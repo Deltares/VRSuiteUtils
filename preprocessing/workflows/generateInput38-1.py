@@ -15,8 +15,38 @@ from owslib.wfs import WebFeatureService
 import shutil
 import copy
 sys.path.append('../../src')
-from FloodDefenceSystem.DikeSection import DikeProfile
 
+def beta_SF_StabilityInner(SF_or_beta, type=False, modelfactor=1.06):
+    """Careful: ensure that upon using this function you clearly define the input parameter!"""
+    if type == "SF":
+        if isinstance(SF_or_beta,float):
+            beta = ((SF_or_beta / modelfactor) - 0.41) / 0.15
+        else:
+            beta = ((SF_or_beta.item() / modelfactor) - 0.41) / 0.15
+
+        beta = np.min([beta, 8.0])
+        return beta
+    elif type == "beta":
+        SF = (0.41 + 0.15 * SF_or_beta) * modelfactor
+        return SF
+
+class DikeProfile:
+    # TODO copied from VRTool, make sure it can be shared.
+    def __init__(self,name = None):
+        self.characteristic_points = {}
+        self.name = name
+    def add_point(self,key, xz):
+        self.characteristic_points[key] = xz
+
+    def generate_shapely_polygon(self):
+        pass
+
+    def read_points(self):
+        pass
+
+    def to_csv(self,path):
+        #add mkdir?
+        pd.DataFrame.from_dict(self.characteristic_points, orient='index', columns=['x', 'z']).to_csv(path.joinpath('{}.csv'.format(self.name)))
 
 def get_traject_shape_from_NBPW(traject,NBWP_shape_path=False):
     if not NBWP_shape_path:
@@ -173,8 +203,14 @@ def dp_as_number(dijkpaal):
     return dp_num
 def check_STBI_data(data):
     #TODO ensure that always an SF and a BETA are given as input.
-    raise Exception('Develop the STBI check to avoid nans in SF and BETA')
-    pass
+    for count, row in data.iterrows():
+        if np.isnan(row.SF):
+            data.loc[count,'SF'] = beta_SF_StabilityInner(row.SF,type='SF')
+        elif np.isnan(row.BETA):
+            data.loc[count, 'BETA'] = beta_SF_StabilityInner(row.BETA, type='beta')
+
+    return data
+
 def write_intermediate_data(traject_name,vakindeling_tabel_path,clear_data = False):
     #this part writes all original data to a more or less fixed format (to be more fixed in the future). This is the really tailo
     input_dir = vakindeling_tabel_path.parent    #input directory
@@ -373,8 +409,10 @@ def write_mechanism_data_legacy(working_dir, vakindeling_gdf, housing_data, meas
 
 
     # make subfolders for Overflow and Toetspeil:
-    shutil.rmtree(working_dir.joinpath('output', 'Overflow'))
-    shutil.rmtree(working_dir.joinpath('output', 'Waterstand'))
+    if working_dir.joinpath('output', 'Overflow').exists():
+        shutil.rmtree(working_dir.joinpath('output', 'Overflow'))
+    if working_dir.joinpath('output', 'Waterstand').exists():
+        shutil.rmtree(working_dir.joinpath('output', 'Waterstand'))
     working_dir.joinpath('output', 'Overflow', '2025').mkdir(parents=True)
     working_dir.joinpath('output', 'Overflow', '2100').mkdir(parents=True)
     working_dir.joinpath('output', 'Waterstand', '2025').mkdir(parents=True)
