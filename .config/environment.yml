@@ -8,6 +8,7 @@ dependencies:
   - argon2-cffi=21.3.0=pyhd3eb1b0_0
   - argon2-cffi-bindings=21.2.0=py310h2bbff1b_0
   - asttokens=2.0.5=pyhd3eb1b0_0
+  - atomicwrites=1.4.0=py_0
   - attrs=22.1.0=py310haa95532_0
   - babel=2.11.0=py310haa95532_0
   - backcall=0.2.0=pyhd3eb1b0_0
@@ -67,6 +68,7 @@ dependencies:
   - hdf5=1.12.2=nompi_h57737ce_101
   - icu=70.1=h0e60522_0
   - idna=3.4=py310haa95532_0
+  - iniconfig=1.1.1=pyhd3eb1b0_0
   - intel-openmp=2023.0.0=h57928b3_25922
   - ipykernel=6.19.2=py310h9909e9c_0
   - ipython=8.10.0=py310haa95532_0
@@ -158,6 +160,7 @@ dependencies:
   - pip=23.0.1=py310haa95532_0
   - pixman=0.40.0=h8ffe710_0
   - platformdirs=2.5.2=py310haa95532_0
+  - pluggy=1.0.0=py310haa95532_1
   - pooch=1.7.0=pyhd8ed1ab_0
   - poppler=23.03.0=h934c637_1
   - poppler-data=0.4.12=hd8ed1ab_0
@@ -168,6 +171,7 @@ dependencies:
   - pthread-stubs=0.4=hcd874cb_1001
   - pthreads-win32=2.9.1=hfa6e2cd_3
   - pure_eval=0.2.2=pyhd3eb1b0_0
+  - py=1.11.0=pyhd3eb1b0_0
   - pycparser=2.21=pyhd3eb1b0_0
   - pygments=2.11.2=pyhd3eb1b0_0
   - pyopenssl=23.0.0=py310haa95532_0
@@ -175,6 +179,7 @@ dependencies:
   - pyproj=3.4.1=py310hcdd211a_1
   - pyrsistent=0.18.0=py310h2bbff1b_0
   - pysocks=1.7.1=py310haa95532_0
+  - pytest=7.1.2=py310haa95532_0
   - python=3.10.9=h4de0772_0_cpython
   - python-dateutil=2.8.2=pyhd3eb1b0_0
   - python-fastjsonschema=2.16.2=py310haa95532_0
