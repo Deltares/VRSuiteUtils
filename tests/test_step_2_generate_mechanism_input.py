@@ -1,16 +1,17 @@
+import shutil
+import filecmp
 import pytest
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 from geopandas.testing import assert_geodataframe_equal,assert_geoseries_equal
-from preprocessing.step2_mechanism_data.overflow import OverflowInput
+from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
+from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputation
 @pytest.mark.parametrize("hring_input,gekb_shape,traject_shape,db_location",[(Path('test_data').joinpath('38-1','input','HRING_data.csv'),
                                                                   Path('test_data').joinpath('38-1','input','gekb_shape.shp'),
                                                                   Path('test_data').joinpath('38-1','reference_shape.shp'),
                                                                   Path('test_data').joinpath('38-1','input','db','2023','WBI2017_Bovenrijn_38-1_v04.sqlite'))])
-
-
 def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
     #HRING input should have: M-value of location, and what is in HR-data.
     #read GEKB_input:
@@ -30,10 +31,56 @@ def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
 
     overflow_input.verify_and_filter_columns()
     pd.testing.assert_frame_equal(overflow_input.hring_data,pd.read_csv(Path(traject_shape.parent).joinpath('HRING_data_reference.csv'),index_col=0))
-    # overflow_input.hring_data.to_csv(Path('test_data','38-1','HRING_data_reference2.csv'))
 
-def test_make_HRING_overflow_input():
-    pass
+@pytest.mark.parametrize("HRING_data,HRING_reference_files, prfl_path, db_path, results_dir, ilocs",[(Path('test_data').joinpath('38-1','HRING_data_reference.csv'),
+                                                                               Path('test_data').joinpath('38-1','HRING_reference_files'),
+                                                                               Path('test_data').joinpath('38-1','input','prfl'),
+                                                                               Path('test_data').joinpath('38-1','input','db'),
+                                                                               Path('test_results').joinpath('38-1','HRING'),
+                                                                               [0, 20, 40])])
+def test_make_HRING_overflow_input(HRING_data,HRING_reference_files,prfl_path, results_dir, db_path,ilocs):
+    #based on HRING_data_reference:
+    #generate input SQL and ini files for Hydra-Ring
+    database_paths = list(db_path.glob("*\\"))
+
+    #clear the output dir
+    if results_dir.exists(): shutil.rmtree(results_dir)
+
+    #make output dirs
+
+    #read locations, filter 3 locs:
+    HRING_data = pd.read_csv(HRING_data,index_col=0)
+    HRING_data = HRING_data.iloc[ilocs]
+    comparison_errors_ini = []
+    comparison_errors_sql = []
+    for database_path in database_paths:
+        results_dir.joinpath(database_path.stem).mkdir(parents=True,exist_ok=False)
+        for count, location in HRING_data.iterrows():
+            loc_output_dir = results_dir.joinpath(database_path.stem,location.dijkvak)
+            loc_output_dir.mkdir(parents=True,exist_ok=False)
+
+            loc_output_reference_dir = HRING_reference_files.joinpath(database_path.stem,location.dijkvak)
+            computation = OverflowComputation()
+            #data from input sheet:
+            computation.fill_data(location)
+            #add profile:
+            computation.get_prfl(prfl_path.joinpath(location.prfl_bestand))
+            #get config:
+            computation.get_HRING_config(database_path)
+            #get critical discharge
+            computation.get_critical_discharge(Path('test_data').joinpath('general','critical_discharges.csv'))
+
+            computation.make_SQL_file(loc_output_dir,Path('test_data').joinpath('general','sql_reference_overflow.sql'))
+            if not filecmp.cmp(loc_output_dir.joinpath(computation.name + '.sql'),loc_output_reference_dir.joinpath(computation.name + '.sql')):
+                comparison_errors_sql.append('SQL-file for {} not identical'.format(computation.name))
+
+            computation.make_ini_file(loc_output_dir,Path('test_data').joinpath('general','ini_reference_overflow.ini'),database_path)
+            if not filecmp.cmp(loc_output_dir.joinpath(computation.name + '.ini'),loc_output_reference_dir.joinpath(computation.name + '.ini')):
+                comparison_errors_ini.append('ini-file for {} and database {} not identical'.format(computation.name, database_path.stem))
+
+    assert not comparison_errors_ini + comparison_errors_sql, f"Errors: {comparison_errors_ini + comparison_errors_sql}"
+
+
 
 def test_add_piping_tool_input():
     pass

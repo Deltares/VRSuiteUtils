@@ -116,8 +116,8 @@ def main():
     #lees input uit Locaties_voorStephan
     inputfile = PATH.joinpath('Locaties38-1_voorStephan.csv')
 
-    refsql = PATH.joinpath('Toetspeil_basis','sql_reference.sql')
-    refini = PATH.joinpath('Toetspeil_basis','ini_reference.ini')
+    refsql = PATH.joinpath('Toetspeil_basis','sql_reference_overflow.sql')
+    refini = PATH.joinpath('Toetspeil_basis','ini_reference_overflow.ini')
 
     database_loc = PATH.joinpath('DatabaseOntwerp')
     configfile = list(database_loc.glob("*.config.sqlite"))[0]
