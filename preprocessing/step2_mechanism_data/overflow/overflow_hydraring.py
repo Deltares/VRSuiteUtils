@@ -12,7 +12,7 @@ from pathlib import Path
 import sqlite3
 import subprocess
 
-class HydraRingComputation:
+class HydraRingComputationInput:
     def __init__(self,HRING_path = r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe"):
         #default HRING_path is to latest Riskeer version.
         self.HydraRingPath =  Path(HRING_path)
@@ -24,7 +24,7 @@ class HydraRingComputation:
         subprocess.run([self.HydraRingPath, str(inifile)], cwd=str(inifile.parent))
 
 
-class OverflowComputation(HydraRingComputation):
+class OverflowComputationInput(HydraRingComputationInput):
     def get_critical_discharge(self,discharge_path):
         critical_discharges = pd.read_csv(discharge_path,index_col=0)
         try:
@@ -121,7 +121,7 @@ class OverflowComputation(HydraRingComputation):
         for j, line in enumerate(fileinput.input(new_sql, inplace=1)):
             sys.stdout.write(line.replace('ORIENTATION', str(self.prfl['RICHTING'])))
         for j, line in enumerate(fileinput.input(new_sql, inplace=1)):
-            sys.stdout.write(line.replace('TimeIntegration', str(self.TimeIntegrationScheme)))
+            sys.stdout.write(line.replace('TIMEINTEGRATION', str(self.TimeIntegrationScheme)))
         for j, line in enumerate(fileinput.input(new_sql, inplace=1)):
             sys.stdout.write(line.replace('Hmin', str(self.prfl['KRUINHOOGTE'] + lower_bound)))
         for j, line in enumerate(fileinput.input(new_sql, inplace=1)):
@@ -155,6 +155,14 @@ class OverflowComputation(HydraRingComputation):
                     sys.stdout.write('INSERT INTO [FORELANDS] VALUES ({:d}, {:d}, {:.3f}, {:.3f});'.format(1, k+1, self.prfl['VOORLAND'][k,0], self.prfl['VOORLAND'][k,1]) + '\n')
             elif 'INSERTBREAKWATER' in line:
                 pass
+            elif 'ADDNUMERICSHERE' in line:
+                #add the different fields from Numerics and write them to the file
+                for count, k in self.NumericsTable.iterrows():
+                    sys.stdout.write('INSERT INTO [Numerics] VALUES (1, {}, 1, 1, {}, {}, {}, {}, {}, {}, {}, {}, {}, 3, {}, {}, {}, {}, {}, {});'.format(
+                        int(k.MechanismID),int(k.SubMechanismID),int(k.CalculationMethod),int(k.FORM_StartMethod),int(k.FORM_NIterations),k.FORM_RelaxationFactor,
+                        k.FORM_EpsBeta,k.FORM_EpsHOH, k.FORM_EpsZFunc,int(k.DS_StartMethod), int(k.DS_Min), int(k.DS_Max), k.DS_VarCoefficient,
+                        int(k.NI_UMin), int(k.NI_UMax), int(k.NI_NumberSteps)) + '\n')
+
             else:
                 sys.stdout.write(line)
         pass
@@ -167,109 +175,3 @@ class OverflowComputation(HydraRingComputation):
         for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
             sys.stdout.write(line.replace('DATABASEPATH', str(db_path)))
         self.ini_path = new_ini
-def modifyOverflowfile(i, filespath, filename, refsql, refini,database_loc,NumericsSettings,lowerbound= -1,upperbound=2):
-    newsql = filespath.joinpath(filename,filename + '.sql')
-    newini = filespath.joinpath(filename,filename + '.ini')
-    workdir = filespath.joinpath(filename)
-    if not os.path.exists(workdir):
-        os.makedirs(workdir)
-    shutil.copy(refsql, newsql)
-    shutil.copy(refini, newini)
-
-    #input prfl data.
-    prfl = getPrfl(filespath.parent.joinpath('Input_Profielen',i.prfl_bestandnaam))
-    if prfl['DAM'] != '0': raise Exception('Profielbestand {} bevat een dam, dit is niet ondersteund'.format(i.prfl_bestandsnaam))
-
-    # changes values in sql for Location, orientation, claculation method and variables
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('LocationName', i['Vaknaam']))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('HLCDID', str(i.LocationID)))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        # sys.stdout.write(line.replace('ORIENTATION', str(i.prfl_oriëntatie)))
-        sys.stdout.write(line.replace('ORIENTATION', str(prfl['RICHTING'])))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('TimeIntegration', str(i.TimeIntegrationSchemeID)))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('Hmin', str(i.prfl_dijkhoogte+lowerbound)))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('Hmax', str(i.prfl_dijkhoogte+upperbound)))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('Hstep', str(0.25)))
-    # insert the correct parameters
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('KRUINHOOGTE', str(i.prfl_dijkhoogte)))
-
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('MU_QC', str(i.mu_qc/1000)))
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        sys.stdout.write(line.replace('SIGMA_QC', str(i.sigma_qc/1000)))
-
-
-    #write profiles to file
-    for j, line in enumerate(fileinput.input(newsql, inplace=1)):
-        if 'INSERTPROFILES' in line:
-            #loop over points:
-            for k in range(0,prfl['DIJK'].shape[0]):
-                sys.stdout.write('INSERT INTO [Profiles] VALUES ({:d}, {:d}, {:.3f}, {:.3f});'.format(1, k+1, prfl['DIJK'][k,0], prfl['DIJK'][k,1]) + '\n')
-        elif 'INSERTCALCULATIONPROFILE' in line:
-            #loop over points:
-            for k in range(0,prfl['DIJK'].shape[0]):
-                sys.stdout.write('INSERT INTO [CalculationProfiles] VALUES ({:d}, {:d}, {:.3f}, {:.3f}, {:.3f});'.format(1, k+1, prfl['DIJK'][k,0], prfl['DIJK'][k,1], prfl['DIJK'][k,2]) + '\n')
-        elif 'INSERTFORELANDGEOMETRY' in line:
-            #loop over points:
-            for k in range(0,prfl['VOORLAND'].shape[0]):
-                sys.stdout.write('INSERT INTO [FORELANDS] VALUES ({:d}, {:d}, {:.3f}, {:.3f});'.format(1, k+1, prfl['VOORLAND'][k,0], prfl['VOORLAND'][k,1]) + '\n')
-        elif 'INSERTBREAKWATER' in line:
-            pass
-        else:
-            sys.stdout.write(line)
-
-    #TODO profiel goed in bestand zetten.
-    # change values in ini
-    for j, line in enumerate(fileinput.input(newini, inplace=1)):
-        sys.stdout.write(line.replace('DIJKPAAL', i.Vaknaam))
-    for j, line in enumerate(fileinput.input(newini, inplace=1)):
-        sys.stdout.write(line.replace('DATABASEPATH', str(database_loc)))
-    return newini
-
-#First we generate all the input files
-def main():
-    PATH = Path(r'c:\PilotWSRL\Overslag')
-
-    #Lees de locaties die moeten worden bekeken. Dit is standaarduitvoer uit de routine die de invoerbestanden maakt.
-    inputfile = PATH.joinpath('GEKBdata.csv')
-
-    #refereer naar basisbestanden met specifieke keys
-    refsql = PATH.joinpath('Overslag_basis','sql_reference_overflow.sql')
-    refini = PATH.joinpath('Overslag_basis','ini_reference_overflow.ini')
-
-    #refereer naar de database die moet worden gebruikt.
-    # database_locs = ['DatabaseOntwerp','DatabaseWBI']
-    database_locs = ['DatabaseWBI','DatabaseOntwerp']
-
-    for dbloc in database_locs:
-        input = pd.read_csv(inputfile)
-        database_loc = PATH.joinpath(dbloc)
-
-        #lees data voor config voor Numerics en TimeIntegration
-        configfile = list(database_loc.glob("*.config.sqlite"))[0]
-        cnx = sqlite3.connect(configfile)
-        TimeIntegrationTable = pd.read_sql_query("SELECT * FROM TimeIntegrationSettings", cnx)
-        TimeIntegrationTable = TimeIntegrationTable.loc[TimeIntegrationTable.CalculationTypeID==6][['LocationID','TimeIntegrationSchemeID']]
-
-        NumericsTable = pd.read_sql_query("SELECT * FROM NumericsSettings", cnx)
-        NumericsTable = NumericsTable.loc[NumericsTable.MechanismID==101]
-
-        input = input.merge(TimeIntegrationTable,on='LocationID')
-        #add critical overtopping discharge
-        critical_discharges = pd.read_csv(refini.parent.joinpath('critical_discharges.csv'))
-        input = add_overtopping_discharges(input,critical_discharges)
-        results_dir = PATH.joinpath('Resultaten_{}'.format(database_loc.stem))
-        for count, location in input.iterrows():
-            ini_file = modifyOverflowfile(location, results_dir,location.Vaknaam,refsql,refini, database_loc,NumericsTable.loc[NumericsTable.LocationId == location.LocationID])
-            runHydraRing(ini_file)
-        # exit()
-
-if __name__ == '__main__':
-    main()

@@ -1,5 +1,5 @@
 --! Basic input file for GEKB computation
--- KEYS TO BE FILLED: 'RW185', 13811189, 337, 1, 7.01, 10.01, 0.25, data from profile
+-- KEYS TO BE FILLED: 'RW185', 13811189, 337, 1, 7.01, 10.01, 0.25, data from profile and numerics settings
 DELETE FROM [HydraulicModels];
 INSERT INTO [HydraulicModels] VALUES (1, 1, 'WTI 2017');
 

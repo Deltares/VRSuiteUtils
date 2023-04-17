@@ -7,13 +7,13 @@ import geopandas as gpd
 import pandas as pd
 from geopandas.testing import assert_geodataframe_equal,assert_geoseries_equal
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
-from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputation
+from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputationInput
 @pytest.mark.parametrize("hring_input,gekb_shape,traject_shape,db_location",[(Path('test_data').joinpath('38-1','input','HRING_data.csv'),
                                                                   Path('test_data').joinpath('38-1','input','gekb_shape.shp'),
                                                                   Path('test_data').joinpath('38-1','reference_shape.shp'),
                                                                   Path('test_data').joinpath('38-1','input','db','2023','WBI2017_Bovenrijn_38-1_v04.sqlite'))])
 def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
-    #HRING input should have: M-value of location, and what is in HR-data.
+    #HRING_Input input should have: M-value of location, and what is in HR-data.
     #read GEKB_input:
     hring_df = pd.read_csv(hring_input,index_col=0)
     gekb_shape = gpd.read_file(gekb_shape).sort_values('M_VAN').drop('OBJECTID', axis=1).reset_index(drop=True).reset_index().rename(columns={'index': 'OBJECTID'})
@@ -36,7 +36,7 @@ def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
                                                                                Path('test_data').joinpath('38-1','HRING_reference_files'),
                                                                                Path('test_data').joinpath('38-1','input','prfl'),
                                                                                Path('test_data').joinpath('38-1','input','db'),
-                                                                               Path('test_results').joinpath('38-1','HRING'),
+                                                                               Path('test_results').joinpath('38-1','HRING_Input'),
                                                                                [0, 20, 40])])
 def test_make_HRING_overflow_input(HRING_data,HRING_reference_files,prfl_path, results_dir, db_path,ilocs):
     #based on HRING_data_reference:
@@ -60,7 +60,7 @@ def test_make_HRING_overflow_input(HRING_data,HRING_reference_files,prfl_path, r
             loc_output_dir.mkdir(parents=True,exist_ok=False)
 
             loc_output_reference_dir = HRING_reference_files.joinpath(database_path.stem,location.dijkvak)
-            computation = OverflowComputation()
+            computation = OverflowComputationInput()
             #data from input sheet:
             computation.fill_data(location)
             #add profile:
@@ -80,7 +80,11 @@ def test_make_HRING_overflow_input(HRING_data,HRING_reference_files,prfl_path, r
 
     assert not comparison_errors_ini + comparison_errors_sql, f"Errors: {comparison_errors_ini + comparison_errors_sql}"
 
-
+# @pytest.mark.parametrize("source_path, results_path, loc_names",[()])
+# def test_run_HydraRing():
+#     pass
+#     #test to verify correct run of Hydra-Ring. Note that it requires a specific version of Riskeer that should be installed locally.
+#     # TODO: see if we need to add it to the repos.
 
 def test_add_piping_tool_input():
     pass
