@@ -16,3 +16,12 @@ BOI: nette overgang kruin - open zode,3 meter,9.4,2.2,BOI - Overgangen
 BOI: geometrische overgang - open zode,1 meter,271,262,BOI - Overgangen
 BOI: geometrische overgang - open zode,2 meter,33,12,BOI - Overgangen
 BOI: geometrische overgang - open zode,3 meter,24,6.4,BOI - Overgangen
+ToM hoog AL,NVT,1000000,1,Toetsrapport 16-1
+Gedet. gesloten zode,1 meter,225,250,WBI schematiseringshandleiding
+Gedet. gesloten zode,2 meter,100,120,WBI schematiseringshandleiding
+Gedet. gesloten zode,3 meter,70,80,WBI schematiseringshandleiding
+Gedet. open zode,1 meter,100,120,WBI schematiseringshandleiding
+Gedet. open zode,2 meter,70,80,WBI schematiseringshandleiding
+Gedet. open zode,3 meter,40,50,WBI schematiseringshandleiding
+Taludvervangende constructie,NVT,1000000,1,Eigen aanname
+ToM bebouwing,NVT,10,15,ToM 16-1

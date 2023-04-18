@@ -85,25 +85,29 @@ class OverflowComputationInput(HydraRingComputation):
                 total_count = np.int_(line.split()[1])
                 dijk_array = np.empty((total_count, 3))
                 pass
-            elif 'DAM' in line:  # damtype
-                prfl['DAM'] = line.split()[1]
             elif 'DAMWAND' in line:  # not used in Riskeer
                 pass
             elif 'DAMHOOGTE' in line:
                 prfl['DAMHOOGTE'] = line.split()[1]
+            elif 'DAM' in line:  # damtype
+                prfl['DAM'] = line.split()[1]
             elif 'MEMO' in line:
                 pass
             else:
                 if count_for != '':
+                    if total_count == count:
+                        count=0
+                        count_for = ''
                     # add points for voorland or dijk
-                    if count_for == 'VOORLAND':
+                    elif count_for == 'VOORLAND':
                         voorland_array[count, :] = np.array(line.split(), dtype=np.float32)
+                        count += 1
                     elif count_for == 'DIJK':
                         dijk_array[count, :] = np.array(line.split(), dtype=np.float32)
-                    count += 1
-                    if total_count == count:
-                        count = 0
-                        count_for = ''
+                        count += 1
+                    # if total_count == count:
+                    #     count = 0
+                    #     count_for = ''
                 else:
                     pass
 
