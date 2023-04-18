@@ -5,14 +5,21 @@ import warnings
 import sqlite3
 
 class OverflowInput:
-    def __init__(self,traject_shape,kind='weakest'):
-        self.traject = gpd.read_file(traject_shape)
+    def __init__(self,kind='weakest'):
         self.kind = kind
+
+    def add_traject_shape(self,traject_shape):
+        #add the shape of the traject
+        self.traject = gpd.read_file(traject_shape)
+
     def get_mvalue_of_locs(self,hring_locs,gekb_shape=False):
         #gets M_VALUES for a gekb_shape with sections with bounds M_VAN and M_TOT
         gekb_shape = gekb_shape
         gekb_shape['M_VALUE'] = np.add(gekb_shape.M_VAN, gekb_shape.M_TOT) / 2
-        self.hring_data = pd.merge(hring_locs.drop(columns=['M_VALUE']),gekb_shape[['OBJECTID','M_VALUE']],left_on='nr',right_on='OBJECTID')
+        self.add_hring_data(pd.merge(hring_locs.drop(columns=['M_VALUE']),gekb_shape[['OBJECTID','M_VALUE']],left_on='nr',right_on='OBJECTID'))
+
+    def add_hring_data(self,dataset):
+        self.hring_data = dataset
 
     @staticmethod
     def select_weakest(section_set,section_name):
@@ -26,13 +33,14 @@ class OverflowInput:
         distance = np.abs(np.subtract(locs.M_VALUE, np.mean([section.M_START, section.M_EIND])))
         return np.argmin(distance)
 
-    def get_HRLocation(self,db_location):
+    @staticmethod
+    def get_HRLocation(db_location,hring_data):
         cnx = sqlite3.connect(db_location)
-        # TODO make cnx flexible
         locs = pd.read_sql_query("SELECT * FROM HRDLocations", cnx)
-        for count, line in self.hring_data.iterrows():
-            self.hring_data.loc[count,'HRLocation'] = locs.loc[locs['Name'] == line['HR koppel']]['HRDLocationId'].values[0]
-        self.hring_data['HRLocation'] = self.hring_data['HRLocation'].astype(np.int64)
+        for count, line in hring_data.iterrows():
+            hring_data.loc[count,'HRLocation'] = locs.loc[locs['Name'] == line['HR koppel']]['HRDLocationId'].values[0]
+        hring_data['HRLocation'] = hring_data['HRLocation'].astype(np.int64)
+        return hring_data
     def select_locs(self):
         #for each section
         indices = []
@@ -52,13 +60,14 @@ class OverflowInput:
         self.hring_data = self.hring_data.iloc[indices].reset_index().rename(columns={'index': 'ID'})
 
     def verify_and_filter_columns(self):
-        required_cols = ['M_VALUE','bovengrens','ondergrens','prfl_bestand','orientatie','dijkhoogte','zodeklasse','golfhoogteklasse','kruindaling','HRLocation']
-        optional_cols = ['dijkvak','faalkans']
+        required_cols = ['bovengrens','ondergrens','prfl_bestand','orientatie','dijkhoogte','zodeklasse','bovengrens_golfhoogteklasse','kruindaling','HRLocation']
+        optional_cols = ['M_VALUE','dijkvak','faalkans','LocationId']
         if hasattr(self,'hring_data'):
             for column in self.hring_data.columns:
                 if column not in required_cols + optional_cols:
                     self.hring_data = self.hring_data.drop(columns=column)
-
-            #TODO verify values in columns
+            for column in required_cols:
+                if column not in self.hring_data.columns:
+                    raise Exception('Column {} is required but not present in hring_data'.format(column))
         else:
             raise Exception('hring_data not present, verification of columns is not possible')
