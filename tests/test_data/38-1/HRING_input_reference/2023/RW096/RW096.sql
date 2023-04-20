@@ -1,16 +1,16 @@
 --! Basic input file for GEKB computation
--- KEYS TO BE FILLED: 'LocationName', HLCDID, ORIENTATION, TimeIntegration, Hmin, Hmax, Hstep, data from profile
+-- KEYS TO BE FILLED: 'RW096', 13811103, 280, 1, 8.32, 11.32, 0.25, data from profile and numerics settings
 DELETE FROM [HydraulicModels];
 INSERT INTO [HydraulicModels] VALUES (1, 1, 'WTI 2017');
 
 DELETE FROM [Sections];
-INSERT INTO [Sections] VALUES (1, 1, 1, 'LocationName', 'LocationName', -999,-999,-999,-999, HLCDID, HLCDID, 100, ORIENTATION, 0);
+INSERT INTO [Sections] VALUES (1, 1, 1, 'RW096', 'RW096', -999,-999,-999,-999, 13811103, 13811103, 100, 280, 0);
 
 DELETE FROM [SectionCalculationSchemes];
 INSERT INTO [SectionCalculationSchemes] VALUES (1, 101, 1);
 
 DELETE FROM [DesignTables];
-INSERT INTO [DesignTables] VALUES (1, 101, 1, 1, 3, 1, NULL, Hmin, Hmax, Hstep, 0, 0, 0);
+INSERT INTO [DesignTables] VALUES (1, 101, 1, 1, 3, 1, NULL, 8.32, 11.32, 0.25, 0, 0, 0);
 
 DELETE FROM [PreprocessorSettings];
 
@@ -19,12 +19,12 @@ INSERT INTO [Numerics] VALUES (1, 101, 1, 1, 102, 12, 4, 150, 0.15000001, 0.005,
 INSERT INTO [Numerics] VALUES (1, 101, 1, 1, 103, 12, 4, 150, 0.15000001, 0.005, 0.005, 0.005, 2, 3, 10000, 40000, 0.1, -6, 6, 25);
 
 DELETE FROM [VariableDatas];
-INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 1, KRUINHOOGTE, 0, 0, NULL, NULL, NULL, 1, 0, 300);
+INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 1, 9.32, 0, 0, NULL, NULL, NULL, 1, 0, 300);
 INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 8, 1, 0, 0, NULL, NULL, NULL, 1, 0, 300);
 INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 10, 0, 19, 4.75, 0.5, 0, 99, 1, 0, 300);
 INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 11, 0, 19, 2.6, 0.35, 0, 99, 1, 0, 300);
 INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 12, 1, 0, 0, NULL, NULL, NULL, 1, 0, 300);
-INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 17, 0, 4, MU_QC, SIGMA_QC, NULL, NULL, 1, 0, 300);
+INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 17, 0, 4, 0.189, 0.21, NULL, NULL, 1, 0, 300);
 INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 120, 0, 19, 1, 0.07, 0, 99, 1, 0, 300);
 INSERT INTO [VariableDatas] VALUES (1, 101, 1, 1, 123, 0, 19, 0.92, 0.24, 0, 99, 1, 0, 300);
 
@@ -45,18 +45,24 @@ DELETE FROM [PresentationSections];
 --(Forelands, ForelandModels, Profiles, CalculationProfiles, Breakwaters)
 
 DELETE FROM [CalculationProfiles];
-INSERTCALCULATIONPROFILE
+INSERT INTO [CalculationProfiles] VALUES (1, 1, -13.500, 4.940, 1.000);
+INSERT INTO [CalculationProfiles] VALUES (1, 2, -10.000, 5.860, 1.000);
+INSERT INTO [CalculationProfiles] VALUES (1, 3, -0.500, 9.176, 1.000);
 --Example line: INSERT INTO [CalculationProfiles] VALUES (1, 1, -17, 5.13, 1);
 
 DELETE FROM [Profiles];
-INSERTPROFILES
+INSERT INTO [Profiles] VALUES (1, 1, -13.500, 4.940);
+INSERT INTO [Profiles] VALUES (1, 2, -10.000, 5.860);
+INSERT INTO [Profiles] VALUES (1, 3, -0.500, 9.176);
 --Example line: INSERT INTO [Profiles] VALUES (1, 1, -17, 5.13);
 
 DELETE FROM [ForelandModels];
 INSERT INTO [ForelandModels] VALUES (1, 101, 3);
 
 DELETE FROM [Forelands];
-INSERTFORELANDGEOMETRY
+INSERT INTO [FORELANDS] VALUES (1, 1, -50.000, 4.914);
+INSERT INTO [FORELANDS] VALUES (1, 2, -28.500, 4.934);
+INSERT INTO [FORELANDS] VALUES (1, 3, -13.500, 4.940);
 --Example line: INSERT INTO [Forelands] VALUES (1, 1, -68, 2.56);
 
 DELETE FROM [ProbabilityAlternatives];

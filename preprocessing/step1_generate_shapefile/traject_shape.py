@@ -79,7 +79,7 @@ class TrajectShape:
     def generate_vakindeling_shape(self, vakken_path):
         df_vakken = pd.read_excel(vakken_path,sheet_name='Algemeen',
                                   usecols = ['OBJECTID', 'VAKNUMMER', 'M_START', 'M_EIND', 'IN_ANALYSE'],
-                                  dtype = {'OBJECTID':np.int32, 'VAKNUMMER':str,'M_START':np.float32,'M_EIND':np.float32,'IN_ANALYSE':bool})
+                                  dtype = {'OBJECTID':np.int64, 'VAKNUMMER':str,'M_START':np.float64,'M_EIND':np.float64,'IN_ANALYSE':np.int64})
         self.check_vakindeling(df_vakken,self.NBPW_shape.geometry.length.values[0])
         traject_geom = self.NBPW_shape.geometry[0][0]
 

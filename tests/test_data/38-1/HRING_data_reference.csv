@@ -1,0 +1,63 @@
+,dijkvak,bovengrens,ondergrens,prfl_bestand,orientatie,dijkhoogte,zodeklasse,bovengrens_golfhoogteklasse,faalkans,kruindaling,M_VALUE,HRLocation
+0,RW000,10.83,7.5,RW000.prfl,226,10.51,Bebouwing in kruin/talud,1 meter,1.03E-05,0.005,90,13811002
+1,RW003,10.81,7.49,RW003.prfl,191,10.87,Bebouwing in kruin/talud,1 meter,1.44E-06,0.005,438.5,13811005
+2,RW012,10.76,7.44,RW012.prfl,244,10.84,Bebouwing in kruin/talud,1 meter,1.83E-06,0.005,1323.5,13811013
+3,RW013,10.72,7.41,RW013.prfl,236,10.82,Bebouwing in kruin/talud,1 meter,1.70E-06,0.005,1425.5,13811015
+4,RW023,10.59,7.28,RW023.prfl,256,10.27,Bebouwing in kruin/talud,1 meter,6.96E-06,0.005,2418.5,13811024
+5,RW024,10.48,7.18,RW024.prfl,164,9.93,BOI: nette overgang talud - gesloten zode,1 meter,2.72E-05,0.005,2527.5,13819026
+6,RW026,10.42,7.08,RW026.prfl,170,9.95,BOI: nette overgang kruin - gesloten zode,1 meter,6.16E-06,0.005,2742,13819028
+7,RW027,10.35,6.97,RW027.prfl,157,9.98,BOI: nette overgang kruin - gesloten zode,1 meter,5.19E-06,0.005,2868,13811030
+8,RW032,10.35,6.97,RW032.prfl,143,9.93,BOI: nette overgang talud - gesloten zode,1 meter,1.98E-05,0.005,3422.5,13811035
+9,RW046,10.35,6.97,RW046.prfl,154,9.87,BOI: nette overgang kruin - gesloten zode,1 meter,6.45E-06,0.005,4806,13811049
+10,RW050,10.35,6.97,RW050.prfl,169,9.89,BOI: nette overgang kruin - gesloten zode,1 meter,6.08E-06,0.005,5200,13811053
+11,RW062,10.35,6.97,RW062.prfl,244,10.45,Bebouwing in kruin/talud,1 meter,2.24E-06,0.005,6396.5,13811064
+12,RW063,10.35,6.97,RW063.prfl,248,10.22,Bebouwing in kruin/talud,1 meter,7.56E-06,0.005,6495,13811065
+13,RW073,10.2,6.87,RW073.prfl,181,10.17,Bebouwing in kruin/talud,1 meter,4.19E-06,0.005,7499,13811076
+14,RW075,10.15,6.82,RW075.prfl,183,10.11,Bebouwing in kruin/talud,1 meter,3.56E-06,0.005,7696.5,13811078
+15,RW076,10.17,6.82,RW076.prfl,163,10.13,Bebouwing in kruin/talud,1 meter,4.25E-06,0.005,7796.5,13811079
+16,RW083,10.08,6.72,RW083.prfl,151,10.17,Bebouwing in kruin/talud,1 meter,2.20E-06,0.005,8493,13811086
+17,RW087,9.9,6.61,RW087.prfl,166,8.96,NVT,-,inf,0.005,8891.5,13811095
+18,RW089,9.9,6.61,RW089.prfl,167,9.51,BOI: nette overgang kruin - gesloten zode,1 meter,4.28E-06,0.005,9083,13811096
+19,RW091,9.9,6.61,RW091.prfl,259,9.33,BOI: nette overgang kruin - gesloten zode,1 meter,9.79E-06,0.005,9271,13811097
+20,RW096,9.86,6.56,RW096.prfl,100,9.32,BOI: nette overgang kruin - gesloten zode,1 meter,8.54E-06,0.005,9781.5,13811103
+21,RW097,9.86,6.56,RW097.prfl,196,9.27,BOI: nette overgang talud - gesloten zode,1 meter,2.51E-05,0.005,9875.5,13811103
+22,RW098,9.83,6.52,RW098.prfl,196,9.39,NVT,-,inf,0.005,9978,13811104
+23,RW105,9.66,6.4,RW105.prfl,130,9.32,NVT,-,inf,0.005,10849.5,13811113
+24,RW106,9.66,6.4,RW106.prfl,182,9.32,NVT,-,inf,0.005,10959,13811113
+25,RW109,9.61,6.37,RW109.prfl,185,9.31,Bebouwing in kruin/talud,1 meter,6.40E-06,0.005,11263.5,13819116
+26,RW111,9.59,6.35,RW111.prfl,166,9.31,Bebouwing in kruin/talud,1 meter,7.02E-06,0.005,11466,13819118
+27,RW113,9.56,6.33,RW113.prfl,171,9.19,BOI: nette overgang kruin - gesloten zode,1 meter,4.01E-06,0.005,11665.5,13811120
+28,RW115,9.54,6.32,RW115.prfl,148,9.21,BOI: nette overgang kruin - gesloten zode,1 meter,3.54E-06,0.005,11870,13811122
+29,RW120,9.47,6.25,RW120.prfl,141,9.17,BOI: nette overgang kruin - gesloten zode,1 meter,3.68E-06,0.005,12366.5,13811127
+30,RW128,9.39,6.14,RW128.prfl,175,9.1,Bebouwing in kruin/talud,1 meter,6.77E-06,0.005,13142,13811135
+31,RW136,9.29,6.07,RW136.prfl,189,9.13,Bebouwing in kruin/talud,1 meter,6.13E-06,0.005,13819,13811141
+32,RW138,9.31,6.07,RW138.prfl,191,9.08,Bebouwing in kruin/talud,1 meter,7.77E-06,0.005,13991.5,13811143
+33,RW149,9.14,5.95,RW149.prfl,212,8.51,BOI: nette overgang kruin - gesloten zode,1 meter,1.38E-05,0.005,14990,13811153
+34,RW158,8.95,5.83,RW158.prfl,178,8.81,Bebouwing in kruin/talud,1 meter,4.70E-06,0.005,15909,13811162
+35,RW163,8.92,5.55,RW163.prfl,125,8.8,Bebouwing in kruin/talud,1 meter,7.08E-06,0.005,16425,13811168
+36,RW168,8.89,5.55,RW168.prfl,180,8.62,BOI: nette overgang talud - gesloten zode,1 meter,7.88E-06,0.005,16914,13811172
+37,RW171,8.86,5.54,RW171.prfl,181,8.52,BOI: nette overgang kruin - gesloten zode,1 meter,3.56E-06,0.005,17213.5,13811175
+38,RW173,8.78,5.53,RW173.prfl,163,8.57,BOI: nette overgang kruin - gesloten zode,1 meter,2.06E-06,0.005,17412,13811177
+39,RW180,8.72,5.5,RW180.prfl,181,8.46,BOI: nette overgang talud - gesloten zode,1 meter,6.94E-06,0.005,18111,13811184
+40,RW185,8.52,5.39,RW185.prfl,157,8.01,BOI: nette overgang kruin - gesloten zode,1 meter,8.08E-06,0.005,18614,13811189
+41,RW189,8.49,5.37,RW189.prfl,190,8.58,Bebouwing in kruin/talud,1 meter,2.71E-06,0.005,19016.5,13811193
+42,RW191,8.41,5.3,RW191.prfl,152,8.14,Bebouwing in kruin/talud,1 meter,1.74E-05,0.005,19223,13811196
+43,RW192,8.4,5.3,RW192.prfl,149,8.03,Bebouwing in kruin/talud,1 meter,1.81E-05,0.005,19326,13811197
+44,RW196,8.4,5.06,RW196.prfl,159,8.03,BOI: nette overgang talud - gesloten zode,1 meter,1.20E-05,0.005,19741.5,13811201
+45,RW202,8.35,5.04,RW202.prfl,206,8.07,Bebouwing in kruin/talud,1 meter,7.28E-06,0.005,20331,13811206
+46,RW204,8.34,5.03,RW204.prfl,233,7.83,BOI: nette overgang kruin - gesloten zode,1 meter,8.26E-06,0.005,20530,13811208
+47,RW206,8.32,5.02,RW206.prfl,216,7.96,BOI: nette overgang kruin - gesloten zode,1 meter,4.01E-06,0.005,20730,13811210
+48,RW209,8.19,4.97,RW209.prfl,213,8.03,Bebouwing in kruin/talud,1 meter,5.06E-06,0.005,21030,13811213
+49,RW216,8.03,4.9,RW216.prfl,186,7.93,Bebouwing in kruin/talud,1 meter,4.25E-06,0.005,21729,13811220
+50,RW222,7.9,4.82,RW222.prfl,237,7.71,Bebouwing in kruin/talud,1 meter,7.29E-06,0.005,22324.5,13811226
+51,RW230,7.76,4.75,RW230.prfl,214,7.53,Bebouwing in kruin/talud,1 meter,7.80E-06,0.005,23135,13811234
+52,RW245,7.28,4.37,RW245.prfl,106,7.63,Bebouwing in kruin/talud,1 meter,7.53E-06,0.005,24638,13811250
+53,RW250,7.27,4.36,RW250.prfl,151,7.29,Bebouwing in kruin/talud,1 meter,5.76E-06,0.005,25134,13811255
+54,RW252,7.25,4.35,RW252.prfl,156,7.21,Bebouwing in kruin/talud,1 meter,7.76E-06,0.005,25332,13811257
+55,RW254,7.24,4.33,RW254.prfl,158,7.19,Bebouwing in kruin/talud,1 meter,7.56E-06,0.005,25531.5,13811258
+56,RW257,7.21,4.28,RW257.prfl,190,7.04,Bebouwing in kruin/talud,1 meter,7.66E-06,0.005,25833,13811261
+57,RW260V,7.08,4.19,RW260V.prfl,91,8.08,Bebouwing in kruin/talud,1 meter,1.16E-08,0.005,26129,13811265
+58,RW274V,7.06,4.13,RW274V.prfl,174,8.53,Bebouwing in kruin/talud,1 meter,3.24E-10,0.005,27387.5,13811277
+59,RW283V,7.04,3.96,RW283V.prfl,119,6.96,Bebouwing in kruin/talud,1 meter,7.55E-06,0.005,28195.5,13811286
+60,RW283V,7.04,3.96,RW283V.prfl,119,6.96,Bebouwing in kruin/talud,1 meter,7.55E-06,0.005,28195.5,13811286
+61,RW290,7.05,3.96,RW290.prfl,37,6.81,Bebouwing in kruin/talud,1 meter,8.00E-06,0.005,28856.715,13811288
