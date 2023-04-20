@@ -2,7 +2,8 @@ from pathlib import Path
 import pandas as pd
 import os
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
-from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputationInput, HydraRingComputation
+from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputationInput
+from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 
 
 def check_string_in_list(str, list_vals):

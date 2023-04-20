@@ -9,24 +9,17 @@ import os
 import numpy as np
 # import matplotlib.pyplot as plt
 from pathlib import Path
-import sqlite3
-import subprocess
 
-class HydraRingComputation:
-    def __init__(self,HRING_path = r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe"):
-        #default HRING_path is to latest Riskeer version.
-        self.HydraRingPath =  Path(HRING_path)
-
-
-
-    def run_hydraring(self,
-            inifile: Path,
-    ):
-        #TODO aanpassen
-        subprocess.run([str(self.HydraRingPath), str(inifile)], cwd=str(inifile.parent))
+from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 
 
 class OverflowComputationInput(HydraRingComputation):
+    def __init__(self,HRING_path = r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe"):
+        self.ComputationID = 6
+        self.MechanismID = 101
+        # Prototype initialization 3.x:
+        super().__init__(HRING_path=HRING_path)
+
     def get_critical_discharge(self,discharge_path):
         critical_discharges = pd.read_csv(discharge_path,index_col=0)
         try:
@@ -52,14 +45,6 @@ class OverflowComputationInput(HydraRingComputation):
         self.wave_class = data.bovengrens_golfhoogteklasse
         self.HRLocation = data.HRLocation
 
-    def get_HRING_config(self,db_path):
-
-        #lees data voor config voor Numerics en TimeIntegration
-        configfile = list(db_path.glob("*.config.sqlite"))[0]
-        cnx = sqlite3.connect(configfile)
-        self.TimeIntegrationScheme = np.int_(pd.read_sql_query("SELECT TimeIntegrationSchemeID FROM TimeIntegrationSettings WHERE CalculationTypeID=6 AND LocationID={}".format(self.HRLocation), cnx).values.flatten()[0])
-        self.NumericsTable = pd.read_sql_query("SELECT * FROM NumericsSettings WHERE MechanismID=101 AND LocationID={}".format(self.HRLocation), cnx)
-        cnx.close()
     def get_prfl(self, fileName):
         prfl = {}
         count_for = ''
