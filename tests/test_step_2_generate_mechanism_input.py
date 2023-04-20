@@ -88,7 +88,7 @@ def test_make_HRING_waterlevel_input(HRING_data,HRING_input_reference, results_d
             #make sql file
             computation.make_SQL_file(loc_output_dir,Path('test_data').joinpath('general','sql_reference_waterlevel.sql'),t_2100=t_2100)
             if not filecmp.cmp(loc_output_dir.joinpath(computation.name + '.sql'),loc_output_reference_dir.joinpath(computation.name + '.sql')):
-                comparison_errors_sql.append('SQL-file for {} not identical'.format(computation.name))
+                comparison_errors_sql.append('SQL-file for {} and database {} not identical'.format(computation.name, database_path.stem))
             #make ini file
             computation.make_ini_file(loc_output_dir,Path('test_data').joinpath('general','ini_reference_waterlevel.ini'),database_path,config_db_path)
             if not filecmp.cmp(loc_output_dir.joinpath(computation.name + '.ini'),loc_output_reference_dir.joinpath(computation.name + '.ini')):
@@ -154,17 +154,25 @@ def test_make_HRING_overflow_input(HRING_data,HRING_input_reference,prfl_path, r
 
     assert not comparison_errors_ini + comparison_errors_sql, f"Errors: {comparison_errors_ini + comparison_errors_sql}"
 
-@pytest.mark.parametrize("ini_file",[(Path('test_data').joinpath('38-1', 'HRING_input_reference','2023','RW000','RW000.ini'))])
+@pytest.mark.parametrize("ini_file",[(Path('test_data').joinpath('38-1', 'HRING_input_reference','overflow','2023','RW000','RW000.ini')),
+                                     (Path('test_data').joinpath('38-1', 'HRING_input_reference','waterlevel','2023','RW000','RW000.ini')),
+                                     (Path('test_data').joinpath('38-1', 'HRING_input_reference','waterlevel','2100','RW096','RW096.ini'))])
 def test_run_HydraRing(ini_file):
     #path of work_dir is the same as the ini_file
     work_dir = ini_file.parent
+    output_file_name = 'DESIGNTABLE_{}.txt'.format(ini_file.stem)
+    #clear test_results dir
+    if Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:]).exists():
+        shutil.rmtree(Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:]))
+    #and remake it
+    Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:]).mkdir(parents=True,exist_ok=False)
 
     #run HydraRing
     HydraRingComputation().run_hydraring(Path(os.getcwd()).joinpath(ini_file))
 
     # move designTable.txt from work_dir to test_results\38-1\HRING_input\2023\RW000\
-    shutil.move(work_dir.joinpath('designTable.txt'),
-                Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:],'designTable.txt'))
+    shutil.move(work_dir.joinpath(output_file_name),
+                Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:],output_file_name))
 
     #remove the other files for which the name is not the same as the ini_file
     for file in work_dir.glob('*'):
@@ -172,8 +180,8 @@ def test_run_HydraRing(ini_file):
             file.unlink()
 
     #compare the designTable.txt with the reference file
-    assert filecmp.cmp(Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:],'designTable.txt'),
-Path(os.getcwd()).joinpath('test_data',work_dir.parts[1],'HRING_computations_reference',*work_dir.parts[3:],'designTable.txt'))
+    assert filecmp.cmp(Path(os.getcwd()).joinpath('test_results',work_dir.parts[1],'HRING_computations',*work_dir.parts[3:],output_file_name),
+Path(os.getcwd()).joinpath('test_data',work_dir.parts[1],'HRING_computations_reference',*work_dir.parts[3:],output_file_name))
 
 
 

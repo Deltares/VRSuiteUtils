@@ -1,5 +1,5 @@
 --! Most basic input for HBN
--- KEYS TO BE FILLED: 'RW096', 13811103, 1, 6.56, 9.86, 0.25
+-- KEYS TO BE FILLED: 'RW096', 13811103, 1, 7.31, 10.61, 0.25
 -- [Areas] ;
 DELETE FROM [Areas];
 INSERT INTO [Areas] VALUES (1, '1', 'Nederland');
@@ -69,7 +69,7 @@ DELETE FROM [DesignTables];
 -- T =  4000, p = 0.00025   beta = 3.48076;
 -- T = 10000, p = 0.0001    beta = 3.71902;
 --INSERT INTO [DesignTables] ([SectionId], [MechanismId], [LayerId], [AlternativeId], [Method], [VariableId], [LoadVariableId], [TableMin], [TableMax], [TableStepSize], [ValueMin], [ValueMax], [Beta]) VALUES ( 1, 1, 1, 1, 0, NULL, NULL, 10, 11, 0.01, 12, 13, 4.123 );
-INSERT INTO [DesignTables]  VALUES (  1, 1, 1, 1, 3, 26, NULL, 6.56, 9.86, 0.25, 2.0, 4.0, 3.71902 );
+INSERT INTO [DesignTables]  VALUES (  1, 1, 1, 1, 3, 26, NULL, 7.31, 10.61, 0.25, 2.0, 4.0, 3.71902 );
 
 											
 -- [VariableDatas] ;
