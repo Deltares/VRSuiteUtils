@@ -5,17 +5,15 @@ import pandas as pd
 import shutil
 import fileinput
 import sys
-import os
 import numpy as np
 # import matplotlib.pyplot as plt
-from pathlib import Path
 
 from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 
 
 class OverflowComputationInput(HydraRingComputation):
     def __init__(self,HRING_path = r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe"):
-        self.ComputationID = 6
+        self.CalculationTypeID = 6
         self.MechanismID = 101
         # Prototype initialization 3.x:
         super().__init__(HRING_path=HRING_path)
@@ -44,6 +42,7 @@ class OverflowComputationInput(HydraRingComputation):
         self.sod_class = data.zodeklasse
         self.wave_class = data.bovengrens_golfhoogteklasse
         self.HRLocation = data.HRLocation
+
 
     def get_prfl(self, fileName):
         prfl = {}
@@ -156,17 +155,3 @@ class OverflowComputationInput(HydraRingComputation):
 
             else:
                 sys.stdout.write(line)
-        pass
-    def make_ini_file(self,path,reference_file,db_path,config_db_path):
-        if config_db_path.name != 'config.sqlite':
-            config_db_path = config_db_path.joinpath('config.sqlite')
-        new_ini = path.joinpath(self.name + '.ini')
-        shutil.copy(reference_file,new_ini)
-
-        for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
-            sys.stdout.write(line.replace('DIJKPAAL', self.name))
-        for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
-            sys.stdout.write(line.replace('DATABASEPATH', str(Path(os.getcwd()).joinpath(db_path))))
-        for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
-            sys.stdout.write(line.replace('CONFIGDBPATH', str(config_db_path)))
-        self.ini_path = new_ini

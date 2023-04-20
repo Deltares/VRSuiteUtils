@@ -12,9 +12,8 @@ class OverflowInput:
         #add the shape of the traject
         self.traject = gpd.read_file(traject_shape)
 
-    def get_mvalue_of_locs(self,hring_locs,gekb_shape=False):
+    def get_mvalue_of_locs(self,hring_locs,gekb_shape):
         #gets M_VALUES for a gekb_shape with sections with bounds M_VAN and M_TOT
-        gekb_shape = gekb_shape
         gekb_shape['M_VALUE'] = np.add(gekb_shape.M_VAN, gekb_shape.M_TOT) / 2
         self.add_hring_data(pd.merge(hring_locs.drop(columns=['M_VALUE']),gekb_shape[['OBJECTID','M_VALUE']],left_on='nr',right_on='OBJECTID'))
 

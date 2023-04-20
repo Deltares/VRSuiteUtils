@@ -9,6 +9,7 @@ import os
 from geopandas.testing import assert_geodataframe_equal,assert_geoseries_equal
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputationInput
+from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import WaterlevelComputationInput
 from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 
 
@@ -65,6 +66,11 @@ def test_make_HRING_waterlevel_input(HRING_data,HRING_input_reference, results_d
     #loop over all locations and databases
     for database_path in database_paths:
         results_dir.joinpath(database_path.stem).mkdir(parents=True,exist_ok=False)
+        if '2100' in str(database_path):
+            t_2100 = True
+        else:
+            t_2100 = False
+
         for count, location in HRING_data.iterrows():
             #make output dir
             loc_output_dir = results_dir.joinpath(database_path.stem,location.dijkvak)
@@ -74,21 +80,17 @@ def test_make_HRING_waterlevel_input(HRING_data,HRING_input_reference, results_d
             loc_output_reference_dir = HRING_input_reference.joinpath(database_path.stem,location.dijkvak)
 
             #make computation object
-            computation = OverflowComputationInput()
+            computation = WaterlevelComputationInput()
             #data from input sheet:
             computation.fill_data(location)
-            #add profile data:
-            computation.get_prfl(prfl_path.joinpath(location.prfl_bestand))
             #get config from hydraulic database:
             computation.get_HRING_config(database_path)
-            #get critical discharge
-            computation.get_critical_discharge(Path('test_data').joinpath('general','critical_discharges.csv'))
             #make sql file
-            computation.make_SQL_file(loc_output_dir,Path('test_data').joinpath('general','sql_reference_overflow.sql'))
+            computation.make_SQL_file(loc_output_dir,Path('test_data').joinpath('general','sql_reference_waterlevel.sql'),t_2100=t_2100)
             if not filecmp.cmp(loc_output_dir.joinpath(computation.name + '.sql'),loc_output_reference_dir.joinpath(computation.name + '.sql')):
                 comparison_errors_sql.append('SQL-file for {} not identical'.format(computation.name))
             #make ini file
-            computation.make_ini_file(loc_output_dir,Path('test_data').joinpath('general','ini_reference_overflow.ini'),database_path,config_db_path)
+            computation.make_ini_file(loc_output_dir,Path('test_data').joinpath('general','ini_reference_waterlevel.ini'),database_path,config_db_path)
             if not filecmp.cmp(loc_output_dir.joinpath(computation.name + '.ini'),loc_output_reference_dir.joinpath(computation.name + '.ini')):
                 comparison_errors_ini.append('ini-file for {} and database {} not identical'.format(computation.name, database_path.stem))
 
