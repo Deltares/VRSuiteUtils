@@ -1,16 +1,14 @@
 from pathlib import Path
 import pandas as pd
 import os
+
+from preprocessing.common_functions import check_string_in_list
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputationInput
 from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 
 
-def check_string_in_list(str, list_vals):
-    for item in list_vals:
-        if item in str:
-            return True
-    return False
+
 def main(work_dir,database_paths,
          config_db_path = Path(r'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\config.sqlite')):
     '''This is the main function of the workflow.
