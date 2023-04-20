@@ -24,7 +24,8 @@ def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
     hring_df = pd.read_csv(hring_input,index_col=0)
     gekb_shape = gpd.read_file(gekb_shape).sort_values('M_VAN').drop('OBJECTID', axis=1).reset_index(drop=True).reset_index().rename(columns={'index': 'OBJECTID'})
 
-    overflow_input = OverflowInput(traject_shape,kind='weakest')
+    overflow_input = OverflowInput(kind='weakest')
+    overflow_input.add_traject_shape(traject_shape)
     #check if M-value in hring_df
     if any(hring_df.M_VALUE.isna()):
         overflow_input.get_mvalue_of_locs(hring_df,gekb_shape)
