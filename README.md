@@ -17,5 +17,7 @@ If you want to contribute contact the repository owner. Any contribution should 
 ## Who do I talk to? ##
 
 For questions about the repository contact Wouter Jan Klerk or Stephan Rikkert.
+
 wouterjan.klerk@deltares.nl
+
 stephan.rikkert@deltares.nl
