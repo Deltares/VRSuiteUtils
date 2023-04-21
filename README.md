@@ -1,22 +1,21 @@
-# Veiligheidsrendement Preprocessing #
+# Veiligheidsrendement Tools #
 
-This is a repository with tools to translate results from the safety assessment and additional data to input for the VRTool
+This repository contains tools to process input from a WBI assessment to input for the VRTOOL, which can be used to apply the veiligheidsrendementmethode to determine optimized configurations of dike reinforcements. Additionally it contains tools to process and analyze results from the VRTOOL
 
 ## What is this repository for?
 
-* Quick summary
-* Version
+* The current version that this repository pertains to is VRTOOL v0.1
 
 ## How do I get set up? ##
 
+* Download the repository and run it from the environment as specified in the .yml and .toml files.
 
 ## Contribution guidelines ##
 
-* Writing tests
-* Code review
-* Other guidelines
+If you want to contribute contact the repository owner. Any contribution should be testable and useful for more than just your own case study, otherwise you should keep it locally or generalize first.
 
 ## Who do I talk to? ##
 
-* Repo owner or admin
-* Other community or team contact
+For questions about the repository contact Wouter Jan Klerk or Stephan Rikkert.
+wouterjan.klerk@deltares.nl
+stephan.rikkert@deltares.nl
