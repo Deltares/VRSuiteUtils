@@ -1,0 +1,63 @@
+,doorsnede,bovengrens,ondergrens,prfl_bestand,orientatie,dijkhoogte,zodeklasse,bovengrens_golfhoogteklasse,faalkans,kruindaling,m_value,hrlocation,hr_koppel,,Kolom,,Beschrijving
+0,RW000,10.83,7.5,RW000.prfl,226,10.51,Bebouwing in kruin/talud,1 meter,1.03E-05,0.005,90,13811002,038-01_0002_1_WA_km0926,,dijkvak,Optioneel,Wanneer berekeningen gekoppeld moeten worden aan naamgeving in Vakindeling.csv is dit veld verplicht en moet het overeenkomen met veld overslag
+1,RW003,10.81,7.49,RW003.prfl,191,10.87,Bebouwing in kruin/talud,1 meter,1.44E-06,0.005,438.5,13811005,038-01_0005_1_WA_km0926,,bovengrens,,Bovengrens voor waterstandsberekeningen (bijv bij kans 1/30 van de signaleringswaarde)
+,,,,,,,,,,,,,,,ondergrens,,Ondergrens voor waterstandsberekeningen (bijv bij kans 1/10)
+,,,,,,,,,,,,,,,prfl_bestand,,Naam van het prfl bestand te gebruiken voor overslag
+,,,,,,,,,,,,,,,orientatie,Optioneel,Orientatie van het profiel voor overslagberekeningen. Wordt in principe uit het prfl bestand gelezen. Ter controle
+,,,,,,,,,,,,,,,dijkhoogte,,Hoogte van de dijk.
+,,,,,,,,,,,,,,,zodeklasse,,Beschrijving van de graszodekwaliteit. Waarden moeten overeenkomen met de waarden in de standaardtabel.
+,,,,,,,,,,,,,,,bovengrens_golfhoogteklasse,,"Bovengrens van de golfhoogteklasse. Bij 0-1 meter dus ""1 meter"", 1-2 meter wordt ""2 meter"" etc."
+,,,,,,,,,,,,,,,faalkans,Optioneel,"Faalkans uit beoordeling, ter controle"
+,,,,,,,,,,,,,,,kruindaling,,Jaarlijkse kruindaling in m
+,,,,,,,,,,,,,,,m_value,Optioneel,Verplicht wanneer berekeningen geografisch moeten worden gekoppeld. Kan worden gevuld met aparte workflow
+,,,,,,,,,,,,,,,hrlocation/hr_koppel,,Verwijzing naar de bijbehorende locatie in de hydraulische database. Hrlocation kan worden afgeleid o.b.v. hr_koppel
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,
