@@ -10,6 +10,14 @@ This repository contains tools to process input from a WBI assessment to input f
 
 * Download the repository and run it from the environment as specified in the .yml and .toml files.
 
+* Using Anaconda (or miniconda):
+```
+conda env create -f .config\environment.yml -p .env\vrtool_pre_env
+conda activate .env\vrtool_pre_env
+poetry install
+```
+> If an installation error happends during `poetry install` it might be due to the combination of poetry and conda, for now the workaround is to execute once more the same command (`poetry install`).
+
 ## Contribution guidelines ##
 
 If you want to contribute contact the repository owner. Any contribution should be testable and useful for more than just your own case study, otherwise you should keep it locally or generalize first.
