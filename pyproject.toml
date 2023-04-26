@@ -18,6 +18,7 @@ fiona = "^1.9.3"
 scipy = "^1.10.1"
 geojson = "^3.0.1"
 openpyxl = "^3.1.2"
+owslib = "^0.29.1"
 
 
 [tool.poetry.group.test.dependencies]
