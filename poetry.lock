@@ -371,18 +371,6 @@ unicode = ["unicodedata2 (>=15.0.0)"]
 woff = ["brotli (>=1.0.1)", "brotlicffi (>=0.8.0)", "zopfli (>=0.1.4)"]
 
 [[package]]
-name = "geojson"
-version = "3.0.1"
-description = "Python bindings and utilities for GeoJSON"
-category = "main"
-optional = false
-python-versions = ">=3.7, <3.12"
-files = [
-    {file = "geojson-3.0.1-py3-none-any.whl", hash = "sha256:e49df982b204ed481e4c1236c57f587adf71537301cf8faf7120ab27d73c7568"},
-    {file = "geojson-3.0.1.tar.gz", hash = "sha256:ff3d75acab60b1e66504a11f7ea12c104bad32ff3c410a807788663b966dee4a"},
-]
-
-[[package]]
 name = "geopandas"
 version = "0.12.2"
 description = "Geographic pandas extensions"
@@ -1171,4 +1159,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.11"
-content-hash = "b8b43e787ad1ac96e838b3fa4e35a2202e7057352a3e7b3a34dd3669df2707e6"
+content-hash = "48a5b72f013c014f20cef757f1d7dd48734bc8f7c4d80c61e3229b5b37b42337"
