@@ -11,6 +11,8 @@ packages = [{include="preprocessing"},]
 python = "^3.9, <3.11"
 geopandas = "^0.12.2"
 numpy = "^1.24.3"
+geojson = "^3.0.1"
+seaborn = "^0.12.2"
 
 
 [tool.poetry.group.test.dependencies]
