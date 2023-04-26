@@ -16,6 +16,8 @@ pandas = "^2.0.1"
 shapely = "^2.0.1"
 fiona = "^1.9.3"
 scipy = "^1.10.1"
+geojson = "^3.0.1"
+openpyxl = "^3.1.2"
 
 
 [tool.poetry.group.test.dependencies]
