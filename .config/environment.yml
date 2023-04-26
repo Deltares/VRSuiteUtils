@@ -8,3 +8,4 @@ dependencies:
   - conda-forge::openpyxl
   - conda-forge::jupyterlab
   - conda-forge::owslib
+  - conda-forge::traitlets
