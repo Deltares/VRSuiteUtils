@@ -5,7 +5,5 @@ channels:
 dependencies:
   - conda-forge::python=3.10
   - conda-forge::poetry
-  - conda-forge::openpyxl
+  - conda-forge::fiona
   - conda-forge::jupyterlab
-  - conda-forge::owslib
-  - conda-forge::traitlets
