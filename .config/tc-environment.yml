@@ -4,6 +4,5 @@ channels:
   - defaults
 dependencies:
   - conda-forge::python=3.10
-  - conda-forge::poetry
   - conda-forge::fiona
   - conda-forge::jupyterlab
