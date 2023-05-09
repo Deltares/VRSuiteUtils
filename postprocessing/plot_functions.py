@@ -1,6 +1,8 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 import contextily as ctx
+
 def plot_vakindeling(shapefile, output_loc):
     fig, ax = plt.subplots(figsize=(12, 5))
     colors = sns.color_palette('colorblind', n_colors=8)
@@ -44,6 +46,28 @@ def plot_assessment_betas(shapefile, betas, output_dir, year=2025, mechanism_dic
         axes.set_title(mechanism_dict[list(mechanism_dict.keys())[count]])
         ctx.add_basemap(axes, crs=shapes[list(mechanism_dict.keys())[count]].crs, source=ctx.providers.Stamen.TonerLite)
     plt.savefig(output_dir.joinpath('beoordeling_{}_beta.png'.format(year)), dpi=300,
+                bbox_inches='tight')
+    if close_output:
+        plt.close()
+def plot_assessment_probabilities(shapefile, probabilities, output_dir, year=2025, mechanism_dict = {'StabilityInner':'Stabiliteit', 'Piping':'Piping','Overflow':'Overslag'},close_output=True):
+
+    shapes = {}
+    for mech in mechanism_dict.keys():
+        subset = probabilities.loc[probabilities.mechanism==mech]
+        shapes[mech] = shapefile.merge(subset,left_on='NUMMER',right_on='name')
+
+    sns.set_style('whitegrid')
+    fig,ax = plt.subplots(nrows=3,figsize=(12,5))
+    for count, axes in enumerate(ax):
+        shapes[list(mechanism_dict.keys())[count]].plot(column='0',ax=axes,legend=True,cmap='RdYlGn_r',
+                                                    norm=matplotlib.colors.LogNorm(vmin=1e-7,vmax=1e-2), linewidth=4,legend_kwds={'label':'Faalkans','fmt':'{:.0e}'})
+        axes.set_xticklabels([])
+        axes.set_yticklabels([])
+        axes.set_ylim(bottom=axes.get_ylim()[0]-1000)
+
+        axes.set_title(mechanism_dict[list(mechanism_dict.keys())[count]])
+        ctx.add_basemap(axes, crs = shapes[list(mechanism_dict.keys())[count]].crs,source=ctx.providers.Stamen.TonerLite)
+    plt.savefig(output_dir.joinpath('beoordeling_{}_pf.png'.format(year)), dpi=300,
                 bbox_inches='tight')
     if close_output:
         plt.close()
