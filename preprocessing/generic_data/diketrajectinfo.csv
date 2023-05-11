@@ -1,0 +1,5 @@
+traject_name,omega_piping,omega_stability_inner,omega_overflow,a_piping,b_piping,a_stability_inner,b_stability_inner,N_overflow,N_blockrevetment,p_max,p_sig,flood_damage
+16-1,0.24,0.04,0.24,0.4,300,0.033,50,1,4,3.33E-05,1.11E-05,2.90E+10
+16-3,0.24,0.04,0.24,0.9,300,0.033,50,1,4,0.0001,3.33E-05,2.30E+10
+16-4,0.24,0.04,0.24,0.9,300,0.033,50,1,4,0.0001,3.33E-05,2.30E+10
+38-1,0.24,0.04,0.24,0.9,300,0.033,50,1,4,3.33E-05,1.11E-05,1.40E+10
