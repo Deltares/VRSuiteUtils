@@ -1,7 +1,7 @@
 name: vr_preprocessing
 channels:
   - conda-forge
-  - defaults
+  - nodefaults
 dependencies:
   - conda-forge::python=3.10
   - conda-forge::fiona
