@@ -9,11 +9,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-
+from pathlib import Path
 class HydraRingComputation:
-    def __init__(self,HRING_path = r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe"):
+    def __init__(self,HRING_path = r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236"):
         #default HRING_path is to latest Riskeer version.
-        self.HydraRingPath =  Path(HRING_path)
+        self.HydraRingPath =  Path(HRING_path).joinpath('MechanismComputation.exe')
 
     def run_hydraring(self,
             inifile: Path,
