@@ -16,7 +16,6 @@ conda env create -f .config\environment.yml -p .env\vrtool_pre_env
 conda activate .env\vrtool_pre_env
 poetry install
 ```
-> If an installation error happends during `poetry install` it might be due to the combination of poetry and conda, for now the workaround is to execute once more the same command (`poetry install`).
 
 ## Contribution guidelines ##
 
