@@ -30,30 +30,30 @@ class TrajectShape:
         # checks the integrity of the vakindeling as inputted.
 
         #required_headers
-        set(['OBJECTID','VAKNUMMER', 'M_START', 'M_EIND']).issubset(df_vakindeling.columns)
+        set(['objectid','vaknaam', 'm_start', 'm_eind','in_analyse']).issubset(df_vakindeling.columns)
 
         # check if OBJECTID and NUMMER have unique values
         try:
-            if any(df_vakindeling['OBJECTID'].duplicated()): raise ('values in OBJECTID are not unique')
+            if any(df_vakindeling['objectid'].duplicated()): raise ('values in OBJECTID are not unique')
         except:
-            df_vakindeling['OBJECTID'] = list(range(1,len(df_vakindeling+1)))
+            df_vakindeling['objectid'] = list(range(1,len(df_vakindeling+1)))
 
-        if any(df_vakindeling['VAKNUMMER'].duplicated()): raise ('values in VAKNUMMER are not unique')
+        if any(df_vakindeling['vaknaam'].duplicated()): raise ('values in VAKNUMMER are not unique')
 
         # sort the df by OBJECTID:
-        df_vakindeling = df_vakindeling.sort_values('OBJECTID')
+        df_vakindeling = df_vakindeling.sort_values('objectid')
 
         df_vakindeling = df_vakindeling.fillna(value=np.nan)
         # check if, if sorted on OBJECTID M_START and M_EIND are increasing
-        if any(np.diff(df_vakindeling.M_EIND) < 0): raise ValueError(
-            'M_EIND values are not always increasing if sorted on OBJECTID')
-        if any(np.diff(df_vakindeling.M_START) < 0): raise ValueError(
-            'M_START values are not always increasing if sorted on OBJECTID')
-        if any(np.subtract(df_vakindeling.M_EIND, df_vakindeling.M_START) < 0.): raise ValueError(
-            'M_START is higher than M_EIND for at least 1 section')
+        if any(np.diff(df_vakindeling.m_eind) < 0): raise ValueError(
+            'm_eind values are not always increasing if sorted on objectid')
+        if any(np.diff(df_vakindeling.m_start) < 0): raise ValueError(
+            'm_start values are not always increasing if sorted on objectid')
+        if any(np.subtract(df_vakindeling.m_eind, df_vakindeling.m_start) < 0.): raise ValueError(
+            'm_eind is higher than m_eind for at least 1 section')
 
         # check if MEAS_END.max() is approx equal to traject_length
-        np.testing.assert_approx_equal(df_vakindeling.M_EIND.max(), traject_length, significant=5)
+        np.testing.assert_approx_equal(df_vakindeling.m_eind.max(), traject_length, significant=5)
 
         return df_vakindeling
 
@@ -77,18 +77,21 @@ class TrajectShape:
                     geometry.LineString([(cp.x, cp.y)] + coords[i:])]
 
     def generate_vakindeling_shape(self, vakken_path):
-        df_vakken = pd.read_excel(vakken_path,sheet_name='Algemeen',
-                                  usecols = ['OBJECTID', 'VAKNUMMER', 'M_START', 'M_EIND', 'IN_ANALYSE'],
-                                  dtype = {'OBJECTID':np.int64, 'VAKNUMMER':str,'M_START':np.float64,'M_EIND':np.float64,'IN_ANALYSE':np.int64})
+        df_vakken = pd.read_csv(vakken_path,
+                                  usecols = ['objectid', 'vaknaam', 'm_start', 'm_eind', 'in_analyse', 'van_dp',
+                                             'tot_dp',	'stabiliteit',	'piping',	'overslag',	'bekledingen',	'kunstwerken'],
+                                  dtype = {'objectid':int, 'vaknaam':object,'m_start':float,'m_eind':float,'in_analyse':int, 'van_dp':object,'tot_dp':object,
+                                           'stabiliteit':object,	'piping':object,	'overslag':object,	'bekledingen':object,	'kunstwerken':object})
         self.check_vakindeling(df_vakken,self.NBPW_shape.geometry.length.values[0])
         traject_geom = self.NBPW_shape.geometry[0][0]
 
         section_geom = []
         total_dist = 0.
         for count, row in df_vakken.iterrows():
-            section, traject_geom = self.cut(traject_geom, row['M_EIND'] - total_dist)
+            section, traject_geom = self.cut(traject_geom, row['m_eind'] - total_dist)
             section_geom.append(section)
             total_dist += section.length
             # sanity check. VAKLENGTE column and section length should be almost equal
-            np.testing.assert_approx_equal(section.length, row['M_EIND']-row['M_START'], significant=5)
-        self.vakindeling_shape = gpd.GeoDataFrame(df_vakken, geometry=section_geom)
+            np.testing.assert_approx_equal(section.length, row['m_eind']-row['m_start'], significant=5)
+        self.vakindeling_shape = gpd.GeoDataFrame(df_vakken, geometry=section_geom,crs = self.NBPW_shape.crs)
+
