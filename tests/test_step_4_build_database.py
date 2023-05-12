@@ -39,6 +39,8 @@ def test_make_database(traject,output_path):
    #read the data for measures
    measures_table = read_measures_data(Path('test_data').joinpath('38-1','intermediate','base_measures.csv'))
 
+   #read the data for profilepoints
+
    initialize_database(output_path)
 
    db_obj = open_database(output_path)
@@ -48,7 +50,11 @@ def test_make_database(traject,output_path):
    #sectiondata
    fill_sectiondata_table(traject='38-1',shape_file=shapefile, HR_input=HR_input, geo_input = stability_table[['deklaagdikte','pleistoceendiepte']])
    #waterleveldata
+   fill_buildings(buildings=bebouwing_table)
 
+   fill_waterleveldata(waterlevel_table=waterlevel_table)
+
+   # fill_profilepoints(profilepoints=HR_input)
 
 
    # SectionData(dike_traject=)

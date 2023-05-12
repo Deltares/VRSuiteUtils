@@ -5,6 +5,7 @@ import geopandas as gpd
 import os
 import numpy as np
 from vrtool.orm.models import *
+import warnings
 def fill_diketrajectinfo_table(traject):
     traject_data = pd.read_csv(Path(os.getcwd()).parent.joinpath('preprocessing', 'generic_data', 'diketrajectinfo.csv'), index_col=0).loc[traject]
 
@@ -26,9 +27,25 @@ def fill_sectiondata_table(traject,shape_file,HR_input,geo_input):
     #get the id of traject from DikeTrajectInfo
     traject_id = DikeTrajectInfo.select(DikeTrajectInfo.id).where(DikeTrajectInfo.traject_name == traject).get().id
     for count, row in shape_file.iterrows():
-        SectionData.create(dike_traject_id=traject_id,section_name=row.vaknaam, meas_start=row.m_start,meas_end=row.m_eind,
-                           in_analysis=row.in_analyse,section_length=np.abs(row.m_eind-row.m_start),crest_height=row.dijkhoogte,
-                           annual_crest_decline=0.005)
+        if row.in_analyse:
+            SectionData.create(dike_traject_id=traject_id,section_name=row.vaknaam, meas_start=row.m_start,meas_end=row.m_eind,
+                               in_analysis=row.in_analyse,section_length=np.abs(row.m_eind-row.m_start),crest_height=row.dijkhoogte,
+                               annual_crest_decline=0.005)
+def fill_buildings(buildings):
+    ids = []
+    for count, row in buildings.iterrows():
+        try:
+            vak_id = SectionData.select(SectionData.id).where(SectionData.section_name == row.NUMMER).get().id
+
+            row_filtered = row.drop(columns=['OBJECTID','NUMMER'])
+            for distance, number in row_filtered.iteritems():
+                Buildings.create(section_data = vak_id,distance_from_toe=distance,number_of_buildings = number)
+        except:
+            warnings.warn('Dijkvak {} niet in SectionData'.format(row.NUMMER))
+    pass
+
+def fill_waterleveldata(waterleveldata):
+    pass
 
 class SQLiteDatabase:
     def __init__(self, db_path, traject):
