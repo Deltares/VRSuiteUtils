@@ -39,7 +39,11 @@ class Traject:
         if m_value_bp[-1] < self.length:
             m_value_bp = np.append(m_value_bp, self.length)
 
+        show_progress = 5 # show progress every 5%
+
         for i in range(len(m_value_bp)):
+            if i%(np.ceil(len(m_value_bp)/(100/show_progress)))==0:
+                print(i/(np.ceil(len(m_value_bp)/(100/show_progress)))*show_progress, "%")
             if m_value_bp[i] < 1:
                 dike_angle_points = [self.traject_shape.geometry[0].interpolate(m_value_bp[i]),
                                      self.traject_shape.geometry[0].interpolate(m_value_bp[i]+1)]
@@ -50,12 +54,13 @@ class Traject:
                 dike_angle_points = [self.traject_shape.geometry[0].interpolate(m_value_bp[i]-1),
                                      self.traject_shape.geometry[0].interpolate(m_value_bp[i])]
 
+            break_point = self.traject_shape.geometry[0].interpolate(m_value_bp[i])
             dike_angle = determine_dike_angle(dike_angle_points[0], dike_angle_points[1])
 
-            transect_point_right = create_transect_points(self.traject_shape.geometry[0].interpolate(m_value_bp[i]),
+            transect_point_right = create_transect_points(break_point,
                                                           dike_angle - .5 * np.pi,
                                                           foreshore_distance)
-            transect_point_left = create_transect_points(self.traject_shape.geometry[0].interpolate(m_value_bp[i]),
+            transect_point_left = create_transect_points(break_point,
                                                          dike_angle + .5 * np.pi,
                                                          hinterland_distance)
 
@@ -66,12 +71,15 @@ class Traject:
 
             profile = self.get_values_polyline([[float(transect_point_right.x), float(transect_point_right.y)],
                                                 [float(transect_point_left.x), float(transect_point_left.y)]])
-
+            break_points.append(break_point)
             profiles.append(profile)
+
+        self.m_values = m_value_bp
         self.cross_sections = cross_sections
         self.break_points = break_points
         self.profiles = profiles
-        return self.cross_sections, self.break_points, self.profiles
+
+        return self.m_values, self.cross_sections, self.break_points, self.profiles
 
     def get_values_polyline(self, coordinate_list: list, ):
         '''
@@ -95,10 +103,9 @@ class Traject:
         response = requests.get(url, params=params)
         if response.status_code == 200:
             result = response.json()
-            try:
-                print(result['message'])
-            except:
-                print(result.keys())
+            # try:
+                # print(result['message'])
+            # except:
                 # print(result['messages'])
         else:
             print("Failed to get response from the API")
