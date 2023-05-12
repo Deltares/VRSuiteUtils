@@ -16,15 +16,20 @@ def test_make_database(traject,output_path):
 
    #get all the input data
    #read the vakindeling shape
-   shapefile = gpd.read_file(Path('test_data').joinpath('38-1','reference_shape.shp'))
-
+   shapefile = gpd.read_file(Path('test_data').joinpath('38-1','reference_shape.geojson'))
+   #read the HR_input
+   HR_input = pd.read_csv(Path('test_data').joinpath('38-1','HRING_data_reference.csv')).drop_duplicates(subset=['doorsnede'])
    #read the data for different mechanisms
+
     #read the data for waterlevels
    waterlevel_table = read_waterlevel_data(Path('test_data').joinpath('38-1','intermediate','Waterstand'))
+
     #read the data for overflow
    overflow_table = read_overflow_data(Path('test_data').joinpath('38-1','intermediate','Overslag'))
+
     #read the data for piping
    piping_table = read_piping_data(Path('test_data').joinpath('38-1','intermediate','Piping_data.csv'))
+
    #read the data for stability
    stability_table = read_stability_data(Path('test_data').joinpath('38-1','intermediate','STBI_data.csv'))
 
@@ -41,7 +46,7 @@ def test_make_database(traject,output_path):
    #diketractinfo
    fill_diketrajectinfo_table(traject='38-1')
    #sectiondata
-   fill_sectiondata_table(traject='38-1',shape_path=Path('test_data').joinpath('38-1','reference_shape.shp'))
+   fill_sectiondata_table(traject='38-1',shape_file=shapefile, HR_input=HR_input, geo_input = stability_table[['deklaagdikte','pleistoceendiepte']])
    #waterleveldata
 
 

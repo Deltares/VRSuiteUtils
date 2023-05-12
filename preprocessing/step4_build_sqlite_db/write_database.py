@@ -13,13 +13,21 @@ def fill_diketrajectinfo_table(traject):
                            p_max=traject_data['p_max'],p_sig=traject_data['p_sig'], flood_damage=traject_data['flood_damage'],
                            N_overflow=traject_data['N_overflow'], N_blockrevetment=traject_data['N_blockrevetment'])
 
-def fill_sectiondata_table(traject,shape_path):
+def fill_sectiondata_table(traject,shape_file,HR_input,geo_input):
+    #merge HR_input['dijkhoogte'] with shape_file based on doorsnede and overslag
+    shape_file = shape_file.merge(HR_input[['doorsnede','dijkhoogte']],left_on=['overslag'],right_on=['doorsnede'],how='left').drop(columns=['doorsnede'])
+    #merge pleistoceendiepte and deklaagdiepte from geo_input with shape_file based on doorsnede
+    shape_file = shape_file.merge(geo_input[['pleistoceendiepte','deklaagdikte']],left_on=['stabiliteit'],right_index=True,how='left')
+    #replace nans in pleistoceendiepte and deklaagdikte with default
+    shape_file['pleistoceendiepte'] = shape_file['pleistoceendiepte'].fillna(SectionData.pleistocene_level.default)
+    shape_file['deklaagdikte'] = shape_file['deklaagdikte'].fillna(SectionData.cover_layer_thickness.default)
+    #merge on index
+
     #get the id of traject from DikeTrajectInfo
     traject_id = DikeTrajectInfo.select(DikeTrajectInfo.id).where(DikeTrajectInfo.traject_name == traject).get().id
-    shape_file = gpd.read_file(shape_path)
     for count, row in shape_file.iterrows():
-        SectionData.create(dike_traject_id=traject_id,section_name=row.VAKNUMMER, meas_start=row.M_START,meas_end=row.M_EIND,
-                           in_analysis=row.IN_ANALYSE,section_length=np.abs(row.M_EIND-row.M_START),crest_height=-999,
+        SectionData.create(dike_traject_id=traject_id,section_name=row.vaknaam, meas_start=row.m_start,meas_end=row.m_eind,
+                           in_analysis=row.in_analyse,section_length=np.abs(row.m_eind-row.m_start),crest_height=row.dijkhoogte,
                            annual_crest_decline=0.005)
 
 class SQLiteDatabase:
