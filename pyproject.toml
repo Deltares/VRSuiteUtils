@@ -19,7 +19,7 @@ scipy = "^1.8.1"
 geojson = "^3.0.1"
 openpyxl = "^3.1.2"
 owslib = "^0.29.1"
-vrtool = { git = "git@github.com:Deltares/Veiligheidsrendement.git", rev = "ff96edf" }
+vrtool = {git = "https://github.com/Deltares/Veiligheidsrendement.git", rev = "feature/VRTOOL-69_implement_database_orm"}
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.3.1"

@@ -1755,8 +1755,8 @@ shapely = "^2.0.1"
 
 [package.source]
 type = "git"
-url = "git@github.com:Deltares/Veiligheidsrendement.git"
-reference = "ff96edf"
+url = "https://github.com/Deltares/Veiligheidsrendement.git"
+reference = "feature/VRTOOL-69_implement_database_orm"
 resolved_reference = "ff96edf3ea9c8f1ed14b3944fe1980109955bbd7"
 
 [[package]]
@@ -1778,4 +1778,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9, <3.11"
-content-hash = "e2ac3e44d31a642f546455f10aa5c1cf42a4802b0d6b1e8d6085c617e03faf1f"
+content-hash = "9d9b526f72a3010c81465144df0b6262df316ae50c835fc2df6f1e98cc9e6540"
