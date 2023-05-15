@@ -6,5 +6,3 @@ dependencies:
   - conda-forge::python=3.10
   - conda-forge::fiona
   - conda-forge::jupyterlab
-  - pip:
-    - vrtool @ git+https://github.com/Deltares/Veiligheidsrendement.git@feature/VRTOOL-69_implement_database_orm
