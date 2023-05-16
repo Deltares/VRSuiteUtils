@@ -28,11 +28,17 @@ class Traject:
         print("Total traject length =", self.length)
         return self.traject_shape, self.length
 
-    def generate_cross_section(self, cross_section_distance: int = 30, foreshore_distance=50, hinterland_distance=50):
+    def generate_cross_section(self, option,
+                               cross_section_distance: int = 30,
+                               foreshore_distance=50,
+                               hinterland_distance=50):
         # interpolate trajectory on regular intervals:
         break_points = []
         cross_sections = []
         profiles = []
+        foreshore_coords = []
+        hinterland_coords = []
+        profile_coords = []
 
         # determine the m-values of the cross section break points
         m_value_bp = np.arange(0, self.traject_shape.geometry[0].length, cross_section_distance)
@@ -44,6 +50,7 @@ class Traject:
         for i in range(len(m_value_bp)):
             if i%(np.ceil(len(m_value_bp)/(100/show_progress)))==0:
                 print(i/(np.ceil(len(m_value_bp)/(100/show_progress)))*show_progress, "%")
+
             if m_value_bp[i] < 1:
                 dike_angle_points = [self.traject_shape.geometry[0].interpolate(m_value_bp[i]),
                                      self.traject_shape.geometry[0].interpolate(m_value_bp[i]+1)]
@@ -64,22 +71,36 @@ class Traject:
                                                          dike_angle + .5 * np.pi,
                                                          hinterland_distance)
 
-            cs = create_cross_section_coordinates(transect_point_right, transect_point_left, step=1)
-            cross_sections.append(cs)
 
-            # listed_coordinates = list(zip(list(cs.xy[0]), list(cs.xy[1])))
+            if option == "line":
+                profile = self.get_values_polyline([[float(transect_point_right.x), float(transect_point_right.y)],
+                                                    [float(transect_point_left.x), float(transect_point_left.y)]])
+            elif option == "point":
+                cs = create_cross_section_coordinates(transect_point_right, transect_point_left, step=1)
+                cross_sections.append(cs)
+                listed_coordinates = list(zip(list(cs.xy[0]), list(cs.xy[1])))
+                profile = self.parallel_getvalue(listed_coordinates, 'AHN4_DTM_50cm') # ['AHN4_DTM_50cm', 'AHN4_DSM_50cm', 'AHN3_r', 'AHN3_i']
+                profile_coords.append(listed_coordinates)
 
-            profile = self.get_values_polyline([[float(transect_point_right.x), float(transect_point_right.y)],
-                                                [float(transect_point_left.x), float(transect_point_left.y)]])
             break_points.append(break_point)
             profiles.append(profile)
 
+
+            foreshore_point = transect_point_right
+            hinterland_point = transect_point_left
+
+            foreshore_coords.append(foreshore_point)
+            hinterland_coords.append(hinterland_point)
+
+        self.foreshore_coords = foreshore_coords
+        self.hinterland_coords = hinterland_coords
         self.m_values = m_value_bp
         self.cross_sections = cross_sections
         self.break_points = break_points
         self.profiles = profiles
+        self.profile_coords = profile_coords
 
-        return self.m_values, self.cross_sections, self.break_points, self.profiles
+        return # self.m_values, self.cross_sections, self.break_points, self.profiles
 
     def get_values_polyline(self, coordinate_list: list, ):
         '''
@@ -111,6 +132,33 @@ class Traject:
             print("Failed to get response from the API")
         xyzl_data = np.array(result['results'][0]['value']['features'][0]['geometry']['paths'][0])
         return xyzl_data
+
+    def get_value(self, x: float, y: float, data_type: str, i: int, ):
+        if i is None:
+            i = 0
+        pixelSize = 0.1
+        url = f"https://ahn.arcgisonline.nl/arcgis/rest/services/AHNviewer/{data_type}/ImageServer/identify?f=json&" \
+              f"geometry={{\"x\":{x},\"y\":{y},\"spatialReference\":{{\"wkid\":28992,\"latestWkid\":28992}}}}&" \
+              f"returnGeometry=true&returnCatalogItems=true&geometryType=esriGeometryPoint&" \
+              f"pixelSize={{\"x\":{pixelSize},\"y\":{pixelSize},\"spatialReference\":{{\"wkid\":28992,\"latestWkid\":28992}}}}&" \
+              f"renderingRules=[{{\"rasterFunction\":\"Color Ramp D\"}}]"
+        response = requests.get(url)
+        data = response.json()
+        if data["value"] == 'NoData':
+            value = np.nan
+        else:
+            value = float(data["value"])
+        return [x, y, value]
+
+    def parallel_getvalue(self, coordinates: list, data_type: str):
+        results = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=500) as executor:
+            futures = [executor.submit(self.get_value, x, y, data_type, i, ) for i, (x, y) in enumerate(coordinates)]
+        for future in futures:
+            # Looping over the future list preserves the order of creation. No sorting required.
+            results.append(future.result())
+        return results
+
 
 def determine_dike_angle(point1, point2):
     """Calculate angle between two points in radians and degrees.
