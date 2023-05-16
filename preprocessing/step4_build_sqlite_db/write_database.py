@@ -83,7 +83,49 @@ def fill_mechanisms(shape_file, overflow_table=None,piping_table=None,stability_
         for count, header in enumerate(header_names):
             if isinstance(row[header],str):
                 MechanismPerSection.create(section=section_data_id,mechanism=Mechanism.select(Mechanism.id).where(Mechanism.name == default_mechanisms[count]).get().id)
-    #next fill ComputationScenario table
-
+    #next fill ComputationScenario table and children for each mechanism
+    #first fill the ComputationType table
+    for computation_type in ['HRING','SEMIPROB','SIMPLE']:
+        ComputationType.create(name=computation_type)
+    if isinstance(overflow_table,pd.DataFrame):
+        fill_overflow(overflow_table,shape_file=shape_file)
     pass
 
+def fill_overflow(overflow_table,shape_file,computation_type = 'HRING'):
+    #get id of Overflow from Mechanism table
+    overflow_id = Mechanism.select(Mechanism.id).where(Mechanism.name == 'Overflow').get().id
+    relevant_indices = [val for val in MechanismPerSection.select().where(MechanismPerSection.mechanism == overflow_id).dicts()]
+    section_names = [SectionData.select().where(SectionData.id == row['id']).dicts() for row in relevant_indices]
+    #loop over relevant_indices
+    for count, row in enumerate(relevant_indices):
+        #sscenario name should be equal to LocationId in overflow_table
+        section_name = SectionData.select().where(SectionData.id == row['section']).get().section_name
+        scenario_name = shape_file.loc[shape_file['vaknaam'] == section_name]['overslag'].values[0]
+        computation_type = ComputationType.select().where(ComputationType.name == 'HRING').get().id
+        ComputationScenario.create(mechanism_per_section=row['id'], mechanism=overflow_id,
+                                   computation_name=scenario_name, scenario_name=scenario_name,
+                                   scenario_probability=1.0, computation_type=computation_type,
+                                   probability_of_failure=1.)
+        #TODO: probability_of_failure should not be Required, but it is now.
+        #TODO: scenario_name should not be Required, but it is now.
+
+        #for overflow we fill MechanismTables
+        #for each ComputationSceanrio for Overflow, fill the MechanismTable
+        #find the ComputationName that belongs to row
+        computation_name = ComputationScenario.select().where(ComputationScenario.mechanism_per_section == row['id']).get().computation_name
+        for count, row in overflow_table.loc[computation_name].iterrows():
+            #create a row in MechanismTable
+            MechanismTable.create(computation_scenario=computation_name, year=row['Year'],value=row['CrestHeight'], beta=row['Beta'])
+
+
+def fill_piping():
+    pass
+
+def fill_stability():
+    pass
+
+def fill_revetment():
+    pass
+
+def fill_structures():
+    pass

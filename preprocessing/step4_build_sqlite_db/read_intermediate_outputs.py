@@ -31,6 +31,7 @@ def read_overflow_data(files_path):
                                   'CrestHeight': list(design_table['Value']),
                                   'Beta': list(design_table['Beta'])})
                     overflow_data = overflow_data.append(table_data,ignore_index=True)
+    overflow_data = overflow_data.set_index('LocationId')
     return overflow_data
 
 def read_piping_data(file_path):
