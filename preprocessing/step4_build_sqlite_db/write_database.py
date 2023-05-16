@@ -42,45 +42,48 @@ def fill_buildings(buildings):
                 Buildings.create(section_data = vak_id,distance_from_toe=distance,number_of_buildings = number)
         except:
             warnings.warn('Dijkvak {} niet in SectionData'.format(row.NUMMER))
+    # TODO check if all sections in SectionData have buildings
+
+
+def fill_waterleveldata(waterlevel_table,shape_file):
+    #get section_names from SectionData
+    section_names = [name['section_name'] for name in SectionData.select(SectionData.section_name).dicts()]
+
+    for section_name in section_names:
+        section_data_id = SectionData.select(SectionData.id).where(SectionData.section_name == section_name).get().id
+        #get the WaterLevelLocationId from shape_file
+        waterlevel_location_id = shape_file.loc[shape_file['vaknaam'] == section_name]['overslag'].values[0]
+        #get all rows from waterlevel_table that have the same WaterLevelLocationId
+        wl_table_data = waterlevel_table.loc[waterlevel_table['WaterLevelLocationId'] == waterlevel_location_id]
+        for count, row in wl_table_data.iterrows():
+            #TODO check how to write waterlevel_location_id, it now gives an integrity error
+            WaterlevelData.create(section_data=section_data_id, water_level=row['WaterLevel'], beta=row['Beta'], year=row['Year'],
+                                  waterlevel_location_id = 999)#, waterlevel_location_id=waterlevel_location_id)
+
+def fill_profilepoints(profile_points,shape_file):
+    #find unique values in CharacteristicPoint of profile_points
+    unique_points = profile_points['CharacteristicPoint'].unique()
+    id_dict = {k:v for k,v in zip(unique_points,range(1,len(unique_points)+1))}
+    for count, row in profile_points.iterrows():
+        section_data_id = SectionData.select(SectionData.id).where(SectionData.section_name == row['ProfileName']).get().id
+        ProfilePoint.create(section_data=section_data_id,profile_point_type=id_dict[row['CharacteristicPoint']],
+                            x_coordinate=row['x'],y_coordinate=row['z'])
+    for id in id_dict.keys():
+        CharacteristicPointType.create(id = id_dict[id],name = id)
+
+def fill_mechanisms(shape_file, overflow_table=None,piping_table=None,stability_table=None, revetment_table = None, structures_table = None):
+    default_mechanisms = ['Overflow','Piping','Stability','Revetment','HydraulicStructures']
+    header_names = ['overslag','piping','stabiliteit','bekledingen','kunstwerken']
+    #add default_mechanisms to the Mechanisms table
+    for mechanism in default_mechanisms:
+        Mechanism.create(name=mechanism)
+    #first fill the MechanismsPerSection table
+    for count, row in shape_file.loc[shape_file.in_analyse==1].iterrows():
+        section_data_id = SectionData.select(SectionData.id).where(SectionData.section_name == row['vaknaam']).get().id
+        for count, header in enumerate(header_names):
+            if isinstance(row[header],str):
+                MechanismPerSection.create(section=section_data_id,mechanism=Mechanism.select(Mechanism.id).where(Mechanism.name == default_mechanisms[count]).get().id)
+    #next fill ComputationScenario table
+
     pass
 
-def fill_waterleveldata(waterleveldata):
-    pass
-
-class SQLiteDatabase:
-    def __init__(self, db_path, traject):
-        self.db_path = db_path
-        self.cnx = sqlite3.connect(db_path)
-        self.traject = traject
-        self.diketrajectinfo = pd.read_csv(Path(__file__).parent.joinpath('generic_data','diketrajectinfo.csv'),index_col=0).loc[self.traject]\
-            .to_frame().transpose().reset_index().rename(columns={'index':'traject_name','level_0':'id'})
-    def load_vakindeling_shape(self,shape_path):
-        #load shape
-        self.vakindeling_shape = gpd.read_file(shape_path)
-        self.diketrajectinfo
-    def write_diketrajectinfo_table(self):
-        #write trajectinfo
-        self.diketrajectinfo.to_sql('DikeTrajectInfo',self.cnx,if_exists='replace',index_label='id')
-
-    def write_sectiondata_table(self):
-        '''Writes the section data to a sqlite database'''
-        section_data = pd.DataFrame(
-            columns=['id', 'section_name', 'dijkpaal_start', 'dijkpaal_end', 'meas_start', 'meas_end',
-                     'section_length', 'in_analysis', 'crest_height', 'annual_crest_decline',
-                     'cover_layer_thickness', 'pleistocene_level'])
-        section_data['id'] = self.vakindeling_shape['OBJECTID']
-        section_data['section_name'] = self.vakindeling_shape['VAKNUMMER']
-        section_data['meas_start'] = self.vakindeling_shape['M_START']
-        section_data['meas_end'] = self.vakindeling_shape['M_EIND']
-        section_data['section_length'] = self.vakindeling_shape['M_EIND'] - self.vakindeling_shape['M_START']
-        section_data['in_analysis'] = self.vakindeling_shape['IN_ANALYSE']
-
-        section_data.to_sql('SectionData', self.cnx, if_exists='replace', index=False,index_label='id')
-
-    def write_waterleveldata_table(self, waterleveldata):
-        '''Writes the waterleveldata to a sqlite database'''
-        pass
-
-    def write_mechanismspersection_table(self, mechanismspersection):
-        '''Writes the mechanismspersection to a sqlite database'''
-        pass

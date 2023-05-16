@@ -1,5 +1,3 @@
-
-from preprocessing.step4_build_sqlite_db.write_database import SQLiteDatabase
 from pathlib import Path
 import shutil as sh
 import pytest
@@ -40,6 +38,7 @@ def test_make_database(traject,output_path):
    measures_table = read_measures_data(Path('test_data').joinpath('38-1','intermediate','base_measures.csv'))
 
    #read the data for profilepoints
+   profile_table = read_profilepoints_data(Path('test_data').joinpath('38-1','intermediate','Profielen'))
 
    initialize_database(output_path)
 
@@ -52,11 +51,12 @@ def test_make_database(traject,output_path):
    #waterleveldata
    fill_buildings(buildings=bebouwing_table)
 
-   fill_waterleveldata(waterlevel_table=waterlevel_table)
+   # fill_waterleveldata(waterlevel_table=waterlevel_table,shape_file=shapefile)
 
-   # fill_profilepoints(profilepoints=HR_input)
+   fill_profilepoints(profile_points=profile_table,shape_file=shapefile)
 
-
+   # fill all the mechanisms
+   fill_mechanisms(overflow_table=overflow_table,piping_table=piping_table,stability_table=stability_table, shape_file=shapefile)
    # SectionData(dike_traject=)
    # SectionData.get_or_create()
    #peewee doc

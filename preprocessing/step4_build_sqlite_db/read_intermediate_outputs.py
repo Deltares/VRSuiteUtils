@@ -44,3 +44,16 @@ def read_bebouwing_data(file_path):
 
 def read_measures_data(file_path):
     return pd.read_csv(file_path,index_col=0)
+
+def read_profilepoints_data(files_path):
+    profile_data = pd.DataFrame(columns=['ProfileName','CharacteristicPoint','x','z'])
+    for profile_file in files_path.iterdir():
+        profile_name = profile_file.stem
+        profile = pd.read_csv(profile_file,index_col=0)
+        profile_points = pd.DataFrame({'ProfileName': [profile_name] * profile.shape[0],
+                                  'CharacteristicPoint': list(profile.index),
+                                  'x': list(profile.x),
+                                  'z': list(profile.z)})
+        profile_data = profile_data.append(profile_points,ignore_index=True)
+    return profile_data
+    # return pd.read_csv(file_path,index_col=0)
