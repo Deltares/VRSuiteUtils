@@ -12,10 +12,11 @@ This repository contains tools to process input from a WBI assessment to input f
 
 * Using Anaconda (or miniconda):
 ```
-conda env create -f .config\environment.yml -p .env\vrtool_pre_env
-conda activate .env\vrtool_pre_env
+conda env create -f .config\environment.yml -p .env
+conda activate .env
 poetry install
 ```
+> IMPORTANT! If the installation fails because of the `vrtool` dependency (or any related like `peewee`) try installing through pip (`pip install .`) and then installing again through poetry `poetry install`
 
 ## Contribution guidelines ##
 
