@@ -45,11 +45,13 @@ class Traject:
         if m_value_bp[-1] < self.length:
             m_value_bp = np.append(m_value_bp, self.length)
 
-        show_progress = 5 # show progress every 5%
+        progress_percent = 5. # show progress every 5% of the total steps
+        progress_step = len(m_value_bp) // (100./progress_percent)
 
         for i in range(len(m_value_bp)):
-            if i%(np.ceil(len(m_value_bp)/(100/show_progress)))==0:
-                print(i/(np.ceil(len(m_value_bp)/(100/show_progress)))*show_progress, "%")
+            if i % progress_step == 0:
+                progress = (i // progress_step) * 5
+                print(f"Progress: {progress}%")
 
             if m_value_bp[i] < 1:
                 dike_angle_points = [self.traject_shape.geometry[0].interpolate(m_value_bp[i]),

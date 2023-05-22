@@ -3,10 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import re
-
+from pathlib import Path
 
 # import data
-traject_profiles_path = r'c:\VRM\Gegevens 38-1\profiles\traject_profiles_point.csv'
+traject_profiles_path = r'c:\WSRL\Gegevens 38-1\profiles\traject_profiles_point.csv'
+output_path = Path(r'c:\WSRL\Gegevens 38-1\profiles\profile_plots')
 
 if traject_profiles_path.endswith("line.csv"):
     with open(traject_profiles_path, 'r') as csvfile:
@@ -33,7 +34,7 @@ if traject_profiles_path.endswith("line.csv"):
                                                                                       round(row[6],1)),
                  horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
         # plt.show()
-        plt.savefig(r'c:\VRM\Gegevens 38-1\profiles\profile_plots\profile_{}.png'.format(int(row[0])), dpi=300)
+        plt.savefig(output_path.joinpath(r'profile_{}.png'.format(int(row[0]))), dpi=300)
 
 elif traject_profiles_path.endswith("point.csv"):
     with open(traject_profiles_path, 'r') as csvfile:
@@ -69,8 +70,8 @@ elif traject_profiles_path.endswith("point.csv"):
                                                                                             round(float(line[4]),1)),
                         horizontalalignment='center', verticalalignment='center', transform=plt.gca().transAxes)
             # plt.show()
-            plt.savefig(r'c:\VRM\Gegevens 38-1\profiles\profile_plots\profile_{}.png'.format(int(line[0])), dpi=300)
-
+            plt.savefig(output_path.joinpath(r'profile_{}.png'.format(int(line[0]))), dpi=300)
+            plt.close("all")
             xx.append(x)
 
 # x slightly differs per profile:
