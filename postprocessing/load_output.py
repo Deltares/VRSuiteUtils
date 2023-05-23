@@ -36,4 +36,44 @@ def get_traject_prob(beta_df, mechanisms = ['StabilityInner','Piping','Overflow'
         total_traject_prob += traject_probs[mechanism]
     return total_traject_prob, traject_probs
 
+def get_traject_prob_development(optimal_measures,taken_measures,initial_beta,
+                                 option_dir, calc_type='Veiligheidsrendement', mechanisms = ['StabilityInner','Piping','Overflow']):
+    section_order = taken_measures['Section'].dropna().unique()
+    beta_dfs = []
+    #begin_betas:
+    beta_dfs.append(initial_beta)
+    for count, section in enumerate(section_order,1):
+        beta_df = copy.deepcopy(beta_dfs[-1])
+        # print('Original')
 
+        # maatregel lezen:
+        # option_index = taken_measures.loc[optimal_measures.loc[section]['Unnamed: 0']].option_index
+        # vr_measure = pd.read_csv(results_dir.joinpath(run,'{}_Options_{}.csv'.format(section,calc_type)),index_col=0).loc[option_index]
+        measure_data = taken_measures.loc[optimal_measures.loc[section]['Unnamed: 0']]
+        vr_measure = pd.read_csv(option_dir.joinpath('{}_Options_{}.csv'.format(section,calc_type)),index_col=0)
+
+        vr_measure = vr_measure.loc[(vr_measure.ID == measure_data.ID) & (vr_measure['yes/no'] == measure_data['yes/no'])
+                                    & (vr_measure.dcrest == measure_data.dcrest) & (vr_measure.dberm == measure_data.dberm)].squeeze()
+
+        for mechanism in mechanisms:
+            mask = vr_measure.index.str.startswith(mechanism)
+            betas = vr_measure.loc[mask].values
+            # print('Original')
+            # print(beta_df.loc[(section[2:],mechanism),:])
+            # print('Reinforced')
+            # print(betas)
+
+            beta_df.loc[(section[2:],mechanism),:]=betas
+            # print('Processed')
+            # print(beta_df.loc[(section[2:],mechanism),:])
+        # print('Reinforced')
+        # print(beta_df.loc[section[2:]]['50'])
+        beta_dfs.append(beta_df)
+        # print('added {} with {}'.format(section,vr_measure.type))
+
+    traject_probs = np.empty((len(beta_dfs),7))
+    raw_traject_probs = []
+    for count, beta_df in enumerate(beta_dfs):
+        traject_probs[count,:], raw_traject_prob = get_traject_prob(beta_df)
+        raw_traject_probs.append(raw_traject_prob)
+    return section_order,traject_probs
