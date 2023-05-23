@@ -35,7 +35,8 @@ def read_overflow_data(files_path):
     return overflow_data
 
 def read_piping_data(file_path):
-    return pd.read_csv(file_path,index_col=0)
+    return pd.read_csv(file_path,index_col=0,usecols = ['dwarsprofiel','scenario','scenariokans','wbn','polderpeil','d_wvp','d70','d_cover','h_exit',
+                                                        'r_exit','l_voor','l_achter','k','gamma_sat','kwelscherm','dh_exit','pf_s'], dtype={'dwarsprofiel': str,'scenario':int})
 
 def read_stability_data(file_path):
     return pd.read_csv(file_path,index_col=0,usecols=['doorsnede', 'scenario', 'scenarionaam', 'scenariokans', 'SF', 'beta',
