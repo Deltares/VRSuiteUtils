@@ -11,12 +11,11 @@ import csv
 slope, which are the crest, toe and berm lines. For some profiles manual point adjustments have been made. Therefore: 
 handle this with care and check visually whether generated profiles are correct!!!"""
 
-
-def extract_profile_data(profile_data, window, title, path):
-    # Interpolate gaps with no data
+def correct_raw_data(elevation_data):
+    # round x coordinates to integers (why?)
+    profile_data = copy.deepcopy(elevation_data)
     profile_data["x"] = profile_data["x"].round(0).astype(int)
-    profile_data = profile_data.sort_values("x")
-    df = pd.DataFrame(
+    profile = pd.DataFrame(
         {
             "x": [
                 i
@@ -24,22 +23,94 @@ def extract_profile_data(profile_data, window, title, path):
             ]
         }
     )
-    df = pd.merge(df, profile_data, how="left", on="x").interpolate()
+    profile = pd.merge(profile, profile_data, how="left", on="x").interpolate()
+    return profile
 
+def compute_statistics(profile_data, window=2):
     # Smoothen of the profile and calculate its derivative and covariation
-    df["z_averaged"] = df["z"].rolling(window=window, min_periods=1, center=True).mean()
-    df["z_derivative"] = df["z_averaged"].diff()
-    df["z_covariance"] = (
-        df["z"].rolling(window=window * 2, min_periods=1, center=True).cov()
+    profile_data["z_averaged"] = profile_data["z"].rolling(window=window, min_periods=1, center=True).mean()
+    profile_data["z_derivative"] = profile_data["z_averaged"].diff()
+    profile_data["z_covariance"] = (
+        profile_data["z"].rolling(window=window * 2, min_periods=1, center=True).cov()
     )
+    return profile_data
 
-    # Identify the slopes from the covariance plot
+
+def identify_slopes(profile_data):
+    # Identify the slopes from the covariance plot THIS IS THE OLD VERSION!
     slopes = (
-        df[(df["z_covariance"] >= 0.15) & (df["x"] >= -50) & (df["x"] <= 75)]
+        profile_data[(profile_data["z_covariance"] >= 0.15) & (profile_data["x"] >= -50) & (profile_data["x"] <= 75)]
         .reset_index()
         .rename(columns={"index": "profile index"})
     )
+    #FROM HERE IT IS NEW:
+    #get outer_slope from profile_data. It must have x=0 at upper bound and lower bound is when z_covariance < 0.1
+    outer_slope = profile_data.loc[(profile_data["x"] <= 0) & (profile_data["z_covariance"] > 0.1)]
+    #drop all points from outer_slope that do not have a steadily increasing dataframe index
+    index_diff = np.append(np.diff(outer_slope.index),1)
+    outer_slope = outer_slope.loc[index_diff==1]
+    BUK = outer_slope.iloc[-1]
+    BUT = outer_slope.iloc[0]
 
+    #find inner crest, which should be as high or lower than outer crest
+    BIK = profile_data.loc[(profile_data["x"] > 1) & (profile_data["z_averaged"] < outer_slope.z.values[-1])].iloc[0]
+
+    #for inner_slope, find first point with x>0 where z_covariance > 0.05
+    inner_slope = profile_data.loc[(profile_data["x"] >= BIK.x) & (profile_data["z_covariance"] > 0.025)]
+
+    #check if x at inner slope has gaps larger than 5 meters, this indicates a berm:
+    index_diff = np.append(np.diff(inner_slope.index),1)
+    berm_start = inner_slope.loc[index_diff>5] #this is the BBL
+    if not berm_start.empty:
+        berm_found = True
+        #berm found so add BBL and EBL
+        BBL = berm_start.iloc[0]
+        EBL = inner_slope.loc[inner_slope["x"] > BBL.x].iloc[0]
+    else:
+        berm_found = False
+    BIT = inner_slope.iloc[-1]
+
+    #for testing:
+    plt.plot(profile_data.x, profile_data.z)
+    plt.plot(BUT.x, BUT.z, 'or')
+    plt.plot(BUK.x, BUK.z, 'or')
+    plt.plot(BIK.x, BIK.z, 'or')
+    try:
+        plt.plot(BBL.x, BBL.z, 'or')
+        plt.plot(EBL.x, EBL.z, 'or')
+    except:
+        pass
+    plt.plot(BIT.x, BIT.z, 'or')
+
+    profile_points = {'BUT': BUT, 'BUK': BUK, 'BIK': BIK, 'BIT': BIT}
+    if berm_found:
+        profile_points['BBL'] = BBL
+        profile_points['EBL'] = EBL
+    return profile_points
+
+def plot_profile(elevation_data, profile_points, title, path):
+    fig,ax = plt.subplots()
+    ax.plot(elevation_data.x, elevation_data.z)
+    for point in profile_points.keys():
+        ax.plot(profile_points[point].x, profile_points[point].z, 'or')
+    ax.set_xlim(left = profile_points['BUT'].x-10,right = profile_points['BIT'].x+10)
+    plt.savefig(path.joinpath(title + '.png'))
+    plt.close()
+def extract_profile_data(elevation_data, window, title, path):
+    #correct the elevation data
+    profile = correct_raw_data(elevation_data)
+
+    #compute the statistics of the elevation
+    profile = compute_statistics(profile,window=window)
+
+    profile_points = identify_slopes(profile)
+
+    plot_profile(elevation_data, profile_points, title, path)
+    return profile_points
+
+
+    #in principe everything below here is not needed anymore, if the approach above is robust enough
+    
     # Correct the selected slopes on gradient direction to get rid of non-levee slopes
     slopes = slopes[
         ((slopes["x"] < 0) & (slopes["z_derivative"] > 0))
@@ -263,7 +334,7 @@ def extract_profile_data(profile_data, window, title, path):
 
 def main():
     traject = "38-1"
-    input_path = Path(r"c:/VRM/Gegevens 38-1/profiles/")
+    input_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_profielen")
     output_path = input_path.joinpath("profiles")
     input_file_name = Path(r"traject_profiles_point.csv")
     output_filename = "Dijkvakindeling_v5.2.xlsx"  # wat gebeurt hiermee?
@@ -300,8 +371,9 @@ def main():
                                            path=output_path)
 
             # Save extracted data in .csv
-            profile.to_csv(output_path.joinpath(profile_number + ".csv"))
+            pd.DataFrame.from_dict(profile).transpose()[['x','z']].to_csv(output_path.joinpath(profile_number + ".csv"))
 
+        exit()
         # Write profile_numbers to output file
         wb = load_workbook(input_path.parent.joinpath((output_filename)))
         ws = wb["Dijkvakindeling_keuze_info"]
