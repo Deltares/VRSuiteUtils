@@ -13,7 +13,7 @@ def read_waterlevel_data(files_path):
                                   'Year': [year_dir.name] * design_table.shape[0],
                                   'WaterLevel': list(design_table['Value']),
                                   'Beta': list(design_table['Beta'])})
-                    waterlevel_data = waterlevel_data.append(table_data,ignore_index=True)
+                    waterlevel_data = pd.concat((waterlevel_data, table_data),ignore_index=True)
     return waterlevel_data
 
 
@@ -30,7 +30,7 @@ def read_overflow_data(files_path):
                                   'Year': [year_dir.name] * design_table.shape[0],
                                   'CrestHeight': list(design_table['Value']),
                                   'Beta': list(design_table['Beta'])})
-                    overflow_data = overflow_data.append(table_data,ignore_index=True)
+                    overflow_data = pd.concat((overflow_data,table_data),ignore_index=True)
     overflow_data = overflow_data.set_index('LocationId')
     return overflow_data
 
@@ -55,6 +55,6 @@ def read_profilepoints_data(files_path):
                                   'CharacteristicPoint': list(profile.index),
                                   'x': list(profile.x),
                                   'z': list(profile.z)})
-        profile_data = profile_data.append(profile_points,ignore_index=True)
+        profile_data = pd.concat((profile_data,profile_points),ignore_index=True)
     return profile_data
     # return pd.read_csv(file_path,index_col=0)
