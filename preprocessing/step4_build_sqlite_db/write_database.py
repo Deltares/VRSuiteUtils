@@ -6,6 +6,8 @@ import os
 import numpy as np
 from vrtool.orm.models import *
 import warnings
+from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+from vrtool.failure_mechanisms.stability_inner.stability_inner_functions import calculate_reliability
 def fill_diketrajectinfo_table(traject):
     traject_data = pd.read_csv(Path(os.getcwd()).parent.joinpath('preprocessing', 'generic_data', 'diketrajectinfo.csv'), index_col=0).loc[traject]
 
@@ -22,6 +24,8 @@ def fill_sectiondata_table(traject,shape_file,HR_input,geo_input):
     #replace nans in pleistoceendiepte and deklaagdikte with default
     shape_file['pleistoceendiepte'] = shape_file['pleistoceendiepte'].fillna(SectionData.pleistocene_level.default)
     shape_file['deklaagdikte'] = shape_file['deklaagdikte'].fillna(SectionData.cover_layer_thickness.default)
+    #remove rows with same index
+    shape_file = shape_file.loc[~shape_file.index.duplicated(keep='first')]
     #merge on index
 
     #get the id of traject from DikeTrajectInfo
@@ -89,6 +93,14 @@ def fill_mechanisms(shape_file, overflow_table=None,piping_table=None,stability_
         ComputationType.create(name=computation_type)
     if isinstance(overflow_table,pd.DataFrame):
         fill_overflow(overflow_table,shape_file=shape_file)
+
+    if isinstance(stability_table,pd.DataFrame):
+        fill_stability(stability_table,shape_file=shape_file)
+
+    if isinstance(piping_table,pd.DataFrame):
+        fill_piping(piping_table,shape_file=shape_file)
+
+
     pass
 
 def fill_overflow(overflow_table,shape_file,computation_type = 'HRING'):
@@ -113,15 +125,55 @@ def fill_overflow(overflow_table,shape_file,computation_type = 'HRING'):
         #for each ComputationSceanrio for Overflow, fill the MechanismTable
         #find the ComputationName that belongs to row
         computation_name = ComputationScenario.select().where(ComputationScenario.mechanism_per_section == row['id']).get().computation_name
+        computation_id = ComputationScenario.select().where(ComputationScenario.mechanism_per_section == row['id']).get().id
         for count, row in overflow_table.loc[computation_name].iterrows():
             #create a row in MechanismTable
-            MechanismTable.create(computation_scenario=computation_name, year=row['Year'],value=row['CrestHeight'], beta=row['Beta'])
+            MechanismTable.create(computation_scenario=computation_id, year=row['Year'],value=row['CrestHeight'], beta=row['Beta'])
 
 
-def fill_piping():
+def fill_piping(piping_table,shape_file):
     pass
 
-def fill_stability():
+def add_computation_scenario(data, mechanism_per_section_id, cross_section, mechanism_id):
+    scenario_name = data['scenarionaam']
+    if isinstance(data['stixnaam'], str):
+        computation_type = ComputationType.select().where(ComputationType.name == 'SIMPLE').get().id
+    else:
+        computation_type = ComputationType.select().where(ComputationType.name == 'SIMPLE').get().id
+    ComputationScenario.create(mechanism_per_section=mechanism_per_section_id, mechanism=mechanism_id,
+                               computation_name=cross_section, scenario_name=scenario_name,
+                               scenario_probability=data['scenariokans'], computation_type=computation_type,
+                               probability_of_failure=beta_to_pf(data['beta']))
+
+
+    # for each computation_scenario fill Parameter
+    computation_scenario_id = ComputationScenario.select().where(ComputationScenario.mechanism_per_section == mechanism_per_section_id).get().id
+    beta_value = data['beta']
+    # if nan then get SF from data
+    if np.isnan(beta_value):
+        beta_value = calculate_reliability(data['SF'])
+    Parameter.create(computation_scenario=computation_scenario_id, parameter='beta{}'.format(np.random.randint(0,1e6)), value=beta_value)
+    if isinstance(data.stixnaam,str):
+        SupportingFile.create(computation_scenario=computation_scenario_id, filename=data.stixnaam)
+
+
+def fill_stability(stability_table,shape_file):
+    #get id of Stability from Mechanism table
+    stability_id = Mechanism.select(Mechanism.id).where(Mechanism.name == 'Stability').get().id
+    relevant_indices = [val for val in MechanismPerSection.select().where(MechanismPerSection.mechanism == stability_id).dicts()]
+    # iterrows over relevant_indices
+    for count, row in enumerate(relevant_indices):
+        #sscenario name should be equal to LocationId in overflow_table
+        section_name = SectionData.select().where(SectionData.id == row['section']).get().section_name
+        cross_section = shape_file.loc[shape_file['vaknaam'] == section_name]['stabiliteit'].values[0]
+        if isinstance(stability_table.loc[cross_section],pd.Series):
+            add_computation_scenario(stability_table.loc[cross_section],row['id'],cross_section,stability_id)
+        else:
+            for scen_count, subset in stability_table.loc[cross_section].iterrows():
+                add_computation_scenario(subset,row['id'], cross_section,stability_id)
+
+
+
     pass
 
 def fill_revetment():
