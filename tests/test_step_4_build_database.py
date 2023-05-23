@@ -51,12 +51,16 @@ def test_make_database(traject,output_path):
    #waterleveldata
    fill_buildings(buildings=bebouwing_table)
 
-   # fill_waterleveldata(waterlevel_table=waterlevel_table,shape_file=shapefile)
+   fill_waterleveldata(waterlevel_table=waterlevel_table,shape_file=shapefile)
 
    fill_profilepoints(profile_points=profile_table,shape_file=shapefile)
 
    # fill all the mechanisms
-   fill_mechanisms(overflow_table=overflow_table,piping_table=piping_table,stability_table=stability_table, shape_file=shapefile)
+   # fill_mechanisms(overflow_table=overflow_table,piping_table=piping_table,stability_table=stability_table, shape_file=shapefile)
+
+   # fill measures
+   fill_measures(measure_table=measures_table)
+
    # SectionData(dike_traject=)
    # SectionData.get_or_create()
    #peewee doc

@@ -206,3 +206,8 @@ def fill_revetment():
 
 def fill_structures():
     pass
+
+def fill_measures(measure_table):
+    pass
+    #fill MeasureType
+    #fill CombinableType
