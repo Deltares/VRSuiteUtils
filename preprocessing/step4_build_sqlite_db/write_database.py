@@ -100,9 +100,6 @@ def fill_mechanisms(shape_file, overflow_table=None,piping_table=None,stability_
     if isinstance(piping_table,pd.DataFrame):
         fill_piping(piping_table,shape_file=shape_file)
 
-
-    pass
-
 def fill_overflow(overflow_table,shape_file,computation_type = 'HRING'):
     #get id of Overflow from Mechanism table
     overflow_id = Mechanism.select(Mechanism.id).where(Mechanism.name == 'Overflow').get().id
@@ -132,30 +129,17 @@ def fill_overflow(overflow_table,shape_file,computation_type = 'HRING'):
 
 
 def fill_piping(piping_table,shape_file):
-    pass
-
-def add_computation_scenario(data, mechanism_per_section_id, cross_section, mechanism_id):
-    scenario_name = data['scenarionaam']
-    if isinstance(data['stixnaam'], str):
-        computation_type = ComputationType.select().where(ComputationType.name == 'SIMPLE').get().id
-    else:
-        computation_type = ComputationType.select().where(ComputationType.name == 'SIMPLE').get().id
-    ComputationScenario.create(mechanism_per_section=mechanism_per_section_id, mechanism=mechanism_id,
-                               computation_name=cross_section, scenario_name=scenario_name,
-                               scenario_probability=data['scenariokans'], computation_type=computation_type,
-                               probability_of_failure=beta_to_pf(data['beta']))
-
-
-    # for each computation_scenario fill Parameter
-    computation_scenario_id = ComputationScenario.select().where(ComputationScenario.mechanism_per_section == mechanism_per_section_id).get().id
-    beta_value = data['beta']
-    # if nan then get SF from data
-    if np.isnan(beta_value):
-        beta_value = calculate_reliability(data['SF'])
-    Parameter.create(computation_scenario=computation_scenario_id, parameter='beta{}'.format(np.random.randint(0,1e6)), value=beta_value)
-    if isinstance(data.stixnaam,str):
-        SupportingFile.create(computation_scenario=computation_scenario_id, filename=data.stixnaam)
-
+    piping_id = Mechanism.select(Mechanism.id).where(Mechanism.name == 'Piping').get().id
+    relevant_indices = [val for val in MechanismPerSection.select().where(MechanismPerSection.mechanism == piping_id).dicts()]
+    # iterrows over relevant_indices
+    for count, row in enumerate(relevant_indices):
+        section_name = SectionData.select().where(SectionData.id == row['section']).get().section_name
+        cross_section = shape_file.loc[shape_file['vaknaam'] == section_name]['piping'].values[0]
+        if isinstance(piping_table.loc[cross_section],pd.Series):
+            add_computation_scenario(piping_table.loc[cross_section],row['id'],cross_section,piping_id)
+        else:
+            for scen_count, subset in piping_table.loc[cross_section].iterrows():
+                add_computation_scenario(subset,row['id'],cross_section,piping_id)
 
 def fill_stability(stability_table,shape_file):
     #get id of Stability from Mechanism table
@@ -163,7 +147,6 @@ def fill_stability(stability_table,shape_file):
     relevant_indices = [val for val in MechanismPerSection.select().where(MechanismPerSection.mechanism == stability_id).dicts()]
     # iterrows over relevant_indices
     for count, row in enumerate(relevant_indices):
-        #sscenario name should be equal to LocationId in overflow_table
         section_name = SectionData.select().where(SectionData.id == row['section']).get().section_name
         cross_section = shape_file.loc[shape_file['vaknaam'] == section_name]['stabiliteit'].values[0]
         if isinstance(stability_table.loc[cross_section],pd.Series):
@@ -172,9 +155,51 @@ def fill_stability(stability_table,shape_file):
             for scen_count, subset in stability_table.loc[cross_section].iterrows():
                 add_computation_scenario(subset,row['id'], cross_section,stability_id)
 
+def add_stability_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name):
+    if isinstance(data['stixnaam'], str):
+        computation_type = ComputationType.select().where(ComputationType.name == 'SIMPLE').get().id
+    else:
+        computation_type = ComputationType.select().where(ComputationType.name == 'SIMPLE').get().id
+    ComputationScenario.create(mechanism_per_section=mechanism_per_section_id, mechanism=mechanism_id,
+                               computation_name=cross_section, scenario_name=scenario_name,
+                               scenario_probability=data['scenariokans'], computation_type=computation_type,
+                               probability_of_failure=beta_to_pf(data['beta']))
+    # for each computation_scenario fill Parameter. first get the last computation_scenario_id that matches mechanism_per_section_id
 
 
-    pass
+    computation_scenario_id = [val for val in ComputationScenario.select().where(
+        ComputationScenario.mechanism_per_section == mechanism_per_section_id).dicts()][-1]['id']
+
+    beta_value = data['beta']
+    # if nan then get SF from data
+    if np.isnan(beta_value):
+        beta_value = calculate_reliability(data['SF'])
+    Parameter.create(computation_scenario=computation_scenario_id,
+                     parameter='beta', value=beta_value)
+    if isinstance(data.stixnaam, str):
+        SupportingFile.create(computation_scenario=computation_scenario_id, filename=data.stixnaam)
+
+def add_piping_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name):
+    computation_type = ComputationType.select().where(ComputationType.name == 'SEMIPROB').get().id
+    ComputationScenario.create(mechanism_per_section=mechanism_per_section_id, mechanism=mechanism_id,
+                                 computation_name=cross_section, scenario_name=scenario_name,
+                                 scenario_probability=data['scenariokans'], computation_type=computation_type,
+                                 probability_of_failure=data['pf_s'])
+    # for each computation_scenario fill Parameter
+    computation_scenario_id = [val for val in ComputationScenario.select().where(
+        ComputationScenario.mechanism_per_section == mechanism_per_section_id).dicts()][-1]['id']
+    parameters_to_add = ['wbn', 'polderpeil', 'd_wvp', 'd70', 'd_cover', 'h_exit', 'r_exit', 'l_voor', 'l_achter', 'k', 'gamma_sat', 'kwelscherm', 'dh_exit']
+    for parameter_name in parameters_to_add:
+        Parameter.create(computation_scenario=computation_scenario_id,
+                         parameter=parameter_name, value=data[parameter_name])
+
+def add_computation_scenario(data, mechanism_per_section_id, cross_section, mechanism_id):
+    if Mechanism.select().where(Mechanism.id == mechanism_id).get().name == 'Stability':
+        scenario_name = data['scenarionaam']
+        add_stability_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name)
+    elif Mechanism.select().where(Mechanism.id == mechanism_id).get().name == 'Piping':
+        scenario_name = '{}_{}'.format(cross_section, data['scenario'])
+        add_piping_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name)
 
 def fill_revetment():
     pass
