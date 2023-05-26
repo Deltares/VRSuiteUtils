@@ -41,7 +41,7 @@ def fill_buildings(buildings):
         try:
             vak_id = SectionData.select(SectionData.id).where(SectionData.section_name == row.NUMMER).get().id
 
-            row_filtered = row.drop(columns=['OBJECTID','NUMMER'])
+            row_filtered = row.drop(index=['OBJECTID','NUMMER'])
             for distance, number in row_filtered.iteritems():
                 Buildings.create(section_data = vak_id,distance_from_toe=distance,number_of_buildings = number)
         except:
@@ -76,7 +76,7 @@ def fill_profilepoints(profile_points,shape_file):
         CharacteristicPointType.create(id = id_dict[id],name = id)
 
 def fill_mechanisms(shape_file, overflow_table=None,piping_table=None,stability_table=None, revetment_table = None, structures_table = None):
-    default_mechanisms = ['Overflow','Piping','Stability','Revetment','HydraulicStructures']
+    default_mechanisms = ['Overflow','Piping','StabilityInner','Revetment','HydraulicStructures']
     header_names = ['overslag','piping','stabiliteit','bekledingen','kunstwerken']
     #add default_mechanisms to the Mechanisms table
     for mechanism in default_mechanisms:
@@ -89,7 +89,7 @@ def fill_mechanisms(shape_file, overflow_table=None,piping_table=None,stability_
                 MechanismPerSection.create(section=section_data_id,mechanism=Mechanism.select(Mechanism.id).where(Mechanism.name == default_mechanisms[count]).get().id)
     #next fill ComputationScenario table and children for each mechanism
     #first fill the ComputationType table
-    for computation_type in ['HRING','SEMIPROB','SIMPLE']:
+    for computation_type in ['HRING','SEMIPROB','SIMPLE','DSTABILITY']:
         ComputationType.create(name=computation_type)
     if isinstance(overflow_table,pd.DataFrame):
         fill_overflow(overflow_table,shape_file=shape_file)
@@ -143,7 +143,7 @@ def fill_piping(piping_table,shape_file):
 
 def fill_stability(stability_table,shape_file):
     #get id of Stability from Mechanism table
-    stability_id = Mechanism.select(Mechanism.id).where(Mechanism.name == 'Stability').get().id
+    stability_id = Mechanism.select(Mechanism.id).where(Mechanism.name == 'StabilityInner').get().id
     relevant_indices = [val for val in MechanismPerSection.select().where(MechanismPerSection.mechanism == stability_id).dicts()]
     # iterrows over relevant_indices
     for count, row in enumerate(relevant_indices):
@@ -188,18 +188,20 @@ def add_piping_scenario(data, mechanism_per_section_id, cross_section, mechanism
     # for each computation_scenario fill Parameter
     computation_scenario_id = [val for val in ComputationScenario.select().where(
         ComputationScenario.mechanism_per_section == mechanism_per_section_id).dicts()][-1]['id']
-    parameters_to_add = ['wbn', 'polderpeil', 'd_wvp', 'd70', 'd_cover', 'h_exit', 'r_exit', 'l_voor', 'l_achter', 'k', 'gamma_sat', 'kwelscherm', 'dh_exit']
+    parameters_to_add = ['wbn', 'polderpeil', 'd_wvp', 'd70', 'd_cover', 'h_exit', 'r_exit', 'l_voor', 'l_achter', 'k', 'gamma_sat', 'kwelscherm', 'dh_exit(t)']
     for parameter_name in parameters_to_add:
         Parameter.create(computation_scenario=computation_scenario_id,
                          parameter=parameter_name, value=data[parameter_name])
 
 def add_computation_scenario(data, mechanism_per_section_id, cross_section, mechanism_id):
-    if Mechanism.select().where(Mechanism.id == mechanism_id).get().name == 'Stability':
+    if Mechanism.select().where(Mechanism.id == mechanism_id).get().name == 'StabilityInner':
         scenario_name = data['scenarionaam']
         add_stability_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name)
     elif Mechanism.select().where(Mechanism.id == mechanism_id).get().name == 'Piping':
         scenario_name = '{}_{}'.format(cross_section, data['scenario'])
         add_piping_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name)
+    else:
+        raise Exception('Unknown mechanism in ComputationScenario')
 
 def fill_revetment():
     pass
@@ -208,6 +210,32 @@ def fill_structures():
     pass
 
 def fill_measures(measure_table):
-    pass
+
     #fill MeasureType
+    MeasureType.create(name='Soil reinforcement')
+    MeasureType.create(name='Soil reinforcement with stability screen')
+    MeasureType.create(name='Stability Screen')
+    MeasureType.create(name='Vertical Geotextile')
+    MeasureType.create(name='Diaphragm Wall')
     #fill CombinableType
+    CombinableType.create(name='full')
+    CombinableType.create(name='combinable')
+    CombinableType.create(name='partial')
+
+    #fill StandardMeasure
+    for idx, row in measure_table.iterrows():
+        measure_type_id = MeasureType.select().where(MeasureType.name == row['Type']).get().id
+        combinable_type_id = CombinableType.select().where(CombinableType.name == row['Class']).get().id
+        Measure.create(name=idx, measure_type=measure_type_id, combinable_type=combinable_type_id,year = row['year'])
+        measure_id = [val for val in Measure.select().dicts()][-1]['id']
+        row = row.fillna(-999)
+        StandardMeasure.create(measure=measure_id, max_inward_reinforcement=row['max_inward'],max_outward_reinforcement=row['max_outward'],direction=row['Direction'],
+                               crest_step=.5,max_crest_increase=row['dcrest_max'],stability_screen=row['StabilityScreen'],
+                               prob_of_solution_failure=row['P_solution'],failure_probability_with_solution=row['Pf_solution'],stability_screen_s_f_increase=row['dSF'])
+
+    #all id from Measure
+    measure_ids = [val['id'] for val in Measure.select().dicts()]
+    section_ids = [val['id'] for val in SectionData.select().dicts()]
+    for section_id in section_ids:
+        for measure_id in measure_ids:
+            MeasurePerSection.create(section=section_id, measure=measure_id)
