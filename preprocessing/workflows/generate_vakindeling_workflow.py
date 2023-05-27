@@ -1,4 +1,5 @@
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
+from postprocessing.plot_functions import plot_vakindeling
 from pathlib import Path
 import geopandas as gpd
 import pandas as pd
@@ -15,6 +16,9 @@ def main(traject_id, file_location):
 
     #Save to file
     traject.vakindeling_shape.to_file(file_location.parent.joinpath('Vakindeling_{}.geojson'.format(traject_id)),driver='GeoJSON')
+
+    #Save a plot
+    plot_vakindeling(traject.vakindeling_shape, file_location.parent.joinpath('Vakindeling_{}.png'.format(traject_id)))
 
 if __name__ == '__main__':
     traject = '38-1'
