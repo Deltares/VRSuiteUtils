@@ -4,13 +4,15 @@ import seaborn as sns
 import contextily as ctx
 import numpy as np
 import pandas as pd
+import warnings
 
-def plot_vakindeling(shapefile, output_loc):
+def plot_vakindeling(shapefile, output_loc,basemap_provider = ctx.providers.Stamen.TonerLite):
     fig, ax = plt.subplots(figsize=(12, 5))
     colors = sns.color_palette('colorblind', n_colors=8)
     colcount = 0
+
     for count, row in shapefile.iterrows():
-        if row.IN_ANALYSE:
+        if row.in_analyse:
             colcount += 1
             try:
                 color = colors[colcount]
@@ -19,15 +21,18 @@ def plot_vakindeling(shapefile, output_loc):
                 colcount = 0
             ax.plot(*row.geometry.coords.xy, color=color)
             if (count % 2) == 0:
-                ax.annotate(text=row['NUMMER'], xy=row.geometry.centroid.coords[:][0],
+                ax.annotate(text=row['vaknaam'], xy=row.geometry.centroid.coords[:][0],
                             horizontalalignment='center', verticalalignment='bottom', color=color)
             else:
-                ax.annotate(text=row['NUMMER'], xy=row.geometry.centroid.coords[:][0],
+                ax.annotate(text=row['vaknaam'], xy=row.geometry.centroid.coords[:][0],
                             horizontalalignment='center', verticalalignment='top', color=color)
     ax.set_xticklabels([])
     ax.set_yticklabels([])
     ax.set_ylim(bottom=ax.get_ylim()[0] - 1000)
-    ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite)
+    try:
+        ctx.add_basemap(ax, source=basemap_provider,crs = shapefile.crs)
+    except:
+        warnings.warn('Basemap kon niet worden geladen, plot wordt gemaakt zonder achtergrondkaart.')
     plt.savefig(output_loc, dpi=300, bbox_inches='tight')
 
 def plot_assessment_betas(shapefile, betas, output_dir, year=2025, mechanism_dict = {'StabilityInner':'Stabiliteit', 'Piping':'Piping','Overflow':'Overslag'},close_output=True):
