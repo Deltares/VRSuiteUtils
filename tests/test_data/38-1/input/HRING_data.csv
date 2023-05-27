@@ -1,4 +1,4 @@
-,dijkvak,M_VALUE,nr,HR koppel,bovengrens,ondergrens,overslagdebiet,prfl_bestand,orientatie,dijkhoogte,zodeklasse,bovengrens_golfhoogteklasse,faalkans,kruindaling
+,doorsnede,m_value,nr,hr_koppel,bovengrens,ondergrens,overslagdebiet,prfl_bestand,orientatie,dijkhoogte,zodeklasse,bovengrens_golfhoogteklasse,faalkans,kruindaling
 0,RW294,,294,038-01_0295_1_WA_km0949,7.05,3.96,55.11,RW294.prfl,60,6.4,BOI: enkel geometrisch - gesloten zode,NVT,2.67E-07,0.005
 1,RW293,,293,038-01_0295_1_WA_km0949,7.05,3.96,0.45,RW293.prfl,38,6.81,Bebouwing in kruin/talud,1 meter,8.00E-06,0.005
 2,RW292,,292,038-01_0291_1_WA_km0949,7.05,4.16,0,RW292.prfl,41,6.81,Bebouwing in kruin/talud,1 meter,4.90E-06,0.005
