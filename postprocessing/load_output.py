@@ -49,25 +49,24 @@ def get_traject_prob_development(optimal_measures,taken_measures,initial_beta,
         # maatregel lezen:
         # option_index = taken_measures.loc[optimal_measures.loc[section]['Unnamed: 0']].option_index
         # vr_measure = pd.read_csv(results_dir.joinpath(run,'{}_Options_{}.csv'.format(section,calc_type)),index_col=0).loc[option_index]
-        measure_data = taken_measures.loc[optimal_measures.loc[section]['Unnamed: 0']]
-        vr_measure = pd.read_csv(option_dir.joinpath('{}_Options_{}.csv'.format(section,calc_type)),index_col=0)
-
-        vr_measure = vr_measure.loc[(vr_measure.ID == measure_data.ID) & (vr_measure['yes/no'] == measure_data['yes/no'])
+        #if section
+        if taken_measures.loc[taken_measures.Section==section].shape[0] == 1:
+            measure_data = taken_measures.loc[taken_measures.Section==section].squeeze()
+        else:
+            measure_data = taken_measures.loc[optimal_measures.loc[section]['Unnamed: 0']]
+        if not np.isnan(measure_data.option_index):
+            vr_measure = pd.read_csv(option_dir.joinpath('{}_Options_{}.csv'.format(section,calc_type)),index_col=0)
+            vr_measure = vr_measure.loc[(vr_measure.ID == measure_data.ID) & (vr_measure['yes/no'] == measure_data['yes/no'])
                                     & (vr_measure.dcrest == measure_data.dcrest) & (vr_measure.dberm == measure_data.dberm)].squeeze()
+            for mechanism in mechanisms:
+                mask = vr_measure.index.str.startswith(mechanism)
+                betas = vr_measure.loc[mask].values
+                beta_df.loc[(section[2:],mechanism),:]=betas
 
-        for mechanism in mechanisms:
-            mask = vr_measure.index.str.startswith(mechanism)
-            betas = vr_measure.loc[mask].values
-            # print('Original')
-            # print(beta_df.loc[(section[2:],mechanism),:])
-            # print('Reinforced')
-            # print(betas)
+        else:
+            #no measure, so keep initial beta
+            pass
 
-            beta_df.loc[(section[2:],mechanism),:]=betas
-            # print('Processed')
-            # print(beta_df.loc[(section[2:],mechanism),:])
-        # print('Reinforced')
-        # print(beta_df.loc[section[2:]]['50'])
         beta_dfs.append(beta_df)
         # print('added {} with {}'.format(section,vr_measure.type))
 
