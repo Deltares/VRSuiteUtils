@@ -1,4 +1,4 @@
-,dijkvak,bovengrens,ondergrens,prfl_bestand,orientatie,dijkhoogte,zodeklasse,bovengrens_golfhoogteklasse,faalkans,kruindaling,M_VALUE,HRLocation
+,doorsnede,bovengrens,ondergrens,prfl_bestand,orientatie,dijkhoogte,zodeklasse,bovengrens_golfhoogteklasse,faalkans,kruindaling,m_value,HRLocation
 0,RW000,10.83,7.5,RW000.prfl,226,10.51,Bebouwing in kruin/talud,1 meter,1.03E-05,0.005,90,13811002
 1,RW003,10.81,7.49,RW003.prfl,191,10.87,Bebouwing in kruin/talud,1 meter,1.44E-06,0.005,438.5,13811005
 2,RW012,10.76,7.44,RW012.prfl,244,10.84,Bebouwing in kruin/talud,1 meter,1.83E-06,0.005,1323.5,13811013
@@ -59,5 +59,4 @@
 57,RW260V,7.08,4.19,RW260V.prfl,91,8.08,Bebouwing in kruin/talud,1 meter,1.16E-08,0.005,26129,13811265
 58,RW274V,7.06,4.13,RW274V.prfl,174,8.53,Bebouwing in kruin/talud,1 meter,3.24E-10,0.005,27387.5,13811277
 59,RW283V,7.04,3.96,RW283V.prfl,119,6.96,Bebouwing in kruin/talud,1 meter,7.55E-06,0.005,28195.5,13811286
-60,RW283V,7.04,3.96,RW283V.prfl,119,6.96,Bebouwing in kruin/talud,1 meter,7.55E-06,0.005,28195.5,13811286
-61,RW290,7.05,3.96,RW290.prfl,37,6.81,Bebouwing in kruin/talud,1 meter,8.00E-06,0.005,28856.715,13811288
+60,RW290,7.05,3.96,RW290.prfl,37,6.81,Bebouwing in kruin/talud,1 meter,8.00E-06,0.005,28856.715,13811288

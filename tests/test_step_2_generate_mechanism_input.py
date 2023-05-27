@@ -15,7 +15,7 @@ from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingCo
 
 @pytest.mark.parametrize("hring_input,gekb_shape,traject_shape,db_location",[(Path('test_data').joinpath('38-1','input','HRING_data.csv'),
                                                                   Path('test_data').joinpath('38-1','input','gekb_shape.shp'),
-                                                                  Path('test_data').joinpath('38-1','reference_shape.shp'),
+                                                                  Path('test_data').joinpath('38-1','reference_shape.geojson'),
                                                                   Path('test_data').joinpath('38-1','input','db','2023','WBI2017_Bovenrijn_38-1_v04.sqlite'))])
 def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
     #test to see if the correct locations are selected from the HRING input csv. This is done based on a shapefile with all the locations.
@@ -27,7 +27,7 @@ def test_select_HRING_locs(hring_input,traject_shape,db_location,gekb_shape):
     overflow_input = OverflowInput(kind='weakest')
     overflow_input.add_traject_shape(traject_shape)
     #check if M-value in hring_df
-    if any(hring_df.M_VALUE.isna()):
+    if any(hring_df.m_value.isna()):
         overflow_input.get_mvalue_of_locs(hring_df,gekb_shape)
     else:
         overflow_input.hring_data = hring_df
