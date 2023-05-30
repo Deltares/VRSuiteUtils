@@ -1,17 +1,21 @@
 #This script makes the entire input structure from the general input files
 import sys
+
 sys.path.append('../..')
 
-import pandas as pd
-from HydraRing_scripts import readDesignTable
-from openpyxl import load_workbook
+import copy
+import shutil
 from pathlib import Path
 from shutil import copyfile
-from Mechanisms import OverflowSimple
+
 import numpy as np
+import pandas as pd
+from HydraRing_scripts import readDesignTable
+from Mechanisms import OverflowSimple
+from openpyxl import load_workbook
 from scipy.optimize import fsolve
-import shutil
-import copy
+
+
 def vka_measures(measures_basis, measures_custom_all, measures_location, path, traject):
     j=len(measures_basis.index)
     vka_cols = ['voorkeursalternatief_1', 'voorkeursalternatief_2', 'voorkeursalternatief_3']

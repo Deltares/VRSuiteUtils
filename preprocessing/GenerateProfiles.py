@@ -1,10 +1,12 @@
 import copy
-import matplotlib.pyplot as plt
-import numpy as np
-from openpyxl import load_workbook
-import pandas as pd
 import re
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from openpyxl import load_workbook
+
 """This is a routine to extract profiles from AHN data. It is based on detecting points with the highest covariance in slope, whcih are the crest, toe and berm lines. 
 For some profiles manual point adjustments have been made. Therefore: handle this with care and check visually whether generated profiles are correct!!!"""
 

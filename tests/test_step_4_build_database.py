@@ -1,16 +1,20 @@
+import shutil
 from pathlib import Path
-import shutil as sh
-import pytest
-from vrtool.orm.orm_controllers import *
-from vrtool.orm.models import *
-from preprocessing.step4_build_sqlite_db.write_database import *
-from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 
-@pytest.mark.parametrize("traject,output_path",[('38-1',Path('test_results').joinpath('38-1','Database','test.db'))])
-def test_make_database(traject: str, output_path: Path):
+import pytest
+from vrtool.orm.models import *
+from vrtool.orm.orm_controllers import *
+
+from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
+from preprocessing.step4_build_sqlite_db.write_database import *
+
+
+@pytest.mark.parametrize("traject",[pytest.param('38-1', id="Traject 38-1")])
+def test_make_database(traject: str):
    # remove output_path
-   if output_path.parent.exists():
-      sh.rmtree(output_path.parent)
+   _output_path = Path('test_results').joinpath(traject,'Database','test.db')
+   if _output_path.parent.exists():
+      shutil.rmtree(_output_path.parent)
 
    #get all the input data
    #read the vakindeling shape
@@ -44,9 +48,9 @@ def test_make_database(traject: str, output_path: Path):
    #read the data for profilepoints
    profile_table = read_profilepoints_data(_intermediate_dir.joinpath('Profielen'))
 
-   initialize_database(output_path)
+   initialize_database(_output_path)
 
-   db_obj = open_database(output_path)
+   db_obj = open_database(_output_path)
 
    #diketractinfo
    fill_diketrajectinfo_table(traject=traject)

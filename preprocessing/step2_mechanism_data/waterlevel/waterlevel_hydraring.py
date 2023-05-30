@@ -1,8 +1,12 @@
-import shutil
 import fileinput
-import sys
 import os
-from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
+import shutil
+import sys
+
+from preprocessing.step2_mechanism_data.hydraring_computation import (
+    HydraRingComputation,
+)
+
 
 class WaterlevelComputationInput(HydraRingComputation):
 

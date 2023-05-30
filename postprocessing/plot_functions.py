@@ -1,10 +1,12 @@
+import warnings
+
+import contextily as ctx
 import matplotlib
 import matplotlib.pyplot as plt
-import seaborn as sns
-import contextily as ctx
 import numpy as np
 import pandas as pd
-import warnings
+import seaborn as sns
+
 
 def plot_vakindeling(shapefile, output_loc,basemap_provider = ctx.providers.Stamen.TonerLite):
     fig, ax = plt.subplots(figsize=(12, 5))

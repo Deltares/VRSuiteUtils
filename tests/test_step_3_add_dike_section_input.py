@@ -1,8 +1,11 @@
-import pytest
-from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 from pathlib import Path
+
 import geopandas as gpd
-from geopandas.testing import assert_geodataframe_equal,assert_geoseries_equal
+import pytest
+from geopandas.testing import assert_geodataframe_equal, assert_geoseries_equal
+
+from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
+
 
 # @pytest.mark.parametrize("traject,traject_shape",[('38-1',Path('test_data').joinpath('38-1','reference.shp'))])
 def test_derive_toe_from_AHN():

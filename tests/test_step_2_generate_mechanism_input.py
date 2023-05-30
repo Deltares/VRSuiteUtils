@@ -1,16 +1,24 @@
-import shutil
 import filecmp
-import pytest
-from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
+import os
+import shutil
 from pathlib import Path
+
 import geopandas as gpd
 import pandas as pd
-import os
-from geopandas.testing import assert_geodataframe_equal,assert_geoseries_equal
+import pytest
+from geopandas.testing import assert_geodataframe_equal, assert_geoseries_equal
+
+from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
+from preprocessing.step2_mechanism_data.hydraring_computation import (
+    HydraRingComputation,
+)
+from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import (
+    OverflowComputationInput,
+)
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
-from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import OverflowComputationInput
-from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import WaterlevelComputationInput
-from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
+from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
+    WaterlevelComputationInput,
+)
 
 
 @pytest.mark.parametrize("hring_input,gekb_shape,traject_shape,db_location",[(Path('test_data').joinpath('38-1','input','HRING_data.csv'),

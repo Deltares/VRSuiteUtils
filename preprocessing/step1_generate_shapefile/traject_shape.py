@@ -1,9 +1,12 @@
-import pandas as pd
-from owslib.wfs import WebFeatureService
+import warnings
+
 import geopandas as gpd
 import numpy as np
+import pandas as pd
+from owslib.wfs import WebFeatureService
 from shapely import geometry, ops
-import warnings
+
+
 class TrajectShape:
     '''Class with functions to modify and fill the shape of a traject which is the basic reference for all preprocessing steps'''
     def __init__(self, traject):

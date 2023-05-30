@@ -1,13 +1,18 @@
-import pandas as pd
-from pathlib import Path
-import sqlite3
-import geopandas as gpd
 import os
-import numpy as np
-from vrtool.orm.models import *
+import sqlite3
 import warnings
+from pathlib import Path
+
+import geopandas as gpd
+import numpy as np
+import pandas as pd
+from vrtool.failure_mechanisms.stability_inner.stability_inner_functions import (
+    calculate_reliability,
+)
+from vrtool.orm.models import *
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
-from vrtool.failure_mechanisms.stability_inner.stability_inner_functions import calculate_reliability
+
+
 def fill_diketrajectinfo_table(traject):
     traject_data = pd.read_csv(Path(os.getcwd()).parent.joinpath('preprocessing', 'generic_data', 'diketrajectinfo.csv'), index_col=0).loc[traject]
 

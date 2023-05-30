@@ -1,14 +1,19 @@
 ## This script runs a multitude of HBN calculations for various locations read from an Excel sheet.
 ## It uses reference HBN calculation files which it copies many times.
 
-import pandas as pd
-import shutil
 import fileinput
+import shutil
 import sys
+
 import numpy as np
+import pandas as pd
+
+from preprocessing.step2_mechanism_data.hydraring_computation import (
+    HydraRingComputation,
+)
+
 # import matplotlib.pyplot as plt
 
-from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 
 
 class OverflowComputationInput(HydraRingComputation):

@@ -1,14 +1,15 @@
-from pathlib import Path
 import shelve
 import sys
+from pathlib import Path
+
 sys.path.append('../../src')
 sys.path.append('../../tools')
 
-from vrtool.flood_defence_system.dike_traject import get_section_length_in_traject
-import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from vrtool.decision_making.strategies.strategy_base import StrategyBase
+from vrtool.flood_defence_system.dike_traject import get_section_length_in_traject
 
 
 def plot_lcc(Strategies, traject, input_path=False, fig_size=(12, 2), flip=False, title_in=False, subfig=False, greedymode ='Optimal', color = False):

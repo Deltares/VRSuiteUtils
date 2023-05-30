@@ -1,7 +1,10 @@
-import pandas as pd
-from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta, beta_to_pf
 import copy
+
 import numpy as np
+import pandas as pd
+from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+
+
 def read_assessment_betas(filename):
     """Reads the assessment betas from a csv file and returns a dataframe with the betas and the corresponding
     probabilities of failure"""

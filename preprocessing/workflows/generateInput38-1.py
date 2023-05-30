@@ -1,19 +1,21 @@
 '''This is a first attempt to properly generate a shapefile with all required data'''
-import geopandas as gpd
-import pandas as pd
-import os
-import sys
-import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
-from shapely import geometry, ops
-import warnings
-import sqlite3
-import glob
-import re
-from owslib.wfs import WebFeatureService
-import shutil
 import copy
+import glob
+import os
+import re
+import shutil
+import sqlite3
+import sys
+import warnings
+from pathlib import Path
+
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from owslib.wfs import WebFeatureService
+from shapely import geometry, ops
+
 sys.path.append('../../src')
 
 def beta_SF_StabilityInner(SF_or_beta, type=False, modelfactor=1.06):
