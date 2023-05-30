@@ -10,9 +10,9 @@ from preprocessing.step4_build_sqlite_db.write_database import *
 
 
 @pytest.mark.parametrize("traject", [pytest.param("38-1", id="Traject 38-1")])
-def test_make_database(traject: str):
+def test_make_database(traject: str, request: pytest.FixtureRequest):
    # remove output_path
-   _output_path = test_results.joinpath(traject, "Database", "test.db")
+   _output_path = test_results.joinpath(request.node.name, traject, "test.db")
    if _output_path.parent.exists():
       shutil.rmtree(_output_path.parent)
 
