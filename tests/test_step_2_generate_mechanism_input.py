@@ -333,7 +333,7 @@ def test_run_HydraRing(ini_file):
     ).mkdir(parents=True, exist_ok=False)
 
     # run HydraRing
-    HydraRingComputation().run_hydraring(Path(os.getcwd()).joinpath(ini_file))
+    HydraRingComputation().run_hydraring(ini_file)
 
     # move designTable.txt from work_dir to test_results\38-1\HRING_input\2023\RW000\
     shutil.move(
