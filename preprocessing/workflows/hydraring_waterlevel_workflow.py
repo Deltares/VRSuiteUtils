@@ -51,27 +51,24 @@ def main(
             # get config from hydraulic database:
             computation.get_HRING_config(database_path)
             # make sql file. Make sure that range is adjusted for 2100
+            from tests import test_data
             if "2100" not in str(database_path):
                 computation.make_SQL_file(
                     loc_output_dir,
-                    Path(os.getcwd()).parent.parent.joinpath(
-                        "tests", "test_data", "general", "sql_reference_waterlevel.sql"
+                    test_data.joinpath("general", "sql_reference_waterlevel.sql"
                     ),
                 )
             else:
                 computation.make_SQL_file(
                     loc_output_dir,
-                    Path(os.getcwd()).parent.parent.joinpath(
-                        "tests", "test_data", "general", "sql_reference_waterlevel.sql"
+                    test_data.joinpath("general", "sql_reference_waterlevel.sql"
                     ),
                     t_2100=True,
                 )
             # make ini file:
             computation.make_ini_file(
                 loc_output_dir,
-                Path(os.getcwd()).parent.parent.joinpath(
-                    "tests", "test_data", "general", "ini_reference_waterlevel.ini"
-                ),
+                test_data.joinpath("general", "ini_reference_waterlevel.ini"),
                 database_path,
                 HydraRing_path.joinpath("config.sqlite"),
             )

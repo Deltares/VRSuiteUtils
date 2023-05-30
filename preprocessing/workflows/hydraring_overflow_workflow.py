@@ -53,24 +53,21 @@ def main(
             # get config from hydraulic database:
             computation.get_HRING_config(database_path)
             # get critical discharge
+            from tests import test_data
             computation.get_critical_discharge(
-                Path(os.getcwd()).parent.parent.joinpath(
-                    "tests", "test_data", "general", "critical_discharges.csv"
+               test_data.joinpath(
+                    "general", "critical_discharges.csv"
                 )
             )
             # make sql file
             computation.make_SQL_file(
                 loc_output_dir,
-                Path(os.getcwd()).parent.parent.joinpath(
-                    "tests", "test_data", "general", "sql_reference_overflow.sql"
-                ),
+                test_data.joinpath("general", "sql_reference_overflow.sql"),
             )
             # make ini file:
             computation.make_ini_file(
                 loc_output_dir,
-                Path(os.getcwd()).parent.parent.joinpath(
-                    "tests", "test_data", "general", "ini_reference_overflow.ini"
-                ),
+                test_data.joinpath("general", "ini_reference_overflow.ini"),
                 database_path,
                 HydraRing_path.joinpath("config.sqlite"),
             )

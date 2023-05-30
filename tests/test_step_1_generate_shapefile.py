@@ -5,11 +5,11 @@ import pytest
 from geopandas.testing import assert_geodataframe_equal, assert_geoseries_equal
 
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
-
+from tests import test_data, test_results
 
 @pytest.mark.parametrize(
     "traject,vakindeling_file",
-    [("38-1", Path("test_data").joinpath("38-1", "input", "vakindeling_38-1.csv"))],
+    [("38-1", test_data.joinpath("38-1", "input", "vakindeling_38-1.csv"))],
 )
 def test_generate_shapefile(traject, vakindeling_file):
     # make traject
@@ -17,7 +17,7 @@ def test_generate_shapefile(traject, vakindeling_file):
 
     # get base geometry
     traject.get_traject_shape_from_NBPW(
-        NBWP_shape_path=Path("test_data").joinpath("general", "dijktrajecten.shp")
+        NBWP_shape_path=test_data.joinpath("general", "dijktrajecten.shp")
     )
 
     # cut up in pieces and verify integrity

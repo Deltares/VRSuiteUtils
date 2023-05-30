@@ -19,16 +19,16 @@ from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowI
 from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
     WaterlevelComputationInput,
 )
-
+from tests import test_data, test_results
 
 @pytest.mark.parametrize(
     "hring_input,gekb_shape,traject_shape,db_location",
     [
         (
-            Path("test_data").joinpath("38-1", "input", "HRING_data.csv"),
-            Path("test_data").joinpath("38-1", "input", "gekb_shape.shp"),
-            Path("test_data").joinpath("38-1", "reference_shape.geojson"),
-            Path("test_data").joinpath(
+            test_data.joinpath("38-1", "input", "HRING_data.csv"),
+            test_data.joinpath("38-1", "input", "gekb_shape.shp"),
+            test_data.joinpath("38-1", "reference_shape.geojson"),
+            test_data.joinpath(
                 "38-1", "input", "db", "2023", "WBI2017_Bovenrijn_38-1_v04.sqlite"
             ),
         )
@@ -75,10 +75,10 @@ def test_select_HRING_locs(hring_input, traject_shape, db_location, gekb_shape):
     "HRING_data,HRING_input_reference, db_path, results_dir, ilocs",
     [
         (
-            Path("test_data").joinpath("38-1", "HRING_data_reference.csv"),
-            Path("test_data").joinpath("38-1", "HRING_input_reference", "waterlevel"),
-            Path("test_data").joinpath("38-1", "input", "db"),
-            Path("test_results").joinpath("38-1", "HRING_input", "waterlevel"),
+            test_data.joinpath("38-1", "HRING_data_reference.csv"),
+            test_data.joinpath("38-1", "HRING_input_reference", "waterlevel"),
+            test_data.joinpath("38-1", "input", "db"),
+            test_results.joinpath("38-1", "HRING_input", "waterlevel"),
             [0, 20, 40],
         )
     ],
@@ -139,7 +139,7 @@ def test_make_HRING_waterlevel_input(
             # make sql file
             computation.make_SQL_file(
                 loc_output_dir,
-                Path("test_data").joinpath("general", "sql_reference_waterlevel.sql"),
+                test_data.joinpath("general", "sql_reference_waterlevel.sql"),
                 t_2100=t_2100,
             )
             if not filecmp.cmp(
@@ -154,7 +154,7 @@ def test_make_HRING_waterlevel_input(
             # make ini file
             computation.make_ini_file(
                 loc_output_dir,
-                Path("test_data").joinpath("general", "ini_reference_waterlevel.ini"),
+                test_data.joinpath("general", "ini_reference_waterlevel.ini"),
                 database_path,
                 config_db_path,
             )
@@ -177,11 +177,11 @@ def test_make_HRING_waterlevel_input(
     "HRING_data,HRING_input_reference, prfl_path, db_path, results_dir, ilocs",
     [
         (
-            Path("test_data").joinpath("38-1", "HRING_data_reference.csv"),
-            Path("test_data").joinpath("38-1", "HRING_input_reference", "overflow"),
-            Path("test_data").joinpath("38-1", "input", "prfl"),
-            Path("test_data").joinpath("38-1", "input", "db"),
-            Path("test_results").joinpath("38-1", "HRING_input", "overflow"),
+            test_data.joinpath("38-1", "HRING_data_reference.csv"),
+            test_data.joinpath("38-1", "HRING_input_reference", "overflow"),
+            test_data.joinpath("38-1", "input", "prfl"),
+            test_data.joinpath("38-1", "input", "db"),
+            test_results.joinpath("38-1", "HRING_input", "overflow"),
             [0, 20, 40],
         )
     ],
@@ -239,12 +239,12 @@ def test_make_HRING_overflow_input(
             computation.get_HRING_config(database_path)
             # get critical discharge
             computation.get_critical_discharge(
-                Path("test_data").joinpath("general", "critical_discharges.csv")
+                test_data.joinpath("general", "critical_discharges.csv")
             )
             # make sql file
             computation.make_SQL_file(
                 loc_output_dir,
-                Path("test_data").joinpath("general", "sql_reference_overflow.sql"),
+                test_data.joinpath("general", "sql_reference_overflow.sql"),
             )
             if not filecmp.cmp(
                 loc_output_dir.joinpath(computation.name + ".sql"),
@@ -256,7 +256,7 @@ def test_make_HRING_overflow_input(
             # make ini file
             computation.make_ini_file(
                 loc_output_dir,
-                Path("test_data").joinpath("general", "ini_reference_overflow.ini"),
+                test_data.joinpath("general", "ini_reference_overflow.ini"),
                 database_path,
                 config_db_path,
             )
@@ -279,7 +279,7 @@ def test_make_HRING_overflow_input(
     "ini_file",
     [
         (
-            Path("test_data").joinpath(
+            test_data.joinpath(
                 "38-1",
                 "HRING_input_reference",
                 "overflow",
@@ -289,7 +289,7 @@ def test_make_HRING_overflow_input(
             )
         ),
         (
-            Path("test_data").joinpath(
+            test_data.joinpath(
                 "38-1",
                 "HRING_input_reference",
                 "waterlevel",
@@ -299,7 +299,7 @@ def test_make_HRING_overflow_input(
             )
         ),
         (
-            Path("test_data").joinpath(
+            test_data.joinpath(
                 "38-1",
                 "HRING_input_reference",
                 "waterlevel",
@@ -316,23 +316,20 @@ def test_run_HydraRing(ini_file):
     output_file_name = "DESIGNTABLE_{}.txt".format(ini_file.stem)
     # clear test_results dir
     if (
-        Path(os.getcwd())
-        .joinpath(
-            "test_results", work_dir.parts[1], "HRING_computations", *work_dir.parts[3:]
+        test_results
+        .joinpath( work_dir.parts[1], "HRING_computations", *work_dir.parts[3:]
         )
         .exists()
     ):
         shutil.rmtree(
-            Path(os.getcwd()).joinpath(
-                "test_results",
+           test_results.joinpath(
                 work_dir.parts[1],
                 "HRING_computations",
                 *work_dir.parts[3:],
             )
         )
     # and remake it
-    Path(os.getcwd()).joinpath(
-        "test_results", work_dir.parts[1], "HRING_computations", *work_dir.parts[3:]
+    test_results.joinpath( work_dir.parts[1], "HRING_computations", *work_dir.parts[3:]
     ).mkdir(parents=True, exist_ok=False)
 
     # run HydraRing
@@ -341,8 +338,7 @@ def test_run_HydraRing(ini_file):
     # move designTable.txt from work_dir to test_results\38-1\HRING_input\2023\RW000\
     shutil.move(
         work_dir.joinpath(output_file_name),
-        Path(os.getcwd()).joinpath(
-            "test_results",
+        test_results.joinpath(
             work_dir.parts[1],
             "HRING_computations",
             *work_dir.parts[3:],
@@ -357,15 +353,13 @@ def test_run_HydraRing(ini_file):
 
     # compare the designTable.txt with the reference file
     assert filecmp.cmp(
-        Path(os.getcwd()).joinpath(
-            "test_results",
+       test_results.joinpath(
             work_dir.parts[1],
             "HRING_computations",
             *work_dir.parts[3:],
             output_file_name,
         ),
-        Path(os.getcwd()).joinpath(
-            "test_data",
+        test_data.joinpath(
             work_dir.parts[1],
             "HRING_computations_reference",
             *work_dir.parts[3:],
