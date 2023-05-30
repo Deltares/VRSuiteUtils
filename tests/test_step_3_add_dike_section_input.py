@@ -11,19 +11,22 @@ from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 def test_derive_toe_from_AHN():
     pass
 
+
 def test_verify_toe_from_shape():
     pass
+
 
 def test_get_profile_from_AHN():
     pass
 
+
 def read_profile_from_file():
     pass
+
 
 def get_buildings_from_BAG():
     pass
 
+
 def get_measures_from_file():
     pass
-
-
