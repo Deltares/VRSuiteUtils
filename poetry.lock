@@ -1916,7 +1916,7 @@ category = "main"
 optional = false
 python-versions = ">=3.9,<3.11"
 files = [
-    {file = "vrtool-0.0.2.tar.gz", hash = "sha256:fc8606b7e51952927e4b3dad90b6e228d6c138a7f59d57aa567988ba4470d215"},
+    {file = "vrtool-0.0.2.tar.gz", hash = "sha256:f31e1c46b984e21348ecafa33d899567f8f6db8ae4e5d78332777bcea733429c"},
 ]
 
 [package.dependencies]
