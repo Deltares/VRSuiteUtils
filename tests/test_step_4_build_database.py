@@ -55,6 +55,7 @@ def test_make_database(traject: str):
    profile_table = read_profilepoints_data(_intermediate_dir.joinpath("Profielen"))
 
    initialize_database(_output_path)
+   assert _output_path.exists(), "Database file was not created."
 
    db_obj = open_database(_output_path)
 
