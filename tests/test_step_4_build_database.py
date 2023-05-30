@@ -7,47 +7,51 @@ from preprocessing.step4_build_sqlite_db.write_database import *
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 
 @pytest.mark.parametrize("traject,output_path",[('38-1',Path('test_results').joinpath('38-1','Database','test.db'))])
-def test_make_database(traject,output_path):
+def test_make_database(traject: str, output_path: Path):
    # remove output_path
    if output_path.parent.exists():
       sh.rmtree(output_path.parent)
 
    #get all the input data
    #read the vakindeling shape
-   shapefile = gpd.read_file(Path('test_data').joinpath('38-1','reference_shape.geojson'))
+   _test_data_dir = Path("test_data").joinpath(traject)
+   assert _test_data_dir.exists(), "No test data available at {}".format(_test_data_dir)
+
+   shapefile = gpd.read_file(_test_data_dir.joinpath('reference_shape.geojson'))
    #read the HR_input
-   HR_input = pd.read_csv(Path('test_data').joinpath('38-1','HRING_data_reference.csv')).drop_duplicates(subset=['doorsnede'])
+   HR_input = pd.read_csv(_test_data_dir.joinpath('HRING_data_reference.csv')).drop_duplicates(subset=['doorsnede'])
    #read the data for different mechanisms
 
     #read the data for waterlevels
-   waterlevel_table = read_waterlevel_data(Path('test_data').joinpath('38-1','intermediate','Waterstand'))
+   _intermediate_dir = _test_data_dir.joinpath('intermediate')
+   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath('Waterstand'))
 
     #read the data for overflow
-   overflow_table = read_overflow_data(Path('test_data').joinpath('38-1','intermediate','Overslag'))
+   overflow_table = read_overflow_data(_intermediate_dir.joinpath('Overslag'))
 
     #read the data for piping
-   piping_table = read_piping_data(Path('test_data').joinpath('38-1','intermediate','Piping_data.csv'))
+   piping_table = read_piping_data(_intermediate_dir.joinpath('Piping_data.csv'))
 
    #read the data for stability
-   stability_table = read_stability_data(Path('test_data').joinpath('38-1','intermediate','STBI_data.csv'))
+   stability_table = read_stability_data(_intermediate_dir.joinpath('STBI_data.csv'))
 
    #read the data for bebouwing
-   bebouwing_table = read_bebouwing_data(Path('test_data').joinpath('38-1','intermediate','Bebouwing_data.csv'))
+   bebouwing_table = read_bebouwing_data(_intermediate_dir.joinpath('Bebouwing_data.csv'))
 
    #read the data for measures
-   measures_table = read_measures_data(Path('test_data').joinpath('38-1','intermediate','base_measures.csv'))
+   measures_table = read_measures_data(_intermediate_dir.joinpath('base_measures.csv'))
 
    #read the data for profilepoints
-   profile_table = read_profilepoints_data(Path('test_data').joinpath('38-1','intermediate','Profielen'))
+   profile_table = read_profilepoints_data(_intermediate_dir.joinpath('Profielen'))
 
    initialize_database(output_path)
 
    db_obj = open_database(output_path)
 
    #diketractinfo
-   fill_diketrajectinfo_table(traject='38-1')
+   fill_diketrajectinfo_table(traject=traject)
    #sectiondata
-   fill_sectiondata_table(traject='38-1',shape_file=shapefile, HR_input=HR_input, geo_input = stability_table[['deklaagdikte','pleistoceendiepte']])
+   fill_sectiondata_table(traject=traject,shape_file=shapefile, HR_input=HR_input, geo_input = stability_table[['deklaagdikte','pleistoceendiepte']])
    #waterleveldata
    fill_buildings(buildings=bebouwing_table)
 
