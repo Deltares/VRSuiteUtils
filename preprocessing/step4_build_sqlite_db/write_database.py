@@ -11,13 +11,11 @@ from vrtool.failure_mechanisms.stability_inner.stability_inner_functions import 
 )
 from vrtool.orm.models import *
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
-
+from preprocessing import generic_data
 
 def fill_diketrajectinfo_table(traject):
     traject_data = pd.read_csv(
-        Path(os.getcwd()).parent.joinpath(
-            "preprocessing", "generic_data", "diketrajectinfo.csv"
-        ),
+        generic_data.joinpath("diketrajectinfo.csv"),
         index_col=0,
     ).loc[traject]
 
