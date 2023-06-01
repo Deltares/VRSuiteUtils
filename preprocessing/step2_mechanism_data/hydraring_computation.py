@@ -28,6 +28,7 @@ class HydraRingComputation:
 
         # lees data voor config voor Numerics en TimeIntegration
         configfile = list(db_path.glob("*.config.sqlite"))[0]
+        print(configfile)
         cnx = sqlite3.connect(configfile)
         self.TimeIntegrationScheme = np.int_(
             pd.read_sql_query(

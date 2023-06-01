@@ -19,10 +19,10 @@ class WaterlevelComputationInput(HydraRingComputation):
         super().__init__(HRING_path=HRING_path)
 
     def fill_data(self, data):
-        self.name = data.dijkvak
+        self.name = str(data.doorsnede)
         self.h_min = data.ondergrens
         self.h_max = data.bovengrens
-        self.HRLocation = data.HRLocation
+        self.HRLocation = data.hrlocation
 
     def make_SQL_file(self, path, reference_file, step_size=0.25, t_2100=False):
         new_sql = path.joinpath(self.name + ".sql")

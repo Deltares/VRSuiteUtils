@@ -25,22 +25,29 @@ def main(
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
 
     # read HRING reference csv
-    hring_data = pd.read_csv(work_dir.joinpath(file_name), index_col=0)
+    hring_data = pd.read_csv(work_dir.parent.joinpath(file_name), index_col=0)
 
-    # ensure presence of HRLocation column, otherwise get it from the database
-    if "HRLocation" not in hring_data.columns:
+    # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
+    # then hrlocation is derived from the database, using hr_koppel
+    if ("hrlocation" not in hring_data.columns or hring_data["hrlocation"].isna().any()):
         hrd_path = [
             pad
             for pad in database_paths[0].glob("*.sqlite")
             if not check_string_in_list(pad.name, [".config", "hlcd"])
         ][0]
-        hring_data = OverflowInput.get_HRLocation(hrd_path, hring_data)
+        hlcd_path = [
+            pad
+            for pad in database_paths[0].glob("*.sqlite")
+            if check_string_in_list(pad.name, ["hlcd"])
+        ][0]
+
+        hring_data = OverflowInput.get_HRLocation(hrd_path, hlcd_path, hring_data)
 
     # we can now loop over all the locations and databases to generate the Hydra-Ring input files.
     for database_path in database_paths:
         for count, location in hring_data.iterrows():
             # make output dir
-            loc_output_dir = work_dir.joinpath(database_path.stem, location.dijkvak)
+            loc_output_dir = work_dir.joinpath(database_path.stem, str(location.doorsnede))
             if loc_output_dir.exists():
                 loc_output_dir.rmdir()
             loc_output_dir.mkdir(parents=True, exist_ok=False)
@@ -80,7 +87,7 @@ if __name__ == "__main__":
     # MAIN SETTINGS:
     # working directory:
     work_dir = Path(
-        r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_waterstand"
+        r"c:\VRM\test_hydraring_workflow_wdod\waterstand_missing_hrlocations"
     )
 
     # path to Hydra-Ring:
@@ -90,7 +97,11 @@ if __name__ == "__main__":
     # list of paths to databases to be considered
     database_paths = [
         Path(
-            r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_waterstand\2023"
+            r"c:\VRM\test_hydraring_workflow_wdod\HR\2023"
+        ),
+        Path(
+            r"c:\VRM\test_hydraring_workflow_wdod\HR\2100"
         )
     ]
-    main(work_dir, database_paths, HydraRing_path, file_name="GEKB_data.csv")
+    file_name = "HR_default - Copy.csv"
+    main(work_dir, database_paths, HydraRing_path, file_name)

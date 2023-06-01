@@ -48,15 +48,40 @@ class OverflowInput:
         )
         return np.argmin(distance)
 
+    # @staticmethod
+    # def get_HRLocation_old(db_location, hring_data):
+    #     cnx = sqlite3.connect(db_location)
+    #     locs = pd.read_sql_query("SELECT * FROM HRDLocations", cnx)
+    #
+    #     print(locs)
+    #     for count, line in hring_data.iterrows():
+    #         hring_data.loc[count, "hrlocation"] = locs.loc[
+    #             locs["Name"] == line["hr_koppel"]
+    #         ]["HRDLocationId"].values[0] # HRDLocationId + trackID (beide uit HRD)--> LocationID (HLCD
+    #         print(hring_data["hrlocation"])
+    #     hring_data["hrlocation"] = hring_data["hrlocation"].astype(np.int64)
+    #     return hring_data
+
     @staticmethod
-    def get_HRLocation(db_location, hring_data):
-        cnx = sqlite3.connect(db_location)
-        locs = pd.read_sql_query("SELECT * FROM HRDLocations", cnx)
+    def get_HRLocation(hrd_db_location, hlcd_db_location, hring_data):
+        hrd_cnx = sqlite3.connect(hrd_db_location)
+        hlcd_cnx = sqlite3.connect(hlcd_db_location)
+        hrd_locs = pd.read_sql_query("SELECT * FROM HRDLocations", hrd_cnx)
+        track_id = pd.read_sql_query("SELECT TrackID FROM General", hrd_cnx).values[0][0]
+        hlcd_locs = pd.read_sql_query("SELECT * FROM Locations", hlcd_cnx)
+        print(track_id)
+        print(hrd_locs)
         for count, line in hring_data.iterrows():
-            hring_data.loc[count, "HRLocation"] = locs.loc[
-                locs["Name"] == line["hr_koppel"]
-            ]["HRDLocationId"].values[0]
-        hring_data["HRLocation"] = hring_data["HRLocation"].astype(np.int64)
+            hrd_location = hrd_locs.loc[
+                hrd_locs["Name"] == line["hr_koppel"]
+                        ]["HRDLocationId"].values[0]
+            # hr_locatie is where hlcd_locs["HRDLocationId"] == hrd_location and hlcd_locs["TrackID"] == track_id:
+            hlcd_location = hlcd_locs.loc[
+                (hlcd_locs["HRDLocationId"] == hrd_location) & (hlcd_locs["TrackId"] == track_id)]["LocationId"].values[0]
+            hring_data.loc[count, "hrlocation"] = hlcd_location
+
+        hring_data["hrlocation"] = hring_data["hrlocation"].astype(np.int64)
+        print(hring_data["hrlocation"])
         return hring_data
 
     def select_locs(self):
@@ -96,7 +121,7 @@ class OverflowInput:
             "zodeklasse",
             "bovengrens_golfhoogteklasse",
             "kruindaling",
-            "HRLocation",
+            "hrlocation",
         ]
         optional_cols = ["m_value", "faalkans", "LocationId"]
         if hasattr(self, "hring_data"):

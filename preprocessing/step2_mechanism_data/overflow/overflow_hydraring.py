@@ -42,12 +42,12 @@ class OverflowComputationInput(HydraRingComputation):
         self.sigma = subset.sigma
 
     def fill_data(self, data):
-        self.name = data.dijkvak
+        self.name = str(data.doorsnede)
         self.orientation = data.orientatie
         self.dike_height = data.dijkhoogte
         self.sod_class = data.zodeklasse
         self.wave_class = data.bovengrens_golfhoogteklasse
-        self.HRLocation = data.HRLocation
+        self.HRLocation = data.hrlocation
 
     def get_prfl(self, fileName):
         prfl = {}
