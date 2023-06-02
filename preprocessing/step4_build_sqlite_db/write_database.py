@@ -89,12 +89,12 @@ def fill_buildings(buildings):
         try:
             vak_id = (
                 SectionData.select(SectionData.id)
-                .where(SectionData.section_name == row.NUMMER)
+                .where(SectionData.section_name == row.vaknaam)
                 .get()
                 .id
             )
 
-            row_filtered = row.drop(index=["OBJECTID", "NUMMER"])
+            row_filtered = row.drop(index=["objectid", "vaknaam"])
             for distance, number in row_filtered.iteritems():
                 Buildings.create(
                     section_data=vak_id,
@@ -102,7 +102,7 @@ def fill_buildings(buildings):
                     number_of_buildings=number,
                 )
         except:
-            warnings.warn("Dijkvak {} niet in SectionData".format(row.NUMMER))
+            warnings.warn("Dijkvak {} niet in SectionData".format(row.vaknaam))
     # TODO check if all sections in SectionData have buildings
 
 
@@ -144,18 +144,21 @@ def fill_profilepoints(profile_points, shape_file):
     unique_points = profile_points["CharacteristicPoint"].unique()
     id_dict = {k: v for k, v in zip(unique_points, range(1, len(unique_points) + 1))}
     for count, row in profile_points.iterrows():
-        section_data_id = (
-            SectionData.select(SectionData.id)
-            .where(SectionData.section_name == row["ProfileName"])
-            .get()
-            .id
-        )
-        ProfilePoint.create(
-            section_data=section_data_id,
-            profile_point_type=id_dict[row["CharacteristicPoint"]],
-            x_coordinate=row["x"],
-            y_coordinate=row["z"],
-        )
+        try:
+            section_data_id = (
+                SectionData.select(SectionData.id)
+                .where(SectionData.section_name == row["ProfileName"])
+                .get()
+                .id
+            )
+            ProfilePoint.create(
+                section_data=section_data_id,
+                profile_point_type=id_dict[row["CharacteristicPoint"]],
+                x_coordinate=row["x"],
+                y_coordinate=row["z"],
+            )
+        except:
+            warnings.warn("Dijkvak {} niet in SectionData".format(row.vaknaam))
     for id in id_dict.keys():
         CharacteristicPointType.create(id=id_dict[id], name=id)
 
