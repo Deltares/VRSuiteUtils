@@ -147,7 +147,7 @@ def fill_profilepoints(profile_points, shape_file):
         try:
             section_data_id = (
                 SectionData.select(SectionData.id)
-                .where(SectionData.section_name == row["ProfileName"])
+                .where(SectionData.section_name == row["vaknaam"])
                 .get()
                 .id
             )
@@ -551,7 +551,7 @@ def compare_databases(path_to_generated_db, path_to_reference_db):
             continue
     # Step 5: Perform assertions
     if len(comparison_message)>0:
-        AssertionError(comparison_message)
+        raise AssertionError(comparison_message)
 
     # Close the database connections
     generated_db_conn.close()
