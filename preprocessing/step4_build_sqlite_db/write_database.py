@@ -13,7 +13,7 @@ from vrtool.orm.models import *
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from preprocessing import generic_data
 
-def fill_diketrajectinfo_table(traject):
+def fill_diketrajectinfo_table(traject,length):
     traject_data = pd.read_csv(
         generic_data.joinpath("diketrajectinfo.csv"),
         index_col=0,
@@ -33,6 +33,7 @@ def fill_diketrajectinfo_table(traject):
         flood_damage=traject_data["flood_damage"],
         N_overflow=traject_data["N_overflow"],
         N_blockrevetment=traject_data["N_blockrevetment"],
+        traject_length = length
     )
 
 

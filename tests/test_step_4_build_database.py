@@ -67,7 +67,7 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
    db_obj = open_database(_output_path)
 
    # diketractinfo
-   fill_diketrajectinfo_table(traject=traject)
+   fill_diketrajectinfo_table(traject=traject,length = shapefile.m_eind.max())
    # sectiondata
    fill_sectiondata_table(
       traject=traject,
