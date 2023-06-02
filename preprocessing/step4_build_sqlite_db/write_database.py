@@ -510,3 +510,49 @@ def fill_measures(measure_table):
     for section_id in section_ids:
         for measure_id in measure_ids:
             MeasurePerSection.create(section=section_id, measure=measure_id)
+
+def compare_databases(path_to_generated_db, path_to_reference_db):
+    import sqlite3
+
+    # Step 1: Connect to databases
+    generated_db_conn = sqlite3.connect(path_to_generated_db)
+    reference_db_conn = sqlite3.connect(path_to_reference_db)
+
+    # Step 2: Fetch table information
+    generated_tables = generated_db_conn.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+    reference_tables = reference_db_conn.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+    #check if the tables are equal and write to log
+    comparison_message = ""
+
+    if not generated_tables == reference_tables:
+        comparison_message += "The generated database and the reference database do not have the same tables \n"
+    # Step 3: Compare table structure
+    for table_name in generated_tables:
+        # Fetch table structure from generated database
+        generated_table_structure = generated_db_conn.execute(f"PRAGMA table_info({table_name[0]});").fetchall()
+
+        # Fetch table structure from reference database
+        reference_table_structure = reference_db_conn.execute(f"PRAGMA table_info({table_name[0]});").fetchall()
+
+        # Compare the structures
+        if not generated_table_structure == reference_table_structure:
+            comparison_message += "The generated database and the reference database do not have the same table structure for table {} \n".format(table_name[0])
+    # Step 4: Compare table contents
+    for table_name in generated_tables:
+        # Fetch all rows from the generated database
+        generated_rows = generated_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
+
+        # Fetch all rows from the reference database
+        reference_rows = reference_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
+
+        # Compare the rows and columns
+        if not generated_rows == reference_rows:
+            comparison_message += "The generated database and the reference database do not have the same table contents for table {} \n".format(table_name[0])
+            continue
+    # Step 5: Perform assertions
+    if len(comparison_message)>0:
+        AssertionError(comparison_message)
+
+    # Close the database connections
+    generated_db_conn.close()
+    reference_db_conn.close()

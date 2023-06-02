@@ -88,4 +88,11 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
    # fill measures
    fill_measures(measure_table=measures_table)
 
+   #assert that the database is equal to the reference database
+   _reference_database = _test_data_dir.joinpath('reference_databases','{}_{}.db'.format(traject,test_name))
+   assert _reference_database.exists(), "No reference database available at {}".format(_reference_database)
+
+   compare_databases(_output_path, _reference_database)
+
+
 
