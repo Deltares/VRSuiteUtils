@@ -7,12 +7,14 @@ from vrtool.orm.orm_controllers import *
 from tests import test_data, test_results
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
+import pandas as pd
 
-
-@pytest.mark.parametrize("traject", [pytest.param("38-1", id="Traject 38-1")])
-def test_make_database(traject: str, request: pytest.FixtureRequest):
+@pytest.mark.parametrize("traject,test_name", [pytest.param("38-1", "no_housing", id="38-1 no_housing"),
+                                               pytest.param("38-1", "overflow_no_housing", id="38-1 overflow no_housing"),
+                                               pytest.param("38-1", "full", id="38-1 volledig"),])
+def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequest):
    # remove output_path
-   _output_path = test_results.joinpath(request.node.name, traject, "test.db")
+   _output_path = test_results.joinpath(request.node.name, "{}_{}.db".format(traject,test_name))
    if _output_path.parent.exists():
       shutil.rmtree(_output_path.parent)
 
@@ -24,6 +26,11 @@ def test_make_database(traject: str, request: pytest.FixtureRequest):
    )
 
    shapefile = gpd.read_file(_test_data_dir.joinpath("reference_shape.geojson"))
+
+   vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int})
+   #reset in_analyse in shapefile based on vakindeling_csv. This is only for testdata.
+   shapefile = pd.merge(shapefile.drop(columns=['in_analyse']),vakindeling_csv[['objectid','in_analyse']],on='objectid')
+
    # read the HR_input
    HR_input = pd.read_csv(
       _test_data_dir.joinpath("HRING_data_reference.csv")
@@ -76,43 +83,9 @@ def test_make_database(traject: str, request: pytest.FixtureRequest):
    fill_profilepoints(profile_points=profile_table, shape_file=shapefile)
 
    # fill all the mechanisms
-   # fill_mechanisms(overflow_table=overflow_table,piping_table=piping_table,stability_table=stability_table, shape_file=shapefile)
+   fill_mechanisms(overflow_table=overflow_table,piping_table=piping_table,stability_table=stability_table, shape_file=shapefile)
 
    # fill measures
    fill_measures(measure_table=measures_table)
 
-   # SectionData(dike_traject=)
-   # SectionData.get_or_create()
-   # peewee doc
 
-   # start with trajectinfo
-   # then sectiondata
-   # test_orm_controllers ".create(ojbectwith info). updating values can be done through loop
-   print(db_obj)
-   #
-   # db = SQLiteDatabase(output_path,traject)
-   #
-   # #load vakindeling shape
-   # db.load_vakindeling_shape(shape_path=Path('test_data').joinpath('38-1','reference_shape.shp'))
-   #
-   # db.write_diketrajectinfo_table()
-   #
-   # db.write_sectiondata_table()
-
-   # #load waterleveldata
-   # db.load_waterleveldata()
-   # #load overflowdata
-   # db.load_overflowdata()
-   #
-   # db.load_pipingdata()
-   #
-   # db.load_stabilitydata()
-
-   # load
-   # write trajectinfo
-
-   # assert db.output_path == output_path
-   # assert db.traject == traject
-   # assert db.cnx is not None
-   # assert db.cursor is not None
-   # assert db.cursor.execute('SELECT SQLITE_VERSION()').fetchone()[0] == '3.31.1'
