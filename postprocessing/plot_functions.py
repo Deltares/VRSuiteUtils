@@ -34,7 +34,7 @@ def plot_assessment_betas(shapefile, betas, output_dir, year=2025, mechanism_dic
     shapes = {}
     for mech in mechanism_dict.keys():
         subset = betas.loc[betas.mechanism == mech]
-        shapes[mech] = shapefile.merge(subset, left_on='NUMMER', right_on='name')
+        shapes[mech] = shapefile.merge(subset, left_on="vaknaam", right_on="name")
 
     sns.set_style('whitegrid')
     fig, ax = plt.subplots(nrows=3, figsize=(12, 5))
@@ -54,8 +54,8 @@ def plot_assessment_betas(shapefile, betas, output_dir, year=2025, mechanism_dic
 def plot_assessment_probabilities(shapefile, probabilities, output_dir, year=2025, mechanism_dict = {'StabilityInner':'Stabiliteit', 'Piping':'Piping','Overflow':'Overslag'},close_output=True):
     shapes = {}
     for mech in mechanism_dict.keys():
-        subset = probabilities.loc[probabilities.mechanism==mech]
-        shapes[mech] = shapefile.merge(subset,left_on='NUMMER',right_on='name')
+        subset = probabilities.loc[probabilities.mechanism == mech]
+        shapes[mech] = shapefile.merge(subset, left_on="vaknaam", right_on="name")
 
     sns.set_style('whitegrid')
     fig,ax = plt.subplots(nrows=3,figsize=(12,5))
@@ -94,12 +94,38 @@ def plot_pf_length_cost(vr, dsn, initial_betas, shapefile, output_dir, section_l
         x_vr = pd.concat([pd.Series([0]), get_cum_costs(vr['section_order'], vr['optimal_measures'])])
         x_dsn = pd.concat([pd.Series([0]), get_cum_costs(dsn['section_order'], dsn['optimal_measures'])])
     else:
-        return 'Error: no section lengths or optimal measures provided'
-    ax.plot(x_vr, vr['traject_probs'][:, year_ind], label='Veiligheidsrendement', color='red', marker='.')
-    ax.plot(x_dsn, dsn['traject_probs'][:, year_ind], label='Doorsnede-eisen', color='green', marker='.')
-    ax.hlines(standards['Ondergrens'], 0, shapefile.MEAS_END.max(), label='Ondergrens', color='k', linestyle='--')
+        return "Error: no section lengths or optimal measures provided"
+    ax.plot(
+        x_vr,
+        vr["traject_probs"][:, year_ind],
+        label="Veiligheidsrendement",
+        color="red",
+        marker=".",
+    )
+    ax.plot(
+        x_dsn,
+        dsn["traject_probs"][:, year_ind],
+        label="Doorsnede-eisen",
+        color="green",
+        marker=".",
+    )
+    ax.hlines(
+        standards["Ondergrens"],
+        0,
+        shapefile.m_eind.max(),
+        label="Ondergrens",
+        color="k",
+        linestyle="--",
+    )
 
-    ax.hlines(standards['Signaleringswaarde'], 0, shapefile.MEAS_END.max(), label='Signaleringswaarde', color='k', linestyle=':')
+    ax.hlines(
+        standards["Signaleringswaarde"],
+        0,
+        shapefile.m_eind.max(),
+        label="Signaleringswaarde",
+        color="k",
+        linestyle=":",
+    )
     # text labels vr:
     for count, section in enumerate(vr['section_order'], 1):
         if (count % 2) == 0:
@@ -112,15 +138,26 @@ def plot_pf_length_cost(vr, dsn, initial_betas, shapefile, output_dir, section_l
         if (count % 2) == 0:
             ax.text(x_dsn.iloc[count], 1e-6, section.strip('DV'), rotation=90, verticalalignment='top', color='green')
         else:
-            ax.text(x_dsn.iloc[count], 1e-6, section.strip('DV'), rotation=90, verticalalignment='bottom', color='green')
-    ax.set_yscale('log')
-    if mode == 'Length':
-        ax.set_xlim(left=0, right=shapefile.MEAS_END.max())
-        ax.set_title('Faalkans i.r.t. versterkte lengte ({})'.format(year))
-        ax.set_xlabel('Versterkte lengte in meters')
-    elif mode == 'Cost':
-        x_max_right = np.max([get_cum_costs(vr['section_order'], vr['optimal_measures']).max(),
-                              get_cum_costs(dsn['section_order'], dsn['optimal_measures']).max()])
+            ax.text(
+                x_dsn.iloc[count],
+                1e-6,
+                section.strip("DV"),
+                rotation=90,
+                verticalalignment="bottom",
+                color="green",
+            )
+    ax.set_yscale("log")
+    if mode == "Length":
+        ax.set_xlim(left=0, right=shapefile.m_eind.max())
+        ax.set_title("Faalkans i.r.t. versterkte lengte ({})".format(year))
+        ax.set_xlabel("Versterkte lengte in meters")
+    elif mode == "Cost":
+        x_max_right = np.max(
+            [
+                get_cum_costs(vr["section_order"], vr["optimal_measures"]).max(),
+                get_cum_costs(dsn["section_order"], dsn["optimal_measures"]).max(),
+            ]
+        )
         ax.set_xlim(left=0, right=x_max_right)
         ax.set_title('Faalkans i.r.t. kosten ({})'.format(year))
         ax.set_xlabel('Kosten in miljoenen euro\'s')
