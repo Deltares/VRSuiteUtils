@@ -107,14 +107,14 @@ def read_measures_data(file_path):
 
 def read_profilepoints_data(files_path):
     profile_data = pd.DataFrame(
-        columns=["ProfileName", "CharacteristicPoint", "x", "z"]
+        columns=["vaknaam", "CharacteristicPoint", "x", "z"]
     )
     for profile_file in files_path.iterdir():
         profile_name = profile_file.stem
         profile = pd.read_csv(profile_file, index_col=0)
         profile_points = pd.DataFrame(
             {
-                "ProfileName": [profile_name] * profile.shape[0],
+                "vaknaam": [profile_name] * profile.shape[0],
                 "CharacteristicPoint": list(profile.index),
                 "x": list(profile.x),
                 "z": list(profile.z),
