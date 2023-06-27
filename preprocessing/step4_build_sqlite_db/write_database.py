@@ -13,7 +13,7 @@ from vrtool.orm.models import *
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from preprocessing import generic_data
 
-def fill_diketrajectinfo_table(traject):
+def fill_diketrajectinfo_table(traject,length):
     traject_data = pd.read_csv(
         generic_data.joinpath("diketrajectinfo.csv"),
         index_col=0,
@@ -33,6 +33,7 @@ def fill_diketrajectinfo_table(traject):
         flood_damage=traject_data["flood_damage"],
         N_overflow=traject_data["N_overflow"],
         N_blockrevetment=traject_data["N_blockrevetment"],
+        traject_length = length
     )
 
 
@@ -89,12 +90,12 @@ def fill_buildings(buildings):
         try:
             vak_id = (
                 SectionData.select(SectionData.id)
-                .where(SectionData.section_name == row.NUMMER)
+                .where(SectionData.section_name == row.vaknaam)
                 .get()
                 .id
             )
 
-            row_filtered = row.drop(index=["OBJECTID", "NUMMER"])
+            row_filtered = row.drop(index=["objectid", "vaknaam"])
             for distance, number in row_filtered.iteritems():
                 Buildings.create(
                     section_data=vak_id,
@@ -102,7 +103,7 @@ def fill_buildings(buildings):
                     number_of_buildings=number,
                 )
         except:
-            warnings.warn("Dijkvak {} niet in SectionData".format(row.NUMMER))
+            warnings.warn("Dijkvak {} niet in SectionData".format(row.vaknaam))
     # TODO check if all sections in SectionData have buildings
 
 
@@ -144,18 +145,21 @@ def fill_profilepoints(profile_points, shape_file):
     unique_points = profile_points["CharacteristicPoint"].unique()
     id_dict = {k: v for k, v in zip(unique_points, range(1, len(unique_points) + 1))}
     for count, row in profile_points.iterrows():
-        section_data_id = (
-            SectionData.select(SectionData.id)
-            .where(SectionData.section_name == row["ProfileName"])
-            .get()
-            .id
-        )
-        ProfilePoint.create(
-            section_data=section_data_id,
-            profile_point_type=id_dict[row["CharacteristicPoint"]],
-            x_coordinate=row["x"],
-            y_coordinate=row["z"],
-        )
+        try:
+            section_data_id = (
+                SectionData.select(SectionData.id)
+                .where(SectionData.section_name == row["vaknaam"])
+                .get()
+                .id
+            )
+            ProfilePoint.create(
+                section_data=section_data_id,
+                profile_point_type=id_dict[row["CharacteristicPoint"]],
+                x_coordinate=row["x"],
+                y_coordinate=row["z"],
+            )
+        except:
+            warnings.warn("Dijkvak {} niet in SectionData".format(row.vaknaam))
     for id in id_dict.keys():
         CharacteristicPointType.create(id=id_dict[id], name=id)
 
@@ -507,3 +511,49 @@ def fill_measures(measure_table):
     for section_id in section_ids:
         for measure_id in measure_ids:
             MeasurePerSection.create(section=section_id, measure=measure_id)
+
+def compare_databases(path_to_generated_db, path_to_reference_db):
+    import sqlite3
+
+    # Step 1: Connect to databases
+    generated_db_conn = sqlite3.connect(path_to_generated_db)
+    reference_db_conn = sqlite3.connect(path_to_reference_db)
+
+    # Step 2: Fetch table information
+    generated_tables = generated_db_conn.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+    reference_tables = reference_db_conn.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+    #check if the tables are equal and write to log
+    comparison_message = ""
+
+    if not generated_tables == reference_tables:
+        comparison_message += "The generated database and the reference database do not have the same tables \n"
+    # Step 3: Compare table structure
+    for table_name in generated_tables:
+        # Fetch table structure from generated database
+        generated_table_structure = generated_db_conn.execute(f"PRAGMA table_info({table_name[0]});").fetchall()
+
+        # Fetch table structure from reference database
+        reference_table_structure = reference_db_conn.execute(f"PRAGMA table_info({table_name[0]});").fetchall()
+
+        # Compare the structures
+        if not generated_table_structure == reference_table_structure:
+            comparison_message += "The generated database and the reference database do not have the same table structure for table {} \n".format(table_name[0])
+    # Step 4: Compare table contents
+    for table_name in generated_tables:
+        # Fetch all rows from the generated database
+        generated_rows = generated_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
+
+        # Fetch all rows from the reference database
+        reference_rows = reference_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
+
+        # Compare the rows and columns
+        if not generated_rows == reference_rows:
+            comparison_message += "The generated database and the reference database do not have the same table contents for table {} \n".format(table_name[0])
+            continue
+    # Step 5: Perform assertions
+    if len(comparison_message)>0:
+        raise AssertionError(comparison_message)
+
+    # Close the database connections
+    generated_db_conn.close()
+    reference_db_conn.close()
