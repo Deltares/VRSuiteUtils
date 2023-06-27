@@ -11,17 +11,19 @@ def cli():
 @cli.command(
     name="overflow", help="Generates and evalutes the Hydraring overflow data."
 )
-@click.argument("work_dir", type=click.Path(exists=True), nargs=1)
-@click.argument("database_paths", type=click.Path(exists=True), nargs=2)
-@click.argument("hydraring_path", type=click.Path(exists=True), nargs=1)
-@click.argument("file_name", type=str, nargs=1)
-def generate_and_evaluate_hydraring_computations(**kwargs):
+@click.option("--work_dir", type=click.Path(), nargs=1, required=True)
+@click.option("--database_paths", type=click.Path(), multiple=True, required=True)
+@click.option("--hydraring_path", type=click.Path(), nargs=1, required=True)
+@click.option("--file_name", type=str, nargs=1, required=True)
+def generate_and_evaluate_hydraring_computations(
+    work_dir, database_paths, hydraring_path, file_name
+):
     main(
-        Path(kwargs["work_dir"]),
+        Path(work_dir),
         list(
-            map(Path(kwargs["database_paths"])),
-            Path(kwargs["hydraring_path"]),
-            kwargs["file_name"],
+            map(Path(database_paths)),
+            Path(hydraring_path),
+            file_name,
         ),
     )
 
