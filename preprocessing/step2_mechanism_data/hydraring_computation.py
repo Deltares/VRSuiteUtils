@@ -11,17 +11,11 @@ import pandas as pd
 
 
 class HydraRingComputation:
-    def __init__(
-        self,
-        HRING_path=r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236",
-    ):
-        # default HRING_path is to latest Riskeer version.
-        self.HydraRingPath = Path(HRING_path).joinpath("MechanismComputation.exe")
+    def __init__(self):
+        pass
 
-    def run_hydraring(
-        self,
-        inifile: Path,
-    ):
+    def run_hydraring(self, HydraRingPath: Path, inifile: Path):
+        self.HydraRingPath = Path(HydraRingPath).joinpath("MechanismComputation.exe")
         subprocess.run([str(self.HydraRingPath), str(inifile)], cwd=str(inifile.parent))
 
     def get_HRING_config(self, db_path):

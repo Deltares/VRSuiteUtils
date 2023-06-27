@@ -1,4 +1,4 @@
-from preprocessing.workflows.hydraring_overflow_workflow import main
+from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from pathlib import Path
 
 
@@ -15,5 +15,5 @@ def test_default_case():
         Path(r"c:\VRM\test_hydraring_workflow_wdod\HR\2023"),
         Path(r"c:\VRM\test_hydraring_workflow_wdod\HR\2100"),
     ]
-    file_name = "HR_default.csv"
-    main(work_dir, database_paths, HydraRing_path, file_name)
+    file_name = r"c:\VRM\test_hydraring_workflow_wdod\HR_default.csv"
+    overflow_main(work_dir, database_paths, HydraRing_path, file_name)

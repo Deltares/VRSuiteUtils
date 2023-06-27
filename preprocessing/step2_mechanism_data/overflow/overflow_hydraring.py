@@ -16,14 +16,9 @@ from preprocessing.step2_mechanism_data.hydraring_computation import (
 
 
 class OverflowComputationInput(HydraRingComputation):
-    def __init__(
-        self,
-        HRING_path=r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe",
-    ):
+    def __init__(self):
         self.CalculationTypeID = 6
         self.MechanismID = 101
-        # Prototype initialization 3.x:
-        super().__init__(HRING_path=HRING_path)
 
     def get_critical_discharge(self, discharge_path):
         critical_discharges = pd.read_csv(discharge_path, index_col=0)
