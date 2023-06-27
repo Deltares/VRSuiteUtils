@@ -20,11 +20,9 @@ def generate_and_evaluate_hydraring_computations(
 ):
     main(
         Path(work_dir),
-        list(
-            map(Path(database_paths)),
-            Path(hydraring_path),
-            file_name,
-        ),
+        list(map(Path, database_paths)),
+        Path(hydraring_path),
+        file_name,
     )
 
 
