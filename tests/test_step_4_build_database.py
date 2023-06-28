@@ -27,7 +27,8 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
 
    shapefile = gpd.read_file(_test_data_dir.joinpath("reference_shape.geojson"))
 
-   vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int})
+   vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=";", lineterminator="\n")
+   
    #reset in_analyse in shapefile based on vakindeling_csv. This is only for testdata.
    shapefile = pd.merge(shapefile.drop(columns=['in_analyse']),vakindeling_csv[['objectid','in_analyse']],on='objectid')
 
@@ -49,6 +50,9 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
 
    # read the data for stability
    stability_table = read_stability_data(_intermediate_dir.joinpath("STBI_data.csv"))
+
+   # read the data for revetments
+   slope_part_table, rel_GEBU_table, rel_ZST_table = read_revetment_data(_intermediate_dir.joinpath("Bekleding"))
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
@@ -83,7 +87,9 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
    fill_profilepoints(profile_points=profile_table, shape_file=shapefile)
 
    # fill all the mechanisms
-   fill_mechanisms(overflow_table=overflow_table,piping_table=piping_table,stability_table=stability_table, shape_file=shapefile)
+   fill_mechanisms(overflow_table=overflow_table, piping_table=piping_table, 
+                   slope_part_table=slope_part_table, rel_GEBU_table=rel_GEBU_table, rel_ZST_table=rel_ZST_table,
+                   stability_table=stability_table, shape_file=shapefile)
 
    # fill measures
    fill_measures(measure_table=measures_table)
