@@ -164,13 +164,8 @@ def fill_profilepoints(profile_points, shape_file):
         CharacteristicPointType.create(id=id_dict[id], name=id)
 
 
-def fill_mechanisms(
+def fill_mechanisms(mechanism_data,
     shape_file,
-    overflow_table=None,
-    piping_table=None,
-    stability_table=None,
-    revetment_table=None,
-    structures_table=None,
 ):
     default_mechanisms = [
         "Overflow",
@@ -204,15 +199,22 @@ def fill_mechanisms(
     # first fill the ComputationType table
     for computation_type in ["HRING", "SEMIPROB", "SIMPLE", "DSTABILITY"]:
         ComputationType.create(name=computation_type)
-    if isinstance(overflow_table, pd.DataFrame):
-        fill_overflow(overflow_table, shape_file=shape_file)
+        #check if dict has key
+    if 'overslag' in mechanism_data.keys():
+        if isinstance(mechanism_data['overslag'], pd.DataFrame):
+            fill_overflow(mechanism_data['overslag'], shape_file=shape_file)
 
-    if isinstance(stability_table, pd.DataFrame):
-        fill_stability(stability_table, shape_file=shape_file)
+    if 'stabiliteit' in mechanism_data.keys():
+        if isinstance(mechanism_data['stabiliteit'], pd.DataFrame):
+            fill_stability(mechanism_data['stabiliteit'], shape_file=shape_file)
 
-    if isinstance(piping_table, pd.DataFrame):
-        fill_piping(piping_table, shape_file=shape_file)
+    if 'piping' in mechanism_data.keys():
+        if isinstance(mechanism_data['piping'], pd.DataFrame):
+            fill_piping(mechanism_data['piping'], shape_file=shape_file)
 
+    if 'slope_part_table' in mechanism_data.keys():
+        if isinstance(mechanism_data['slope_part_table'], dict):
+            fill_revetment(mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table'], shape_file=shape_file)
 
 def fill_overflow(overflow_table, shape_file, computation_type="HRING"):
     # get id of Overflow from Mechanism table
@@ -455,9 +457,82 @@ def add_computation_scenario(
         raise Exception("Unknown mechanism in ComputationScenario")
 
 
-def fill_revetment():
-    pass
+def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
+    
+    # get id of Revetment from Mechanism table
+    revetment_id = (
+        Mechanism.select(Mechanism.id).where(Mechanism.name == "Revetment").get().id
+    )
+    relevant_indices = [
+        val
+        for val in MechanismPerSection.select()
+        .where(MechanismPerSection.mechanism == revetment_id)
+        .dicts()
+    ]
+    
+    # loop over relevant_indices
+    for count, row in enumerate(relevant_indices):
+        # sscenario name should be equal to LocationId in overflow_table
+        section_name = (
+            SectionData.select()
+            .where(SectionData.id == row["section"])
+            .get()
+            .section_name
+        )
+        scenario_name = shape_file.loc[shape_file["vaknaam"] == section_name][
+            "bekledingen"
+        ].values[0]
+        
+        computation_type = (
+            ComputationType.select().where(ComputationType.name == "SEMIPROB").get().id
+        )
+        
+        ComputationScenario.create(
+            mechanism_per_section=row["id"],
+            mechanism=revetment_id,
+            computation_name=scenario_name,
+            scenario_name=scenario_name,
+            scenario_probability=1.0,
+            computation_type=computation_type,
+            probability_of_failure=1.0,
+        )
+        
+        computation_id = (
+            ComputationScenario.select()
+            .where(ComputationScenario.mechanism_per_section == row["id"])
+            .get()
+            .id
+        )
 
+        index = np.argwhere(np.array(slope_part_table["location"])==row["section"])
+        for ind in index:
+            current_slope_part = SlopePart.create(
+                computation_scenario_id = computation_id,
+                begin_part = slope_part_table["begin_part"][ind[0]],
+                end_part = slope_part_table["end_part"][ind[0]],
+                top_layer_type = slope_part_table["top_layer_type"][ind[0]],
+                top_layer_thickness = slope_part_table["top_layer_thickness"][ind[0]],
+                tan_alpha = slope_part_table["tan_alpha"][ind[0]],
+            )
+
+            if slope_part_table["top_layer_type"][ind[0]]>=26.0 and slope_part_table["top_layer_type"][ind[0]]<=27.9:
+                index1 = np.argwhere((np.array(rel_ZST_table["location"])==row["section"]) & (np.array(rel_ZST_table["slope_part"])==slope_part_table["slope_part"][ind[0]]))
+                for ind1 in index1:
+                    BlockRevetmentRelation.create(
+                        slope_part_id = current_slope_part.get_id(),
+                        year = rel_ZST_table["year"][ind1[0]],
+                        top_layer_thickness = rel_ZST_table["top_layer_thickness"][ind1[0]],
+                        beta = rel_ZST_table["beta"][ind1[0]],
+                    )
+
+        index = np.argwhere(np.array(rel_GEBU_table["location"])==row["section"])    
+        for ind in index:
+            GrassRevetmentRelation.create(  
+                computation_scenario_id = computation_id,
+                year = rel_GEBU_table["year"][ind[0]],
+                transition_level = rel_GEBU_table["transition_level"][ind[0]],
+                beta = rel_GEBU_table["beta"][ind[0]],
+            )
 
 def fill_structures():
     pass
@@ -475,6 +550,7 @@ def fill_measures(measure_table):
     CombinableType.create(name="full")
     CombinableType.create(name="combinable")
     CombinableType.create(name="partial")
+
 
     # fill StandardMeasure
     for idx, row in measure_table.iterrows():

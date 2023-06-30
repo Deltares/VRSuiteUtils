@@ -1,13 +1,13 @@
 objectid,vaknaam,m_start,m_eind,in_analyse,van_dp,tot_dp,stabiliteit,piping,overslag,bekledingen,kunstwerken,opmerkingen,,Kolom,,Beschrijving
 1,01A,0,359,TRUE,RK000.+000,RW002.+019,RW001.+096,12004,RW000,,,,,objectid,Verplicht,Unieke identifier (moeten verschillende getallen zijn)
-2,01B,359,585,TRUE,RW002.+019,RW004.+047,RW002.+035,11862,RW003,,,,,vaknaam,Verplicht,"Nummer van het dijkvak (moet uniek zijn, kan identiek zijn aan OBJECTID)"
+2,01B,359,585,TRUE,RW002.+019,RW004.+047,RW002.+035,11862,RW003,,,,,vaknaam,Verplicht,Nummer van het dijkvak (moet uniek zijn
 3,2,585,1376,TRUE,RW004.+047,RW012.+054,RW005.+017,10990,RW012,,,,,m_start,Verplicht,startpunt op lijn in SHP van traject
 4,3,1376,1730,TRUE,RW012.+054,RW016.+004,RW014.+048,8870,RW013,,,,,m_eind,Verplicht,eindpunt op lijn in SHP van traject
 5,4,1730,2496,TRUE,RW016.+004,RW023.+110,RW018.+035,8427,RW023,,,,,in_analyse,Verplicht,Vak meenemen in analyse of niet (TRUE/FALSE)
 6,5,2496,2642,TRUE,RW023.+110,RW025.+031,RW024.+089,6804,RW024,,,,,van_dp,Optioneel,Begrenzing dijkpaalnummers
 7,6,2642,2807,TRUE,RW025.+031,RW026.+064,ET_VOLDOET,7131,RW026,,,,,tot_dp,Optioneel,Begrenzing dijkpaalnummers
 8,7,2807,3204,TRUE,RW026.+064,RW029.+113,RW029.+009,7168,RW027,,,,,{},Optioneel,Doorsnede voor een mechanisme. Wanneer dit niet wordt ingevuld moet dit later worden afgeleid uit bijv een shapefile met uittredepunten. Daarvoor zijn specifieke workflows beschikbaar.
-9,8,3204,3490,TRUE,RW029.+113,RW032.+075,RW031.+011,7864,RW032,,,,,opmerkingen,Optioneel,"extra opmerkingen, moet altijd de laatste kolom zijn"
+9,8,3204,3490,TRUE,RW029.+113,RW032.+075,RW031.+011,7864,RW032,,,,,opmerkingen,Optioneel,extra opmerkingen
 10,9,3490,4857,TRUE,RW032.+075,RW046.+049,RW035.+049,11172,RW046,,,,,,,
 11,10,4857,5741,TRUE,RW046.+049,RW055.+048,RW053.+030,11354,RW050,,,,,,,
 12,11,5741,6420,TRUE,RW055.+048,RW062.+023,RW061.+078,10078,RW062,,,,,,,
@@ -34,10 +34,10 @@ objectid,vaknaam,m_start,m_eind,in_analyse,van_dp,tot_dp,stabiliteit,piping,over
 33,31,13862,14670,TRUE,RW136.+043,RW145.+079,RW143.+079,10198,RW138,,,,,,,
 34,32,14670,15855,TRUE,RW145.+079,RW157.+047,RW152.+027,7962,RW149,,,,,,,
 35,33A,15855,16178,TRUE,RW157.+047,RW160.+062,RW162.+075,8082,RW158,,,,,,,
-36,33B,16178,16483,TRUE,RW160.+062,RW163.+056,RW162.+075_2,8731,RW163,,,"Vak heeft andere scenariokansen, extra ""doorsnede"" toegevoegd",,,,
+36,33B,16178,16483,TRUE,RW160.+062,RW163.+056,RW162.+075_2,8731,RW163,,,Vak heeft andere scenariokansen,,,,
 37,34,16483,17058,TRUE,RW163.+056,RW169.+053,RW169.+020,9453,RW168,,,,,,,
 38,35A,17058,17344,TRUE,RW169.+053,RW172.+028,RW183.+022,9099,RW171,,,,,,,
-39,35B,17344,17404,TRUE,RW172.+028,RW172.+088,RW183.+022_2,9384,RW173,,,"Vak heeft andere scenariokansen, extra ""doorsnede"" toegevoegd",,,,
+39,35B,17344,17404,TRUE,RW172.+028,RW172.+088,RW183.+022_2,9384,RW173,,,Vak heeft andere scenariokansen,,,,
 40,35C,17404,18456,TRUE,RW172.+088,RW183.+053,RW183.+022,9145,RW180,,,,,,,
 41,36,18456,18933,TRUE,RW183.+053,RW188.+018,RW184.+064,8664,RW185,,,,,,,
 42,37A,18933,19070,TRUE,RW188.+018,RW189.+054,RW189.+034,7897,RW189,,,,,,,
