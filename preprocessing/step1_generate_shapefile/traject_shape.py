@@ -120,7 +120,7 @@ class TrajectShape:
                 "vaknaam": object,
                 "m_start": float,
                 "m_eind": float,
-                "in_analyse": int,
+                "in_analyse": object,
                 "van_dp": object,
                 "tot_dp": object,
                 "stabiliteit": object,

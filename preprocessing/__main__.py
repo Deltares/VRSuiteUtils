@@ -1,6 +1,7 @@
 import click
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
+from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from pathlib import Path
 
 
@@ -8,7 +9,44 @@ from pathlib import Path
 def cli():
     pass
 
+@cli.command(
+    name="vakindeling", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
+)
+@click.option("--traject_id",
+              type=str,
+              nargs=1,
+              required=True,
+              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
+@click.option("--vakindeling_csv",
+              type=str,
+              nargs=1,
+              required=True,
+              help="Link naar de CSV met de vakindeling ")
+@click.option("--output_folder",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
+              " te vinden in: "
+                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
+@click.option("--traject_shape",
+              type=str,
+              nargs=1,
+              required=False,
+              help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
+                   " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
+                   "gebruikt.")
+def generate_vakindeling_shape(
+    traject_id, vakindeling_csv, output_folder, traject_shape
+):
+    vakindeling_main(
+        traject_id,
+        vakindeling_csv,
+        Path(output_folder),
+        traject_shape,
+    )
 
+########################################################################################################################
 @cli.command(
     name="overflow", help="Generates and evalutes the Hydraring overflow data."
 )
