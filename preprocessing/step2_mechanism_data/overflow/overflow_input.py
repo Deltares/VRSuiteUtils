@@ -48,20 +48,6 @@ class OverflowInput:
         )
         return np.argmin(distance)
 
-    # @staticmethod
-    # def get_HRLocation_old(db_location, hring_data):
-    #     cnx = sqlite3.connect(db_location)
-    #     locs = pd.read_sql_query("SELECT * FROM HRDLocations", cnx)
-    #
-    #     print(locs)
-    #     for count, line in hring_data.iterrows():
-    #         hring_data.loc[count, "hrlocation"] = locs.loc[
-    #             locs["Name"] == line["hr_koppel"]
-    #         ]["HRDLocationId"].values[0] # HRDLocationId + trackID (beide uit HRD)--> LocationID (HLCD
-    #         print(hring_data["hrlocation"])
-    #     hring_data["hrlocation"] = hring_data["hrlocation"].astype(np.int64)
-    #     return hring_data
-
     @staticmethod
     def get_HRLocation(hrd_db_location, hlcd_db_location, hring_data):
         hrd_cnx = sqlite3.connect(hrd_db_location)
