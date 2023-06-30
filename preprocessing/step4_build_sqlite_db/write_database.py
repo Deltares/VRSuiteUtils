@@ -164,15 +164,8 @@ def fill_profilepoints(profile_points, shape_file):
         CharacteristicPointType.create(id=id_dict[id], name=id)
 
 
-def fill_mechanisms(
+def fill_mechanisms(mechanism_data,
     shape_file,
-    overflow_table=None,
-    piping_table=None,
-    stability_table=None,
-    slope_part_table=None,
-    rel_GEBU_table=None,
-    rel_ZST_table=None,
-    structures_table=None,
 ):
     default_mechanisms = [
         "Overflow",
@@ -206,17 +199,22 @@ def fill_mechanisms(
     # first fill the ComputationType table
     for computation_type in ["HRING", "SEMIPROB", "SIMPLE", "DSTABILITY"]:
         ComputationType.create(name=computation_type)
-    if isinstance(overflow_table, pd.DataFrame):
-        fill_overflow(overflow_table, shape_file=shape_file)
+        #check if dict has key
+    if 'overslag' in mechanism_data.keys():
+        if isinstance(mechanism_data['overslag'], pd.DataFrame):
+            fill_overflow(mechanism_data['overslag'], shape_file=shape_file)
 
-    if isinstance(stability_table, pd.DataFrame):
-        fill_stability(stability_table, shape_file=shape_file)
+    if 'stabiliteit' in mechanism_data.keys():
+        if isinstance(mechanism_data['stabiliteit'], pd.DataFrame):
+            fill_stability(mechanism_data['stabiliteit'], shape_file=shape_file)
 
-    if isinstance(piping_table, pd.DataFrame):
-        fill_piping(piping_table, shape_file=shape_file)
+    if 'piping' in mechanism_data.keys():
+        if isinstance(mechanism_data['piping'], pd.DataFrame):
+            fill_piping(mechanism_data['piping'], shape_file=shape_file)
 
-    if isinstance(slope_part_table, dict):
-        fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file=shape_file)
+    if 'slope_part_table' in mechanism_data.keys():
+        if isinstance(mechanism_data['slope_part_table'], dict):
+            fill_revetment(mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table'], shape_file=shape_file)
 
 def fill_overflow(overflow_table, shape_file, computation_type="HRING"):
     # get id of Overflow from Mechanism table
