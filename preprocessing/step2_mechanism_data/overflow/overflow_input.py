@@ -55,8 +55,6 @@ class OverflowInput:
         hrd_locs = pd.read_sql_query("SELECT * FROM HRDLocations", hrd_cnx)
         track_id = pd.read_sql_query("SELECT TrackID FROM General", hrd_cnx).values[0][0]
         hlcd_locs = pd.read_sql_query("SELECT * FROM Locations", hlcd_cnx)
-        print(track_id)
-        print(hrd_locs)
         for count, line in hring_data.iterrows():
             hrd_location = hrd_locs.loc[
                 hrd_locs["Name"] == line["hr_koppel"]
@@ -67,7 +65,6 @@ class OverflowInput:
             hring_data.loc[count, "hrlocation"] = hlcd_location
 
         hring_data["hrlocation"] = hring_data["hrlocation"].astype(np.int64)
-        print(hring_data["hrlocation"])
         return hring_data
 
     def select_locs(self):
