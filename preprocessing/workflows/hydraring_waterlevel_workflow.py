@@ -79,27 +79,3 @@ def waterlevel_main(
             )
             # run Hydra-Ring
             HydraRingComputation().run_hydraring(HydraRing_path, computation.ini_path)
-#
-#
-# if __name__ == "__main__":
-#     # MAIN SETTINGS:
-#     # working directory:
-#     work_dir = Path(
-#         r"c:\VRM\test_hydraring_workflow_wdod\waterstand_missing_hrlocations"
-#     )
-#
-#     # path to Hydra-Ring:
-#     HydraRing_path = Path(
-#         r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236"
-#     )
-#     # list of paths to databases to be considered
-#     database_paths = [
-#         Path(
-#             r"c:\VRM\test_hydraring_workflow_wdod\HR\2023"
-#         ),
-#         Path(
-#             r"c:\VRM\test_hydraring_workflow_wdod\HR\2100"
-#         )
-#     ]
-#     file_name = "HR_default - Copy.csv"
-#     main(work_dir, database_paths, HydraRing_path, file_name)
