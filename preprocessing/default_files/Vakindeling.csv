@@ -1,0 +1,10 @@
+objectid,vaknaam,m_start,m_eind,in_analyse,van_dp,tot_dp,stabiliteit,piping,overslag,bekledingen,kunstwerken,opmerkingen,,Kolom,,Beschrijving
+1,01A,0,359,TRUE,,,DP231,,,,,,,objectid,Verplicht,Unieke identifier (moeten verschillende getallen zijn)
+2,01B,359,585,TRUE,,,DP234,,,,,,,vaknaam,Verplicht,"Nummer van het dijkvak (moet uniek zijn, kan identiek zijn aan OBJECTID)"
+,,,,,,,,,,,,,,m_start,Verplicht,startpunt op lijn in SHP van traject
+,,,,,,,,,,,,,,m_eind,Verplicht,eindpunt op lijn in SHP van traject
+,,,,,,,,,,,,,,in_analyse,Verplicht,Vak meenemen in analyse of niet (TRUE/FALSE)
+,,,,,,,,,,,,,,van_dp,Optioneel,Begrenzing dijkpaalnummers
+,,,,,,,,,,,,,,tot_dp,Optioneel,Begrenzing dijkpaalnummers
+,,,,,,,,,,,,,,{},Optioneel,Doorsnede voor een mechanisme. Wanneer dit niet wordt ingevuld moet dit later worden afgeleid uit bijv een shapefile met uittredepunten. Daarvoor zijn specifieke workflows beschikbaar.
+,,,,,,,,,,,,,,opmerkingen,Optioneel,"extra opmerkingen, moet altijd de laatste kolom zijn"
