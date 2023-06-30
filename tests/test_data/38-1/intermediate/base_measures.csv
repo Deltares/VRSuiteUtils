@@ -1,0 +1,8 @@
+Name,Type,ID,available,Class,Direction,year,max_inward,max_outward,dcrest_min,dcrest_max,StabilityScreen,P_solution,Pf_solution,dSF
+Grondversterking binnenwaarts 2045,Soil reinforcement,1,1,combinable,inward,20,30,0,0,2,0,,,
+Grondversterking binnenwaarts 2025,Soil reinforcement,2,1,combinable,inward,0,30,0,0,2,0,,,
+Grondversterking met stabiliteitsscherm 2045,Soil reinforcement with stability screen,3,1,full,inward,20,30,0,0,2,1,,,
+Grondversterking met stabiliteitsscherm 2025,Soil reinforcement with stability screen,4,1,full,inward,0,30,0,0,2,1,,,
+Verticaal Zanddicht Geotextiel,Vertical Geotextile,5,1,partial,,0,30,0,0,2,,0.001,1.00E-12,
+Zelfkerende constructie,Diaphragm Wall,6,1,full,,0,30,0,0,2,,1.00E-08,1.00E-12,
+Stabiliteitsscherm,Stability Screen,7,1,full,,0,30,0,0,2,,,,0.2
