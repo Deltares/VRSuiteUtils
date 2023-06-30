@@ -13,13 +13,11 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
 )
 
 
-def main(
-    work_dir,
-    database_paths,
-    HydraRing_path=Path(
-        r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\config.sqlite"
-    ),
-    file_name="HR_default.csv",
+def waterlevel_main(
+    work_dir: Path,
+    database_paths: list[Path],
+    HydraRing_path: Path,
+    file_name: str,
 ):
     """This is the main function of the workflow.
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
@@ -80,28 +78,28 @@ def main(
                 HydraRing_path.joinpath("config.sqlite"),
             )
             # run Hydra-Ring
-            HydraRingComputation().run_hydraring(computation.ini_path)
-
-
-if __name__ == "__main__":
-    # MAIN SETTINGS:
-    # working directory:
-    work_dir = Path(
-        r"c:\VRM\test_hydraring_workflow_wdod\waterstand_missing_hrlocations"
-    )
-
-    # path to Hydra-Ring:
-    HydraRing_path = Path(
-        r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236"
-    )
-    # list of paths to databases to be considered
-    database_paths = [
-        Path(
-            r"c:\VRM\test_hydraring_workflow_wdod\HR\2023"
-        ),
-        Path(
-            r"c:\VRM\test_hydraring_workflow_wdod\HR\2100"
-        )
-    ]
-    file_name = "HR_default - Copy.csv"
-    main(work_dir, database_paths, HydraRing_path, file_name)
+            HydraRingComputation().run_hydraring(HydraRing_path, computation.ini_path)
+#
+#
+# if __name__ == "__main__":
+#     # MAIN SETTINGS:
+#     # working directory:
+#     work_dir = Path(
+#         r"c:\VRM\test_hydraring_workflow_wdod\waterstand_missing_hrlocations"
+#     )
+#
+#     # path to Hydra-Ring:
+#     HydraRing_path = Path(
+#         r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236"
+#     )
+#     # list of paths to databases to be considered
+#     database_paths = [
+#         Path(
+#             r"c:\VRM\test_hydraring_workflow_wdod\HR\2023"
+#         ),
+#         Path(
+#             r"c:\VRM\test_hydraring_workflow_wdod\HR\2100"
+#         )
+#     ]
+#     file_name = "HR_default - Copy.csv"
+#     main(work_dir, database_paths, HydraRing_path, file_name)
