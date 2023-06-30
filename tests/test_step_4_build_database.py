@@ -9,10 +9,11 @@ from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
 import pandas as pd
 
-@pytest.mark.parametrize("traject,test_name", [pytest.param("38-1", "no_housing", id="38-1 no_housing"),
-                                               pytest.param("38-1", "overflow_no_housing", id="38-1 overflow no_housing"),
-                                               pytest.param("38-1", "full", id="38-1 volledig"),])
-def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequest):
+@pytest.mark.parametrize("traject,test_name,reference_shape", [pytest.param("38-1", "no_housing","reference_shape.geojson", id="38-1 no_housing"),
+                                               pytest.param("38-1", "overflow_no_housing", "reference_shape.geojson", id="38-1 overflow no_housing"),
+                                               pytest.param("38-1", "revetment_subset", "reference_shape_revetment.geojson", id="38-1 bekledingen"),
+                                               pytest.param("38-1", "full", "reference_shape.geojson", id="38-1 volledig"),])
+def test_make_database(traject: str, test_name: str, reference_shape: str, request: pytest.FixtureRequest):
    # remove output_path
    _output_path = test_results.joinpath(request.node.name, "{}_{}.db".format(traject,test_name))
    if _output_path.parent.exists():
@@ -25,10 +26,13 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
       _test_data_dir
    )
 
-   shapefile = gpd.read_file(_test_data_dir.joinpath("reference_shape.geojson"))
+   shapefile = gpd.read_file(_test_data_dir.joinpath(reference_shape))
 
-   vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=";", lineterminator="\n")
-   
+   try:
+      vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=",", lineterminator="\n")
+   except:
+      vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=";", lineterminator="\n")
+
    #reset in_analyse in shapefile based on vakindeling_csv. This is only for testdata.
    shapefile = pd.merge(shapefile.drop(columns=['in_analyse']),vakindeling_csv[['objectid','in_analyse']],on='objectid')
 
@@ -43,16 +47,23 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
    waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"))
 
    # read the data for overflow
-   overflow_table = read_overflow_data(_intermediate_dir.joinpath("Overslag"))
+   mechanism_data = {}
+   if not all(shapefile.overslag.isna()):
+      mechanism_data["overslag"] = read_overflow_data(_intermediate_dir.joinpath("Overslag"))
+
 
    # read the data for piping
-   piping_table = read_piping_data(_intermediate_dir.joinpath("Piping_data.csv"))
+   if not all(shapefile.piping.isna()):
+        mechanism_data["piping"] = read_piping_data(_intermediate_dir.joinpath("Piping_data.csv"))
 
    # read the data for stability
-   stability_table = read_stability_data(_intermediate_dir.joinpath("STBI_data.csv"))
+   if not all(shapefile.stabiliteit.isna()):
+      mechanism_data['stabiliteit'] = read_stability_data(_intermediate_dir.joinpath("STBI_data.csv"))
+
 
    # read the data for revetments
-   slope_part_table, rel_GEBU_table, rel_ZST_table = read_revetment_data(_intermediate_dir.joinpath("Bekleding"))
+   if not all(shapefile.bekledingen.isna()):
+      mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table'] = read_revetment_data(_intermediate_dir.joinpath("Bekleding"))
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
@@ -77,7 +88,7 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
       traject=traject,
       shape_file=shapefile,
       HR_input=HR_input,
-      geo_input=stability_table[["deklaagdikte", "pleistoceendiepte"]],
+      geo_input=mechanism_data['stabiliteit'][["deklaagdikte", "pleistoceendiepte"]],
    )
    # waterleveldata
    fill_buildings(buildings=bebouwing_table)
@@ -87,9 +98,7 @@ def test_make_database(traject: str, test_name: str, request: pytest.FixtureRequ
    fill_profilepoints(profile_points=profile_table, shape_file=shapefile)
 
    # fill all the mechanisms
-   fill_mechanisms(overflow_table=overflow_table, piping_table=piping_table, 
-                   slope_part_table=slope_part_table, rel_GEBU_table=rel_GEBU_table, rel_ZST_table=rel_ZST_table,
-                   stability_table=stability_table, shape_file=shapefile)
+   fill_mechanisms(mechanism_data=mechanism_data, shape_file=shapefile)
 
    # fill measures
    fill_measures(measure_table=measures_table)

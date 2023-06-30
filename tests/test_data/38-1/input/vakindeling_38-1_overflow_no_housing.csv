@@ -1,7 +1,7 @@
 objectid;vaknaam;m_start;m_eind;in_analyse;van_dp;tot_dp;stabiliteit;piping;overslag;bekledingen;kunstwerken;opmerkingen;;Kolom;;Beschrijving
-1;01A;0;359;FALSE;RK000.+000;RW002.+019;RW001.+096;12004;RW000;0;;;;objectid;Verplicht;Unieke identifier (moeten verschillende getallen zijn)
-2;01B;359;585;FALSE;RW002.+019;RW004.+047;RW002.+035;11862;RW003;1;;;;vaknaam;Verplicht;Nummer van het dijkvak (moet uniek zijn, kan identiek zijn aan OBJECTID)
-3;2;585;1376;FALSE;RW004.+047;RW012.+054;RW005.+017;10990;RW012;2;;;;m_start;Verplicht;startpunt op lijn in SHP van traject
+1;01A;0;359;FALSE;RK000.+000;RW002.+019;RW001.+096;12004;RW000;;;;;objectid;Verplicht;Unieke identifier (moeten verschillende getallen zijn)
+2;01B;359;585;FALSE;RW002.+019;RW004.+047;RW002.+035;11862;RW003;;;;;vaknaam;Verplicht;Nummer van het dijkvak (moet uniek zijn, kan identiek zijn aan OBJECTID)
+3;2;585;1376;FALSE;RW004.+047;RW012.+054;RW005.+017;10990;RW012;;;;;m_start;Verplicht;startpunt op lijn in SHP van traject
 4;3;1376;1730;FALSE;RW012.+054;RW016.+004;RW014.+048;8870;RW013;;;;;m_eind;Verplicht;eindpunt op lijn in SHP van traject
 5;4;1730;2496;FALSE;RW016.+004;RW023.+110;RW018.+035;8427;RW023;;;;;in_analyse;Verplicht;Vak meenemen in analyse of niet (TRUE/FALSE)
 6;5;2496;2642;FALSE;RW023.+110;RW025.+031;RW024.+089;6804;RW024;;;;;van_dp;Optioneel;Begrenzing dijkpaalnummers
