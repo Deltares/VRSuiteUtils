@@ -9,20 +9,15 @@ from preprocessing.step2_mechanism_data.hydraring_computation import (
 
 
 class WaterlevelComputationInput(HydraRingComputation):
-    def __init__(
-        self,
-        HRING_path=r"C:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\MechanismComputation.exe",
-    ):
+    def __init__(self):
         self.CalculationTypeID = 0
         self.MechanismID = 1
-        # Prototype initialization 3.x:
-        super().__init__(HRING_path=HRING_path)
 
     def fill_data(self, data):
-        self.name = data.dijkvak
+        self.name = str(data.doorsnede)
         self.h_min = data.ondergrens
         self.h_max = data.bovengrens
-        self.HRLocation = data.HRLocation
+        self.HRLocation = data.hrlocation
 
     def make_SQL_file(self, path, reference_file, step_size=0.25, t_2100=False):
         new_sql = path.joinpath(self.name + ".sql")

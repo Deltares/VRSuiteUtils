@@ -13,34 +13,39 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
 )
 
 
-def main(
-    work_dir,
-    database_paths,
-    HydraRing_path=Path(
-        r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236\config.sqlite"
-    ),
-    file_name="HR_default.csv",
+def waterlevel_main(
+    work_dir: Path,
+    database_paths: list[Path],
+    HydraRing_path: Path,
+    file_name: str,
 ):
     """This is the main function of the workflow.
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
 
     # read HRING reference csv
-    hring_data = pd.read_csv(work_dir.joinpath(file_name), index_col=0)
+    hring_data = pd.read_csv(work_dir.parent.joinpath(file_name), index_col=0)
 
-    # ensure presence of HRLocation column, otherwise get it from the database
-    if "HRLocation" not in hring_data.columns:
+    # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
+    # then hrlocation is derived from the database, using hr_koppel
+    if ("hrlocation" not in hring_data.columns or hring_data["hrlocation"].isna().any()):
         hrd_path = [
             pad
             for pad in database_paths[0].glob("*.sqlite")
             if not check_string_in_list(pad.name, [".config", "hlcd"])
         ][0]
-        hring_data = OverflowInput.get_HRLocation(hrd_path, hring_data)
+        hlcd_path = [
+            pad
+            for pad in database_paths[0].glob("*.sqlite")
+            if check_string_in_list(pad.name, ["hlcd"])
+        ][0]
+
+        hring_data = OverflowInput.get_HRLocation(hrd_path, hlcd_path, hring_data)
 
     # we can now loop over all the locations and databases to generate the Hydra-Ring input files.
     for database_path in database_paths:
         for count, location in hring_data.iterrows():
             # make output dir
-            loc_output_dir = work_dir.joinpath(database_path.stem, location.dijkvak)
+            loc_output_dir = work_dir.joinpath(database_path.stem, str(location.doorsnede))
             if loc_output_dir.exists():
                 loc_output_dir.rmdir()
             loc_output_dir.mkdir(parents=True, exist_ok=False)
@@ -73,24 +78,4 @@ def main(
                 HydraRing_path.joinpath("config.sqlite"),
             )
             # run Hydra-Ring
-            HydraRingComputation().run_hydraring(computation.ini_path)
-
-
-if __name__ == "__main__":
-    # MAIN SETTINGS:
-    # working directory:
-    work_dir = Path(
-        r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_waterstand"
-    )
-
-    # path to Hydra-Ring:
-    HydraRing_path = Path(
-        r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236"
-    )
-    # list of paths to databases to be considered
-    database_paths = [
-        Path(
-            r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_waterstand\2023"
-        )
-    ]
-    main(work_dir, database_paths, HydraRing_path, file_name="GEKB_data.csv")
+            HydraRingComputation().run_hydraring(HydraRing_path, computation.ini_path)
