@@ -484,7 +484,7 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
         ].values[0]
         
         computation_type = (
-            ComputationType.select().where(ComputationType.name == "HRING").get().id
+            ComputationType.select().where(ComputationType.name == "SEMIPROB").get().id
         )
         
         ComputationScenario.create(
