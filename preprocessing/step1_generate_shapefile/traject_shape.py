@@ -35,6 +35,16 @@ class TrajectShape:
         if len(self.NBPW_shape) > 1:
             warnings.warn("Warning: NBPW shape has more than 1 geometry")
 
+    def flip_traject(self):
+        """self.NBPW_shape['geometry'] contains a linestring of x and y coordinates. This function
+        flips both the X and Y coordinates, so that the first value becomes the last, the second the second last etc.
+        The geometry is updated in place.
+        """
+        self.NBPW_shape["geometry"] = self.NBPW_shape["geometry"].apply(
+            lambda x: geometry.LineString(list(x.coords)[::-1])
+        )
+
+
     @staticmethod
     def check_vakindeling(df_vakindeling, traject_length):
         """Function to check the integrity of a vakindeling df to be used to cut up the traject_shape of the NBPW"""
