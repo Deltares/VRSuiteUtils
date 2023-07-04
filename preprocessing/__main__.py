@@ -36,14 +36,22 @@ def cli():
               help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
                    " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
                    "gebruikt.")
+@click.option("--flip",
+              type=bool,
+              nargs=1,
+              required=False,
+              help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
+                   "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
+                   "de shapefile worden omgedraaid door deze optie op True te zetten.")
 def generate_vakindeling_shape(
-    traject_id, vakindeling_csv, output_folder, traject_shape
+    traject_id, vakindeling_csv, output_folder, traject_shape, flip
 ):
     vakindeling_main(
         traject_id,
         vakindeling_csv,
         Path(output_folder),
         traject_shape,
+        flip,
     )
 
 ########################################################################################################################
@@ -118,6 +126,7 @@ def generate_and_evaluate_waterlevel_computations(
               nargs=1,
               required=True,
               help="Link naar de HR_default.csv.")
+
 def generate_and_evaluate_water_level_computations(
     work_dir, database_paths, hydraring_path, file_name
 ):

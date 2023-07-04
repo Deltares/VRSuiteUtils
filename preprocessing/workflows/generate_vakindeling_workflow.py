@@ -10,13 +10,17 @@ from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 def vakindeling_main(traject_id: str,
                      vakindeling_csv_path: str,
                      output_folder: Path,
-                     traject_shape_path=False):
+                     traject_shape_path=False,
+                     flip_traject=False,
+                        ):
     # make traject
     traject = TrajectShape(traject_id)
 
     # get base geometry
     traject.get_traject_shape_from_NBPW(traject_shape_path)
 
+    if flip_traject:
+        traject.flip_traject()
     # cut up in pieces and verify integrity
     traject.generate_vakindeling_shape(vakindeling_csv_path)
 
