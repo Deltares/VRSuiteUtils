@@ -47,7 +47,7 @@ def plot_vakindeling(shapefile, output_loc, close_output = True):
     ax.set_yticklabels([])
     ax.set_ylim(bottom=ax.get_ylim()[0] - 1000)
     try:
-        ctx.add_basemap(ax, source=basemap_provider, crs=shapefile.crs)
+        ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite, crs=shapefile.crs)
     except:
         warnings.warn(
             "Basemap kon niet worden geladen, plot wordt gemaakt zonder achtergrondkaart."

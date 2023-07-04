@@ -36,12 +36,12 @@ class TrajectShape:
             warnings.warn("Warning: NBPW shape has more than 1 geometry")
 
     def flip_traject(self):
-        """self.NBPW_shape['geometry'] contains a linestring of x and y coordinates. This function
-        flips both the X and Y coordinates, so that the first value becomes the last, the second the second last etc.
-        The geometry is updated in place.
+        """function that reverts a line (self.NBPW_shape['geometry']) that contains a linestring of x and y coordinates.
+         In other words: the function draws the line backwards. The geometry is updated in place.
         """
         self.NBPW_shape["geometry"] = self.NBPW_shape["geometry"].apply(
-            lambda x: geometry.LineString(list(x.coords)[::-1])
+            lambda x: geometry.LineString(list(x.coords)[::-1]),
+            lambda y: geometry.LineString(list(y.coords)[::-1]),
         )
 
 
