@@ -4,75 +4,75 @@ from pathlib import Path
 import numpy as np
 import csv
 
-def run(option):
-    traject = Traject("38-1")
+def profile_generator(traject_id: str,
+                      output_path: Path,
+                      dx: int=25,
+                      fsd: int=50,
+                      hld: int=50,
+                      NBPW_shape_path=False,
+                      ):
+
+    traject = Traject(traject_id)
     # traject_shape_path = Path(r'c:\VRM\Gegevens 38-1\shape\dijktrajecten.shp') # or False, if you want to retrieve it from NBWP
     # traject.get_traject_data(NBWP_shape_path=traject_shape_path)
-    traject.get_traject_data(NBWP_shape_path=False)
-    traject.generate_cross_section(option, cross_section_distance=25, # distance between cross sections
-                                   foreshore_distance=50,
-                                   hinterland_distance=75)
+    traject.get_traject_data(NBPW_shape_path)
+    traject.generate_cross_section(cross_section_distance=dx, # distance between cross sections
+                                   foreshore_distance=fsd,
+                                   hinterland_distance=hld)
 
-    # output_path = Path(r'c:\VRM\Gegevens 38-1\profiles')
-    output_path = Path(r'c:\WSRL\Gegevens 38-1\profiles')
+    # check if output_path.joinpath(profiles) exists, if not create it
+    foldername_output_csv = "profile_csv"
+    if not output_path.joinpath(foldername_output_csv).exists():
+        output_path.joinpath(foldername_output_csv).mkdir()
+        print("output folder created")
+    # if the directory exists, but contains files or folders, delete all files and folders
+    else:
+        for file in output_path.joinpath(foldername_output_csv).iterdir():
+            if file.is_dir():
+                for subfile in file.iterdir():
+                    subfile.unlink()
+                file.rmdir()
+            else:
+                file.unlink()
+        print("output folder emptied")
 
-    # write traject.profiles to a csv file
-    if option == "line":
-        with open(output_path.joinpath('traject_profiles_{}.csv'.format(option)), 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',')
-            count = 0
-            foreshore_length = 50
-            for profile in traject.profiles:
-                if count == 0:
-                    header = ['ProfileID',
-                              'x_coord_fs', 'y_coord_fs',
-                              'x_coord_BUK', 'y_coord_BUK',
-                              'x_coord_hl', 'y_coord_hl',
-                              'm_value'] + list(np.round(profile[:, 3], 1)-foreshore_length)
-                    writer.writerow(header)
-                    row = [count+1,
-                           traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
-                           traject.break_points[count].x, traject.break_points[count].y,
-                           traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
-                           traject.m_values[count]] + list(np.round(profile[:, 2], 1))
-                    writer.writerow(row)
-                    count += 1
-                else:
-                    row = [count+1,
-                           traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
-                           traject.break_points[count].x, traject.break_points[count].y,
-                           traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
-                           traject.m_values[count]] + list(np.round(profile[:, 2], 1))
-                    writer.writerow(row)
-                    count += 1
-    elif option == "point":
-        with open(output_path.joinpath('traject_profiles_{}.csv'.format(option)), 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',')
-            count = 0
-            foreshore_length = 50
-            for profile in traject.profiles:
-                c_list = []
-                if count == 0:
-                    header = ['ProfileID',
-                              'x_coord_fs', 'y_coord_fs',
-                              'x_coord_hl', 'y_coord_hl',
-                              'm_value', "foreshore_length"] + ["c" + str(i) for i in range(len(profile))]
-                    writer.writerow(header)
-                    row = [count + 1,
-                           traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
-                           traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
-                           traject.m_values[count], foreshore_length] + list(np.round(profile, 1))
-                    writer.writerow(row)
-                    count += 1
-                else:
-                    row = [count + 1,
-                           traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
-                           traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
-                           traject.m_values[count], foreshore_length] + list(np.round(profile, 1))
-                    writer.writerow(row)
-                    count += 1
+    # loop through profiles and write each profile to a separate csv file and add a counter
+    for index, profile in enumerate(traject.profiles):
+        # Define the filename for the CSV
+        filename = f"profile_{index+1}.csv"  # Assuming filenames like 'profile_1.csv', 'profile_2.csv', etc.
 
+        # Write the profile data to the CSV file
+        with open(output_path.joinpath(foldername_output_csv,filename), 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            # write x coordinates (profile[0]) on first row
+            writer.writerow(list(profile[0]))
+            # write z coordinates (profile[1]) on second row
+            writer.writerow(np.round(list(profile[1]),2))
 
+        print(f"Saved profile {index + 1} to {filename}")
+
+    # write 1 file with all profile characteristics
+    with open(output_path.joinpath('traject_profiles.csv'), 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+        count = 0
+        header = ['ProfileID',
+                  'x_coord_fs', 'y_coord_fs',
+                  'x_coord_hl', 'y_coord_hl',
+                  'm_value', 'csv_filename']
+        writer.writerow(header)
+        for profile in traject.profiles:
+            row = [count + 1,
+                   traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
+                   traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
+                   traject.m_values[count], f"profile_{count + 1}.csv"]
+            writer.writerow(row)
+            count += 1
 
 if __name__ == '__main__':
-    run(option="point")
+    profile_generator(traject_id="38-1",
+                      output_path=Path(r'c:\VRM\Gegevens 38-1\profiles'),
+                      dx=2500,
+                      fsd=50,
+                      hld=75,
+                      NBPW_shape_path=False,
+                      )

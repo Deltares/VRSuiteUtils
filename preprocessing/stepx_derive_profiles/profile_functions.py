@@ -1,10 +1,14 @@
 import geopandas as gpd
-from owslib.wfs import WebFeatureService
-from shapely.ops import linemerge, substring, unary_union
-from shapely.geometry import LineString, Point, Polygon, MultiPolygon
 import numpy as np
-import requests
-import concurrent.futures
+import time
+from owslib.wfs import WebFeatureService
+# from wcf_ahn4 import AHN4
+from owslib.wcs import WebCoverageService
+from PIL import Image
+from io import BytesIO
+from shapely.geometry import LineString, Point
+from scipy.interpolate import griddata
+
 
 class Traject:
 
@@ -28,10 +32,10 @@ class Traject:
         print("Total traject length =", self.length)
         return self.traject_shape, self.length
 
-    def generate_cross_section(self, option,
-                               cross_section_distance: int = 30,
-                               foreshore_distance=50,
-                               hinterland_distance=50):
+    def generate_cross_section(self,
+                               cross_section_distance: int = 25,
+                               foreshore_distance: int = 50,
+                               hinterland_distance: int = 50):
         # interpolate trajectory on regular intervals:
         break_points = []
         cross_sections = []
@@ -45,14 +49,10 @@ class Traject:
         if m_value_bp[-1] < self.length:
             m_value_bp = np.append(m_value_bp, self.length)
 
-        progress_percent = 5. # show progress every 5% of the total steps
-        progress_step = len(m_value_bp) // (100./progress_percent)
-
+        # determine the angle of the dike, and the location of the foreshore and hinterland points
+        # for each break point. Then create the cross section and get the profile from the AHN.
         for i in range(len(m_value_bp)):
-            if i % progress_step == 0:
-                progress = (i // progress_step) * 5
-                print(f"Progress: {progress}%")
-
+            print(i)
             if m_value_bp[i] < 1:
                 dike_angle_points = [self.traject_shape.geometry[0].interpolate(m_value_bp[i]),
                                      self.traject_shape.geometry[0].interpolate(m_value_bp[i]+1)]
@@ -73,20 +73,13 @@ class Traject:
                                                          dike_angle + .5 * np.pi,
                                                          hinterland_distance)
 
-
-            if option == "line":
-                profile = self.get_values_polyline([[float(transect_point_right.x), float(transect_point_right.y)],
-                                                    [float(transect_point_left.x), float(transect_point_left.y)]])
-            elif option == "point":
-                cs = create_cross_section_coordinates(transect_point_right, transect_point_left, step=1)
-                cross_sections.append(cs)
-                listed_coordinates = list(zip(list(cs.xy[0]), list(cs.xy[1])))
-                profile = self.parallel_getvalue(listed_coordinates, 'AHN4_DTM_50cm') # ['AHN4_DTM_50cm', 'AHN4_DSM_50cm', 'AHN3_r', 'AHN3_i']
-                profile_coords.append(listed_coordinates)
+            ahn4 = AHN4()
+            transect = LineString([[float(transect_point_right.x), float(transect_point_right.y)],
+                                                [float(transect_point_left.x), float(transect_point_left.y)]])
+            profile = ahn4.get_elevation_from_line(transect, raster='dtm_05m', correction=foreshore_distance)
 
             break_points.append(break_point)
             profiles.append(profile)
-
 
             foreshore_point = transect_point_right
             hinterland_point = transect_point_left
@@ -101,66 +94,73 @@ class Traject:
         self.break_points = break_points
         self.profiles = profiles
         self.profile_coords = profile_coords
+        return
 
-        return # self.m_values, self.cross_sections, self.break_points, self.profiles
+class AHN4:
 
-    def get_values_polyline(self, coordinate_list: list, ):
-        '''
-        Service Description: Bereken het profiel van een input lijn op basis van het AHN4.
-        Voor lijnen van 500 meter en korter wordt het AHN4 50cm ruwe bestand gebruikt en
-        voor lijnen langer dan 500 meter wordt het AHN4 5 meter maaiveld bestand gebruikt.
-        URL: https://ahn.arcgisonline.nl/arcgis/rest/services/Geoprocessing/Profile_AHN4/GPServer
-        URL: https://ahn.arcgisonline.nl/arcgis/rest/services/Geoprocessing/Profile_AHN3/GPServer
-        '''
-        url = "https://ahn.arcgisonline.nl/arcgis/rest/services/Geoprocessing/Profile_AHN4/GPServer/Profile/execute"
-        params = {"f": "json",
-                  "env:outSR": 28992,
-                  "InputLineFeatures": '{"fields":[{"name":"OID","type":"esriFieldTypeObjectID","alias":"OID"}],"geometryType":"esriGeometryPolyline","features":[{"geometry":{"spatialReference":{"wkid":28992},"paths":[' + str(
-                      coordinate_list) + ']},"attributes":{"OID":1}}],"sr":{"wkid":28992}}',
-                  "ProfileIDField": "OID",
-                  "DEMResolution": "FINEST",
-                  "MaximumSampleDistance": 0.5,
-                  "MaximumSampleDistanceUnits": "Meters",
-                  "returnZ": True,
-                  "returnM": True}
-        response = requests.get(url, params=params)
-        if response.status_code == 200:
-            result = response.json()
-            # try:
-                # print(result['message'])
-            # except:
-                # print(result['messages'])
+    def __init__(self):
+        self.wcs = WebCoverageService('https://service.pdok.nl/rws/ahn/wcs/v1_0?SERVICE=WCS',
+                                      version='1.0.0')  # Connect to the WCS service
+        self.coverage_id = list(self.wcs.contents)  # Identify which layers are present
+        self.resolution = 0.5  # Resolution of the raster
+        x0, y0, dx, dy = 85875, 444600, 200, 200
+        self.bbox = (x0, y0, x0 + dx, y0 + dy)
+    def get_elevation_from_line(self, linestring, raster=None, correction=0.0):
+        # correction is used if the distance L doesn't start at 0.0 but at a certain value
+        x1, y1 = linestring.coords[0]
+        x2, y2 = linestring.coords[1]
+        if x2 < x1 and y2 < y1:
+            bbox = (x2, y2, x1, y1)
+            reverse_x = True
+            reverse_y = True
+        elif y2 < y1:
+            bbox = (x1, y2, x2, y1)
+            reverse_y = True
+        elif x2 < x1:
+            bbox = (x2, y1, x1, y2)
+            reverse_x = True
         else:
-            print("Failed to get response from the API")
-        xyzl_data = np.array(result['results'][0]['value']['features'][0]['geometry']['paths'][0])
-        return xyzl_data
+            bbox = (x1, y1, x2, y2)
+        data, (X, Y) = self.get_raster_from_wcs(bbox, raster=raster)
+        density = 0.5
+        linestring = LineString([linestring.interpolate(density * i) for i in np.arange(0, linestring.length // density)])
+        L = np.array([np.sqrt((x1 - x) ** 2 + (y1 - y) ** 2) for (x, y) in linestring.coords])-correction
+        Z = griddata(np.column_stack((X.flatten(), Y.flatten())), data.flatten(),
+                     [(x, y) for (x, y) in linestring.coords], method='linear')
 
-    def get_value(self, x: float, y: float, data_type: str, i: int, ):
-        if i is None:
-            i = 0
-        pixelSize = 0.1
-        url = f"https://ahn.arcgisonline.nl/arcgis/rest/services/AHNviewer/{data_type}/ImageServer/identify?f=json&" \
-              f"geometry={{\"x\":{x},\"y\":{y},\"spatialReference\":{{\"wkid\":28992,\"latestWkid\":28992}}}}&" \
-              f"returnGeometry=true&returnCatalogItems=true&geometryType=esriGeometryPoint&" \
-              f"pixelSize={{\"x\":{pixelSize},\"y\":{pixelSize},\"spatialReference\":{{\"wkid\":28992,\"latestWkid\":28992}}}}&" \
-              f"renderingRules=[{{\"rasterFunction\":\"Color Ramp D\"}}]"
-        response = requests.get(url)
-        data = response.json()
-        if data["value"] == 'NoData':
-            value = np.nan
-        else:
-            value = float(data["value"])
-        return [x, y, value]
+        return L, Z
 
-    def parallel_getvalue(self, coordinates: list, data_type: str):
-        results = []
-        with concurrent.futures.ThreadPoolExecutor(max_workers=500) as executor:
-            futures = [executor.submit(self.get_value, x, y, data_type, i, ) for i, (x, y) in enumerate(coordinates)]
-        for future in futures:
-            # Looping over the future list preserves the order of creation. No sorting required.
-            results.append(future.result())
-        return results
+    def get_raster_from_wcs(self, bbox, raster=None, getmap=False):
+        if raster is None: # if None specified, the first raster is taken
+            raster = self.coverage_id[0]
+        elif type(raster) == int: #  user can also specify another value ['dsm_05m', 'dtm_05m']
+            raster = self.coverage_id[raster]
 
+        if bbox[2]-bbox[0]==0 or bbox[3]-bbox[1]==0:
+            print('No 1D rasters are allowed. Increase the xmax or ymax of the boundingbox.')
+            ValueError
+
+        start_time = time.time()
+
+        # InterpolationSupported: NEAREST, AVERAGE, BILINEAR
+        output = self.wcs.getCoverage(identifier=raster,bbox=bbox,resx=self.resolution,resy=self.resolution,
+                                      format='GeoTIFF',crs='EPSG:28992',interpolation='AVERAGE')
+
+        try: # to get the coverage data as a numpy array
+            im = Image.open(BytesIO(output.read()))
+            data = np.array(im)
+            data[data>9999]=np.nan
+        except: # if the output is not a correct geotiff float file
+            print(output.read())
+            data = None
+
+        x = np.resize( np.arange(bbox[0],bbox[2], self.resolution) , data.shape[1] )
+        y = np.resize( np.arange(bbox[1],bbox[3], self.resolution) , data.shape[0] )
+
+        duration = time.time() - start_time
+        # print(duration)
+
+        return data, np.meshgrid(x, np.flip(y))
 
 def determine_dike_angle(point1, point2):
     """Calculate angle between two points in radians and degrees.
