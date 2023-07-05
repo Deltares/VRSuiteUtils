@@ -52,7 +52,6 @@ class Traject:
         # determine the angle of the dike, and the location of the foreshore and hinterland points
         # for each break point. Then create the cross section and get the profile from the AHN.
         for i in range(len(m_value_bp)):
-            print(i)
             if m_value_bp[i] < 1:
                 dike_angle_points = [self.traject_shape.geometry[0].interpolate(m_value_bp[i]),
                                      self.traject_shape.geometry[0].interpolate(m_value_bp[i]+1)]
@@ -103,30 +102,27 @@ class AHN4:
                                       version='1.0.0')  # Connect to the WCS service
         self.coverage_id = list(self.wcs.contents)  # Identify which layers are present
         self.resolution = 0.5  # Resolution of the raster
-        x0, y0, dx, dy = 85875, 444600, 200, 200
-        self.bbox = (x0, y0, x0 + dx, y0 + dy)
+
     def get_elevation_from_line(self, linestring, raster=None, correction=0.0):
         # correction is used if the distance L doesn't start at 0.0 but at a certain value
         x1, y1 = linestring.coords[0]
         x2, y2 = linestring.coords[1]
-        if x2 < x1 and y2 < y1:
-            bbox = (x2, y2, x1, y1)
-            reverse_x = True
-            reverse_y = True
-        elif y2 < y1:
-            bbox = (x1, y2, x2, y1)
-            reverse_y = True
-        elif x2 < x1:
-            bbox = (x2, y1, x1, y2)
-            reverse_x = True
-        else:
-            bbox = (x1, y1, x2, y2)
+
+        margin = 2.5 # adds margin to bbox to prevent errors if linestring is close to the edge of the raster
+        bbox = (min(x1,x2)-margin,
+                min(y1,y2)-margin,
+                max(x1,x2)+margin,
+                max(y1,y2)+margin)
+
         data, (X, Y) = self.get_raster_from_wcs(bbox, raster=raster)
         density = 0.5
-        linestring = LineString([linestring.interpolate(density * i) for i in np.arange(0, linestring.length // density)])
+        linestring = LineString([linestring.interpolate(density * i) for i in np.arange(0, linestring.length // density + 1)])
+
         L = np.array([np.sqrt((x1 - x) ** 2 + (y1 - y) ** 2) for (x, y) in linestring.coords])-correction
+        # print(data)
         Z = griddata(np.column_stack((X.flatten(), Y.flatten())), data.flatten(),
                      [(x, y) for (x, y) in linestring.coords], method='linear')
+        # print(Z)
 
         return L, Z
 

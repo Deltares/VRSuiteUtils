@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import numpy as np
 import csv
-
+import time
 def profile_generator(traject_id: str,
                       output_path: Path,
                       dx: int=25,
@@ -11,6 +11,8 @@ def profile_generator(traject_id: str,
                       hld: int=50,
                       NBPW_shape_path=False,
                       ):
+# time how long this takes
+    start_time = time.time()
 
     traject = Traject(traject_id)
     # traject_shape_path = Path(r'c:\VRM\Gegevens 38-1\shape\dijktrajecten.shp') # or False, if you want to retrieve it from NBWP
@@ -68,10 +70,13 @@ def profile_generator(traject_id: str,
             writer.writerow(row)
             count += 1
 
+    # print the total time this function runs
+    print(f"Total time: {round(time.time() - start_time,2)} seconds")
+
 if __name__ == '__main__':
     profile_generator(traject_id="38-1",
                       output_path=Path(r'c:\VRM\Gegevens 38-1\profiles'),
-                      dx=2500,
+                      dx=280,
                       fsd=50,
                       hld=75,
                       NBPW_shape_path=False,
