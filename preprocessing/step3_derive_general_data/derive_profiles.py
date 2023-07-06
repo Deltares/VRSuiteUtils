@@ -1,4 +1,4 @@
-from preprocessing.stepx_derive_profiles.profile_functions import Traject
+from preprocessing.step3_derive_general_data.profile_functions import Traject
 import matplotlib.pyplot as plt
 from pathlib import Path
 import numpy as np
@@ -76,7 +76,7 @@ def profile_generator(traject_id: str,
 if __name__ == '__main__':
     profile_generator(traject_id="38-1",
                       output_path=Path(r'c:\VRM\Gegevens 38-1\profiles'),
-                      dx=280,
+                      dx=2500,
                       fsd=50,
                       hld=75,
                       NBPW_shape_path=False,
