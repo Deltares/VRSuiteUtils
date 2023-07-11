@@ -1,0 +1,18 @@
+vaknaam,signaleringswaarde,ondergrens,faalkansbijdrage,lengte_effectfactor,locationid,region,gws,getij_amplitude,dwarsprofiel,steentoetsfile,prfl,qvar_p1,qvar_p2,qvar_p3,qvar_p4,qvar_stap,,kolom,,beschrijving
+1,10000,3000,0.05,4,1400364,kust,0,2,310,stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,profiel_1.prfl,0.01,0.0001,3.33333E-06,0.000001,1,,vaknaam,,De vaknaam zoals beschreven in de Vakindeling.csv
+2,10000,3000,0.05,4,1400370,kust,0,2,315,stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,profiel_2.prfl,0.01,0.0001,3.33333E-06,0.000001,1,,signaleringswaarde,,
+3,10000,3000,0.05,4,1400384,kust,0,2,320,stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,profiel_3.prfl,0.01,0.0001,3.33333E-06,0.000001,1,,ondergrens,,
+,,,,,,,,,,,,,,,,,,faalkansbijdrage,,
+,,,,,,,,,,,,,,,,,,lengte_effectfactor,,
+,,,,,,,,,,,,,,,,,,locationid,,
+,,,,,,,,,,,,,,,,,,region,,
+,,,,,,,,,,,,,,,,,,gws,,gemiddelde buitenwaterstand
+,,,,,,,,,,,,,,,,,,getij_amplitude,,
+,,,,,,,,,,,,,,,,,,dwarsprofiel,,
+,,,,,,,,,,,,,,,,,,steentoetsfile,,
+,,,,,,,,,,,,,,,,,,prfl,,
+,,,,,,,,,,,,,,,,,,qvar_p1,,Q-variant: overschrijdingskans voor waterstand. Suggestie: 30/ondergrens
+,,,,,,,,,,,,,,,,,,qvar_p2,,Q-variant: overschrijdingskans voor waterstand. Suggestie: 1/signaleringswaarde
+,,,,,,,,,,,,,,,,,,qvar_p3,,Q-variant: overschrijdingskans voor waterstand. Suggestie: 1/(30 x signaleringswaarde)
+,,,,,,,,,,,,,,,,,,qvar_p4,,Q-variant: overschrijdingskans voor waterstand: 1/(100 x signaleringswaarde)
+,,,,,,,,,,,,,,,,,,qvar_stap,,Stapgrootte voor Q-variant berekeningen
