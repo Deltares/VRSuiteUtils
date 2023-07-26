@@ -143,7 +143,7 @@ class ReliabilityCalculations(object):
             make_sql_qvariant(fileNameSQL, self.locationId, self.orientation, self.beta, self.waterlevel, self.a, self.b, self.c, numSettings)
         
         make_ini_file(fileNameIni, self.mechanismId, fileNameSQL, fileNameConfig, fileNameHLCD)
-        os.system("''" + binHydraRing + 'MechanismComputation.exe ' + fileNameIni)
+        os.system('"' + binHydraRing + 'MechanismComputation.exe' + '" ' + fileNameIni)
         
         if self.mechanism == 'MHW':
             designValue = read_design_value(outputfile)

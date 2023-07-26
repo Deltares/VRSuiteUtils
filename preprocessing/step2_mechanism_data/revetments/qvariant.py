@@ -16,8 +16,8 @@ bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
 profielen_path = Path(r'c:\VRM\test_revetments\profielen')
 database_path = Path(r'c:\VRM\test_revetments\database')
 hring_path = "c:/Program Files (x86)/BOI/Riskeer 21.1.1.2/Application/Standalone/Deltares/HydraRing-20.1.3.10236/"
-# hring_path = 'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'
-# "n:\Projects\11209000\11209353\B. Measurements and calculations\007 - VRTool bekledingen\Scripts\bin_HYR\"
+output_path = Path(r'c:/VRM/test_revetments/output')
+
 df = pd.read_csv(bekleding_path,
                  usecols=['vaknaam', 'dwarsprofiel', 'signaleringswaarde', 'ondergrens', 'locationid', 'prfl',
                           'hrdatabase_folder', 'hrdatabase', 'qvar_p1', 'qvar_p2', 'qvar_p3', 'qvar_p4', 'qvar_stap'])
@@ -25,6 +25,14 @@ df = df.dropna(subset=['vaknaam']) # drop rows where vaknaam is Not a Number
 
 models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
 evaluateYears = [2025, 2100]
+
+# if output_path doesnot exist, create it
+if not output_path.exists():
+    output_path.mkdir()
+# elif output_path exists, but not empty, stop the script
+elif output_path.exists() and len(list(output_path.iterdir())) != 0:
+    print('The output folder is not empty. Please empty the folder and run the script again.')
+    exit()
 
 indexvak = np.arange(0, len(df))
 
@@ -82,7 +90,7 @@ for index in indexvak:
                 for h in wl:
                     Qvar = ReliabilityCalculations(locationId, mechanism, orientation, m, h, beta[j])
                     numSettings = Qvar.get_numerical_settings(configDatabase)
-                    QvarRes = Qvar.run_HydraRing(binHydraRing, HRdatabase, evaluateYears[i], numSettings)
+                    QvarRes = Qvar.run_HydraRing(str(hring_path), str(HRdatabase), evaluateYears[i], numSettings)
 
                     Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                     Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
@@ -96,4 +104,4 @@ for index in indexvak:
                                              "Tp": list(Qvar_Tp),
                                              "dir": list(Qvar_dir)}
 
-    write_JSON_to_file(data, f"Output/Qvar_{index}.json")
+    write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(index)))
