@@ -8,7 +8,9 @@ Created on Wed Feb  1 11:41:52 2023
 import pandas as pd
 import os
 import sqlite3
-from project_utils.makeHYRProjectFiles import make_sql_qvariant, make_sql_MHW, make_ini_file
+from preprocessing.step2_mechanism_data.revetments.project_utils.makeHYRProjectFiles import make_sql_qvariant, make_sql_MHW, make_ini_file
+import subprocess
+from pathlib import Path
 
 def read_beta_mech(fileName):
     
@@ -122,13 +124,20 @@ class ReliabilityCalculations(object):
         con.close()
 
         return numSettings
+
+        # def run_HydraRing(self, binHydraRing, HRdatabase, year, numSettings):
+
+    def run_HydraRing(self, binHydraRing, HRdatabase, output_folder, year, numSettings):
         
-    def run_HydraRing(self, binHydraRing, HRdatabase, year, numSettings):
-        
-        fileNameConfig = binHydraRing + 'config.sqlite'
-        fileNameSQL = '1.sql'
-        fileNameIni = '1.ini'
-        outputfile = '1-output.sqlite'
+
+        fileNameConfig = binHydraRing.joinpath('config.sqlite')
+        fileNameSQL = output_folder.joinpath('1.sql')
+        fileNameIni = output_folder.joinpath('1.ini')
+        outputfile = output_folder.joinpath('1-output.sqlite')
+        # fileNameConfig = binHydraRing + 'config.sqlite'
+        # fileNameSQL = '1.sql'
+        # fileNameIni = '1.ini'
+        # outputfile = '1-output.sqlite'
         
         if year==2025:
             fileNameHLCD = HRdatabase + '/hlcd.sqlite'
@@ -143,8 +152,10 @@ class ReliabilityCalculations(object):
             make_sql_qvariant(fileNameSQL, self.locationId, self.orientation, self.beta, self.waterlevel, self.a, self.b, self.c, numSettings)
         
         make_ini_file(fileNameIni, self.mechanismId, fileNameSQL, fileNameConfig, fileNameHLCD)
-        os.system('"' + binHydraRing + 'MechanismComputation.exe' + '" ' + fileNameIni)
-        
+        HydraRingPath = Path(binHydraRing).joinpath("MechanismComputation.exe")
+        subprocess.run([str(HydraRingPath), str(fileNameIni)], cwd=str(output_folder))
+        # os.system('"' + binHydraRing + 'MechanismComputation.exe' + '" ' + fileNameIni)
+
         if self.mechanism == 'MHW':
             designValue = read_design_value(outputfile)
             return designValue

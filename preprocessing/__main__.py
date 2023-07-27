@@ -2,6 +2,7 @@ import click
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
+from preprocessing.workflows.bekleding_workflow import bekleding_main
 from pathlib import Path
 
 
@@ -137,6 +138,84 @@ def generate_and_evaluate_water_level_computations(
         file_name,
     )
 
+########################################################################################################################
+
+
+@cli.command(
+    name="bekleding", help="Genereert de input data voor bekleding voor de VRTool"
+)
+@click.option("--input_csv",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Dit is het pad naar het CSV bestand dat de invoer voor bekledingen bevat. Een standaard format voor"
+                   "dit bestand is te vinden in de VRTool repository: "
+                   "'preprocessing/default_files/Bekleding_default.csv'")
+@click.option("--database_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de Hydraulische database(s).")
+@click.option("--steentoets_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de steentoetsfiles.")
+@click.option("--profielen_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de profielen.")
+@click.option("--figures_gebu",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met waar de figuren voor de GEBU sommen op worden geslagen. Als deze map nog niet "
+                   "bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar niet leeg is, zal"
+                   "het script automatisch stoppen.")
+@click.option("--figures_zst",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met waar de figuren voor de ZST sommen op worden geslagen. Als deze map nog niet "
+                   "bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar niet leeg is, zal"
+                   "het script automatisch stoppen.")
+@click.option("--hring_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
+              " te vinden in: "
+                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
+@click.option("--bin_dikernel",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de DIKErnel executable 'DIKErnel-cli.exe'.")
+@click.option("--output_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Uitvoermap. Hier worden de resultaten naartoe geschreven, die invoer zijn voor de database. Als"
+                   "deze map nog niet bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar"
+                   "niet leeg is, zal het script automatisch stoppen.")
+
+def generate_bekleding_som(
+        input_csv, database_path, steentoets_path, profielen_path, figures_gebu, figures_zst, hring_path, bin_dikernel,
+        output_path
+):
+    bekleding_main(
+        Path(input_csv),
+        Path(database_path),
+        Path(steentoets_path),
+        Path(profielen_path),
+        Path(figures_gebu),
+        Path(figures_zst),
+        Path(hring_path),
+        Path(bin_dikernel),
+        Path(output_path)
+    )
+########################################################################################################################
 
 if __name__ == "__main__":
     cli()

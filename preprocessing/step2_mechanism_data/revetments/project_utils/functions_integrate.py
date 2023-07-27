@@ -8,11 +8,11 @@ Created on Sun Apr 30 12:01:20 2023
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate
-from project_utils.bisection import bisection
 import math
 from scipy.stats import norm
 from scipy.special import ndtri
 import warnings
+from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
 def issteen(toplaagtype):
     

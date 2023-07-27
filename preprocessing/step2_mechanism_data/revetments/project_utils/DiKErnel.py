@@ -8,6 +8,8 @@ Created on Thu Mar 23 15:26:38 2023
 import json
 import os
 import numpy as np
+from pathlib import Path
+import subprocess
 
 class DIKErnelCalculations(object):
     
@@ -47,8 +49,11 @@ class DIKErnelCalculations(object):
 
     def run_DIKErnel(self, binDIKErnel):
 
-        os.system(binDIKErnel + 'DiKErnel-cli.exe ' + '--invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
-        
+        dike_kernel_exe = binDIKErnel.joinpath('DiKErnel-cli.exe')
+
+        os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
+        # os.system(binDIKErnel + 'DiKErnel-cli.exe ' + '--invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
+
         with open('output.json', 'r') as openfile:
             json_object = json.load(openfile)
             
