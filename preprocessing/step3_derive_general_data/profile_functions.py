@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 from shapely.geometry import LineString, Point
 from scipy.interpolate import griddata
-
+from shapely import geometry
 
 class Traject:
 
@@ -28,9 +28,25 @@ class Traject:
 
         self.traject_shape = NBPW.loc[NBPW.TRAJECT_ID == self.name].reset_index(drop=True)
         # self.traject_shape.geometry[0] = linemerge(self.traject_shape.geometry[0])
-        self.length = self.traject_shape.geometry[0].length
+        self.traject_shape = self.traject_shape[
+            ["TRAJECT_ID", "NORM_SW", "NORM_OG", "geometry"]
+        ]
+        self.traject_shape = self.traject_shape.explode(index_parts=True)
+        if len(self.traject_shape) > 1:
+            warnings.warn("Warning: NBPW shape has more than 1 geometry")
+
+        self.length = self.traject_shape.geometry[0].length[0]
         print("Total traject length =", self.length)
         return self.traject_shape, self.length
+
+    def flip_traject(self):
+        """function that reverts a line (self.NBPW_shape['geometry']) that contains a linestring of x and y coordinates.
+         In other words: the function draws the line backwards. The geometry is updated in place.
+        """
+        self.traject_shape["geometry"] = self.traject_shape["geometry"].apply(
+            lambda x: geometry.LineString(list(x.coords)[::-1]),
+            lambda y: geometry.LineString(list(y.coords)[::-1]),
+        )
 
     def generate_cross_section(self,
                                cross_section_distance: int = 25,
@@ -47,7 +63,7 @@ class Traject:
         profile_coords = []
 
         # determine the m-values of the cross section break points
-        m_value_bp = np.arange(0, self.traject_shape.geometry[0].length, cross_section_distance)
+        m_value_bp = np.arange(0, self.length, cross_section_distance)
         if m_value_bp[-1] < self.length:
             m_value_bp = np.append(m_value_bp, self.length)
 

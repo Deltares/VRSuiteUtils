@@ -31,7 +31,7 @@ class TrajectShape:
         self.NBPW_shape = self.NBPW_shape[
             ["TRAJECT_ID", "NORM_SW", "NORM_OG", "geometry"]
         ]
-        self.NBPW_shape = self.NBPW_shape.explode()
+        self.NBPW_shape = self.NBPW_shape.explode(index_parts=True)
         if len(self.NBPW_shape) > 1:
             warnings.warn("Warning: NBPW shape has more than 1 geometry")
 

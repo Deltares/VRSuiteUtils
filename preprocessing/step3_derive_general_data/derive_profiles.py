@@ -20,6 +20,12 @@ def profile_generator(traject_id: str,
     # traject_shape_path = Path(r'c:\VRM\Gegevens 38-1\shape\dijktrajecten.shp') # or False, if you want to retrieve it from NBWP
     # traject.get_traject_data(NBWP_shape_path=traject_shape_path)
     traject.get_traject_data(NBPW_shape_path)
+
+    # in case the traject shape is oriented in the opposite direction as the vakindeling, flip it.
+    # if this is the case, the user should have also used this flip function when using the vakindeling workflow.
+    if flip_traject:
+        traject.flip_traject()
+
     traject.generate_cross_section(cross_section_distance=dx, # distance between cross sections
                                    foreshore_distance=fsd,
                                    hinterland_distance=hld,
@@ -79,11 +85,11 @@ def profile_generator(traject_id: str,
 
 if __name__ == '__main__':
     profile_generator(traject_id="38-1",
-                      output_path=Path(r'c:\VRM\Gegevens 38-1\profiles4'),
+                      output_path=Path(r'c:\VRM\Gegevens 38-1\profiles5'),
                       NBPW_shape_path=False,
                       dx=2500,
                       flip_traject=False,
-                      flip_waterside=True,
+                      flip_waterside=False,
                       fsd=50,
                       hld=75,
                       )
