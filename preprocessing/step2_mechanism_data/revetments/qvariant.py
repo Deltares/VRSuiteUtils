@@ -75,7 +75,7 @@ def revetment_qvariant(df, profielen_path, database_path, hring_path, output_pat
                     for h in wl:
                         Qvar = ReliabilityCalculations(locationId, mechanism, orientation, m, h, beta[j])
                         numSettings = Qvar.get_numerical_settings(configDatabase)
-                        QvarRes = Qvar.run_HydraRing(str(hring_path), str(HRdatabase), evaluateYears[i], numSettings)
+                        QvarRes = Qvar.run_HydraRing(hring_path, str(HRdatabase), output_path, evaluateYears[i], numSettings)
 
                         Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                         Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
