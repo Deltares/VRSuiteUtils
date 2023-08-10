@@ -35,7 +35,9 @@ class Traject:
     def generate_cross_section(self,
                                cross_section_distance: int = 25,
                                foreshore_distance: int = 50,
-                               hinterland_distance: int = 50):
+                               hinterland_distance: int = 75,
+                               flip_water_side: bool = False,
+                               ):
         # interpolate trajectory on regular intervals:
         break_points = []
         cross_sections = []
@@ -65,12 +67,20 @@ class Traject:
             break_point = self.traject_shape.geometry[0].interpolate(m_value_bp[i])
             dike_angle = determine_dike_angle(dike_angle_points[0], dike_angle_points[1])
 
-            transect_point_right = create_transect_points(break_point,
-                                                          dike_angle - .5 * np.pi,
-                                                          foreshore_distance)
-            transect_point_left = create_transect_points(break_point,
-                                                         dike_angle + .5 * np.pi,
-                                                         hinterland_distance)
+            if flip_water_side:
+                transect_point_right = create_transect_points(break_point,
+                                                              dike_angle + .5 * np.pi,
+                                                              foreshore_distance)
+                transect_point_left = create_transect_points(break_point,
+                                                             dike_angle - .5 * np.pi,
+                                                             hinterland_distance)
+            else:
+                transect_point_right = create_transect_points(break_point,
+                                                              dike_angle - .5 * np.pi,
+                                                              foreshore_distance)
+                transect_point_left = create_transect_points(break_point,
+                                                             dike_angle + .5 * np.pi,
+                                                             hinterland_distance)
 
             ahn4 = AHN4()
             transect = LineString([[float(transect_point_right.x), float(transect_point_right.y)],

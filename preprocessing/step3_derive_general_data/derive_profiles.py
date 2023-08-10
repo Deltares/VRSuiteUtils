@@ -6,10 +6,12 @@ import csv
 import time
 def profile_generator(traject_id: str,
                       output_path: Path,
+                      NBPW_shape_path=False,
                       dx: int=25,
+                      flip_traject: bool=False,
+                      flip_waterside: bool=False,
                       fsd: int=50,
                       hld: int=50,
-                      NBPW_shape_path=False,
                       ):
 # time how long this takes
     start_time = time.time()
@@ -20,7 +22,9 @@ def profile_generator(traject_id: str,
     traject.get_traject_data(NBPW_shape_path)
     traject.generate_cross_section(cross_section_distance=dx, # distance between cross sections
                                    foreshore_distance=fsd,
-                                   hinterland_distance=hld)
+                                   hinterland_distance=hld,
+                                   flip_water_side=flip_waterside,
+                                   )
 
     # check if output_path.joinpath(profiles) exists, if not create it
     foldername_output_csv = "profile_csv"
@@ -75,9 +79,11 @@ def profile_generator(traject_id: str,
 
 if __name__ == '__main__':
     profile_generator(traject_id="38-1",
-                      output_path=Path(r'c:\VRM\Gegevens 38-1\profiles'),
+                      output_path=Path(r'c:\VRM\Gegevens 38-1\profiles4'),
+                      NBPW_shape_path=False,
                       dx=2500,
+                      flip_traject=False,
+                      flip_waterside=True,
                       fsd=50,
                       hld=75,
-                      NBPW_shape_path=False,
                       )
