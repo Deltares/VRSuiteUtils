@@ -2,6 +2,7 @@ import click
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
+from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from pathlib import Path
 
 
@@ -26,9 +27,7 @@ def cli():
               type=click.Path(),
               nargs=1,
               required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
+              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
 @click.option("--traject_shape",
               type=str,
               nargs=1,
@@ -136,6 +135,72 @@ def generate_and_evaluate_water_level_computations(
         Path(hydraring_path),
         file_name,
     )
+
+################
+@cli.command(
+    name="genereer_dijkprofielen", help="Voor het afleiden van karakteristieke dijkprofielen af voor een gegeven "
+                                        "dijktraject"
+)
+@click.option("--traject_id",
+              type=str,
+              nargs=1,
+              required=True,
+              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
+@click.option("--output_folder",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
+@click.option("--traject_shape",
+              nargs=1,
+              default=False,
+              help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
+                   " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
+                   "gebruikt.")
+@click.option("--flip_traject",
+              type=bool,
+              nargs=1,
+              default=False,
+              help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
+                   "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
+                   "de shapefile worden omgedraaid door deze optie op True te zetten.")
+@click.option("--flip_waterkant",
+              type=bool,
+              nargs=1,
+              default=False,
+              help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
+                   "nummering van de vakken volgt. Als het water aan de andere linkerkant loopt, moet hier True worden "
+                   "ingevuld. Default is False. ")
+@click.option("--dx",
+                type=int,
+                nargs=1,
+                default=25,
+                help="De afstand tussen de profielen. Optioneel, default is 25 meter.")
+@click.option("--voorland_lengte",
+                type=int,
+                nargs=1,
+                default=50,
+                help="De lengte van het voorland. Optioneel, default is 50 meter.")
+@click.option("--achterland_lengte",
+                type=int,
+                nargs=1,
+                default=75,
+                help="De lengte van het voorland. Optioneel, default is 75 meter.")
+
+def obtain_the_AHN_profiles_for_traject(
+    traject_id, output_folder, traject_shape, flip_traject, flip_waterkant, dx, voorland_lengte, achterland_lengte
+):
+    main_traject_profiles(
+        traject_id,
+        Path(output_folder),
+        dx,
+        voorland_lengte,
+        achterland_lengte,
+        traject_shape,
+        flip_traject,
+        flip_waterkant,
+    )
+
 
 
 if __name__ == "__main__":

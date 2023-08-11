@@ -1,20 +1,12 @@
 import geopandas as gpd
 import pandas as pd
 import numpy as np
-from shapely.geometry import Point, LineString
-from shapely import geometry
-# force_2d
+from shapely.geometry import Point
 from shapely.ops import linemerge
 from shapely.ops import split
 from shapely.ops import nearest_points
-from shapely.ops import transform
-# from requests import Request
-import requests
-from owslib.wfs import WebFeatureService
 from pathlib import Path
-import openpyxl
-import json
-import geojson
+
 
 
 
@@ -22,7 +14,7 @@ traject_name = "38-1"
 teenlijn_geojson = Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn\teenlijn traject_38-1_line2.geojson")
 vakindeling_geojson = Path(r"c:\VRM\test_vakindeling_workflow\result\Vakindeling_38-1_original.geojson")
 intermediate_dir = Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn")
-
+all_buildings_filename = Path("c://GIS//Achtergrond//bag-light.gpkg")
 
 # read teenlijn and vakindeling
 teenlijn_gdf = gpd.read_file(teenlijn_geojson)
@@ -45,7 +37,7 @@ def create_bounding_box(input_shape, margin=250):
     return xmin_bound, ymin_bound, xmax_bound, ymax_bound
 
 # Create bounding box around dike segment
-bounding_box = create_bounding_box(vakindeling_gdf, margin=250)
+bounding_box = create_bounding_box(vakindeling_gdf, margin=100)
 
 
 # determine the coordinates of where the dike segment splits into a new section. Make sure both the first and last

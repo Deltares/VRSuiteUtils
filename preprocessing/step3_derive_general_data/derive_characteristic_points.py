@@ -151,19 +151,19 @@ class DFlowSlideCharacteristicPointsSimple():
     def check_crests(self):
     # abort mission if outer or inner crest point is missing
         if (self.id_outer_crest is None) or (self.id_inner_crest is None):
-            print('Outer or inner crest point is missing. Aborting mission.')
+            # print('Outer or inner crest point is missing. Aborting mission.') # better if this goes into logging file?
             self.correct_profile = False
             return
 
     # Check if outer and inner crest are less than 20m apart
         if abs(self.df.loc[self.id_outer_crest, 'X'] - self.df.loc[self.id_inner_crest, 'X']) > 20:
-            print('Outer and inner crest are too far apart. Aborting mission.')
+            # print('Outer and inner crest are too far apart. Aborting mission.') # better if this goes into logging file?
             self.correct_profile = False
             return
 
     # Check if tehere are points on the foreland and hinterland that are higher than the maximum between the crest points
         if self.df.loc[self.id_outer_crest:self.id_inner_crest, 'Z'].max() < self.df['Z'].max():
-            print('There are higher points in foreland or hinterland than the crests. Aborting mission.')
+            # print('There are higher points in foreland or hinterland than the crests. Aborting mission.') # better if this goes into logging file?
             self.correct_profile = False
             return
 
@@ -365,20 +365,10 @@ def rmse(line, df, n_breakpoints):
     root_mean_squared_error = np.sqrt(np.mean(squared_error))
     return root_mean_squared_error
 
-def run_comparison():
-    input_dir = Path(r'c:\VRM\Gegevens 38-1\profiles5\profile_csv')
-    output_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output3')
-    # check if output work_dir exists, otherwise create
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    # If it exists, check if it is empty. If it is not empty, print that there are files in the folder
-    elif len(os.listdir(output_dir)) != 0:
-        print('output folder is not empty')
-        print('please empty the folder first')
-        # stop the script
-        sys.exit()
-    else:
-        pass
+def obtain_characteristic_profiles(input_dir: Path,
+                                   output_dir: Path):
+    # input_dir = Path(r'c:\VRM\Gegevens 38-1\profiles5\profile_csv')
+    # output_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output3')
 
     for dwp, file in enumerate(os.listdir(input_dir)):
         if file.endswith('.csv'):
@@ -414,5 +404,5 @@ def run_comparison():
                 DFS_CharPoints.CharacteristicPointCollection.to_csv(os.path.join(output_dir, column_name + '.csv'), index=False)
 
 
-
-run_comparison()
+#
+# run_comparison()
