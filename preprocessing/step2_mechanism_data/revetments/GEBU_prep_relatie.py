@@ -16,7 +16,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
 
-def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU):
+def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path):
 
     # define variables
     typeZode = 'grasGeslotenZode'
@@ -132,8 +132,8 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU):
 
                         for p in positions_golfklap:
                             bek = DIKErnelCalculations(tijdstippen, h_series[i,j,ind,:], Hs_series[i,j,ind,:], Tp_series[i,j,ind,:], betahoek_series[i,j,ind,:], dijkprofiel_x, dijkprofiel_y, p)
-                            bek.gras_golfklap_input_JSON(typeZode)
-                            maxSchadegetal_golfklap = np.max([maxSchadegetal_golfklap, bek.run_DIKErnel(binDIKErnel)])
+                            bek.gras_golfklap_input_JSON(typeZode, local_path)
+                            maxSchadegetal_golfklap = np.max([maxSchadegetal_golfklap, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
 
                     maxSchadegetal_golfoploop = 0.0
                     if golfoploop:
@@ -141,8 +141,8 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU):
 
                         for p in positions_golfoploop:
                             bek = DIKErnelCalculations(tijdstippen, h_series[i,j,ind,:], Hs_series[i,j,ind,:], Tp_series[i,j,ind,:], betahoek_series[i,j,ind,:], dijkprofiel_x, dijkprofiel_y, p)
-                            bek.gras_golfoploop_input_JSON(typeZode)
-                            maxSchadegetal_golfoploop = np.max([maxSchadegetal_golfoploop, bek.run_DIKErnel(binDIKErnel)])
+                            bek.gras_golfoploop_input_JSON(typeZode, local_path)
+                            maxSchadegetal_golfoploop = np.max([maxSchadegetal_golfoploop, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
 
                     maxSchadegetal = np.max([maxSchadegetal_golfklap, maxSchadegetal_golfoploop, 10**(-4)])
                     SF = np.append(SF, 1/maxSchadegetal)

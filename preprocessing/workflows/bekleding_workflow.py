@@ -1,6 +1,6 @@
 from pathlib import Path
 import pandas as pd
-
+import os
 from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qvariant
 from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import revetment_gebu
 from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
@@ -9,10 +9,12 @@ from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revet
 def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: Path, profielen_path: Path,
                      figures_GEBU: Path, figures_ZST: Path, hring_path: Path, binDIKErnel: Path, output_path: Path):
 
+    local_path = Path(os.path.dirname(__file__))
+
     # if output_path doesnot exist, create it
     if not output_path.exists():
         output_path.mkdir()
-    # elif output_path exists, but not empty, stop the script
+    elif output_path exists, but not empty, stop the script
     elif output_path.exists() and len(list(output_path.iterdir())) != 0:
         print('The output folder is not empty. Please empty the folder and run the script again.')
         exit()
@@ -47,21 +49,25 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
     revetment_qvariant(df, profielen_path, database_path, hring_path, output_path)
 
     # step 2: GEBU
-    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU)
+    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path)
 
     # step 3: ZST
     revetment_zst(df, steentoets_path, output_path, figures_ZST)
 
+    # get the path where this script is in
+
+
     # cleanup files
-    files = [Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "1.ini"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "1.sql"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "1-input.txt"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "1-output.sqlite"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "1-output.txt"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "combin.sqlite"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "designTable.txt"),
-             Path.cwd().parent.joinpath("step2_mechanism_data", "revetments", "hydraring.log")]
+    files = [local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "1.ini"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "1.sql"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "1-input.txt"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "1-output.sqlite"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "1-output.txt"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "combin.sqlite"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "designTable.txt"),
+             local_path.parent.joinpath("step2_mechanism_data", "revetments", "hydraring.log")]
+
 
     # remove files
     for file in files:
@@ -73,16 +79,16 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
 if __name__ == '__main__':
 
     # input paths
-    bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
-    database_path = Path(r'c:\VRM\test_revetments\database')
-    steentoets_path = Path(r'c:\VRM\test_revetments\steentoets')
-    profielen_path = Path(r'c:\VRM\test_revetments\profielen')
-    figures_GEBU = Path(r'c:\VRM\test_revetments\figures_GEBU_test')
-    figures_ZST = Path(r'c:\VRM\test_revetments\figures_ZST_test')
+    bekleding_path = Path(r'c:\VRM\test_revetments_cli\Bekleding_default.csv')
+    database_path = Path(r'c:\VRM\test_revetments_cli\database')
+    steentoets_path = Path(r'c:\VRM\test_revetments_cli\steentoets')
+    profielen_path = Path(r'c:\VRM\test_revetments_cli\profielen')
+    figures_GEBU = Path(r'c:\VRM\test_revetments_cli\figures_GEBU_test_CLI')
+    figures_ZST = Path(r'c:\VRM\test_revetments_cli\figures_ZST_test_CLI')
     hring_path = Path(
         "c:/Program Files (x86)/BOI/Riskeer 21.1.1.2/Application/Standalone/Deltares/HydraRing-20.1.3.10236")
     binDIKErnel = Path('c:/VRM/test_revetments/bin_DiKErnel')
-    output_path = Path(r'c:\VRM\test_revetments\output_test')
+    output_path = Path(r'c:\VRM\test_revetments_cli\output_CLI')
 
     bekleding_main(bekleding_path, database_path, steentoets_path, profielen_path,
                    figures_GEBU, figures_ZST, hring_path, binDIKErnel, output_path)

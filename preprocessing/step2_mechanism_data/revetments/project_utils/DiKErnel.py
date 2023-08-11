@@ -24,16 +24,16 @@ class DIKErnelCalculations(object):
         self.y = list(y)
         self.positie = positie
 
-    def gras_golfklap_input_JSON(self, typeZode):
+    def gras_golfklap_input_JSON(self, typeZode, local_path):
 
         data = {"tijdstippen": self.tijdstippen, 
                 "hydraulischeBelastingen": {"waterstanden": self.waterstand, "golfhoogtenHm0": self.Hs, "golfperiodenTm10": self.Tp, "golfhoeken": self.betahoek},
                 "dijkprofiel": {"posities": self.x, "hoogten": self.y, "teenBuitenzijde": self.x[0], "kruinBuitenzijde": self.x[-1]}, 
-                "locaties": [{"positie": self.positie, "rekenmethode": "grasGolfklap", "typeToplaag": typeZode}]}        
-        
-        write_JSON_to_file(data, "project_utils/input.json")
+                "locaties": [{"positie": self.positie, "rekenmethode": "grasGolfklap", "typeToplaag": typeZode}]}
+
+        write_JSON_to_file(data, local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json"))
             
-    def gras_golfoploop_input_JSON(self, typeZode):
+    def gras_golfoploop_input_JSON(self, typeZode, local_path):
         
         # calculate tanalpha
         ind = np.argwhere((self.positie>=self.x[0:-1]) & (self.positie<=self.x[1:]))[0][0]
@@ -45,16 +45,20 @@ class DIKErnelCalculations(object):
                 "locaties": [{"positie": self.positie, "rekenmethode": "grasGolfoploop", "typeToplaag": typeZode, "tanA": tanalpha}],
                 "rekenmethoden": [{"rekenmethode": "grasGolfoploop", "rekenprotocol": {"typeRekenprotocol": "rayleighDiscreet"}}]} 
         
-        write_JSON_to_file(data, "project_utils/input.json")
+        write_JSON_to_file(data, local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json"))
 
-    def run_DIKErnel(self, binDIKErnel):
+    def run_DIKErnel(self, binDIKErnel, output_path, local_path):
 
         dike_kernel_exe = binDIKErnel.joinpath('DiKErnel-cli.exe')
-
-        os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
+        input_json_path = local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json")
+        output_json_path = output_path.joinpath('output.json')
+        # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
+        print(str(dike_kernel_exe) + ' --invoerbestand ' + str(input_json_path) + ' --uitvoerbestand ' + str(output_json_path) + ' --uitvoerniveau schade')
+        os.system(str(dike_kernel_exe) + ' --invoerbestand ' + str(input_json_path) + ' --uitvoerbestand ' + str(output_json_path) + ' --uitvoerniveau schade')
         # os.system(binDIKErnel + 'DiKErnel-cli.exe ' + '--invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
 
-        with open('output.json', 'r') as openfile:
+        # with open('output.json', 'r') as openfile:
+        with open(output_json_path, 'r') as openfile:
             json_object = json.load(openfile)
             
             
@@ -62,7 +66,7 @@ class DIKErnelCalculations(object):
         
         maxSchadegetal = max(schadegetalPerTijdstap)
         
-        os.remove('output.json')
+        os.remove(output_json_path)
         
         return maxSchadegetal
     
