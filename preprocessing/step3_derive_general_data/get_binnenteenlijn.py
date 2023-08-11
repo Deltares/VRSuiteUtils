@@ -9,6 +9,8 @@ from pathlib import Path
 characteristic_profile_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output5')
 profile_path = Path(r'c:\VRM\Gegevens 38-1\profiles\traject_profiles.csv')
 output_dir = Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn")
+
+
 data_profielen = pd.read_csv(profile_path)
 
 # create an empty list for the coordinates of the binnenteen

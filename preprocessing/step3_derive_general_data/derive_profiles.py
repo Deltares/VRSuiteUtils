@@ -32,6 +32,12 @@ def profile_generator(traject_id: str,
                                    flip_water_side=flip_waterside,
                                    )
 
+    # check if output_path exists, if not create it
+    if not output_path.exists():
+        output_path.mkdir()
+        print("dijkinfo folder created")
+
+
     # check if output_path.joinpath(profiles) exists, if not create it
     foldername_output_csv = "profile_csv"
     if not output_path.joinpath(foldername_output_csv).exists():
@@ -85,7 +91,7 @@ def profile_generator(traject_id: str,
 
 if __name__ == '__main__':
     profile_generator(traject_id="38-1",
-                      output_path=Path(r'c:\VRM\Gegevens 38-1\profiles5'),
+                      output_path=Path(r'c:\VRM\Gegevens 38-1\dijkinfo'),
                       NBPW_shape_path=False,
                       dx=2500,
                       flip_traject=False,

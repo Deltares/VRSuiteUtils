@@ -82,7 +82,6 @@ class DFlowSlideCharacteristicPointsSimple():
         for i in range(self.id_crest_max, 0, -1):
             if self.df.loc[i, 'variance']/self.normalize_factor > self.variance_treshold:
                 self.id_outer_crest = i
-                print('left crest found at x = {}'.format(self.df.loc[i, 'X']))
                 # add this point to the characteristic point collection, using pandas.concat
                 self.CharacteristicPointCollection = pd.concat([self.CharacteristicPointCollection,
                                                                 pd.DataFrame({'X': self.df.loc[i, 'X'],
@@ -112,9 +111,6 @@ class DFlowSlideCharacteristicPointsSimple():
         # determine self.slope_end which happens if slope[i+1] != slope[i] + 1 or if i = len(slope)
         self.slope_end = [slope[i] for i in range(len(slope)) if i == len(slope) - 1 or slope[i + 1] != slope[i] + 1]
 
-        print("slope starts at:", self.slope_start)
-        print("slope ends at:", self.slope_end)
-
         # merge self.slope_start and self.slope_end into self.breakpoints using 1 line of code
         self.breakpoints = [self.slope_start[i] for i in range(len(self.slope_start))] + \
                             [self.slope_end[i] for i in range(len(self.slope_end))]
@@ -139,7 +135,6 @@ class DFlowSlideCharacteristicPointsSimple():
                         self.df.loc[self.inner_break_points[i + 1], 'Z'] - self.df.loc[
                             self.id_outer_crest, 'Z']) > z_range_around_crest):
                     self.id_inner_crest = self.inner_break_points[i]
-                    print('inner crest found at x = {}'.format(self.df.loc[self.id_inner_crest, 'X']))
                     self.CharacteristicPointCollection = pd.concat([self.CharacteristicPointCollection,
                                                                     pd.DataFrame({'X': self.df.loc[self.id_inner_crest, 'X'],
                                                                                   'Z': self.df.loc[self.id_outer_crest, 'Z'],
@@ -159,20 +154,14 @@ class DFlowSlideCharacteristicPointsSimple():
             print('Outer or inner crest point is missing. Aborting mission.')
             self.correct_profile = False
             return
-        # if "BIK" and "BUK" not in self.CharacteristicPointCollection['name'].values:
-        #     print('Outer or inner crest point is missing. Aborting mission.')
-        #     self.correct_profile = False
-        #     break
 
-
-    # ABORT MISSION IF OUTER AND INNER CREST ARE TOO FAR APART
     # Check if outer and inner crest are less than 20m apart
         if abs(self.df.loc[self.id_outer_crest, 'X'] - self.df.loc[self.id_inner_crest, 'X']) > 20:
             print('Outer and inner crest are too far apart. Aborting mission.')
             self.correct_profile = False
             return
 
-    # ABORT MISSION IF THERE ARE HIGHER POINTS IN FORELAND OR HINTERLAND THAN THE CRESTS (OR MAXIMUM BETWEEN CREST POINTS)
+    # Check if tehere are points on the foreland and hinterland that are higher than the maximum between the crest points
         if self.df.loc[self.id_outer_crest:self.id_inner_crest, 'Z'].max() < self.df['Z'].max():
             print('There are higher points in foreland or hinterland than the crests. Aborting mission.')
             self.correct_profile = False
@@ -196,8 +185,7 @@ class DFlowSlideCharacteristicPointsSimple():
 
         # find minimum z between the outer crest and the outer bound, because z_outer_bound is not always the lowest
         self.z_outer_min = self.df.loc[0:self.id_outer_crest, 'Z'].min()
-        step_vertical = 0.5
-        vertical_range = 1.0
+
 
         # self.outer_breakpoints is where self.breakpoints < self.id_outer_crest. Save only unique values
         self.outer_breakpoints = np.unique([self.breakpoints[i] for i in range(len(self.breakpoints)) if
@@ -221,7 +209,6 @@ class DFlowSlideCharacteristicPointsSimple():
                 all_combinations.extend(
                     [np.array(c) for c in variable_combinations])  # Convert each coordinate to numpy array
 
-        print("combinations before filtering:", len(all_combinations))
 
         all_combinations_filtered = []
 
@@ -232,11 +219,6 @@ class DFlowSlideCharacteristicPointsSimple():
             elif np.all(coordinates[1:, 1] >= coordinates[:-1, 1]):
                 all_combinations_filtered.append(coordinates)
 
-        print(len(all_combinations_filtered)/len(all_combinations))
-        print(len(all_combinations_filtered), "combinations of coordinates found")
-        print("")
-
-
         # coords_outer_three
         performance = np.zeros((len(all_combinations_filtered)))
 
@@ -245,7 +227,6 @@ class DFlowSlideCharacteristicPointsSimple():
             x_coords = all_combinations_filtered[i][:, 0].tolist()
             z_coords = all_combinations_filtered[i][:, 1].tolist()
 
-
             # interpolate the line
             line_outer = interp1d([self.df.loc[0, 'X']] + x_coords + [self.df.loc[self.id_outer_crest, 'X']],
                                   [self.z_outer_bound] + z_coords + [self.z_outer_crest])
@@ -253,7 +234,6 @@ class DFlowSlideCharacteristicPointsSimple():
 
         # plot the best line for coords_outer_three
         index_best_performance = np.argmin(performance)
-        print("lowest RMSE is {} and has {} break points: ".format(np.min(performance), len(all_combinations_filtered[index_best_performance])))
 
         # add the points to self.CharacteristicPoints
         for i in range(len(all_combinations_filtered[index_best_performance])):
@@ -266,45 +246,11 @@ class DFlowSlideCharacteristicPointsSimple():
                                                                           'name': 'outer_slope{}'.format(i)},
                                                                          index=[0])])
 
-        # plt.figure()
-        # if len(all_combinations_filtered[index_best_performance]) == 1:
-        #     plt.plot(all_combinations_filtered[index_best_performance][:, 0][0],
-        #              all_combinations_filtered[index_best_performance][:, 1][0],
-        #              'o', color='k', zorder=20)  # break points
-        #     plt.plot([self.df.loc[0, 'X']] + [all_combinations_filtered[index_best_performance][:, 0][0]] + [
-        #         self.df.loc[self.id_outer_crest, 'X']],
-        #              [self.df.loc[0, 'Z']] + [all_combinations_filtered[index_best_performance][:, 1][0]] + [
-        #                  self.df.loc[self.id_outer_crest, 'Z']], color='k', zorder=10)  # Line simplified
-        # else:
-        #     plt.plot(all_combinations_filtered[index_best_performance][:, 0],
-        #              all_combinations_filtered[index_best_performance][:, 1],
-        #              'o', color='k', zorder=20)  # break points
-        #     plt.plot([self.df.loc[0, 'X']] + all_combinations_filtered[index_best_performance][:, 0].tolist() + [
-        #         self.df.loc[self.id_outer_crest, 'X']],
-        #              [self.df.loc[0, 'Z']] + all_combinations_filtered[index_best_performance][:, 1].tolist() + [
-        #                  self.df.loc[self.id_outer_crest, 'Z']], color='k', zorder=10)  # Line simplified
-        # plt.plot(self.df.loc[0, 'X'], self.df.loc[0, 'Z'],
-        #          'o', color='k')  # left outer point
-        # plt.plot(self.df.loc[self.id_outer_crest, 'X'], self.df.loc[self.id_outer_crest, 'Z'],
-        #          'o', color='k')  # outer_crest point
-        #
-        # plt.plot(self.df.loc[0:self.id_outer_crest, 'X'], self.df.loc[0:self.id_outer_crest, 'Z'], lw=4, color='b')
-        #
-        # plt.grid()
-        # # plot a diamond on the x-axis at each of the possible outer slope break points self.outer_breakpoints
-        # # at the line of the x-axis
-        # plt.plot(self.df.loc[self.outer_breakpoints, 'X'], np.ones(len(self.outer_breakpoints)) * (self.z_outer_min - 0.25), 'kd')
-        # plt.ylim([self.z_outer_min - 0.25, self.z_outer_crest + 0.25])
-        # plt.xlim([self.df.loc[0, 'X'], self.df.loc[self.id_outer_crest, 'X']])
-        # plt.savefig(os.path.join(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output4', self.name + '_outer.png'), dpi=300)
-        # plt.close()
-
     def optimize_inner_slope(self):
         '''
         This function fits a simplified slope to the actual outer slope of the dike.
         '''
-        print()
-        print("INNER SLOPE")
+
         self.z_inner_crest = self.CharacteristicPointCollection.loc[self.CharacteristicPointCollection["name"] == "BIK", "Z"].values[0]
         # obstain the last point of the inner slope
         self.id_inner_bound = len(self.df)-1
@@ -317,9 +263,6 @@ class DFlowSlideCharacteristicPointsSimple():
         # self.outer_breakpoints is where self.breakpoints < self.id_outer_crest. Save only unique values
         self.inner_breakpoints = np.unique([self.breakpoints[i] for i in range(len(self.breakpoints)) if
                                   self.breakpoints[i] > self.id_inner_crest])
-
-        # print x of inner_breakpoints
-        print("inner_breakpoints: {}".format(self.df.loc[self.inner_breakpoints, 'X'].values))
 
         possible_break_points = np.empty((1, len(self.inner_breakpoints) * 2))
 
@@ -339,8 +282,6 @@ class DFlowSlideCharacteristicPointsSimple():
                 all_combinations.extend(
                     [np.array(c) for c in variable_combinations])  # Convert each coordinate to numpy array
 
-        print("combinations before filtering:", len(all_combinations))
-
         all_combinations_filtered = []
 
         for combination in all_combinations:
@@ -350,11 +291,6 @@ class DFlowSlideCharacteristicPointsSimple():
 
             elif np.all(coordinates[1:, 1] < coordinates[:-1, 1]):
                 all_combinations_filtered.append(coordinates)
-
-        print(len(all_combinations_filtered)/len(all_combinations))
-        print(len(all_combinations_filtered), "combinations of coordinates found")
-        print("")
-
 
         # coords_outer_three
         performance = np.zeros((len(all_combinations_filtered)))
@@ -371,7 +307,6 @@ class DFlowSlideCharacteristicPointsSimple():
 
         # plot the best line for coords_outer_three
         index_best_performance = np.argmin(performance)
-        print("lowest RMSE is {} and has {} break points: ".format(np.min(performance), len(all_combinations_filtered[index_best_performance])))
 
         # add the points to self.CharacteristicPoints
         for i in range(len(all_combinations_filtered[index_best_performance])):
@@ -399,7 +334,6 @@ class DFlowSlideCharacteristicPointsSimple():
         # plot the characteristic points
         axs.plot(self.CharacteristicPointCollection['X'], self.CharacteristicPointCollection['Z'], 'ko', label = 'characteristic points')
         # plot all the breakpoints vlines (vertical lines) at the x position of the breakpoints
-        # axs.vlines(self.df.loc[self.breakpoints]['X'], self.df['Z'].min()-10, self.df['Z'].max()+10, 'k', alpha=0.2, zorder=-10, label = 'breakpoints')
         plt.plot(self.df.loc[self.breakpoints, 'X'],
                  np.ones(len(self.breakpoints)) * (self.df['Z'].min()-.5), 'kd')
         # plot a line between characteristic points
@@ -432,8 +366,8 @@ def rmse(line, df, n_breakpoints):
     return root_mean_squared_error
 
 def run_comparison():
-    input_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv')
-    output_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output5')
+    input_dir = Path(r'c:\VRM\Gegevens 38-1\profiles5\profile_csv')
+    output_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output3')
     # check if output work_dir exists, otherwise create
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -448,7 +382,7 @@ def run_comparison():
 
     for dwp, file in enumerate(os.listdir(input_dir)):
         if file.endswith('.csv'):
-            print(file)
+
             df_line = pd.read_csv(os.path.join(input_dir, file), header=None, delimiter=",")
             column_name = file.split('.')[0]
 
