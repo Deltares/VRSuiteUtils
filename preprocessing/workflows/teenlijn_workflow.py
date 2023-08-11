@@ -1,4 +1,3 @@
-import os, sys
 from pathlib import Path
 
 from preprocessing.step3_derive_general_data.get_binnenteenlijn import derive_teenlijn

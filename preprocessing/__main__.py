@@ -4,6 +4,7 @@ from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_mai
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from preprocessing.workflows.teenlijn_workflow import main_teenlijn
+from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
 from pathlib import Path
 
 
@@ -234,6 +235,50 @@ def obtain_inner_toe_line(
         Path(teenlijn_map),
     )
 
+
+
+@cli.command(name="tel_gebouwen", help="Voor het afleiden van het aantal gebouwen bij ieder dijkvak vanaf 0 tot 50 meter"
+                                       " vanaf de teenlijn landinwaarts"
+)
+@click.option("--traject_id",
+              type=str,
+              nargs=1,
+              required=True,
+              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'")
+@click.option("--teenlijn_geojson",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je het pad naar de GeoJSON van de gegenereerde teenlijn. Deze GeoJSON zou teenlijn.geojson"
+                   " moeten heten, tenzij de gebruiker de naam heeft aangepast.")
+@click.option("--vakindeling_geojson",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
+@click.option("--uitvoer_map",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je de het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
+@click.option("--gebouwen_geopackage",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je de het pad naar de geopackage van de BAG. Dit bestand is te downloaden via "
+                    "https://service.pdok.nl/lv/bag/atom/bag.xml. Dit is nodig, omdat de BAG het niet toelaat alle "
+                   "objecten vanuit het script te downloaden. Het aantal objecten is gelimiteerd tot 1000.")
+
+def tel_alle_gebouwen(
+    traject_id, teenlijn_geojson, vakindeling_geojson, uitvoer_map, gebouwen_geopackage
+):
+    main_bebouwing(
+        traject_id,
+        Path(teenlijn_geojson),
+        Path(vakindeling_geojson),
+        Path(uitvoer_map),
+        Path(gebouwen_geopackage),
+    )
 
 
 
