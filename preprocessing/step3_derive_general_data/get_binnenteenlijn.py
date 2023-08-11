@@ -7,9 +7,9 @@ from pathlib import Path
 
 
 
-def derive_teenlijn(characteristic_profile_dir,
-                    profile_path,
-                    output_dir):
+def derive_teenlijn(characteristic_profile_dir: Path,
+                    profile_path: Path,
+                    output_dir: Path):
 
     data_profielen = pd.read_csv(profile_path)
 

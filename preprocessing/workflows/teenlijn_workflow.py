@@ -4,7 +4,7 @@ from pathlib import Path
 from preprocessing.step3_derive_general_data.get_binnenteenlijn import derive_teenlijn
 
 
-def generate_teenlijn(
+def main_teenlijn(
     characteristic_profile_dir: Path,
     profile_path: Path,
     output_dir: Path
@@ -23,9 +23,9 @@ def generate_teenlijn(
 
 if __name__ == '__main__':
     characteristic_profile_dir = Path(r'c:\VRM\Gegevens 38-1\dijkinfo\characteristic_profiles')
-    profile_path = Path(r'c:\VRM\Gegevens 38-1\dijkinfo\traject_profiles.csv')
-    output_dir = Path(r"c:\VRM\Gegevens 38-1\dijkinfo\teenlijn")
+    profile_path = Path(r'c:\VRM\Gegevens 38-1\dijkinfo2\traject_profiles.csv')
+    output_dir = Path(r"c:\VRM\Gegevens 38-1\dijkinfo2\teenlijn")
 
-    generate_teenlijn(characteristic_profile_dir,
+    main_teenlijn(characteristic_profile_dir,
                         profile_path,
                         output_dir)

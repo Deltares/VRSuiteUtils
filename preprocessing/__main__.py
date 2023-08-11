@@ -3,6 +3,7 @@ from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
+from preprocessing.workflows.teenlijn_workflow import main_teenlijn
 from pathlib import Path
 
 
@@ -200,6 +201,39 @@ def obtain_the_AHN_profiles_for_traject(
         flip_traject,
         flip_waterkant,
     )
+
+@cli.command(name="genereer_teenlijn", help="Voor het afleiden van de teenlijn van een dijktraject"
+)
+@click.option("--karakteristieke_profielen_map",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je het pad naar de map waar de gegenereerde karakteristieke punten (uit een eerdere stap:"
+                   " 'genereer dijkprofielen') zijn opgeslagen")
+@click.option("--profiel_info_csv",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Dit is het pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: "
+                     "'genereer dijkprofielen'). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker "
+                   "de naam heeft aangepast.")
+@click.option("--teenlijn_map",
+              type=click.Path(),
+              nargs=1,
+              default=False,
+              help="Hier geef je de het pad naar de map waar de teenlijn naartoe moet worden geschreven. De gebruiker"
+                   "mag deze map zelf aanmaken, maar als de map niet bestaat, wordt deze automatisch aangemaakt. Het "
+                   "uitvoerbestand heet 'teenlijn.geojson'.")
+
+def obtain_inner_toe_line(
+    karakteristieke_profielen_map, profiel_info_csv, teenlijn_map
+):
+    main_teenlijn(
+        Path(karakteristieke_profielen_map),
+        Path(profiel_info_csv),
+        Path(teenlijn_map),
+    )
+
 
 
 
