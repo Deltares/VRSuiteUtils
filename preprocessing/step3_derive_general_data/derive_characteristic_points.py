@@ -81,20 +81,23 @@ class DFlowSlideCharacteristicPointsSimple():
 
         # from the maximum we go left step by step and find the first point where the variance is larger than the treshold
         self.variance_treshold = 0.05
-        for i in range(self.id_crest_max, 0, -1):
-            if self.df.loc[i, 'variance']/self.normalize_factor > self.variance_treshold:
-                self.id_outer_crest = i
-                # add this point to the characteristic point collection, using pandas.concat
-                self.CharacteristicPointCollection = pd.concat([self.CharacteristicPointCollection,
-                                                                pd.DataFrame({'X': self.df.loc[i, 'X'],
-                                                                              'Z': self.df.loc[i, 'Z'],
-                                                                              'profile_index': i,
-                                                                              'name': 'BUK'},
-                                                                             index=[0])],
-                                                                ignore_index=True)
-                break
-            else:
-                self.id_outer_crest = None
+        normalized_variance = self.df.loc[range(self.id_crest_max, 0, -1), 'variance'] / self.normalize_factor
+        if (normalized_variance > self.variance_treshold).idxmax() < normalized_variance.index.max():
+            i = (normalized_variance > self.variance_treshold).idxmax()
+            self.id_outer_crest = i
+
+        else:
+            #take the point x=0 and print a warning.
+            self.id_outer_crest = self.df.loc[np.isclose(self.df.X,0.),'X'].idxmax()
+            warnings.warn('Warning: no outer crest found for {}. Take x=0 as outer crest'.format(self.name))
+        # add this point to the characteristic point collection, using pandas.concat
+        self.CharacteristicPointCollection = pd.concat([self.CharacteristicPointCollection,
+                                                        pd.DataFrame({'X': self.df.loc[self.id_outer_crest, 'X'],
+                                                                      'Z': self.df.loc[self.id_outer_crest, 'Z'],
+                                                                      'profile_index': self.id_outer_crest,
+                                                                      'name': 'BUK'},
+                                                                     index=[0])],
+                                                       ignore_index=True)
 
     def detect_breakpoints(self):
         '''
