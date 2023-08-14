@@ -8,7 +8,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from pathlib import Path
 import itertools
-
+import warnings
 
 class DFlowSlideCharacteristicPointsSimple():
     def __init__(self, df, name):
@@ -32,18 +32,20 @@ class DFlowSlideCharacteristicPointsSimple():
         self.i_xnull = self.df['X'].iloc[(self.df['X'] - 0).abs().argsort()[:1]].index[0]
 
     def derive_characteristic_points(self):
-        self.preprocess_characteristic_points()
-        self.derive_profile_variables()
-        self.detect_outer_crest()
-        self.detect_breakpoints()
-        self.detect_inner_crest()
-        self.check_crests()
-        self.update_crest_points()
-        if self.correct_profile:
-            self.optimize_outer_slope()
-            self.optimize_inner_slope()
-            self.sort_characteristic_points()
-
+        try:
+            self.preprocess_characteristic_points()
+            self.derive_profile_variables()
+            self.detect_outer_crest()
+            self.detect_breakpoints()
+            self.detect_inner_crest()
+            self.check_crests()
+            self.update_crest_points()
+            if self.correct_profile:
+                self.optimize_outer_slope()
+                self.optimize_inner_slope()
+                self.sort_characteristic_points()
+        except:
+            warnings.warn('Error encountered for {}'.format(self.name))
 
     def preprocess_characteristic_points(self):
         self.CharacteristicPointCollection = pd.DataFrame(columns=['X', 'Z', 'profile_index', 'name'])
