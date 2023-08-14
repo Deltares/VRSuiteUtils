@@ -193,7 +193,7 @@ def obtain_the_AHN_profiles_for_traject(
     traject_id, output_folder, traject_shape, flip_traject, flip_waterkant, dx, voorland_lengte, achterland_lengte
 ):
     main_traject_profiles(
-        traject_id,
+        str(traject_id),
         Path(output_folder),
         dx,
         voorland_lengte,
