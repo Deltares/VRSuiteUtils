@@ -79,16 +79,17 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
 if __name__ == '__main__':
 
     # input paths
-    bekleding_path = Path(r'c:\VRM\test_revetments_cli\Bekleding_default.csv')
+    input_csv = Path(r'c:\VRM\test_revetments_cli\Bekleding_default.csv')
     database_path = Path(r'c:\VRM\test_revetments_cli\database')
     steentoets_path = Path(r'c:\VRM\test_revetments_cli\steentoets')
     profielen_path = Path(r'c:\VRM\test_revetments_cli\profielen')
-    figures_GEBU = Path(r'c:\VRM\test_revetments_cli\figures_GEBU_test_CLI')
-    figures_ZST = Path(r'c:\VRM\test_revetments_cli\figures_ZST_test_CLI')
+    figures_gebu = Path(r'c:\VRM\test_revetments_cli\figures_GEBU_test_CLI')
+    figures_zst = Path(r'c:\VRM\test_revetments_cli\figures_ZST_test_CLI')
     hring_path = Path(
         "c:/Program Files (x86)/BOI/Riskeer 21.1.1.2/Application/Standalone/Deltares/HydraRing-20.1.3.10236")
-    binDIKErnel = Path('c:/VRM/test_revetments/bin_DiKErnel')
+    bin_dikernel = Path('c:/VRM/test_revetments/bin_DiKErnel')
     output_path = Path(r'c:\VRM\test_revetments_cli\output_CLI')
 
-    bekleding_main(bekleding_path, database_path, steentoets_path, profielen_path,
-                   figures_GEBU, figures_ZST, hring_path, binDIKErnel, output_path)
+    
+    bekleding_main(input_csv, database_path, steentoets_path, profielen_path,
+                   figures_gebu, figures_zst, hring_path, bin_dikernel, output_path)
