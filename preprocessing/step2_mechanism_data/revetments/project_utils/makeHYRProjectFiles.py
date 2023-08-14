@@ -237,4 +237,4 @@ def make_ini_file(fileNameIni,mechanismId,fileNameSQL,fileNameConfig,fileNameHLC
         print('configdbfilename = ',fileNameConfig,file=f,sep='')
         print('hydraulicdbfilename = ',fileNameHLCD,file=f,sep='')
         print('availablecores = 4',file=f,sep='')
-        print('designpointoutput = both',file=f,sep='')     
+        print('designpointoutput = sqlite',file=f,sep='')
