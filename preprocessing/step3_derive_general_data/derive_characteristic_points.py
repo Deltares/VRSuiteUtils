@@ -67,7 +67,7 @@ class DFlowSlideCharacteristicPointsSimple():
 
     def detect_outer_crest(self):
         '''
-        This function detects the outer crest of the dike. First it finds the maximum in the profile, within 20m from
+        This function detects the outer crest of the dike. First it finds the maximum in the profile, within 10m from
          x=0.
         '''
         # find the maximum in the profile, 10 m around x=0
@@ -107,6 +107,14 @@ class DFlowSlideCharacteristicPointsSimple():
         slope = [i for i in range(len(self.df)) if
                             self.df.loc[i, 'variance'] / self.normalize_factor >= self.variance_treshold]
 
+        #there must be breakpoints at the outer slope (necessary in case of a flat outer slope/higher foreland).
+        # We take the first point from the outer crest where variance is smaller than 0.01
+        if all(slope > self.id_outer_crest):
+            normalized_variance = self.df.loc[range(self.id_outer_crest,0,-1), 'variance'] / self.normalize_factor
+            outer_slope = list(normalized_variance[normalized_variance > 0.01].index.values)
+            slope = slope + list(reversed(outer_slope))
+
+
         if slope[0] == 0:
             self.slope_start = [0]
             self.slope_start = [slope[i] for i in range(1, len(slope)) if slope[i - 1] != slope[i] - 1]
@@ -116,6 +124,9 @@ class DFlowSlideCharacteristicPointsSimple():
         # determine self.slope_end which happens if slope[i+1] != slope[i] + 1 or if i = len(slope)
         self.slope_end = [slope[i] for i in range(len(slope)) if i == len(slope) - 1 or slope[i + 1] != slope[i] + 1]
 
+
+
+
         # merge self.slope_start and self.slope_end into self.breakpoints using 1 line of code
         self.breakpoints = [self.slope_start[i] for i in range(len(self.slope_start))] + \
                             [self.slope_end[i] for i in range(len(self.slope_end))]
@@ -123,7 +134,7 @@ class DFlowSlideCharacteristicPointsSimple():
 
     def detect_inner_crest(self):
         '''
-        This function detects the outer crest of the dike. First it finds the maximum in the profile, within 20m from
+        This function detects the inner crest of the dike. First it finds the maximum in the profile, within 20m from
          x=0.
         '''
         # find the maximum in the profile, 10 m around x=0
