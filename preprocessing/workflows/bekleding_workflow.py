@@ -14,7 +14,7 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
     # if output_path doesnot exist, create it
     if not output_path.exists():
         output_path.mkdir()
-    elif output_path exists, but not empty, stop the script
+    # elif output_path exists, but not empty, stop the script
     elif output_path.exists() and len(list(output_path.iterdir())) != 0:
         print('The output folder is not empty. Please empty the folder and run the script again.')
         exit()
