@@ -36,7 +36,7 @@ def profile_generator(traject_id: str,
     # loop through profiles and write each profile to a separate csv file and add a counter
     for index, profile in enumerate(traject.profiles):
         # Define the filename for the CSV
-        filename = f"profile_{i:04d}.csv".format(index+1)  # Assuming filenames like 'profile_1.csv', 'profile_2.csv', etc. pad with 3 zeros to ensure correct sorting
+        filename = f"profile_{index:04}.csv" # Assuming filenames like 'profile_0001.csv', 'profile_0002.csv', etc. pad to 4 digits to ensure correct sorting
 
         # Write the profile data to the CSV file
         with open(output_path.joinpath(foldername_output_csv,filename), 'w', newline='') as csvfile:
@@ -61,7 +61,7 @@ def profile_generator(traject_id: str,
             row = [count + 1,
                    fsd, traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
                    hld, traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
-                   traject.m_values[count], f"profile_{count + 1}.csv"]
+                   traject.m_values[count], f"profile_{count+1:04}.csv"]
             writer.writerow(row)
             count += 1
 
