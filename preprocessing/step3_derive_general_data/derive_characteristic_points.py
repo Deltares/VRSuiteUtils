@@ -283,31 +283,27 @@ class DFlowSlideCharacteristicPointsSimple():
         # self.outer_breakpoints is where self.breakpoints < self.id_outer_crest. Save only unique values
         self.inner_breakpoints = np.unique([self.breakpoints[i] for i in range(len(self.breakpoints)) if
                                   self.breakpoints[i] > self.id_inner_crest])
-
-        possible_break_points = np.empty((1, len(self.inner_breakpoints) * 2))
-
-        for i in np.arange(len(self.inner_breakpoints)):
-            possible_break_points[:, int(i*2)] = np.repeat(self.df.loc[self.inner_breakpoints[i], 'X'], 1)
-            possible_break_points[:, i * 2 + 1] = self.df.loc[self.inner_breakpoints[i], 'Z']
-
-
-        all_variables = [np.asarray(list(zip(possible_break_points[:, i*2], possible_break_points[:, i*2+1]))) for i in range(len(self.inner_breakpoints))]
-
+        #new
+        all_variables =  self.df.loc[self.inner_breakpoints, ['X', 'Z']].values
         # Get all possible combinations
         all_combinations = []
         for r in range(1, min(len(self.inner_breakpoints)+1, 4)):
             for combination in itertools.combinations(range(len(all_variables)), r):
-                variable_combinations = itertools.product(*(all_variables[i] for i in combination))
+                variable_combinations = itertools.product((np.array(all_variables[i,:]) for i in combination))
                 # all_combinations.extend(variable_combinations)
                 all_combinations.extend(
-                    [np.array(c) for c in variable_combinations])  # Convert each coordinate to numpy array
+                    [[np.array(c).flatten() for c in variable_combinations]])  #
 
         all_combinations_filtered = []
 
         for combination in all_combinations:
             coordinates = np.array(combination)  # Convert combination to numpy array
             if len(coordinates) == 1:
-                all_combinations_filtered.append(coordinates)
+                #there may not be a line in all_variables where X is smaller than coordinates[0][0] and Z is smaller than coordinates[0][1]
+                if not any(np.minimum(np.array(all_variables[:,0] < coordinates[0][0]), np.array(all_variables[:,1] < coordinates[0][1]))):
+                    all_combinations_filtered.append(coordinates)
+                else:
+                    pass
 
             elif np.all(coordinates[1:, 1] < coordinates[:-1, 1]):
                 all_combinations_filtered.append(coordinates)
