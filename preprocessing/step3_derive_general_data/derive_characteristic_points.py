@@ -83,9 +83,13 @@ class DFlowSlideCharacteristicPointsSimple():
         self.variance_treshold = 0.05
         normalized_variance = self.df.loc[range(self.id_crest_max, 0, -1), 'variance'] / self.normalize_factor
         if (normalized_variance > self.variance_treshold).idxmax() < normalized_variance.index.max():
-            i = (normalized_variance > self.variance_treshold).idxmax()
+            #find the point where the difference with the max crest is not too high, that is furthest away. This is the outer crest.
+            diff_with_crest = self.df.Z.loc[self.id_crest_max] - self.df.Z.loc[range(self.id_crest_max, 0, -1)]
+            diff_with_crest = diff_with_crest.loc[(normalized_variance > self.variance_treshold)]
+            i = diff_with_crest.loc[diff_with_crest<0.25].idxmax()
+            #simpler alternative but less robust?
+            # i = (normalized_variance > self.variance_treshold).idxmax()
             self.id_outer_crest = i
-
         else:
             #take the point x=0 and print a warning.
             self.id_outer_crest = self.df.loc[np.isclose(self.df.X,0.),'X'].idxmax()
