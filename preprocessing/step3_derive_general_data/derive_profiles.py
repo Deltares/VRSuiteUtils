@@ -57,11 +57,11 @@ def profile_generator(traject_id: str,
                   'length_hl', 'x_coord_hl', 'y_coord_hl',
                   'm_value', 'csv_filename']
         writer.writerow(header)
-        for count, profile in enumerate(traject.profiles,start=1):
+        for count, profile in enumerate(traject.profiles,start=0):
             row = [count,
                    fsd, traject.foreshore_coords[count].x, traject.foreshore_coords[count].y,
                    hld, traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
-                   traject.m_values[count], f"profile_{count:04}.csv"]
+                   traject.m_values[count], f"profile_{count+1:04}.csv"]
             writer.writerow(row)
 
     # print the total time this function runs
