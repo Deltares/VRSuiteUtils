@@ -5,6 +5,7 @@ from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_ma
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from preprocessing.workflows.teenlijn_workflow import main_teenlijn
 from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
+from preprocessing.workflows.select_profiles_workflow import main_profiel_selectie
 from pathlib import Path
 
 
@@ -280,6 +281,54 @@ def tel_alle_gebouwen(
         Path(gebouwen_geopackage),
     )
 
+@cli.command(name="selecteer_profiel", help="Selecteer per dijkvak een profiel")
+
+
+@click.option("--vakindeling_geojson",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
+
+@click.option("--karakteristieke_profielen_map",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je het pad naar de map waar de gegenereerde karakteristieke punten (uit een eerdere stap:"
+                   " 'genereer dijkprofielen') zijn opgeslagen")
+@click.option("--profiel_info_csv",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Dit is het pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: "
+                     "'genereer dijkprofielen'). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker "
+                   "de naam heeft aangepast.")
+
+@click.option("--uitvoer_map",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je de het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
+@click.option("--invoerbestand",
+              type=click.Path(),
+              nargs=1,
+              default=False,
+              help="Het is mogelijk om een invoerbestand op te geven waar voor sommige vakken al profielen zijn ingevoerd.")
+@click.option("--selectiemethode",
+              type=click.Path(),
+              nargs=1,
+              default="minimum",
+              help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
+
+def selecteer_profiel(
+    vakindeling_geojson, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand, selectiemethode):
+    main_profiel_selectie(
+        Path(vakindeling_geojson),
+        Path(karakteristieke_profielen),
+        Path(profiel_info_csv),
+        Path(uitvoer_map),
+        Path(invoerbestand),
+        selectiemethode)
 
 
 if __name__ == "__main__":
