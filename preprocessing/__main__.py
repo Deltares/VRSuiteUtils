@@ -290,7 +290,14 @@ def tel_alle_gebouwen(
               required=True,
               help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
 
-@click.option("--karakteristieke_profielen_map",
+@click.option("--ahn_profielen",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Hier geef je het pad naar de map waar de ahn hoogtedata (uit een eerdere stap:"
+                   " 'genereer dijkprofielen') zijn opgeslagen")
+
+@click.option("--karakteristieke_profielen",
               type=click.Path(),
               nargs=1,
               required=True,
@@ -310,24 +317,25 @@ def tel_alle_gebouwen(
               required=True,
               help="Hier geef je de het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
 @click.option("--invoerbestand",
-              type=click.Path(),
               nargs=1,
               default=False,
               help="Het is mogelijk om een invoerbestand op te geven waar voor sommige vakken al profielen zijn ingevoerd.")
 @click.option("--selectiemethode",
-              type=click.Path(),
               nargs=1,
               default="minimum",
               help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
 
 def selecteer_profiel(
-    vakindeling_geojson, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand, selectiemethode):
+    vakindeling_geojson, ahn_profielen, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand, selectiemethode):
+    if invoerbestand:
+        invoerbestand = Path(invoerbestand)
     main_profiel_selectie(
         Path(vakindeling_geojson),
+        Path(ahn_profielen),
         Path(karakteristieke_profielen),
         Path(profiel_info_csv),
         Path(uitvoer_map),
-        Path(invoerbestand),
+        invoerbestand,
         selectiemethode)
 
 

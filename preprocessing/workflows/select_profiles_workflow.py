@@ -1,14 +1,24 @@
 from pathlib import Path
 import geopandas as gpd
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 import warnings
+import shutil
 def main_profiel_selectie(
         vakindeling_geojson: Path,
+        ahn_profielen: Path,
         karakteristieke_profielen: Path,
         profiel_info_csv: Path,
         uitvoer_map: Path,
         invoerbestand: Path,
         selectiemethode: str):
+    #make sure uitvoer_map does not exist: delete and recreate
+    if uitvoer_map.exists():
+        warnings.warn("uitvoer_map already exists. Deleting and recreating")
+        #remove with shutil.rmtree
+        shutil.rmtree(uitvoer_map)
+    uitvoer_map.mkdir()
     #load vakindeling_geojson
     vakindeling = gpd.read_file(vakindeling_geojson)
 
@@ -17,20 +27,52 @@ def main_profiel_selectie(
 
     if invoerbestand:
         #load invoerbestand
-        invoerbestand = pd.read_csv(invoerbestand)
+        invoerbestand = pd.read_csv(Path(invoerbestand))
 
 
     #for each vak in vakindeling
     for vak in vakindeling.itertuples():
+        if vak.in_analyse == 0: #skip vakken die niet worden beschouwd
+            continue
+        if vak.vaknaam != '16':
+            continue
         #select profielen
         if invoerbestand:
             #if a profile is given in invoerbestand then use that one
             pass    #TODO develop this
         else:
             #select profielen based on geometry
-            available_profiles = profiel_info.loc[(profiel_info.m_value > vak.m_start) & (profiel_info.m_value < vak.m_eind)]
-            select_profile(available_profiles, karakteristieke_profielen, vak.vaknaam, selectiemethode)
+            available_profiles = profiel_info.loc[(profiel_info.m_value > vak.m_start) & (profiel_info.m_value < vak.m_eind)].copy()
+            #drop non-existent profiles
+            for idx, row in available_profiles.iterrows():
+                if not karakteristieke_profielen.joinpath(row.csv_filename.split('.')[0] + '.png').exists():
+                    available_profiles.drop(index=idx, inplace=True)
+            characteristic_profile = select_profile(available_profiles, karakteristieke_profielen, vak.vaknaam, selectiemethode)
+            if characteristic_profile is not None:
+                characteristic_profile.to_csv(uitvoer_map.joinpath(vak.vaknaam + '.csv'), index=True)
+                #plot aggregated profile, and AHN data
+                plot_profile(characteristic_profile, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
+            else:
+                warnings.warn(f'No profile found for vak {vak.vaknaam}')
+
+
         #save profielen to file
+
+def plot_profile(profile, vaknaam : str, profile_names, ahn_path : Path, output_path : Path):
+
+    fig, ax = plt.subplots()
+    #plot ahn_profiles
+    for profile_name in profile_names:
+        ahn_profile = pd.read_csv(ahn_path.joinpath(profile_name),header=None).transpose()
+        ax.plot(ahn_profile[0], ahn_profile[1], color='grey', alpha=0.5)
+    #plot aggregated profile
+    ax.plot(profile.X, profile.Z, color='black')
+    ax.set_title(vaknaam)
+    ax.set_xlabel('X [m]')
+    ax.set_ylabel('Z [m+NAP]')
+    # ax.set_aspect('equal')
+    plt.savefig(output_path.joinpath(vaknaam + '.png'),dpi=300)
+    plt.close()
 
 def compute_slope(point1, point2):
     #point1 and point2 are tuples of x,y coordinates
@@ -67,24 +109,33 @@ def select_inner_slope_points(profile):
     BIK = profile.loc[profile.name == 'BIK']
     #Is BIK correct, or are there points with similar Z in possible_points
     possible_alternative_BIK = possible_points.loc[BIK.Z.item() - possible_points.Z < 2]
-    if len(possible_alternative_BIK) >0:
+    if (len(possible_alternative_BIK) >0) and (len(possible_points) > 1):
         #change the BIK to last point in possible_alternative_BIK, but adjust the height in accordance with the slope
-        #TODO this is relevant in case of a tuimelkade. But the approach is very simplistic!
-        new_BIK = possible_alternative_BIK.iloc[-1]
-        point_idx = possible_points.loc[possible_points.name == new_BIK['name']].index + 1
+        #simplistic approach for tuimelkades
+        #the new_BIK is the last in possible_alternative_BIK but may not be the same as the last in possible_points
+        if possible_alternative_BIK.index[-1] < max(possible_points.index):
+            new_BIK = possible_alternative_BIK.iloc[-1].copy()
+            point_idx = possible_points.loc[possible_points.name == new_BIK['name']].index + 1
+        else:
+            new_BIK = possible_alternative_BIK.iloc[-2].copy()
+            point_idx = possible_points.loc[possible_points.name == new_BIK['name']].index + 1
         tan_inner = compute_slope((new_BIK.X, new_BIK.Z), (possible_points.loc[point_idx].X.item(), possible_points.loc[point_idx].Z.item()))
         dZ = BIK.Z - new_BIK.Z
-        new_BIK.Z = new_BIK.Z + dZ.item()
         new_BIK.X = new_BIK.X + dZ.item() / tan_inner
-        BIK = new_BIK.squeeze()
+        new_BIK.Z = new_BIK.Z + dZ.item()
+        #check that new_BIk has larger X than old BIK
+        if new_BIK.X < BIK.X.item():
+            BIK = BIK.squeeze()
+        else:
+            BIK = new_BIK.squeeze()
 
     #a berm should be at least 2 meters lower than the BIK
     possible_berm_points = possible_points.loc[possible_points.Z < BIK.Z.item() - 2]
-    if possible_berm_points.shape[0]== 1:
+    if possible_berm_points.shape[0] <= 1:
         #no berm, only BIT
 
 
-        BIT = possible_berm_points.iloc[-1]
+        BIT = possible_points.iloc[-1]
         BBL = None
         EBL = None
     elif possible_berm_points.shape[0] == 2:
@@ -99,8 +150,10 @@ def select_inner_slope_points(profile):
             BIT = possible_berm_points.iloc[1]
             BBL = possible_berm_points.iloc[0]
             EBL = possible_berm_points.iloc[0]
+    elif possible_berm_points.shape[0] == 0:
+        pass
     else:
-        #we have a berm, so we have BIT, BBL and EBL
+        #we might have a berm, so we have BIT, BBL and EBL
         #if the slope between BIK and BBL is larger than that between the first and second point of possible_berm_points, then we have found the BBL
         first_slope = compute_slope((BIK.X, BIK.Z), (possible_berm_points.iloc[0].X, possible_berm_points.iloc[0].Z))
         second_slope = compute_slope((possible_berm_points.iloc[0].X, possible_berm_points.iloc[0].Z), (possible_berm_points.iloc[1].X, possible_berm_points.iloc[1].Z))
@@ -114,12 +167,12 @@ def select_inner_slope_points(profile):
             else:
                 BIT = remaining_points.iloc[0]
         else:
-            pass
-
-
-        #TODO hier verder
-        pass
-
+            #in this case the slope becomes steeper, so we have not found the berm yet. We should look further if possible
+            #we assume that the last point is the BIT and there is noe EBL and BBL.
+            #TODO shoudl this be more sophisticated?
+            BIT = possible_berm_points.iloc[-1]
+            BBL = None
+            EBL = None
     return BIK, BIT, BBL, EBL
 def define_characteristic_points(profile):
     #define characteristic points BUT, BIT, EBL, BBL
@@ -147,10 +200,93 @@ def define_characteristic_points(profile):
     else:
         characteristic_profile = characteristic_profile.reindex(['BUT', 'BUK', 'BIK', 'BIT'])
     return characteristic_profile
+
+def filter_characteristic_profiles(characteristic_profiles, selectiemethode):
+    #selectiemethode is nog nader in te vullen. Voor nu werken we o.b.v. mediane waarden.
+    import matplotlib.pyplot as plt
+    # for profile in characteristic_profiles:
+    #     plt.plot(profile.X, profile.Z)
+    # plt.plot(filtered_profile.X, filtered_profile.Z, '--or')
+    # plt.show()
+    filtered_profile = pd.DataFrame(columns=['X','Z'])
+    all_characteristic_points = pd.concat(characteristic_profiles,
+                                          keys = range(0,len(characteristic_profiles))).reset_index().set_index('level_1').rename(columns={'level_0':'Profielnummer'})
+    profielnummers = list(range(0,len(characteristic_profiles)))
+    outer_slope = np.empty((len(profielnummers),1))
+    z_BUT = np.empty((len(profielnummers),1))
+    #compute outer slope for each profielnummer
+    for profiel in profielnummers:
+        profile_points = all_characteristic_points.loc[all_characteristic_points.Profielnummer == profiel]
+        outer_slope[profiel,0] = compute_slope((profile_points.loc['BUK'].X, profile_points.loc['BUK'].Z),
+                        (profile_points.loc['BUT'].X, profile_points.loc['BUT'].Z))
+        z_BUT[profiel,0] = profile_points.loc['BUT'].Z
+
+    #buitentalud: mediane Z met mediane slope tussen BUT en BUK
+    outer_slope = np.median(outer_slope)
+    z_BUT = np.median(z_BUT)
+    z_BUK = np.median(all_characteristic_points.loc['BUK'].Z)
+    x_BUK = np.median(all_characteristic_points.loc['BUK'].X)
+    x_BUT = x_BUK - (z_BUK - z_BUT) / outer_slope
+    filtered_profile.loc['BUT',['X','Z']] = [x_BUT, z_BUT]
+    filtered_profile.loc['BUK',['X','Z']] = [x_BUK, z_BUK]
+
+    #binnenkruinlijn:
+    #z is gelijk aan BUK
+    #x is mediane BIK.X
+    filtered_profile.loc['BIK',['X','Z']] = [np.median(all_characteristic_points.loc['BIK'].X), z_BUK]
+
+    #binnentalud:
+    inner_slope = np.empty((len(profielnummers),1))
+    #mediane slope tussen BIK en BBL of BIT als BBL niet bestaat
+    for profiel in profielnummers:
+        profile_points = all_characteristic_points.loc[all_characteristic_points.Profielnummer == profiel]
+        if 'BBL' in profile_points.index:
+            inner_slope[profiel,0] = compute_slope((profile_points.loc['BIK'].X, profile_points.loc['BIK'].Z),
+                        (profile_points.loc['BBL'].X, profile_points.loc['BBL'].Z))
+        else:
+            inner_slope[profiel,0] = compute_slope((profile_points.loc['BIK'].X, profile_points.loc['BIK'].Z),
+                        (profile_points.loc['BIT'].X, profile_points.loc['BIT'].Z))
+    inner_slope = np.median(inner_slope)
+    z_BIT = np.median(all_characteristic_points.loc['BIT'].Z)
+
+    #als er helemaal nergens een berm zit, leidt dan direct BIT af a.d.h.v. de mediane slope tussen BIK en BIT
+    if 'BBL' not in all_characteristic_points.index:
+        x_BIT = filtered_profile.loc['BIK','X'] +  (z_BIT - filtered_profile.loc['BIK','Z'])/inner_slope
+        # z_BIT = z_BUK - inner_slope * (x_BUK - np.median(all_characteristic_points.loc['BIK'].X))
+        filtered_profile.loc['BIT',['X','Z']] = [x_BIT, z_BIT]
+    else:
+        #als er profielen zijn met een berm laten we het afhangen van de mediane X van BIT of er nog een berm tussen moet worden gevoegd
+        #eerst de x_BIT als er geen berm tussen zit, obv de mediane slope tussen BIK en BIT
+        x_BIT_no_berm = filtered_profile.loc['BIK','X'] +  (z_BIT - filtered_profile.loc['BIK','Z'])/inner_slope
+        #dan de werkelijke x_BIT
+        x_BIT = np.median(all_characteristic_points.loc['BIT'].X)
+        #verschil is de berm lengte
+        berm_lengte = x_BIT - x_BIT_no_berm
+        #case 1: berm_lengte positief:
+        if berm_lengte > 0:
+            #de bermhoogte:
+            z_berm = np.median(all_characteristic_points.loc[['BBL','EBL']].Z)
+            #TODO schuine berm o.b.v. talud tussen EBL en BBL
+            #de x van BBL o.b.v. de slope vanaf de BIK:
+            x_BBL = filtered_profile.loc['BIK','X'] + (z_berm - filtered_profile.loc['BIK','Z'])/inner_slope
+            x_EBL = x_BBL + berm_lengte
+            filtered_profile.loc['BBL',['X','Z']] = [x_BBL, z_berm]
+            filtered_profile.loc['EBL',['X','Z']] = [x_EBL, z_berm]
+            filtered_profile.loc['BIT',['X','Z']] = [x_BIT, z_BIT]
+        else:
+            #geen berm, geen EBL BBL, BIT is gewoon BIT o.b.v. werkelijke BIT
+            filtered_profile.loc['BIT',['X','Z']] = [x_BIT, z_BIT]
+    # hoe breed is de basis?
+    # hoe breed is de kruin?
+    # hoe steil is het bovenste en onderste binnentalud?
+    # moet er een berm in?
+
+    return filtered_profile
 def select_profile(available_profiles, karakteristieke_profielen, section, selectiemethode):
     profiles = []
     if available_profiles.empty:
         warnings.warn("No profiles found in available_profiles")
+        return None
     # elif available_profiles.shape[0] == 1:
     #     #only one profile found, use that one
     #     profiles.append(pd.read_csv(karakteristieke_profielen / f"{available_profiles.csv_filename.item()}"))
@@ -164,29 +300,8 @@ def select_profile(available_profiles, karakteristieke_profielen, section, selec
         #read all profiles from csv files
 
     if len(profiles) > 1:
-        import matplotlib.pyplot as plt
-        for profile in characteristic_profiles:
-            plt.plot(profile.X, profile.Z)
-        plt.show()
-        #hoe steil is het buitentalud?
+        characteristic_profile = filter_characteristic_profiles(characteristic_profiles, selectiemethode)
 
-        #hoe breed is de basis?
-        #hoe breed is de kruin?
-        #hoe steil is het bovenste en onderste binnentalud?
-        #moet er een berm in?
-
-        if selectiemethode == "minimum":
-            #for BUT we take the lowest BUT.Z and the average slope between BUT and BUK
-            outer_slope = (characteristic_profiles[0].loc['BUK'].Z - characteristic_profiles[0].loc['BUT'].Z) / characteristic_profiles[0].loc['BUT'].X
-            # characteristic_BUT =
-            #take profile with narrowest base
-            pass
-        elif selectiemethode == "median":
-            pass
-        elif selectiemethode == "gemiddeld":
-            pass
-        else:
-            raise ValueError(f"selectiemethode {selectiemethode} is not known")
     else:
         characteristic_profile = characteristic_profiles[0]
 
