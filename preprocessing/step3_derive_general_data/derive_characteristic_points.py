@@ -414,10 +414,13 @@ def obtain_characteristic_profiles(input_dir: Path,
             DFS_CharPoints = DFlowSlideCharacteristicPointsSimple(df, name=column_name)
             DFS_CharPoints.derive_characteristic_points()
             if DFS_CharPoints.correct_profile:
-                # plot the profile
-                DFS_CharPoints.plot_profile(output_dir)
                 # write DFS_CharPoints.CharacteristicPointCollection to csv
                 DFS_CharPoints.CharacteristicPointCollection.to_csv(os.path.join(output_dir, column_name + '.csv'), index=False)
+                # plot the profile
+                try:
+                    DFS_CharPoints.plot_profile(output_dir)
+                except:
+                    warnings.warn('Could not plot profile for {}'.format(column_name))
 
 
 #
