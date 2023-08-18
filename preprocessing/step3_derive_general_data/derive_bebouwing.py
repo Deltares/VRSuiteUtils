@@ -79,6 +79,10 @@ def count_buildings_per_vak(traject_name,
     elif len(result.geoms) == 1:
         line = None
         remainder = result.geoms[0]
+    else:
+        #remove parts where line_teen has crossed itself
+        #raise Exception that there are unexpectedly many parts and that the teenlijn should be inspected for crossings
+        raise Exception("Knippen van teenlijn levert onverwacht veel delen op. Controleer teenlijn op kruisingen.")
 
     teenvakken_gdf = gpd.GeoDataFrame(columns=["vaknaam", "geometry"])
     teenvakken_gdf = pd.concat([teenvakken_gdf, pd.DataFrame({"vaknaam": vakindeling_gdf.vaknaam[0], "geometry": line}, index=[0])])
@@ -99,7 +103,7 @@ def count_buildings_per_vak(traject_name,
 
     # write to geojson with crs epsg:28992
     teenvakken_gdf.crs = "epsg:28992"
-    teenvakken_gdf.to_file(r"c:\VRM\Gegevens 38-1\profiles\teenlijn\teenlijn_vakindeling3.geojson", driver="GeoJSON")
+    teenvakken_gdf.to_file(output_dir.joinpath("teenlijn_vakindeling.geojson"), driver="GeoJSON")
 
     buildings_gdf = gpd.read_file(all_buildings_filename, bbox=bounding_box, engine="fiona")
     buildings_gdf.to_file(output_dir.joinpath("buildings_traject{0}.geojson".format(traject_name)), driver='GeoJSON')

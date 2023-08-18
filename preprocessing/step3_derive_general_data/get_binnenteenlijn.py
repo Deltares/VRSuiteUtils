@@ -4,8 +4,8 @@ import numpy as np
 from shapely.geometry import Point, LineString
 import geopandas
 from pathlib import Path
-
-
+from shapely.ops import polygonize, unary_union, linemerge
+from shapely import intersection
 
 def derive_teenlijn(characteristic_profile_dir: Path,
                     profile_path: Path,
@@ -55,8 +55,20 @@ def derive_teenlijn(characteristic_profile_dir: Path,
     # sort the df_binnenteen by profile_number in ascending order
     df_binnenteen = df_binnenteen.sort_values(by="profile_number", ascending=True)
 
+
+    teenlijn_geometry = LineString(df_binnenteen["coordinates"])
+    #check if the teenlijn is_simple
+    if not teenlijn_geometry.is_simple:
+        # if not simple, we identify all polygons that are created from the linestring using polygonize
+        polygons = polygonize(unary_union(teenlijn_geometry))
+        intersections = [intersection(teenlijn_geometry,polygon) for polygon in polygons]
+        # we remove the intersections from the teenlijn_geometry
+        teenlijn_geometry = teenlijn_geometry.difference(unary_union(intersections))
+        # we convert the teenlijn_geometry from a MultiLineString to a LineString
+        teenlijn_geometry = linemerge(teenlijn_geometry)
+
     # write a line to geojson, with LineString(df_binnenteen["coordinates"]) as geometry and with coordinatesystem EPSG:28992
-    d = {"geometry": LineString(df_binnenteen["coordinates"]), "properties": {"Name": "binnenteenlijn"}}
+    d = {"geometry": teenlijn_geometry, "properties": {"Name": "binnenteenlijn"}}
 
     # write binnenteenlijn to geojson, with coordinatesystem EPSG:28992
     gdf = geopandas.GeoDataFrame(d, crs="EPSG:28992")
