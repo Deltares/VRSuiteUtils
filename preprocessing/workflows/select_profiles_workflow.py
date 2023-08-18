@@ -34,8 +34,6 @@ def main_profiel_selectie(
     for vak in vakindeling.itertuples():
         if vak.in_analyse == 0: #skip vakken die niet worden beschouwd
             continue
-        if vak.vaknaam != '16':
-            continue
         #select profielen
         if invoerbestand:
             #if a profile is given in invoerbestand then use that one
@@ -84,7 +82,7 @@ def compute_slope(point1, point2):
         return slope
 
 def select_BUT(profile):
-    possible_points = profile.loc[profile.name.str.contains('outer_slope')]
+    possible_points = profile.loc[profile.name.str.contains('outer_slope')].iloc[::-1]
     start_point = 'BUK'
     if possible_points.empty:
         warnings.warn("No outer slope points found in profile. Use 1:3 slope with deltaZ = 4 meters")
@@ -94,14 +92,18 @@ def select_BUT(profile):
     elif possible_points.shape[0] == 1:
         BUT = possible_points
     else:
-        slopes = []
+        piecewise_slopes = []
+        cumulated_slopes = []
         for point in possible_points.itertuples():
-            #compute piecewise slope between start_point and point
-            slopes.append(compute_slope((profile.loc[profile.name == start_point].X, profile.loc[profile.name == start_point].Z), (point.X, point.Z)))
+            #compute piecewise and cumulated slope between start_point and point
+            piecewise_slopes.append(compute_slope((profile.loc[profile.name == start_point].X, profile.loc[profile.name == start_point].Z), (point.X, point.Z)))
+            cumulated_slopes.append(compute_slope((profile.loc[profile.name == 'BUK'].X, profile.loc[profile.name == 'BUK'].Z), (point.X, point.Z)))
             start_point = point.name
-        #for now we take the first point (always)
+        #filter points based on slope, the last point where the slope is 80% of the first part is assumed to be the BUT
+        possible_points = possible_points.loc[np.array(cumulated_slopes) > 0.9*piecewise_slopes[0]]
+        #
         # TODO develop a more advanced rationale for selecting the outer slope point
-        BUT = possible_points.iloc[0]
+        BUT = possible_points.iloc[-1]
     return BUT.squeeze()
 def select_inner_slope_points(profile):
     #select inner slope points BIT, BBL and EBL
@@ -262,16 +264,21 @@ def filter_characteristic_profiles(characteristic_profiles, selectiemethode):
         x_BIT = np.median(all_characteristic_points.loc['BIT'].X)
         #verschil is de berm lengte
         berm_lengte = x_BIT - x_BIT_no_berm
-        #case 1: berm_lengte positief:
-        if berm_lengte > 0:
+        #case 1: berm_lengte groter dan 2 meter:
+        if berm_lengte > 2:
             #de bermhoogte:
-            z_berm = np.median(all_characteristic_points.loc[['BBL','EBL']].Z)
+            z_BBL = np.median(all_characteristic_points.loc[['BBL']].Z)
+            z_EBL = np.median(all_characteristic_points.loc[['EBL']].Z)
             #TODO schuine berm o.b.v. talud tussen EBL en BBL
             #de x van BBL o.b.v. de slope vanaf de BIK:
-            x_BBL = filtered_profile.loc['BIK','X'] + (z_berm - filtered_profile.loc['BIK','Z'])/inner_slope
+            x_BBL = filtered_profile.loc['BIK','X'] + (z_BBL - filtered_profile.loc['BIK','Z'])/inner_slope
             x_EBL = x_BBL + berm_lengte
-            filtered_profile.loc['BBL',['X','Z']] = [x_BBL, z_berm]
-            filtered_profile.loc['EBL',['X','Z']] = [x_EBL, z_berm]
+            filtered_profile.loc['BBL',['X','Z']] = [x_BBL, z_BBL]
+            filtered_profile.loc['EBL',['X','Z']] = [x_EBL, z_EBL]
+            #mediane z_BIT voor profielen met een EBL
+            profielnummers_met_berm = all_characteristic_points.loc[['EBL']]['Profielnummer'].values
+            z_BIT = np.median(all_characteristic_points.loc[all_characteristic_points.Profielnummer.isin(profielnummers_met_berm)].loc['BIT'].Z)
+            x_BIT = np.median(all_characteristic_points.loc[all_characteristic_points.Profielnummer.isin(profielnummers_met_berm)].loc['BIT'].X)
             filtered_profile.loc['BIT',['X','Z']] = [x_BIT, z_BIT]
         else:
             #geen berm, geen EBL BBL, BIT is gewoon BIT o.b.v. werkelijke BIT
