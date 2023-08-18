@@ -326,8 +326,7 @@ def tel_alle_gebouwen(
 #               help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
 
 def selecteer_profiel(
-    vakindeling_geojson, ahn_profielen, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand, selectiemethode):
-    selectiemethode = False #nog niet in gebruik
+    vakindeling_geojson, ahn_profielen, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand):
     if invoerbestand:
         invoerbestand = Path(invoerbestand)
     main_profiel_selectie(
@@ -336,7 +335,8 @@ def selecteer_profiel(
         Path(karakteristieke_profielen),
         Path(profiel_info_csv),
         Path(uitvoer_map),
-        invoerbestand)
+        invoerbestand,
+        "minimum") #selectiemethode is nog niet in gebruik
 
 
 if __name__ == "__main__":
