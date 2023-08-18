@@ -320,13 +320,14 @@ def tel_alle_gebouwen(
               nargs=1,
               default=False,
               help="Het is mogelijk om een invoerbestand op te geven waar voor sommige vakken al profielen zijn ingevoerd.")
-@click.option("--selectiemethode",
-              nargs=1,
-              default="minimum",
-              help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
+# @click.option("--selectiemethode",
+#               nargs=1,
+#               default="minimum",
+#               help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
 
 def selecteer_profiel(
     vakindeling_geojson, ahn_profielen, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand, selectiemethode):
+    selectiemethode = False #nog niet in gebruik
     if invoerbestand:
         invoerbestand = Path(invoerbestand)
     main_profiel_selectie(
@@ -335,8 +336,7 @@ def selecteer_profiel(
         Path(karakteristieke_profielen),
         Path(profiel_info_csv),
         Path(uitvoer_map),
-        invoerbestand,
-        selectiemethode)
+        invoerbestand)
 
 
 if __name__ == "__main__":

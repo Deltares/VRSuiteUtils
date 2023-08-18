@@ -18,6 +18,7 @@ def main_profiel_selectie(
         warnings.warn("uitvoer_map already exists. Deleting and recreating")
         #remove with shutil.rmtree
         shutil.rmtree(uitvoer_map)
+    use_file = False
     uitvoer_map.mkdir()
     #load vakindeling_geojson
     vakindeling = gpd.read_file(vakindeling_geojson)
@@ -25,37 +26,60 @@ def main_profiel_selectie(
     #load profiel info
     profiel_info = pd.read_csv(profiel_info_csv)
 
-    if invoerbestand:
+    #check if invoerbestand is False or a Path that exists
+    if invoerbestand is not False:
         #load invoerbestand
-        invoerbestand = pd.read_csv(Path(invoerbestand))
+        try:
+            #vaknaam as index with dtype str
+            custom_profiles = pd.read_csv(Path(invoerbestand),index_col=0, dtype={'vaknaam':str},header=[0,1])
+            custom_profiles.index = custom_profiles.index.astype(str)
+            use_file = True
+        except:
+            raise FileNotFoundError(f'Could not find invoerbestand {invoerbestand}')
 
 
     #for each vak in vakindeling
     for vak in vakindeling.itertuples():
         if vak.in_analyse == 0: #skip vakken die niet worden beschouwd
             continue
-        #select profielen
-        if invoerbestand:
+
+        #select profielen based on geometry
+        available_profiles = profiel_info.loc[(profiel_info.m_value > vak.m_start) & (profiel_info.m_value < vak.m_eind)].copy()
+        #drop non-existent profiles
+        for idx, row in available_profiles.iterrows():
+            if not karakteristieke_profielen.joinpath(row.csv_filename.split('.')[0] + '.png').exists():
+                available_profiles.drop(index=idx, inplace=True)
+
+        #select characteristic profile
+        if use_file and vak.vaknaam in custom_profiles.index:
             #if a profile is given in invoerbestand then use that one
-            pass    #TODO develop this
+            characteristic_profile = profile_from_file(custom_profiles.loc[vak.vaknaam])
         else:
-            #select profielen based on geometry
-            available_profiles = profiel_info.loc[(profiel_info.m_value > vak.m_start) & (profiel_info.m_value < vak.m_eind)].copy()
-            #drop non-existent profiles
-            for idx, row in available_profiles.iterrows():
-                if not karakteristieke_profielen.joinpath(row.csv_filename.split('.')[0] + '.png').exists():
-                    available_profiles.drop(index=idx, inplace=True)
             characteristic_profile = select_profile(available_profiles, karakteristieke_profielen, vak.vaknaam, selectiemethode)
-            if characteristic_profile is not None:
-                characteristic_profile.to_csv(uitvoer_map.joinpath(vak.vaknaam + '.csv'), index=True)
-                #plot aggregated profile, and AHN data
-                plot_profile(characteristic_profile, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
-            else:
-                warnings.warn(f'No profile found for vak {vak.vaknaam}')
 
+        #store result
+        if characteristic_profile is not None:
+            characteristic_profile.to_csv(uitvoer_map.joinpath(vak.vaknaam + '.csv'), index=True)
+            #plot aggregated profile, and AHN data
+            plot_profile(characteristic_profile, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
+        else:
+            plot_profile(None, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
+            warnings.warn(f'No profile found for vak {vak.vaknaam}')
 
-        #save profielen to file
+def profile_from_file(profile):
+    #profile is a row from the custom_profiles dataframe
+    #drop the nans
+    profile = profile.dropna()
+    #output df has profile index level_1 as index, and level 2 as columns
+    idx = profile.index.get_level_values(0).unique().tolist()
+    cols = profile.index.get_level_values(1).unique().tolist()
+    characteristic_profile = pd.DataFrame(index=idx, columns=cols)
+    for index, row in profile.items():
 
+        characteristic_profile.loc[index] = row
+    #make sure BUK.X = 0
+    characteristic_profile.X = characteristic_profile.X - characteristic_profile.loc['BUK'].X
+    return characteristic_profile
 def plot_profile(profile, vaknaam : str, profile_names, ahn_path : Path, output_path : Path):
 
     fig, ax = plt.subplots()
@@ -64,7 +88,8 @@ def plot_profile(profile, vaknaam : str, profile_names, ahn_path : Path, output_
         ahn_profile = pd.read_csv(ahn_path.joinpath(profile_name),header=None).transpose()
         ax.plot(ahn_profile[0], ahn_profile[1], color='grey', alpha=0.5)
     #plot aggregated profile
-    ax.plot(profile.X, profile.Z, color='black')
+    if profile is not None:
+        ax.plot(profile.X, profile.Z, color='black')
     ax.set_title(vaknaam)
     ax.set_xlabel('X [m]')
     ax.set_ylabel('Z [m+NAP]')
