@@ -16,7 +16,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
 
-def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path):
+def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid):
 
     # define variables
     typeZode = 'grasGeslotenZode'
@@ -36,16 +36,12 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         Amp = df['getij_amplitude'].values[index] # getij amplitude
         region = df['region'][index]
         begin_grasbekleding = df['begin_grasbekleding'][index]
-        Qvar_p1 = df['qvar_p1'].values[index]
-        Qvar_p2 = df['qvar_p2'].values[index]
-        Qvar_p3 = df['qvar_p3'].values[index]
-        Qvar_p4 = df['qvar_p4'].values[index]
+
 
         grasbekleding_begin = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
         grasbekleding_end = kruinhoogte
 
-        prob = [Qvar_p1, Qvar_p2, Qvar_p3, Qvar_p4]
-        beta = -ndtri(prob)
+        beta = -ndtri(p_grid)
 
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(index)))
@@ -57,7 +53,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         betahoek_series = []
         for i in range(0, len(evaluateYears)):
 
-            for j in range(0, len(prob)):
+            for j in range(0, len(p_grid)):
 
                 for k in range(0,len(models)):
 
@@ -78,16 +74,16 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     Tp_series = np.append(Tp_series, Tp_hulp)
                     betahoek_series = np.append(betahoek_series, betahoek_hulp)
 
-        h_series = h_series.reshape(len(evaluateYears), len(prob), len(models), len(tijd))
-        Hs_series = Hs_series.reshape(len(evaluateYears), len(prob), len(models), len(tijd))
-        Tp_series = Tp_series.reshape(len(evaluateYears), len(prob), len(models), len(tijd))
-        betahoek_series = betahoek_series.reshape(len(evaluateYears), len(prob), len(models), len(tijd))
+        h_series = h_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
+        Hs_series = Hs_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
+        Tp_series = Tp_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
+        betahoek_series = betahoek_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
 
         # run DiKErnel
         SF = []
         for i in range(0, len(evaluateYears)):
 
-            for j in range(0, len(prob)):
+            for j in range(0, len(p_grid)):
 
                 valMHW = Qvar[f'MHW {i}_{j}']
 
@@ -147,7 +143,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     maxSchadegetal = np.max([maxSchadegetal_golfklap, maxSchadegetal_golfoploop, 10**(-4)])
                     SF = np.append(SF, 1/maxSchadegetal)
 
-        SF = SF.reshape(len(evaluateYears), len(prob), len(grasbekleding_begin))
+        SF = SF.reshape(len(evaluateYears), len(p_grod), len(grasbekleding_begin))
 
         # get relation between h_overgang and beta
         betaFalen = []
@@ -190,8 +186,8 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         for i in range(0, len(evaluateYears)):
             for j in range(0, len(grasbekleding_begin)):
                 plt.figure()
-                plt.semilogx(1/np.array(prob), SF[i,:,j], 'o--')
-                plt.semilogx(1/np.array(prob), np.full_like(SF[i,:,j], 1.0), 'k')
+                plt.semilogx(1/np.array(p_grid), SF[i,:,j], 'o--')
+                plt.semilogx(1/np.array(p_grid), np.full_like(SF[i,:,j], 1.0), 'k')
                 plt.grid()
                 plt.xlabel('Terugkeertijd [jaar]')
                 plt.ylabel('SF [-]')
@@ -214,7 +210,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         # plot water levels
         # plt.figure()
         # for i in range(0, len(evaluateYears)):
-        #     plt.semilogx(1.0/np.array(prob), valMHW[i,:], 'o--', label=str(evaluateYears[i]))
+        #     plt.semilogx(1.0/np.array(p_grid), valMHW[i,:], 'o--', label=str(evaluateYears[i]))
         # plt.legend()
         # plt.grid()
         # plt.xlabel('Terugkeertijd [jaar]')
@@ -225,7 +221,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         # plot time series
         for i in range(0, len(evaluateYears)):
 
-            for j in range(0, len(prob)):
+            for j in range(0, len(p_grid)):
 
                 for k in range(0, len(models)):
 

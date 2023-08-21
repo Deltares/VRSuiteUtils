@@ -19,7 +19,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integ
 
 
 
-def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N = 4):
+def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
 
     # define variables
     evaluateYears = [2025, 2100]
@@ -31,13 +31,9 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N
         signaleringswaarde = df['signaleringswaarde'].values[index]
         ondergrens = df['ondergrens'].values[index]
         steentoetsFile = df['steentoetsfile'].values[index]
-        Qvar_p1 = df['qvar_p1'].values[index]
-        Qvar_p2 = df['qvar_p2'].values[index]
-        Qvar_p3 = df['qvar_p3'].values[index]
-        Qvar_p4 = df['qvar_p4'].values[index]
 
-        prob = [Qvar_p1, Qvar_p2, Qvar_p3, Qvar_p4]
-        beta = -ndtri(prob)
+
+        beta = -ndtri(p_grid)
 
         # import Q-varinat results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(index)))
@@ -49,7 +45,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N
         years = []
         for i in range(0, len(evaluateYears)):
 
-            for j in range(0, len(prob)):
+            for j in range(0, len(p_grid)):
 
                 Qvar_Hs = np.array(Qvar[f'Qvar {i}_{j}_zuilen']['Hs'])
                 Qvar_h = np.array(Qvar[f'Qvar {i}_{j}_zuilen']['waterstand'])
@@ -80,7 +76,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N
         D_opt1 = np.min([D_opt1, D_opt2], axis=0)
         D_opt = np.append(D_opt1, D_opt2)
 
-        D_opt = D_opt.reshape(len(evaluateYears), len(prob), len(Zo))
+        D_opt = D_opt.reshape(len(evaluateYears), len(p_grid), len(Zo))
 
         data = {}
         # export results to JSON
@@ -102,7 +98,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N
 
                 if issteen(toplaagtype[j]):
                     # include faalkansbijdrage and length-effect factor
-                    betaFalen = -ndtri(np.array(prob) * fb_ZST / N)
+                    betaFalen = -ndtri(np.array(p_grid) * fb_ZST / N)
                 else:
                     betaFalen = np.full_like(Zo, np.nan)
 
@@ -116,7 +112,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N
         plt.figure()
         for i in range(0, len(evaluateYears)):
             for j in range(0, len(Zo)):
-                probFalen = np.array(prob) * fb_ZST / N
+                probFalen = np.array(p_grid) * fb_ZST / N
                 plt.semilogy(D_opt[i,:,j], probFalen, f'{col[i]}o--',label = f'jaar {evaluateYears[i]} vlak {j}')
         plt.grid()
         plt.legend(loc="center left")

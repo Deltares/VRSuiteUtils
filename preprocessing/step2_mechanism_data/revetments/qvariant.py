@@ -20,6 +20,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
     models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
 
     evaluateYears = [2025, 2100]
+    beta = -ndtri(Q_var_pgrid)
 
     # check if hlcd and hlcd_W_2100 are in HRdatabase
     if len(list(database_path.glob('*hlcd.sqlite')))==0: raise ValueError('No hlcd.sqlite file found in database_path.')
@@ -33,18 +34,6 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
         dwarsprofiel = row['dwarsprofiel']
         locationId = row['locationid']
         orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
-
-        # binHydraRing = 'c:/Werk/Veiligheidsrendement_bekledingen/bin_HYR/'
-
-
-        # Qvar_p1 = df['qvar_p1'].values[index]
-        # Qvar_p2 = df['qvar_p2'].values[index]
-        # Qvar_p3 = df['qvar_p3'].values[index]
-        # Qvar_p4 = df['qvar_p4'].values[index]
-
-        # Qvar_stap = df['qvar_stap'].values[index]
-
-        beta = -ndtri(Q_var_pgrid)
 
         # get design water levels
         valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))

@@ -7,33 +7,35 @@ from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revet
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 
 def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: Path, profielen_path: Path,
-                     figures_GEBU: Path, figures_ZST: Path, hring_path: Path, binDIKErnel: Path, output_path: Path):
+                     hring_path: Path, binDIKErnel: Path, output_path: Path):
 
     local_path = Path(os.path.dirname(__file__))
 
-    # if output_path doesnot exist, create it
+    # if output_path doesnot exist, create it, with subfolders for the figures
     if not output_path.exists():
-        output_path.mkdir()
+        output_path.joinpath('figures_ZST').mkdir(parents=True, exist_ok=False)
+        output_path.joinpath('figures_GEBU').mkdir(parents=True, exist_ok=False)
     # elif output_path exists, but not empty, stop the script
     elif output_path.exists() and len(list(output_path.iterdir())) != 0:
-        print('The output folder is not empty. Please empty the folder and run the script again.')
-        exit()
+        #check if the length of iterdir is 2
+        if len(list(output_path.iterdir())) == 2:
+            #check if the stems of the two subfolders are figures_ZST and figures_GEBU (in random order)
+            if 'figures_ZST' in [x.stem for x in list(output_path.iterdir())] and 'figures_GEBU' in [x.stem for x in list(output_path.iterdir())]:
+                #ensure they are empty
+                if len(list(output_path.joinpath('figures_ZST').iterdir())) == 0 and len(list(output_path.joinpath('figures_GEBU').iterdir())) == 0:
+                    pass
+                else:
+                    print('The output folder is not empty. Please empty the folder and run the script again.')
+                    exit()
+            else:
+                print('The output folder is not empty. Please empty the folder and run the script again.')
+                exit()
+        else:
+            print('The output folder is not empty. Please empty the folder and run the script again.')
+            exit()
 
-    # if figures_GEBU doesnot exist, create it
-    if not figures_GEBU.exists():
-        figures_GEBU.mkdir()
-    # elif figures_GEBU exists, but not empty, stop the script
-    elif figures_GEBU.exists() and len(list(figures_GEBU.iterdir())) != 0:
-        print('The figure folder is not empty. Please empty the figures_GEBU folder and run the script again.')
-        exit()
-
-    # if figures_ZST doesnot exist, create it
-    if not figures_ZST.exists():
-        figures_ZST.mkdir()
-    # elif figures_ZST exists, but not empty, stop the script
-    elif figures_ZST.exists() and len(list(figures_ZST.iterdir())) != 0:
-        print('The figure folder is not empty. Please empty the figures_ZST folder and run the script again.')
-        exit()
+    figures_GEBU = output_path.joinpath('figures_GEBU')
+    figures_ZST = output_path.joinpath('figures_ZST')
 
     # read bekleding csv
     df = pd.read_csv(bekleding_path,
@@ -47,17 +49,17 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
     traject_object = TrajectShape('30-1')
     traject_object.get_traject_shape_from_NBPW()
 
-    Q_var_pgrid = [1./30,
+    p_grid = [1./30,
                    1./traject_object.ondergrens,
                    1./traject_object.signaleringswaarde,
                    1./(traject_object.signaleringswaarde/1000)]
 
     # run functions
     # step 1: qvariant
-    revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,Q_var_pgrid)
+    revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,p_grid)
 
     # step 2: GEBU
-    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path)
+    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
 
     # step 3: ZST
     revetment_zst(df, steentoets_path, output_path, figures_ZST)
@@ -93,8 +95,8 @@ if __name__ == '__main__':
     steentoets_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\steentoets")
     profielen_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\profielen")
     waterlevel_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\input_waterlevel")
-    figures_gebu = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\figures_GEBU_test_CLI")
-    figures_zst = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\figures_ZST_test_CLI")
+    # figures_gebu = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\figures_GEBU_test_CLI")
+    # figures_zst = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\figures_ZST_test_CLI")
     output_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\output_test_CLI")
 
     #these should become externals
@@ -103,4 +105,4 @@ if __name__ == '__main__':
 
     
     bekleding_main(input_csv, database_path, steentoets_path, profielen_path,
-                   figures_gebu, figures_zst, hring_path, bin_dikernel, output_path)
+                   hring_path, bin_dikernel, output_path)
