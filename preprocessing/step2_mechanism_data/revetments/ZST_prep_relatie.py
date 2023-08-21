@@ -19,7 +19,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integ
 
 
 
-def revetment_zst(df, steentoets_path, output_path, figures_ZST):
+def revetment_zst(df, steentoets_path, output_path, figures_ZST,fb_ZST = 0.05, N = 4):
 
     # define variables
     evaluateYears = [2025, 2100]
@@ -31,8 +31,6 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST):
         signaleringswaarde = df['signaleringswaarde'].values[index]
         ondergrens = df['ondergrens'].values[index]
         steentoetsFile = df['steentoetsfile'].values[index]
-        fb_ZST = df['faalkansbijdrage'].values[index]
-        N = df['lengte_effectfactor'].values[index]
         Qvar_p1 = df['qvar_p1'].values[index]
         Qvar_p2 = df['qvar_p2'].values[index]
         Qvar_p3 = df['qvar_p3'].values[index]

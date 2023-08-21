@@ -4,7 +4,7 @@ import os
 from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qvariant
 from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import revetment_gebu
 from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
-
+from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 
 def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: Path, profielen_path: Path,
                      figures_GEBU: Path, figures_ZST: Path, hring_path: Path, binDIKErnel: Path, output_path: Path):
@@ -37,16 +37,24 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
 
     # read bekleding csv
     df = pd.read_csv(bekleding_path,
-                     usecols=['vaknaam', 'dwarsprofiel', 'signaleringswaarde', 'ondergrens', 'faalkansbijdrage',
-                              'lengte_effectfactor', 'locationid', 'hrdatabase_folder', 'hrdatabase', 'region', 'gws',
-                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'qvar_p1', 'qvar_p2',
-                              'qvar_p3', 'qvar_p4', 'qvar_stap'])
+                     usecols=['vaknaam', 'dwarsprofiel','HR_locatie', 'locationid', 'region', 'gws',
+                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'])
     df = df.dropna(subset=['vaknaam'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
 
+    #set default Q-variant probability grid:
+    #get signaleringswaarde from NBPW
+    traject_object = TrajectShape('30-1')
+    traject_object.get_traject_shape_from_NBPW()
+
+    Q_var_pgrid = [1./30,
+                   1./traject_object.ondergrens,
+                   1./traject_object.signaleringswaarde,
+                   1./(traject_object.signaleringswaarde/1000)]
+
     # run functions
     # step 1: qvariant
-    revetment_qvariant(df, profielen_path, database_path, hring_path, output_path)
+    revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,Q_var_pgrid)
 
     # step 2: GEBU
     revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path)
@@ -79,16 +87,19 @@ def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: P
 if __name__ == '__main__':
 
     # input paths
-    input_csv = Path(r'c:\VRM\test_revetments_cli\Bekleding_default.csv')
-    database_path = Path(r'c:\VRM\test_revetments_cli\database')
-    steentoets_path = Path(r'c:\VRM\test_revetments_cli\steentoets')
-    profielen_path = Path(r'c:\VRM\test_revetments_cli\profielen')
-    figures_gebu = Path(r'c:\VRM\test_revetments_cli\figures_GEBU_test_CLI')
-    figures_zst = Path(r'c:\VRM\test_revetments_cli\figures_ZST_test_CLI')
-    hring_path = Path(
-        "c:/Program Files (x86)/BOI/Riskeer 21.1.1.2/Application/Standalone/Deltares/HydraRing-20.1.3.10236")
-    bin_dikernel = Path('c:/VRM/test_revetments/bin_DiKErnel')
-    output_path = Path(r'c:\VRM\test_revetments_cli\output_CLI')
+    input_csv = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\Bekleding_default.csv")
+    database_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\database\WBI2017_Oosterschelde_26-3_v02")
+
+    steentoets_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\steentoets")
+    profielen_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\profielen")
+    waterlevel_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\input_waterlevel")
+    figures_gebu = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\figures_GEBU_test_CLI")
+    figures_zst = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\figures_ZST_test_CLI")
+    output_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\output_test_CLI")
+
+    #these should become externals
+    hring_path = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\HydraRing 23.1.1")
+    bin_dikernel = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\DiKErnel")
 
     
     bekleding_main(input_csv, database_path, steentoets_path, profielen_path,

@@ -58,7 +58,7 @@ def read_qvariant(fileName):
     return output['h'], output['Hs'], output['Tp'], output['dir'], output['S']
 
 # reliability calculations for the selected hydraulic structure and measure    
-class ReliabilityCalculations(object):
+class QVariantCalculations(object):
         
     def __init__(self, locationId, mechanism, orientation, model, waterlevel, beta):
         
@@ -82,6 +82,8 @@ class ReliabilityCalculations(object):
                 self.a = 1.0
                 self.b = 1.7
                 self.c = 0.3
+        else:
+            raise ValueError('Unknown failure mechanism')
         
     def get_numerical_settings(self, configDatabase):
         
