@@ -146,9 +146,12 @@ class TrajectShape:
         section_geom = []
         total_dist = 0.0
         for count, row in df_vakken.iterrows():
-            section, traject_geom = self.cut(traject_geom, row["m_eind"] - total_dist)
-            section_geom.append(section)
+            try:
+                section, traject_geom = self.cut(traject_geom, row["m_eind"] - total_dist)
+            except: # catch the case where the last section ends exactly at the end of the traject
+                section = self.cut(traject_geom, row["m_eind"] - total_dist)[0]
             total_dist += section.length
+            section_geom.append(section)
             # sanity check. VAKLENGTE column and section length should be almost equal
             np.testing.assert_approx_equal(
                 section.length, row["m_eind"] - row["m_start"], significant=5
