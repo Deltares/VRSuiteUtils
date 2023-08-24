@@ -9,10 +9,8 @@ from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from tests import test_data, test_results
 
-@pytest.mark.parametrize(
-    "traject,vakindeling_file",
-    [("38-1", test_data.joinpath("38-1", "input", "vakindeling_38-1_full.csv"))],
-)
+@pytest.mark.parametrize("traject,vakindeling_file",
+                         [pytest.param("38-1", test_data.joinpath("38-1", "input", "vakindeling_38-1_full.csv"))])
 def test_generate_vakindeling_workflow(traject, vakindeling_file):
     # remove test results
     if test_results.joinpath(traject,"output","vakindeling").exists():
