@@ -58,7 +58,7 @@ def generate_vakindeling_shape(
 
 ########################################################################################################################
 @cli.command(
-    name="overflow", help="Generates and evalutes the Hydraring overflow data."
+    name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
 @click.option("--work_dir",
               type=click.Path(),
@@ -88,7 +88,7 @@ def generate_vakindeling_shape(
               nargs=1,
               required=True,
               help="Link naar de HR_default.csv.")
-def generate_and_evaluate_waterlevel_computations(
+def generate_and_evaluate_overflow_computations(
     work_dir, database_paths, hydraring_path, file_name
 ):
     overflow_main(
@@ -99,7 +99,7 @@ def generate_and_evaluate_waterlevel_computations(
     )
 
 @cli.command(
-    name="waterlevel", help="Generates and evalutes the Hydraring waterlevel data."
+    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
 )
 @click.option("--work_dir",
               type=click.Path(),
