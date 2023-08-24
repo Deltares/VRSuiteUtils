@@ -516,7 +516,7 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
             )
 
             if slope_part_table["top_layer_type"][ind[0]]>=26.0 and slope_part_table["top_layer_type"][ind[0]]<=27.9:
-                index1 = np.argwhere((np.array(rel_ZST_table["location"])==row["section"]) & (np.array(rel_ZST_table["slope_part"])==slope_part_table["slope_part"][ind[0]]))
+                index1 = np.argwhere((np.array(rel_ZST_table["location"])==scenario_name) & (np.array(rel_ZST_table["slope_part"])==slope_part_table["slope_part"][ind[0]]))
                 for ind1 in index1:
                     BlockRevetmentRelation.create(
                         slope_part_id = current_slope_part.get_id(),
