@@ -504,7 +504,7 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
             .id
         )
 
-        index = np.argwhere(np.array(slope_part_table["location"])==row["section"])
+        index = np.argwhere(np.array(slope_part_table["location"])==scenario_name)
         for ind in index:
             current_slope_part = SlopePart.create(
                 computation_scenario_id = computation_id,
@@ -525,7 +525,7 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
                         beta = rel_ZST_table["beta"][ind1[0]],
                     )
 
-        index = np.argwhere(np.array(rel_GEBU_table["location"])==row["section"])    
+        index = np.argwhere(np.array(rel_GEBU_table["location"])==scenario_name)
         for ind in index:
             GrassRevetmentRelation.create(  
                 computation_scenario_id = computation_id,
