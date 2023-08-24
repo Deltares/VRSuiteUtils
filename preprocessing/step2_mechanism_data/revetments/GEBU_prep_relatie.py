@@ -80,7 +80,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         SF = []
         for i, year in enumerate(evaluateYears):
 
-            for j, p in enumerate(p_grid):
+            for j, probability in enumerate(p_grid):
 
                 valMHW = Qvar[f'MHW {i}_{j}']
 
@@ -115,7 +115,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     plt.grid()
                     plt.xlabel('Horizontale richting dijk x [m]')
                     plt.ylabel('Verticale richting dijk z [m+NAP]')
-                    plt.savefig(figures_GEBU.joinpath(f'posities_dijkvak_{row.doorsnede}_{year}_T_{1/p}_transitionlevel_{transition_level}.png'))
+                    plt.savefig(figures_GEBU.joinpath(f'posities_dijkvak_{row.doorsnede}_{year}_T_{int(1/probability)}_transitionlevel_{transition_level}.png'))
                     plt.close()
 
                     maxSchadegetal_golfklap = 0.0
@@ -188,7 +188,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                 plt.xlabel('Terugkeertijd [jaar]')
                 plt.ylabel('SF [-]')
                 plt.title(f'Begin gras = {transition_levels[j]} m+NAP, eind gras = {grasbekleding_end} m+NAP')
-                plt.savefig(figures_GEBU.joinpath('safetyFactor_{}_{}_overgang_{}.png'.format(row.doorsnede, year, transition_level)))
+                plt.savefig(figures_GEBU.joinpath('safetyFactor_loc={}_{}_overgang_{:.2f}.png'.format(row.doorsnede, year, transition_level)))
                 plt.close()
 
         # plot beta
@@ -200,7 +200,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         plt.legend()
         plt.xlabel('h_overgang [m+NAP]')
         plt.ylabel('Faalkans [1/jaar]')
-        plt.savefig(figures_GEBU.joinpath('betaFalen_{}.png'.format(row.doorsnede)))
+        plt.savefig(figures_GEBU.joinpath('betaFalen_loc={}.png'.format(row.doorsnede)))
         plt.close()
 
         # plot water levels
@@ -217,7 +217,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         # plot time series
         for i, year in enumerate(evaluateYears):
 
-            for j, p in enumerate(p_grid):
+            for j, probability in enumerate(p_grid):
 
                 for k, model in enumerate(models):
 
@@ -233,7 +233,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     axs[1, 0].grid()
                     axs[1, 1].plot(tijd, betahoek_series[i,j,k,:])
                     axs[1, 1].grid()
-                    plt.savefig(figures_GEBU.joinpath('belasting_loc={}_{}_T={}_{}.png'.format(row.doorsnede, year, 1/p, model)))
+                    plt.savefig(figures_GEBU.joinpath('belasting_loc={}_{}_T={}_{}.png'.format(row.doorsnede, year, int(1/probability), model)))
                     plt.close()
 
 if __name__ == '__main__':

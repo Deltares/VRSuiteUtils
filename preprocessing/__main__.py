@@ -4,7 +4,7 @@ from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_mai
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from preprocessing.workflows.bekleding_workflow import bekleding_main
 from pathlib import Path
-
+import os
 
 @click.group()
 def cli():
