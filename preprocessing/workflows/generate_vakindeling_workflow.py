@@ -30,7 +30,7 @@ def vakindeling_main(traject_id: str,
 
     # Save to file
     traject.vakindeling_shape.to_file(
-        Path(output_folder).joinpath("Vakindeling_{}.geojson".format(traject_id)),
+        Path(output_folder).joinpath(f"Vakindeling_{traject_id}.geojson"),
         driver="GeoJSON",
     )
 
