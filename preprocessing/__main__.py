@@ -166,32 +166,6 @@ def generate_and_evaluate_water_level_computations(
               nargs=1,
               required=True,
               help="Link naar de map met de profielen.")
-@click.option("--figures_gebu",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met waar de figuren voor de GEBU sommen op worden geslagen. Als deze map nog niet "
-                   "bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar niet leeg is, zal"
-                   "het script automatisch stoppen.")
-@click.option("--figures_zst",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met waar de figuren voor de ZST sommen op worden geslagen. Als deze map nog niet "
-                   "bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar niet leeg is, zal"
-                   "het script automatisch stoppen.")
-@click.option("--hring_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-@click.option("--bin_dikernel",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de DIKErnel executable 'DIKErnel-cli.exe'.")
 @click.option("--output_path",
               type=click.Path(),
               nargs=1,
@@ -209,11 +183,9 @@ def generate_bekleding_som(
         Path(database_path),
         Path(steentoets_path),
         Path(profielen_path),
-        Path(figures_gebu),
-        Path(figures_zst),
-        Path(hring_path),
-        Path(bin_dikernel),
-        Path(output_path)
+        Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\HydraRing 23.1.1"),
+        Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\DiKErnel"),
+        Path(output_path),
     )
 ########################################################################################################################
 
