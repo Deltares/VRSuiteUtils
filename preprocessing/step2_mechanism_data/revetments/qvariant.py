@@ -45,7 +45,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
 
 
         # Q-variant calculations
-        data = {'dwarsprofiel': dwarsprofiel / 1.0}
+        data = {'dwarsprofiel': dwarsprofiel}
         mechanism = 'Qvariant'
         for i in range(0, len(evaluateYears)):
 

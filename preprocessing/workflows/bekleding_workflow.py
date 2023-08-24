@@ -6,7 +6,7 @@ from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import reve
 from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 import shutil
-def bekleding_main(bekleding_path: Path, database_path: Path, steentoets_path: Path, profielen_path: Path,
+def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: Path, steentoets_path: Path, profielen_path: Path,
                      hring_path: Path, binDIKErnel: Path, output_path: Path):
 
 

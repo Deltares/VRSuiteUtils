@@ -156,6 +156,12 @@ def generate_and_evaluate_water_level_computations(
               nargs=1,
               required=True,
               help="Link naar de map met de Hydraulische database(s).")
+
+@click.option("--waterlevel_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het bestand met resultaten van de waterstandsberekeningen.")
 @click.option("--steentoets_path",
               type=click.Path(),
               nargs=1,
@@ -175,12 +181,12 @@ def generate_and_evaluate_water_level_computations(
                    "niet leeg is, zal het script automatisch stoppen.")
 
 def generate_bekleding_som(
-        input_csv, database_path, steentoets_path, profielen_path, figures_gebu, figures_zst, hring_path, bin_dikernel,
-        output_path
+        input_csv, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
 ):
     bekleding_main(
         Path(input_csv),
         Path(database_path),
+        Path(waterlevel_path),
         Path(steentoets_path),
         Path(profielen_path),
         Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\HydraRing 23.1.1"),
