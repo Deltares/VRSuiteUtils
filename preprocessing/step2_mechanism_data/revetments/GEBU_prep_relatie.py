@@ -23,39 +23,36 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
     models = ['gras_golfklap', 'gras_golfoploop']
     evaluateYears = [2025, 2100]
 
-    indexvak = np.arange(0, len(df))
 
-    for index in indexvak:
+
+    for index, row in df.iterrows():
 
         orientation, kruinhoogte, dijkprofiel_x, dijkprofiel_y = read_prfl(profielen_path.joinpath(df['prfl'].values[index]))
 
-        dwarsprofiel = df['dwarsprofiel'].values[index]
-        signaleringswaarde = df['signaleringswaarde'].values[index]
-        ondergrens = df['ondergrens'].values[index]
-        GWS = df['gws'].values[index] # gemiddelde buitenwaterstand
-        Amp = df['getij_amplitude'].values[index] # getij amplitude
-        region = df['region'][index]
-        begin_grasbekleding = df['begin_grasbekleding'][index]
+        dwarsprofiel = row.dwarsprofiel
+        GWS = row['gws'] # gemiddelde buitenwaterstand
+        Amp = row['getij_amplitude'] # getij amplitude
+        region = row['region']
+        begin_grasbekleding = row['begin_grasbekleding']
 
-
-        grasbekleding_begin = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
+        transition_levels = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
         grasbekleding_end = kruinhoogte
 
         beta = -ndtri(p_grid)
 
         # import Q-variant results
-        Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(index)))
+        Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
 
         # get time series
         h_series = []
         Hs_series = []
         Tp_series = []
         betahoek_series = []
-        for i in range(0, len(evaluateYears)):
+        for i, year in enumerate(evaluateYears):
 
-            for j in range(0, len(p_grid)):
+            for j, p in enumerate(p_grid):
 
-                for k in range(0,len(models)):
+                for k,model in enumerate(models):
 
                     valMHW = Qvar[f'MHW {i}_{j}']
                     Qvar_h = np.array(Qvar[f'Qvar {i}_{j}_{models[k]}']['waterstand'])
@@ -81,13 +78,13 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
 
         # run DiKErnel
         SF = []
-        for i in range(0, len(evaluateYears)):
+        for i, year in enumerate(evaluateYears):
 
-            for j in range(0, len(p_grid)):
+            for j, p in enumerate(p_grid):
 
                 valMHW = Qvar[f'MHW {i}_{j}']
 
-                for k in range(0, len(grasbekleding_begin)):
+                for k, transition_level in enumerate(transition_levels):
 
                     golfklap = False
                     golfoploop = False
@@ -95,15 +92,15 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     positions_golfoploop = []
 
                     if grasbekleding_end<=valMHW: # golfklap
-                        positions = np.arange(grasbekleding_begin[k], grasbekleding_end, 0.1)
+                        positions = np.arange(transition_level, grasbekleding_end, 0.1)
                         positions_golfklap = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
                         golfklap = True
-                    elif grasbekleding_begin[k]>=valMHW: # golfoploop
-                        positions = np.array([grasbekleding_begin[k]])
+                    elif transition_level>=valMHW: # golfoploop
+                        positions = np.array([transition_level])
                         positions_golfoploop = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
                         golfoploop = True
                     else: # in between --> then only golfklap
-                        positions = np.arange(grasbekleding_begin[k], valMHW, 0.1)
+                        positions = np.arange(transition_level, valMHW, 0.1)
                         positions_golfklap = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
                         positions = np.array([valMHW])
                         positions_golfoploop = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
@@ -118,8 +115,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     plt.grid()
                     plt.xlabel('Horizontale richting dijk x [m]')
                     plt.ylabel('Verticale richting dijk z [m+NAP]')
-                    plt.savefig(figures_GEBU.joinpath('posities_{}_{}_prob_{}_set_{}.png'.format(index,
-                                                                                                 evaluateYears[i], j, k)))
+                    plt.savefig(figures_GEBU.joinpath(f'posities_dijkvak_{row.doorsnede}_{year}_T_{1/p}_transitionlevel_{transition_level}.png'))
                     plt.close()
 
                     maxSchadegetal_golfklap = 0.0
@@ -143,13 +139,13 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     maxSchadegetal = np.max([maxSchadegetal_golfklap, maxSchadegetal_golfoploop, 10**(-4)])
                     SF = np.append(SF, 1/maxSchadegetal)
 
-        SF = SF.reshape(len(evaluateYears), len(p_grod), len(grasbekleding_begin))
+        SF = SF.reshape(len(evaluateYears), len(p_grid), len(transition_levels))
 
         # get relation between h_overgang and beta
         betaFalen = []
         years = []
         for i in range(0, len(evaluateYears)):
-            for j in range(0, len(grasbekleding_begin)):
+            for j in range(0, len(transition_levels)):
 
                 f = interpolate.interp1d(beta, SF[i,:,j]-1.0, fill_value=('extrapolate'))
                 try:
@@ -170,41 +166,41 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         beta_2 = np.min([beta_1, beta_2], axis=0)
         betaFalen = np.append(beta_1, beta_2)
 
-        betaFalen = betaFalen.reshape(len(evaluateYears), len(grasbekleding_begin))
+        betaFalen = betaFalen.reshape(len(evaluateYears), len(transition_levels))
 
         # export results to JSON
-        for i in range(0, len(evaluateYears)):
-            data = {"zichtjaar": evaluateYears[i]/1.0,
-                    "dwarsprofiel": dwarsprofiel/1.0,
+        for i, year in enumerate(evaluateYears):
+            data = {"zichtjaar": year,
+                    "dwarsprofiel": dwarsprofiel,
                     "dijkprofiel_x": list(dijkprofiel_x),
                     "dijkprofiel_y": list(dijkprofiel_y),
-                    "grasbekleding_begin": list(grasbekleding_begin),
+                    "grasbekleding_begin": list(transition_levels),
                     "betaFalen": list(betaFalen[i])}
-            write_JSON_to_file(data, output_path.joinpath("GEBU_{}_{}.json".format(index, evaluateYears[i])))
+            write_JSON_to_file(data, output_path.joinpath("GEBU_{}_{}.json".format(row.doorsnede, year)))
 
         # plot safety factor
-        for i in range(0, len(evaluateYears)):
-            for j in range(0, len(grasbekleding_begin)):
+        for i, year in enumerate(evaluateYears):
+            for j, transition_level in enumerate(transition_levels):
                 plt.figure()
                 plt.semilogx(1/np.array(p_grid), SF[i,:,j], 'o--')
                 plt.semilogx(1/np.array(p_grid), np.full_like(SF[i,:,j], 1.0), 'k')
                 plt.grid()
                 plt.xlabel('Terugkeertijd [jaar]')
                 plt.ylabel('SF [-]')
-                plt.title(f'Begin gras = {grasbekleding_begin[j]} m+NAP, eind gras = {grasbekleding_end} m+NAP')
-                plt.savefig(figures_GEBU.joinpath('safetyFactor_{}_{}_overgang_{}.png'.format(index, evaluateYears[i], j)))
+                plt.title(f'Begin gras = {transition_levels[j]} m+NAP, eind gras = {grasbekleding_end} m+NAP')
+                plt.savefig(figures_GEBU.joinpath('safetyFactor_{}_{}_overgang_{}.png'.format(row.doorsnede, year, transition_level)))
                 plt.close()
 
         # plot beta
         plt.figure()
-        for i in range(0, len(evaluateYears)):
+        for i, year in enumerate(evaluateYears):
             probFalen = norm.cdf(-betaFalen[i,:])
-            plt.semilogy(grasbekleding_begin, probFalen, 'o--', label = f'year= {evaluateYears[i]}')
+            plt.semilogy(transition_levels, probFalen, 'o--', label = f'year= {year}')
         plt.grid()
         plt.legend()
         plt.xlabel('h_overgang [m+NAP]')
         plt.ylabel('Faalkans [1/jaar]')
-        plt.savefig(figures_GEBU.joinpath('betaFalen_{}.png'.format(index)))
+        plt.savefig(figures_GEBU.joinpath('betaFalen_{}.png'.format(row.doorsnede)))
         plt.close()
 
         # plot water levels
@@ -219,11 +215,11 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         # plt.close()
 
         # plot time series
-        for i in range(0, len(evaluateYears)):
+        for i, year in enumerate(evaluateYears):
 
-            for j in range(0, len(p_grid)):
+            for j, p in enumerate(p_grid):
 
-                for k in range(0, len(models)):
+                for k, model in enumerate(models):
 
                     plt.plot()
                     fig, axs = plt.subplots(2, 2)
@@ -237,7 +233,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     axs[1, 0].grid()
                     axs[1, 1].plot(tijd, betahoek_series[i,j,k,:])
                     axs[1, 1].grid()
-                    plt.savefig(figures_GEBU.joinpath('belasting_{}_{}_{}_{}.png'.format(index, evaluateYears[i], j, k)))
+                    plt.savefig(figures_GEBU.joinpath('belasting_loc={}_{}_T={}_{}.png'.format(row.doorsnede, year, 1/p, model)))
                     plt.close()
 
 if __name__ == '__main__':

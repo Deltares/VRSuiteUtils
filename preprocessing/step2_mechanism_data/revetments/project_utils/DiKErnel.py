@@ -53,9 +53,9 @@ class DIKErnelCalculations(object):
         input_json_path = local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json")
         output_json_path = output_path.joinpath('output.json')
         # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
-        print(str(dike_kernel_exe) + ' --invoerbestand ' + str(input_json_path) + ' --uitvoerbestand ' + str(output_json_path) + ' --uitvoerniveau schade')
-        os.system(str(dike_kernel_exe) + ' --invoerbestand ' + str(input_json_path) + ' --uitvoerbestand ' + str(output_json_path) + ' --uitvoerniveau schade')
-        # os.system(binDIKErnel + 'DiKErnel-cli.exe ' + '--invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
+        cmdstring = '"{}" --invoerbestand "{}" --uitvoerbestand "{}" --uitvoerniveau schade'.format(dike_kernel_exe, input_json_path, output_json_path)
+        #run cmdsring using subprocess
+        subprocess.run(cmdstring, shell=True)
 
         # with open('output.json', 'r') as openfile:
         with open(output_json_path, 'r') as openfile:

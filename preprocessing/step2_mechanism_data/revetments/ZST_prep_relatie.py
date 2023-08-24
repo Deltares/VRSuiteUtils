@@ -10,6 +10,7 @@ import pandas as pd
 
 from scipy.special import ndtri
 import matplotlib.pyplot as plt
+import seaborn as sns
 from pathlib import Path
 from preprocessing.step2_mechanism_data.revetments.project_utils.readSteentoetsFile import read_steentoets_file
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_JSON
@@ -23,29 +24,27 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
     # define variables
     evaluateYears = [2025, 2100]
-    indexvak = np.arange(0, len(df))
 
-    for index in indexvak:
+    for section_index,section in df.iterrows():
 
-        dwarsprofiel = df['dwarsprofiel'].values[index]
-        signaleringswaarde = df['signaleringswaarde'].values[index]
-        ondergrens = df['ondergrens'].values[index]
-        steentoetsFile = df['steentoetsfile'].values[index]
+        dwarsprofiel = section.dwarsprofiel
+
+        steentoetsFile = section['steentoetsfile']
 
 
         beta = -ndtri(p_grid)
 
-        # import Q-varinat results
-        Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(index)))
+        # import Q-variant results
+        Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
 
         # read Steentoets results
-        Zo, Zb, overgang, tana, Bsegment, toplaagtype, D, rho_s, Hs_ini, overschot, delta, D_voldoet, ratio_voldoet = read_steentoets_file(steentoets_path.joinpath(steentoetsFile), dwarsprofiel)
+        steentoets_df = read_steentoets_file(steentoets_path.joinpath(steentoetsFile), dwarsprofiel)
 
         D_opt = []
         years = []
-        for i in range(0, len(evaluateYears)):
+        for i, year in enumerate(evaluateYears):
 
-            for j in range(0, len(p_grid)):
+            for j, p in enumerate(p_grid):
 
                 Qvar_Hs = np.array(Qvar[f'Qvar {i}_{j}_zuilen']['Hs'])
                 Qvar_h = np.array(Qvar[f'Qvar {i}_{j}_zuilen']['waterstand'])
@@ -53,12 +52,13 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                 Hs_help = np.interp(h_help, Qvar_h, Qvar_Hs)
 
                 # determine relation clay thickness vs beta for each vlak
-                for k in range(0, len(Zo)):
+                # for k, Zo in range(0, len(Zo)):
+                for index, row in steentoets_df.iterrows():
 
-                    if issteen(toplaagtype[k]):
+                    if issteen(row.toplaagtype):
 
-                        D_help = Hs_help/(delta[k] * ratio_voldoet[k])
-                        select = np.argwhere((h_help >= Zo[k]) & (h_help <= Zb[k]))
+                        D_help = Hs_help/(row.delta * row.ratio_voldoet)
+                        select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
 
                         if len(select)==0:
                            raise ValueError("No points found")
@@ -76,49 +76,45 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         D_opt1 = np.min([D_opt1, D_opt2], axis=0)
         D_opt = np.append(D_opt1, D_opt2)
 
-        D_opt = D_opt.reshape(len(evaluateYears), len(p_grid), len(Zo))
+        D_opt = D_opt.reshape(len(evaluateYears), len(p_grid), steentoets_df.shape[0])
 
         data = {}
         # export results to JSON
-        for i in range(0, len(evaluateYears)):
+        for i, year in enumerate(evaluateYears):
+            steentoets_df.rename(columns={"overgang": "overgang huidig", "D": "D huidig"}, inplace=True)
+            data = {"zichtjaar": year,
+                    "dwarsprofiel": dwarsprofiel,
+                    "aantal deelvakken": steentoets_df.shape[0]}
+            for key in ["Zo", "Zb", 'overgang huidig', "D huidig", "tana", "toplaagtype", "delta", "ratio_voldoet"]:
+                data[key] = list(steentoets_df[key])
 
-            data = {"zichtjaar": evaluateYears[i]/1.0,
-                    "dwarsprofiel": dwarsprofiel/1.0,
-                    "Zo": list(Zo),
-                    "Zb": list(Zb),
-                    "overgang huidig": overgang,
-                    "aantal deelvakken": len(Zo),
-                    "D huidig": list(D),
-                    "tana": list(tana),
-                    "toplaagtype": list(toplaagtype),
-                    "delta": list(delta),
-                    "ratio_voldoet": list(ratio_voldoet)}
+            for j, row in steentoets_df.iterrows():
 
-            for j in range(0, len(Zo)):
-
-                if issteen(toplaagtype[j]):
+                if issteen(row.toplaagtype):
                     # include faalkansbijdrage and length-effect factor
                     betaFalen = -ndtri(np.array(p_grid) * fb_ZST / N)
                 else:
-                    betaFalen = np.full_like(Zo, np.nan)
+                    betaFalen = np.full_like(p_grid, np.nan)
 
                 data[f"deelvak {j}"] = {"D_opt": list(D_opt[i,:,j]),
                         "betaFalen": list(betaFalen)}
 
-            write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(index, evaluateYears[i])))
+            write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section_index, evaluateYears[i])))
 
         # plots
-        col = ['b','c']
+        colors = sns.color_palette("husl", steentoets_df.shape[0])
         plt.figure()
-        for i in range(0, len(evaluateYears)):
-            for j in range(0, len(Zo)):
-                probFalen = np.array(p_grid) * fb_ZST / N
-                plt.semilogy(D_opt[i,:,j], probFalen, f'{col[i]}o--',label = f'jaar {evaluateYears[i]} vlak {j}')
+        linestyles = ['-', ':', '--', '-.']
+        for i, year in enumerate(evaluateYears):
+            for j in range(0, steentoets_df.shape[0]):
+                if issteen(steentoets_df.iloc[j].toplaagtype):
+                    probFalen = np.array(p_grid) * fb_ZST / N
+                    plt.semilogy(D_opt[i,:,j], probFalen, linestyle = linestyles[i], color = colors[j],marker= 'o',label = f'jaar {year} vlak {j}')
         plt.grid()
         plt.legend(loc="center left")
         plt.xlabel('Toplaagdikte [m]')
         plt.ylabel('Faalkans [1/jaar]')
-        plt.savefig(figures_ZST.joinpath('SF_{}_simple.png'.format(index)))
+        plt.savefig(figures_ZST.joinpath('Dikte_vs_Faalkans_doorsnede={}.png'.format(section.doorsnede)))
         plt.close()
 
 

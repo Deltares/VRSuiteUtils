@@ -79,7 +79,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
                                                  "Tp": list(Qvar_Tp),
                                                  "dir": list(Qvar_dir)}
 
-        write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(index)))
+        write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
 
 if __name__ == '__main__':
     # inputs
