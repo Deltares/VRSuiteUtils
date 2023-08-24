@@ -183,14 +183,15 @@ def generate_and_evaluate_water_level_computations(
 def generate_bekleding_som(
         input_csv, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
 ):
+    print(Path(os.path.dirname(os.path.realpath(__file__))).parent)
     bekleding_main(
         Path(input_csv),
         Path(database_path),
         Path(waterlevel_path),
         Path(steentoets_path),
         Path(profielen_path),
-        Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\HydraRing 23.1.1"),
-        Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\DiKErnel"),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','DiKErnel'),
         Path(output_path),
     )
 ########################################################################################################################

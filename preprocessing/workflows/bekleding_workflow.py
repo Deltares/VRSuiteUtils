@@ -57,7 +57,7 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
 
     # run functions
     # step 1: qvariant
-    revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,p_grid)
+    revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,local_path,p_grid)
 
     # step 2: GEBU
     revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
@@ -86,5 +86,5 @@ if __name__ == '__main__':
     bin_dikernel = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\DiKErnel")
 
     
-    bekleding_main(input_csv, database_path, steentoets_path, profielen_path,
+    bekleding_main(input_csv, database_path, waterlevel_path, steentoets_path, profielen_path,
                    hring_path, bin_dikernel, output_path)
