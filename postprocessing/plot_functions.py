@@ -172,6 +172,7 @@ def plot_pf_length_cost(
     year=2025,
     standards={"Ondergrens": 1.0 / 10000, "Signaleringswaarde": 1.0 / 30000},
     mode="Length",
+    close_output=True,
 ):
     colors = sns.cubehelix_palette(n_colors=2, start=2.3, rot=1, gamma=1, hue=1.0, light=0.7, dark=0.2)
 
