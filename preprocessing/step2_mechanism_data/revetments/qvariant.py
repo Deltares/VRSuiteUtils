@@ -8,60 +8,50 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from scipy.special import ndtri
-from preprocessing.step2_mechanism_data.revetments.project_utils.reliability import ReliabilityCalculations
+from preprocessing.step2_mechanism_data.revetments.project_utils.reliability import QVariantCalculations
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_prfl
+from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
+from scipy.interpolate import interp1d
 
+import warnings
 
-
-
-def revetment_qvariant(df, profielen_path, database_path, hring_path, output_path):
+def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path, Q_var_pgrid):
 # define variables
     models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
+
     evaluateYears = [2025, 2100]
+    beta = -ndtri(Q_var_pgrid)
 
-    indexvak = np.arange(0, len(df))
+    # check if hlcd and hlcd_W_2100 are in HRdatabase
+    if len(list(database_path.glob('*hlcd.sqlite')))==0: raise ValueError('No hlcd.sqlite file found in database_path.')
+    if len(list(database_path.glob('*hlcd_W_2100.sqlite')))==0: raise ValueError('No hlcd_W_2100.sqlite file found in database_path.')
 
-    for index in indexvak:
-        dwarsprofiel = df['dwarsprofiel'].values[index]
-        signaleringswaarde = df['signaleringswaarde'].values[index]
-        ondergrens = df['ondergrens'].values[index]
-        locationId = df['locationid'].values[index]
-        orientation = read_prfl(profielen_path.joinpath(df['prfl'].values[index]))[0]
+    #path to config database:
+    configDatabase = list(database_path.glob('*.config.sqlite'))[0]
+    if len(list(database_path.glob('*.config.sqlite')))>0: warnings.warn('Warning: multiple config.sqlite files found in database_path. Using first file found.')
 
-        HRdatabase = database_path.joinpath(df['hrdatabase_folder'].values[index])
-        configDatabase = HRdatabase.joinpath(df['hrdatabase'].values[index] + '.config.sqlite')
-        # binHydraRing = 'c:/Werk/Veiligheidsrendement_bekledingen/bin_HYR/'
+    for index,row in df.iterrows():
+        dwarsprofiel = row['dwarsprofiel']
+        locationId = row['locationid']
+        orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
+        # get design water levels
+        valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))
+        for i, year in enumerate(evaluateYears):
+            output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.HR_locatie}', 'designTable.txt')
+            wl_frequencycurve = read_design_table(output_overflow)[['Value','Beta']]
+            f = interp1d(wl_frequencycurve['Beta'], wl_frequencycurve['Value'], fill_value=('extrapolate'))
+            valMHW[i,:] = f(beta)
 
-        Qvar_p1 = df['qvar_p1'].values[index]
-        Qvar_p2 = df['qvar_p2'].values[index]
-        Qvar_p3 = df['qvar_p3'].values[index]
-        Qvar_p4 = df['qvar_p4'].values[index]
-        Qvar_stap = df['qvar_stap'].values[index]
-
-        prob = [Qvar_p1, Qvar_p2, Qvar_p3, Qvar_p4]
-        beta = -ndtri(prob)
-
-        # water level calculations
-        mechanism = 'MHW'
-        valMHW = []
-        for i in range(0, len(evaluateYears)):
-
-            for j in range(0, len(prob)):
-                MHW = ReliabilityCalculations(locationId, mechanism, 0.0, '', 0.0, beta[j])
-                numSettings = MHW.get_numerical_settings(configDatabase)
-                valMHW = np.append(valMHW, MHW.run_HydraRing(hring_path, str(HRdatabase), output_path, evaluateYears[i], numSettings))
-
-        valMHW = valMHW.reshape(len(evaluateYears), len(prob))
 
         # Q-variant calculations
         data = {'dwarsprofiel': dwarsprofiel / 1.0}
         mechanism = 'Qvariant'
         for i in range(0, len(evaluateYears)):
 
-            for j in range(0, len(prob)):
+            for j in range(0, len(Q_var_pgrid)):
 
-                wl = np.arange(0.0, valMHW[i, j] - 0.05, Qvar_stap)
+                wl = np.arange(0.0, valMHW[i, j] - 0.05, row['waterstand_stap'])
                 wl = np.append(wl, valMHW[i, j] - 0.05)
                 wl = np.unique(wl)
 
@@ -73,9 +63,9 @@ def revetment_qvariant(df, profielen_path, database_path, hring_path, output_pat
                     Qvar_Tp = []
                     Qvar_dir = []
                     for h in wl:
-                        Qvar = ReliabilityCalculations(locationId, mechanism, orientation, m, h, beta[j])
+                        Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
                         numSettings = Qvar.get_numerical_settings(configDatabase)
-                        QvarRes = Qvar.run_HydraRing(str(hring_path), str(HRdatabase), evaluateYears[i], numSettings)
+                        QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), output_path, evaluateYears[i], numSettings)
 
                         Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                         Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
@@ -89,7 +79,7 @@ def revetment_qvariant(df, profielen_path, database_path, hring_path, output_pat
                                                  "Tp": list(Qvar_Tp),
                                                  "dir": list(Qvar_dir)}
 
-        write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(index)))
+        write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
 
 if __name__ == '__main__':
     # inputs
