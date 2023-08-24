@@ -14,9 +14,9 @@ class HydraRingComputation:
     def __init__(self):
         pass
 
-    def run_hydraring(self, HydraRingPath: Path, inifile: Path):
-        self.HydraRingPath = Path(HydraRingPath).joinpath("MechanismComputation.exe")
-        subprocess.run([str(self.HydraRingPath), str(inifile)], cwd=str(inifile.parent))
+    def run_hydraring(self, hydraring_path: Path, inifile: Path):
+        self.hydraring_path = Path(hydraring_path).joinpath("MechanismComputation.exe")
+        subprocess.run([str(self.hydraring_path), str(inifile)], cwd=str(inifile.parent))
 
     def get_HRING_config(self, db_path):
 
