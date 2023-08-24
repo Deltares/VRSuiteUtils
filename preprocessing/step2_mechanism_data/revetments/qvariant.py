@@ -15,7 +15,7 @@ from scipy.interpolate import interp1d
 
 import warnings
 
-def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path, Q_var_pgrid):
+def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
 # define variables
     models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
 
@@ -28,8 +28,8 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
 
     #path to config database:
     configDatabase = list(database_path.glob('*.config.sqlite'))[0]
-    if len(list(database_path.glob('*.config.sqlite')))>0: warnings.warn('Warning: multiple config.sqlite files found in database_path. Using first file found.')
-
+    if len(list(database_path.glob('*.config.sqlite')))>1: warnings.warn('Warning: multiple config.sqlite files found in database_path. Using first file found.')
+    if len(list(database_path.glob('*.config.sqlite')))==0: raise Exception('No config.sqlite found in database_path')
     for index,row in df.iterrows():
         dwarsprofiel = row['dwarsprofiel']
         locationId = row['locationid']
@@ -65,7 +65,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
                     for h in wl:
                         Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
                         numSettings = Qvar.get_numerical_settings(configDatabase)
-                        QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), output_path, evaluateYears[i], numSettings)
+                        QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), local_path, evaluateYears[i], numSettings)
 
                         Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                         Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])

@@ -129,13 +129,13 @@ class QVariantCalculations(object):
 
         # def run_HydraRing(self, binHydraRing, HRdatabase, year, numSettings):
 
-    def run_HydraRing(self, binHydraRing, HRdatabase, output_folder, year, numSettings):
+    def run_HydraRing(self, binHydraRing, HRdatabase, working_dir, year, numSettings):
         
 
         fileNameConfig = binHydraRing.joinpath('config.sqlite')
-        fileNameSQL = output_folder.joinpath('1.sql')
-        fileNameIni = output_folder.joinpath('1.ini')
-        outputfile = output_folder.joinpath('1-output.sqlite')
+        fileNameSQL = working_dir.joinpath('1.sql')
+        fileNameIni = working_dir.joinpath('1.ini')
+        outputfile = working_dir.joinpath('1-output.sqlite')
         # fileNameConfig = binHydraRing + 'config.sqlite'
         # fileNameSQL = '1.sql'
         # fileNameIni = '1.ini'
@@ -155,7 +155,7 @@ class QVariantCalculations(object):
         
         make_ini_file(fileNameIni, self.mechanismId, fileNameSQL, fileNameConfig, fileNameHLCD)
         HydraRingPath = Path(binHydraRing).joinpath("MechanismComputation.exe")
-        subprocess.run([str(HydraRingPath), str(fileNameIni)], cwd=str(output_folder))
+        subprocess.run([str(HydraRingPath), str(fileNameIni)], cwd=str(working_dir))
         # os.system('"' + binHydraRing + 'MechanismComputation.exe' + '" ' + fileNameIni)
 
         if self.mechanism == 'MHW':
