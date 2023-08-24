@@ -2,12 +2,14 @@ import click
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
+from preprocessing.workflows.bekleding_workflow import bekleding_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from preprocessing.workflows.teenlijn_workflow import main_teenlijn
 from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
 from preprocessing.workflows.select_profiles_workflow import main_profiel_selectie
-from pathlib import Path
 
+from pathlib import Path
+import os
 
 @click.group()
 def cli():
@@ -139,7 +141,64 @@ def generate_and_evaluate_water_level_computations(
         file_name,
     )
 
-################
+########################################################################################################################
+
+
+@cli.command(
+    name="bekleding", help="Genereert de input data voor bekleding voor de VRTool"
+)
+@click.option("--input_csv",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Dit is het pad naar het CSV bestand dat de invoer voor bekledingen bevat. Een standaard format voor"
+                   "dit bestand is te vinden in de VRTool repository: "
+                   "'preprocessing/default_files/Bekleding_default.csv'")
+@click.option("--database_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de Hydraulische database(s).")
+
+@click.option("--waterlevel_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het bestand met resultaten van de waterstandsberekeningen.")
+@click.option("--steentoets_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de steentoetsfiles.")
+@click.option("--profielen_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de profielen.")
+@click.option("--output_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Uitvoermap. Hier worden de resultaten naartoe geschreven, die invoer zijn voor de database. Als"
+                   "deze map nog niet bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar"
+                   "niet leeg is, zal het script automatisch stoppen.")
+
+def generate_bekleding_som(
+        input_csv, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
+):
+    print(Path(os.path.dirname(os.path.realpath(__file__))).parent)
+    bekleding_main(
+        Path(input_csv),
+        Path(database_path),
+        Path(waterlevel_path),
+        Path(steentoets_path),
+        Path(profielen_path),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','DiKErnel'),
+        Path(output_path),
+    )
+########################################################################################################################
+
 @cli.command(
     name="genereer_dijkprofielen", help="Voor het afleiden van karakteristieke dijkprofielen af voor een gegeven "
                                         "dijktraject"
@@ -337,7 +396,6 @@ def selecteer_profiel(
         Path(uitvoer_map),
         invoerbestand,
         "minimum") #selectiemethode is nog niet in gebruik
-
 
 if __name__ == "__main__":
     cli()
