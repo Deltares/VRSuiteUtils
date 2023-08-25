@@ -328,16 +328,28 @@ def obtain_inner_toe_line(
               help="Hier geef je de het pad naar de geopackage van de BAG. Dit bestand is te downloaden via "
                     "https://service.pdok.nl/lv/bag/atom/bag.xml. Dit is nodig, omdat de BAG het niet toelaat alle "
                    "objecten vanuit het script te downloaden. Het aantal objecten is gelimiteerd tot 1000.")
+@click.option("--flip_waterkant",
+              type=bool,
+              nargs=1,
+              default=False,
+              help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
+                   "nummering van de vakken volgt. Als het water aan de linkerkant loopt, moet hier True worden "
+                   "ingevuld. Default is False. Instelling is identiek aan die bij de workflow voor het genereren van profielen.")
 
 def tel_alle_gebouwen(
-    traject_id, teenlijn_geojson, vakindeling_geojson, uitvoer_map, gebouwen_geopackage
+    traject_id, teenlijn_geojson, vakindeling_geojson, uitvoer_map, gebouwen_geopackage, flip_waterkant
 ):
+    if flip_waterkant == True:
+        richting = -1
+    else:
+        richting = 1
     main_bebouwing(
         traject_id,
         Path(teenlijn_geojson),
         Path(vakindeling_geojson),
         Path(uitvoer_map),
         Path(gebouwen_geopackage),
+        richting
     )
 
 @cli.command(name="selecteer_profiel", help="Selecteer per dijkvak een profiel")
