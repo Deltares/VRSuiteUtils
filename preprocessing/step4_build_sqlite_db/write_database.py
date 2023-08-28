@@ -540,12 +540,10 @@ def fill_structures():
 
 def fill_measures(measure_table):
 
-    # fill MeasureType
-    MeasureType.create(name="Soil reinforcement")
-    MeasureType.create(name="Soil reinforcement with stability screen")
-    MeasureType.create(name="Stability Screen")
-    MeasureType.create(name="Vertical Geotextile")
-    MeasureType.create(name="Diaphragm Wall")
+    #get types from measure_table
+    types = measure_table["measure_type"].unique()
+    for type in types: MeasureType.create(name=type)
+
     # fill CombinableType
     CombinableType.create(name="full")
     CombinableType.create(name="combinable")
@@ -555,10 +553,10 @@ def fill_measures(measure_table):
     # fill StandardMeasure
     for idx, row in measure_table.iterrows():
         measure_type_id = (
-            MeasureType.select().where(MeasureType.name == row["Type"]).get().id
+            MeasureType.select().where(MeasureType.name == row["measure_type"]).get().id
         )
         combinable_type_id = (
-            CombinableType.select().where(CombinableType.name == row["Class"]).get().id
+            CombinableType.select().where(CombinableType.name == row["combinable_type"]).get().id
         )
         Measure.create(
             name=idx,
@@ -570,15 +568,18 @@ def fill_measures(measure_table):
         row = row.fillna(-999)
         StandardMeasure.create(
             measure=measure_id,
-            max_inward_reinforcement=row["max_inward"],
-            max_outward_reinforcement=row["max_outward"],
-            direction=row["Direction"],
-            crest_step=0.5,
-            max_crest_increase=row["dcrest_max"],
-            stability_screen=row["StabilityScreen"],
-            prob_of_solution_failure=row["P_solution"],
-            failure_probability_with_solution=row["Pf_solution"],
-            stability_screen_s_f_increase=row["dSF"],
+            max_inward_reinforcement=row["max_inward_reinforcement"],
+            max_outward_reinforcement=row["max_outward_reinforcement"],
+            direction=row["direction"],
+            crest_step=row["crest_step"],
+            max_crest_increase=row["max_crest_increase"],
+            stability_screen=row["stability_screen"],
+            prob_of_solution_failure=row["prob_of_solution_failure"],
+            failure_probability_with_solution=row["failure_probability_with_solution"],
+            stability_screen_s_f_increase=row["stability_screen_s_f_increase"],
+            transition_level_increase_step=row["transition_level_increase_step"],
+            max_pf_factor_block=row["max_pf_factor_block"],
+            n_steps_block=row["n_steps_block"],
         )
 
     # all id from Measure
