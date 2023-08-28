@@ -57,12 +57,15 @@ class OverflowInput:
         hlcd_locs = pd.read_sql_query("SELECT * FROM Locations", hlcd_cnx)
         for count, line in hring_data.iterrows():
             hrd_location = hrd_locs.loc[
-                hrd_locs["Name"] == line["hr_koppel"]
-                        ]["HRDLocationId"].values[0]
+                    hrd_locs["Name"] == line["hr_koppel"]
+                    ]["HRDLocationId"].values[0]
             # hr_locatie is where hlcd_locs["HRDLocationId"] == hrd_location and hlcd_locs["TrackID"] == track_id:
             hlcd_location = hlcd_locs.loc[
                 (hlcd_locs["HRDLocationId"] == hrd_location) & (hlcd_locs["TrackId"] == track_id)]["LocationId"].values[0]
-            hring_data.loc[count, "hrlocation"] = hlcd_location
+            if hring_data.loc[count, "hrlocation"] != hlcd_location:
+                raise Exception("HRLocation in input sheet is different from  HLCDLocation found in database for {}".format(line["hr_koppel"]))
+            else:
+                hring_data.loc[count, "hrlocation"] = hlcd_location
 
         hring_data["hrlocation"] = hring_data["hrlocation"].astype(np.int64)
         return hring_data
