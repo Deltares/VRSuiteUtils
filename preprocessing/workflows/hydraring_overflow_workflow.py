@@ -13,7 +13,7 @@ from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import (
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 
 
-def overflow_main(file_name: str,
+def overflow_main(file_path: Path,
     database_paths: list[Path],
     profielen_dir: Path,
     HydraRing_path: Path,
@@ -22,7 +22,7 @@ def overflow_main(file_name: str,
     It can be used to generate and evaluate Hydra-Ring computations for overflow for a given dataset"""
 
     # read HRING reference csv, and add to OverflowInput object
-    hring_data = pd.read_csv(file_name, index_col=0)
+    hring_data = pd.read_csv(file_path, index_col=0)
     overflow_input_object = OverflowInput()
     overflow_input_object.add_hring_data(hring_data)
 

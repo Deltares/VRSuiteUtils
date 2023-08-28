@@ -59,11 +59,11 @@ def generate_vakindeling_shape(
 @cli.command(
     name="overflow", help="Generates and evalutes the Hydraring overflow data."
 )
-@click.option("--file_name",
-              type=str,
+@click.option("--file_path",
+              type=click.Path(),
               nargs=1,
               required=True,
-              help="Link naar de HR_default.csv.")
+              help="Link naar het invoerbestand (HR_default.csv).")
 
 @click.option("--database_paths",
               type=click.Path(),
@@ -97,10 +97,10 @@ def generate_vakindeling_shape(
                    "deze map voorafgaand aan het runnen leeg moet zijn.")
 
 def generate_and_evaluate_waterlevel_computations(
-    file_name, database_paths, profielen_dir, hydraring_path, output_path
+    file_path, database_paths, profielen_dir, hydraring_path, output_path
 ):
     overflow_main(
-        file_name,
+        Path(file_path),
         list(map(Path, database_paths)),
         Path(profielen_dir),
         Path(hydraring_path),
@@ -110,11 +110,11 @@ def generate_and_evaluate_waterlevel_computations(
 @cli.command(
     name="waterlevel", help="Generates and evalutes the Hydraring waterlevel data."
 )
-@click.option("--file_name",
-              type=str,
+@click.option("--file_path",
+              type=click.Path(),
               nargs=1,
               required=True,
-              help="Link naar de HR_default.csv.")
+              help="Link naar het invoerbestand (HR_default.csv).")
 
 @click.option("--database_paths",
               type=click.Path(),
@@ -142,10 +142,10 @@ def generate_and_evaluate_waterlevel_computations(
                    "deze map voorafgaand aan het runnen leeg moet zijn.")
 
 def generate_and_evaluate_water_level_computations(
-        file_name, database_paths, hydraring_path, output_path
+        file_path, database_paths, hydraring_path, output_path
 ):
     waterlevel_main(
-        file_name,
+        Path(file_path),
         list(map(Path, database_paths)),
         Path(hydraring_path),
         Path(output_path),
