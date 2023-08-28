@@ -99,7 +99,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                 data[f"deelvak {j}"] = {"D_opt": list(D_opt[i,:,j]),
                         "betaFalen": list(betaFalen)}
 
-            write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section_index, evaluateYears[i])))
+            write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede, evaluateYears[i])))
 
         # plots
         colors = sns.color_palette("husl", steentoets_df.shape[0])

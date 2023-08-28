@@ -24,6 +24,10 @@ def vakindeling_main(traject_id: str,
     # cut up in pieces and verify integrity
     traject.generate_vakindeling_shape(vakindeling_csv_path)
 
+    #check if output folder exists, if not create it:
+    if not output_folder.exists():
+        output_folder.mkdir(parents=True,exist_ok=True)
+
     # Save to file
     traject.vakindeling_shape.to_file(
         Path(output_folder).joinpath("Vakindeling_{}.geojson".format(traject_id)),

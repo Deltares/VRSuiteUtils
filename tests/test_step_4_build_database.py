@@ -9,10 +9,13 @@ from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
 import pandas as pd
 
-@pytest.mark.parametrize("traject,test_name,reference_shape", [pytest.param("38-1", "no_housing","reference_shape.geojson", id="38-1 no_housing"),
+@pytest.mark.parametrize("traject,test_name,reference_shape", [
+                                               pytest.param("38-1", "no_housing","reference_shape.geojson", id="38-1 no_housing"),
                                                pytest.param("38-1", "overflow_no_housing", "reference_shape.geojson", id="38-1 overflow no_housing"),
                                                pytest.param("38-1", "revetment_subset", "reference_shape_revetment.geojson", id="38-1 bekledingen"),
-                                               pytest.param("38-1", "full", "reference_shape.geojson", id="38-1 volledig"),])
+                                               pytest.param("38-1", "revetment_bundling", "reference_shape_revetment_bundling.geojson", id="38-1 bekledingen case 2"),
+                                               pytest.param("38-1", "full", "reference_shape.geojson", id="38-1 volledig"),
+                                                ])
 def test_make_database(traject: str, test_name: str, reference_shape: str, request: pytest.FixtureRequest):
    # remove output_path
    _output_path = test_results.joinpath(request.node.name, "{}_{}.db".format(traject,test_name))

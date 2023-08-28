@@ -31,7 +31,7 @@ class DIKErnelCalculations(object):
                 "dijkprofiel": {"posities": self.x, "hoogten": self.y, "teenBuitenzijde": self.x[0], "kruinBuitenzijde": self.x[-1]}, 
                 "locaties": [{"positie": self.positie, "rekenmethode": "grasGolfklap", "typeToplaag": typeZode}]}
 
-        write_JSON_to_file(data, local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json"))
+        write_JSON_to_file(data, local_path.joinpath("input.json"))
             
     def gras_golfoploop_input_JSON(self, typeZode, local_path):
         
@@ -45,15 +45,16 @@ class DIKErnelCalculations(object):
                 "locaties": [{"positie": self.positie, "rekenmethode": "grasGolfoploop", "typeToplaag": typeZode, "tanA": tanalpha}],
                 "rekenmethoden": [{"rekenmethode": "grasGolfoploop", "rekenprotocol": {"typeRekenprotocol": "rayleighDiscreet"}}]} 
         
-        write_JSON_to_file(data, local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json"))
+        write_JSON_to_file(data, local_path.joinpath("input.json"))
 
     def run_DIKErnel(self, binDIKErnel, output_path, local_path):
 
         dike_kernel_exe = binDIKErnel.joinpath('DiKErnel-cli.exe')
-        input_json_path = local_path.parent.joinpath("step2_mechanism_data", "revetments", "project_utils", "input.json")
+        input_json_path = local_path.joinpath("input.json")
         output_json_path = output_path.joinpath('output.json')
         # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
         cmdstring = '"{}" --invoerbestand "{}" --uitvoerbestand "{}" --uitvoerniveau schade'.format(dike_kernel_exe, input_json_path, output_json_path)
+        print(cmdstring)
         #run cmdsring using subprocess
         subprocess.run(cmdstring, shell=True)
 
