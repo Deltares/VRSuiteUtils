@@ -84,14 +84,6 @@ def generate_vakindeling_shape(
               required=True,
               help="Link naar de map met alle profielen.")
 
-@click.option("--hydraring_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-
 @click.option("--output_path",
               type=click.Path(),
               nargs=1,
@@ -101,13 +93,13 @@ def generate_vakindeling_shape(
 
  
 def generate_and_evaluate_overflow_computations(
-    work_dir, database_paths, hydraring_path, file_name
+    work_dir, database_paths, file_name
 ):
     overflow_main(
         Path(file_path),
         list(map(Path, database_paths)),
         Path(profielen_dir),
-        Path(hydraring_path),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
 
@@ -131,14 +123,6 @@ def generate_and_evaluate_overflow_computations(
                    "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
                    "voor de 2100 situatie>")
 
-@click.option("--hydraring_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-
 @click.option("--output_path",
               type=click.Path(),
               nargs=1,
@@ -147,12 +131,12 @@ def generate_and_evaluate_overflow_computations(
                    "deze map voorafgaand aan het runnen leeg moet zijn.")
 
 def generate_and_evaluate_water_level_computations(
-        file_path, database_paths, hydraring_path, output_path
+        file_path, database_paths, output_path
 ):
     waterlevel_main(
         Path(file_path),
         list(map(Path, database_paths)),
-        Path(hydraring_path),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'),
         Path(output_path),
     )
 
