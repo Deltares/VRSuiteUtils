@@ -13,17 +13,16 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
 )
 
 
-def waterlevel_main(
-    work_dir: Path,
+def waterlevel_main(file_path: Path,
     database_paths: list[Path],
-    HydraRing_path: Path,
-    file_name: str,
-):
+    hydraring_path: Path,
+        output_path: Path):
+
     """This is the main function of the workflow.
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
 
     # read HRING reference csv
-    hring_data = pd.read_csv(work_dir.parent.joinpath(file_name), index_col=0)
+    hring_data = pd.read_csv(file_path, index_col=0)
 
     # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
     # then hrlocation is derived from the database, using hr_koppel
@@ -45,7 +44,7 @@ def waterlevel_main(
     for database_path in database_paths:
         for count, location in hring_data.iterrows():
             # make output dir
-            loc_output_dir = work_dir.joinpath(database_path.stem, str(location.doorsnede))
+            loc_output_dir = output_path.joinpath(str(location.doorsnede))
             if loc_output_dir.exists():
                 loc_output_dir.rmdir()
             loc_output_dir.mkdir(parents=True, exist_ok=False)
@@ -75,7 +74,24 @@ def waterlevel_main(
                 loc_output_dir,
                 test_data.joinpath("general", "ini_reference_waterlevel.ini"),
                 database_path,
-                HydraRing_path.joinpath("config.sqlite"),
+                hydraring_path.joinpath("config.sqlite"),
             )
             # run Hydra-Ring
-            HydraRingComputation().run_hydraring(HydraRing_path, computation.ini_path)
+            HydraRingComputation().run_hydraring(hydraring_path, computation.ini_path)
+
+# # file_name: str,
+# #     database_paths: list[Path],
+# #     output_path: Path
+#
+
+# if __name__ == '__main__':
+#     # input paths
+#     # Path_prf = Path(
+#     #     r'C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\prfl')
+#     Path_results = Path(
+#         r'C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\Result test')
+#     Path_HR = [Path(
+#         r"C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\DatabaseWBI")]
+#     Path_file = r"C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\GEKBdata_base.csv"
+#
+#     waterlevel_main(Path_file,Path_HR, Path_results)

@@ -62,53 +62,65 @@ def generate_vakindeling_shape(
 @cli.command(
     name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
-@click.option("--work_dir",
+@click.option("--file_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het invoerbestand (HR_default.csv).")
+
+@click.option("--database_paths",
+              type=click.Path(),
+              multiple=True,
+              required=True,
+              help="Link naar de map met de Hydraulische database. "
+                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
+                   "moet deze optie twee keer worden opgegeven. Dus:"
+                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
+                   "voor de 2100 situatie>.")
+
+@click.option("--profielen_dir",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met alle profielen.")
+
+@click.option("--hydraring_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
+              " te vinden in: "
+                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
+
+@click.option("--output_path",
               type=click.Path(),
               nargs=1,
               required=True,
               help="Dit is de werkmap, waarin je de resultaten van de overslagsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map voorafgaand aan het runnen van het script al een map met de profielen bevat. Deze map met "
-                   "profielen moet de naam 'prfl' hebben. Naast de profielenmap, moet de map leeg zijn")
-@click.option("--database_paths",
-              type=click.Path(),
-              multiple=True,
-              required=True,
-              help="Link naar de map met de Hydraulische database. "
-                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
-                   "moet deze optie twee keer worden opgegeven. Dus:"
-                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
-                   "voor de 2100 situatie>")
-@click.option("--hydraring_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-@click.option("--file_name",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Link naar de HR_default.csv.")
+                   "deze map voorafgaand aan het runnen leeg moet zijn.")
+
+ 
 def generate_and_evaluate_overflow_computations(
     work_dir, database_paths, hydraring_path, file_name
 ):
     overflow_main(
-        Path(work_dir),
+        Path(file_path),
         list(map(Path, database_paths)),
+        Path(profielen_dir),
         Path(hydraring_path),
-        file_name,
+        Path(output_path),
     )
 
+########################################################################################################################
 @cli.command(
     name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
 )
-@click.option("--work_dir",
+@click.option("--file_path",
               type=click.Path(),
               nargs=1,
               required=True,
-              help="Dit is de werkmap, waarin je de resultaten van de waterstandsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map leeg is")
+              help="Link naar het invoerbestand (HR_default.csv).")
+
 @click.option("--database_paths",
               type=click.Path(),
               multiple=True,
@@ -118,6 +130,7 @@ def generate_and_evaluate_overflow_computations(
                    "moet deze optie twee keer worden opgegeven. Dus:"
                    "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
                    "voor de 2100 situatie>")
+
 @click.option("--hydraring_path",
               type=click.Path(),
               nargs=1,
@@ -125,20 +138,22 @@ def generate_and_evaluate_overflow_computations(
               help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
               " te vinden in: "
                    "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-@click.option("--file_name",
-              type=str,
+
+@click.option("--output_path",
+              type=click.Path(),
               nargs=1,
               required=True,
-              help="Link naar de HR_default.csv.")
+              help="Dit is de werkmap, waarin je de resultaten van de waterstandsommen wilt uitvoeren. Belangrijk is dat"
+                   "deze map voorafgaand aan het runnen leeg moet zijn.")
 
 def generate_and_evaluate_water_level_computations(
-    work_dir, database_paths, hydraring_path, file_name
+        file_path, database_paths, hydraring_path, output_path
 ):
     waterlevel_main(
-        Path(work_dir),
+        Path(file_path),
         list(map(Path, database_paths)),
         Path(hydraring_path),
-        file_name,
+        Path(output_path),
     )
 
 ########################################################################################################################
