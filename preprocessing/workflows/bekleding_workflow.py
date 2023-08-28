@@ -40,7 +40,7 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
     local_path = output_path.joinpath('temp')
     # read bekleding csv
     df = pd.read_csv(bekleding_path,
-                     usecols=['doorsnede', 'dwarsprofiel','HR_locatie', 'locationid', 'region', 'gws',
+                     usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'locationid', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
@@ -73,14 +73,14 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
 if __name__ == '__main__':
 
     # input paths
-    input_csv = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\Bekleding_default.csv")
-    database_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\database\WBI2017_Oosterschelde_26-3_v02")
+    input_csv = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\Bekleding_default.csv")
+    database_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\database\WBI2017_Oosterschelde_26-3_v02")
 
-    steentoets_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\steentoets")
-    profielen_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\profielen")
-    waterlevel_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\input_waterlevel")
+    steentoets_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\steentoets")
+    profielen_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\profielen")
+    waterlevel_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\input_waterlevel")
 
-    output_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_bekledingen\output_test_CLI3")
+    output_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\output_test_CLI4")
 
     hring_path = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\HydraRing 23.1.1")
     bin_dikernel = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\DiKErnel")
