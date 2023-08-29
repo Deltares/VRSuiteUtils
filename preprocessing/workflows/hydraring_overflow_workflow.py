@@ -13,16 +13,16 @@ from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import (
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 
 
-def overflow_main(file_path: Path,
+def overflow_main(input_csv_path: Path,
     database_paths: list[Path],
-    profielen_dir: Path,
+    profielen_path: Path,
     HydraRing_path: Path,
     output_path: Path):
     """This is the main function of the workflow.
     It can be used to generate and evaluate Hydra-Ring computations for overflow for a given dataset"""
 
     # read HRING reference csv, and add to OverflowInput object
-    hring_data = pd.read_csv(file_path, index_col=0)
+    hring_data = pd.read_csv(input_csv_path, index_col=0)
     overflow_input_object = OverflowInput()
     overflow_input_object.add_hring_data(hring_data)
 
@@ -59,7 +59,7 @@ def overflow_main(file_path: Path,
             # data from input sheet:
             computation.fill_data(location)
             # add profile data:
-            computation.get_prfl(profielen_dir.joinpath( location.prfl_bestand))
+            computation.get_prfl(profielen_path.joinpath( location.prfl_bestand))
             # get config from hydraulic database:
             print(database_path)
             computation.get_HRING_config(database_path)

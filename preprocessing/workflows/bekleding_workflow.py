@@ -6,7 +6,7 @@ from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import reve
 from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 import shutil
-def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: Path, steentoets_path: Path, profielen_path: Path,
+def bekleding_main(input_csv_path: Path, database_path: Path, waterlevel_path: Path, steentoets_path: Path, profielen_path: Path,
                      hring_path: Path, binDIKErnel: Path, output_path: Path):
 
 
@@ -39,7 +39,7 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
     figures_ZST = output_path.joinpath('figures_ZST')
     local_path = output_path.joinpath('temp')
     # read bekleding csv
-    df = pd.read_csv(bekleding_path,
+    df = pd.read_csv(input_csv_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'locationid', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number

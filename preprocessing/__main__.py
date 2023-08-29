@@ -18,21 +18,16 @@ def cli():
 @cli.command(
     name="vakindeling", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
 )
+@click.option("--input_csv_path",
+              type=str,
+              nargs=1,
+              required=True,
+              help="Link naar de CSV met de vakindeling ")
 @click.option("--traject_id",
               type=str,
               nargs=1,
               required=True,
               help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
-@click.option("--vakindeling_csv",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Link naar de CSV met de vakindeling ")
-@click.option("--output_folder",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
 @click.option("--traject_shape",
               type=str,
               nargs=1,
@@ -47,22 +42,27 @@ def cli():
               help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
                    "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
                    "de shapefile worden omgedraaid door deze optie op True te zetten.")
+@click.option("--output_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
 def generate_vakindeling_shape(
-    traject_id, vakindeling_csv, output_folder, traject_shape, flip
+    input_csv_path, traject_id, traject_shape, flip, output_path
 ):
     vakindeling_main(
+        input_csv_path,
         traject_id,
-        vakindeling_csv,
-        Path(output_folder),
         traject_shape,
         flip,
+        Path(output_path),
     )
 
 ########################################################################################################################
 @cli.command(
     name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
-@click.option("--file_path",
+@click.option("--input_csv_path",
               type=click.Path(),
               nargs=1,
               required=True,
@@ -78,7 +78,7 @@ def generate_vakindeling_shape(
                    "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
                    "voor de 2100 situatie>.")
 
-@click.option("--profielen_dir",
+@click.option("--profielen_path",
               type=click.Path(),
               nargs=1,
               required=True,
@@ -93,12 +93,12 @@ def generate_vakindeling_shape(
 
  
 def generate_and_evaluate_overflow_computations(
-    work_dir, database_paths, file_name
+    input_csv_path, database_paths, profielen_path, output_path
 ):
     overflow_main(
-        Path(file_path),
+        Path(input_csv_path),
         list(map(Path, database_paths)),
-        Path(profielen_dir),
+        Path(profielen_path),
         Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
@@ -107,7 +107,7 @@ def generate_and_evaluate_overflow_computations(
 @cli.command(
     name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
 )
-@click.option("--file_path",
+@click.option("--input_csv_path",
               type=click.Path(),
               nargs=1,
               required=True,
@@ -131,10 +131,10 @@ def generate_and_evaluate_overflow_computations(
                    "deze map voorafgaand aan het runnen leeg moet zijn.")
 
 def generate_and_evaluate_water_level_computations(
-        file_path, database_paths, output_path
+        input_csv_path, database_paths, output_path
 ):
     waterlevel_main(
-        Path(file_path),
+        Path(input_csv_path),
         list(map(Path, database_paths)),
         Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'),
         Path(output_path),
@@ -146,7 +146,7 @@ def generate_and_evaluate_water_level_computations(
 @cli.command(
     name="bekleding", help="Genereert de input data voor bekleding voor de VRTool"
 )
-@click.option("--input_csv",
+@click.option("--input_csv_path",
               type=click.Path(),
               nargs=1,
               required=True,
@@ -183,11 +183,11 @@ def generate_and_evaluate_water_level_computations(
                    "niet leeg is, zal het script automatisch stoppen.")
 
 def generate_bekleding_som(
-        input_csv, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
+        input_csv_path, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
 ):
     print(Path(os.path.dirname(os.path.realpath(__file__))).parent)
     bekleding_main(
-        Path(input_csv),
+        Path(input_csv_path),
         Path(database_path),
         Path(waterlevel_path),
         Path(steentoets_path),

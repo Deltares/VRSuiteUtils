@@ -1,4 +1,4 @@
-doorsnede,naam_hrlocatie,hrlocation,hr_koppel,region,gws,getij_amplitude,steentoetsfile,dwarsprofiel,prfl,begin_grasbekleding,waterstand_stap
-1,Locatie1,1400358,OS_1_26-3_dk_00105,kust,0,2,stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,310,profiel_1.prfl,4,1
-2,Locatie2,1400370,,kust,0,2,stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,315,profiel_2.prfl,3.85,1
-3,Locatie3,1400384,,kust,0,2,stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,320,profiel_3.prfl,3.76,1
+doorsnede;HR_locatie;locationid;region;gws;getij_amplitude;dwarsprofiel;steentoetsfile;prfl;begin_grasbekleding;waterstand_stap
+1;Locatie1;1400364;kust;0;2;310;stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm;profiel_1.prfl;4;1
+2;Locatie2;1400370;kust;0;2;315;stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm;profiel_2.prfl;3.85;1
+3;Locatie3;1400384;kust;0;2;320;stt Os 310-323 20220524 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm;profiel_3.prfl;3.76;1

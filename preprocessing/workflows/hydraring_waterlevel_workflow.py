@@ -13,7 +13,7 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
 )
 
 
-def waterlevel_main(file_path: Path,
+def waterlevel_main(input_csv_path: Path,
     database_paths: list[Path],
     hydraring_path: Path,
         output_path: Path):
@@ -22,7 +22,7 @@ def waterlevel_main(file_path: Path,
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
 
     # read HRING reference csv
-    hring_data = pd.read_csv(file_path, index_col=0)
+    hring_data = pd.read_csv(input_csv_path, index_col=0)
 
     # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
     # then hrlocation is derived from the database, using hr_koppel
