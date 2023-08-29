@@ -14,6 +14,7 @@ import pandas as pd
                                                pytest.param("38-1", "overflow_no_housing", False, id="38-1 overflow no_housing"),
                                                pytest.param("38-1", "revetment_subset", True,  id="38-1 bekledingen"),
                                                pytest.param("38-1", "revetment_bundling", True, id="38-1 bekledingen case 2"),
+                                               pytest.param("38-1", "revetment_small", True, id="38-1 bekledingen klein"),
                                                pytest.param("38-1", "full", False, id="38-1 volledig"),
                                                    ])
 def test_make_database(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
