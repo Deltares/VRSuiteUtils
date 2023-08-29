@@ -28,6 +28,13 @@ def cli():
               nargs=1,
               required=True,
               help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
+
+@click.option("--output_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
+
 @click.option("--traject_shape",
               type=str,
               nargs=1,
@@ -42,20 +49,16 @@ def cli():
               help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
                    "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
                    "de shapefile worden omgedraaid door deze optie op True te zetten.")
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
+
 def generate_vakindeling_shape(
     input_csv_path, traject_id, traject_shape, flip, output_path
 ):
     vakindeling_main(
         input_csv_path,
         traject_id,
+        Path(output_path),
         traject_shape,
         flip,
-        Path(output_path),
     )
 
 ########################################################################################################################
