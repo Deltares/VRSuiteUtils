@@ -2,14 +2,14 @@ import click
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
+from preprocessing.workflows.bekleding_workflow import bekleding_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from preprocessing.workflows.teenlijn_workflow import main_teenlijn
 from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
 from preprocessing.workflows.select_profiles_workflow import main_profiel_selectie
+
 from pathlib import Path
-
 import os
-
 
 @click.group()
 def cli():
@@ -62,13 +62,57 @@ def generate_vakindeling_shape(
 @cli.command(
     name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
-@click.option("--work_dir",
+@click.option("--file_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het invoerbestand (HR_default.csv).")
+
+@click.option("--database_paths",
+              type=click.Path(),
+              multiple=True,
+              required=True,
+              help="Link naar de map met de Hydraulische database. "
+                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
+                   "moet deze optie twee keer worden opgegeven. Dus:"
+                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
+                   "voor de 2100 situatie>.")
+
+@click.option("--profielen_dir",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met alle profielen.")
+
+@click.option("--output_path",
               type=click.Path(),
               nargs=1,
               required=True,
               help="Dit is de werkmap, waarin je de resultaten van de overslagsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map voorafgaand aan het runnen van het script al een map met de profielen bevat. Deze map met "
-                   "profielen moet de naam 'prfl' hebben. Naast de profielenmap, moet de map leeg zijn")
+                   "deze map voorafgaand aan het runnen leeg moet zijn.")
+
+ 
+def generate_and_evaluate_overflow_computations(
+    work_dir, database_paths, file_name
+):
+    overflow_main(
+        Path(file_path),
+        list(map(Path, database_paths)),
+        Path(profielen_dir),
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1'),
+        Path(output_path),
+    )
+
+########################################################################################################################
+@cli.command(
+    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
+)
+@click.option("--file_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het invoerbestand (HR_default.csv).")
+
 @click.option("--database_paths",
               type=click.Path(),
               multiple=True,
@@ -78,67 +122,22 @@ def generate_vakindeling_shape(
                    "moet deze optie twee keer worden opgegeven. Dus:"
                    "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
                    "voor de 2100 situatie>")
-@click.option("--hydraring_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-@click.option("--file_name",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Link naar de HR_default.csv.")
-def generate_and_evaluate_overflow_computations(
-    work_dir, database_paths, hydraring_path, file_name
-):
-    overflow_main(
-        Path(work_dir),
-        list(map(Path, database_paths)),
-        Path(hydraring_path),
-        file_name,
-    )
 
-@cli.command(
-    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
-)
-@click.option("--work_dir",
+@click.option("--output_path",
               type=click.Path(),
               nargs=1,
               required=True,
               help="Dit is de werkmap, waarin je de resultaten van de waterstandsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map leeg is")
-@click.option("--database_paths",
-              type=click.Path(),
-              multiple=True,
-              required=True,
-              help="Link naar de map met de Hydraulische database. "
-                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
-                   "moet deze optie twee keer worden opgegeven. Dus:"
-                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
-                   "voor de 2100 situatie>")
-@click.option("--hydraring_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraring executable 'MechanismComputation.exe'. Deze executable is meestal"
-              " te vinden in: "
-                   "'c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236'")
-@click.option("--file_name",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Link naar de HR_default.csv.")
+                   "deze map voorafgaand aan het runnen leeg moet zijn.")
 
 def generate_and_evaluate_water_level_computations(
-    work_dir, database_paths, hydraring_path, file_name
+        file_path, database_paths, output_path
 ):
     waterlevel_main(
-        Path(work_dir),
+        Path(file_path),
         list(map(Path, database_paths)),
-        Path(hydraring_path),
-        file_name,
+        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'),
+        Path(output_path),
     )
 
 ########################################################################################################################
@@ -165,6 +164,7 @@ def generate_and_evaluate_water_level_computations(
               nargs=1,
               required=True,
               help="Link naar de map met resultaten van de waterstandsberekeningen.")
+
 @click.option("--steentoets_path",
               type=click.Path(),
               nargs=1,
@@ -328,16 +328,28 @@ def obtain_inner_toe_line(
               help="Hier geef je de het pad naar de geopackage van de BAG. Dit bestand is te downloaden via "
                     "https://service.pdok.nl/lv/bag/atom/bag.xml. Dit is nodig, omdat de BAG het niet toelaat alle "
                    "objecten vanuit het script te downloaden. Het aantal objecten is gelimiteerd tot 1000.")
+@click.option("--flip_waterkant",
+              type=bool,
+              nargs=1,
+              default=False,
+              help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
+                   "nummering van de vakken volgt. Als het water aan de linkerkant loopt, moet hier True worden "
+                   "ingevuld. Default is False. Instelling is identiek aan die bij de workflow voor het genereren van profielen.")
 
 def tel_alle_gebouwen(
-    traject_id, teenlijn_geojson, vakindeling_geojson, uitvoer_map, gebouwen_geopackage
+    traject_id, teenlijn_geojson, vakindeling_geojson, uitvoer_map, gebouwen_geopackage, flip_waterkant
 ):
+    if flip_waterkant == True:
+        richting = -1
+    else:
+        richting = 1
     main_bebouwing(
         traject_id,
         Path(teenlijn_geojson),
         Path(vakindeling_geojson),
         Path(uitvoer_map),
         Path(gebouwen_geopackage),
+        richting
     )
 
 @cli.command(name="selecteer_profiel", help="Selecteer per dijkvak een profiel")
@@ -396,7 +408,6 @@ def selecteer_profiel(
         Path(uitvoer_map),
         invoerbestand,
         "minimum") #selectiemethode is nog niet in gebruik
-
 
 if __name__ == "__main__":
     cli()

@@ -8,7 +8,8 @@ def main_bebouwing(
     teenlijn_geojson: Path,
     vakindeling_geojson: Path,
     output_dir: Path,
-    all_buildings_filename: Path
+    all_buildings_filename: Path,
+        richting: bool,
     ):
 
     # check if output_path exists, if not create it
@@ -21,7 +22,8 @@ def main_bebouwing(
         teenlijn_geojson,
         vakindeling_geojson,
         output_dir,
-        all_buildings_filename)
+        all_buildings_filename,
+    direction_parameter=richting)
 
 
 if __name__ == '__main__':

@@ -34,7 +34,8 @@ class TrajectShape:
         self.NBPW_shape = self.NBPW_shape.explode(index_parts=True)
         if len(self.NBPW_shape) > 1:
             warnings.warn("Warning: NBPW shape has more than 1 geometry")
-
+        self.ondergrens = self.NBPW_shape["NORM_OG"].iloc[0]
+        self.signaleringswaarde = self.NBPW_shape["NORM_SW"].iloc[0]
     def flip_traject(self):
         """function that reverts a line (self.NBPW_shape['geometry']) that contains a linestring of x and y coordinates.
          In other words: the function draws the line backwards. The geometry is updated in place.

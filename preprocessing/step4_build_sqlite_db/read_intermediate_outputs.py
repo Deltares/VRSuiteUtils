@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import json
+import warnings
 from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
 
 
@@ -109,8 +110,7 @@ def read_revetment_data(files_path):
             for loc_file in year_dir.iterdir():
                 if loc_file.is_file():
 
-                    location = int(loc_file.name.split("_")[1]) + 1
-
+                    location = str(loc_file.name.split("_")[1])
                     with open(loc_file, "r") as openfile:
                         json_object = json.load(openfile)
                     

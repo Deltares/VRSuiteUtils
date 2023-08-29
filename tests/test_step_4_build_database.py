@@ -18,6 +18,7 @@ import pandas as pd
                                                pytest.param("38-1", "full", False, id="38-1 volledig"),
                                                    ])
 def test_make_database(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
+
    # remove output_path
    _output_path = test_results.joinpath(request.node.name, "{}_{}.db".format(traject,test_name))
    if _output_path.parent.exists():

@@ -12,7 +12,8 @@ def count_buildings_per_vak(traject_name,
                             teenlijn_geojson,
                             vakindeling_geojson,
                             output_dir,
-                            all_buildings_filename):
+                            all_buildings_filename,
+                            direction_parameter=1):
 
     # read teenlijn and vakindeling
     teenlijn_gdf = gpd.read_file(teenlijn_geojson)
@@ -139,7 +140,7 @@ def count_buildings_per_vak(traject_name,
     for i in range(len(buffersize)):
         print("Within", buffersize[i], "meters from the toe:")
         # creates a buffer along a shape with a given buffer size
-        teenvak_buffer = create_buffer(teenvakken_gdf, buffersize[i])
+        teenvak_buffer = create_buffer(teenvakken_gdf, buffersize[i], direction=direction_parameter)
         # count the amount of buildings within a buffer
         counted_buildings = count_buildings(buildings_gdf, teenvak_buffer)
         print()
