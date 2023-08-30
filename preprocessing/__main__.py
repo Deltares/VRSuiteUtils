@@ -51,7 +51,7 @@ def cli():
                    "de shapefile worden omgedraaid door deze optie op True te zetten.")
 
 def generate_vakindeling_shape(
-    input_csv_path, traject_id, traject_shape, flip, output_path
+    input_csv_path, traject_id, output_path, traject_shape, flip
 ):
     vakindeling_main(
         input_csv_path,
@@ -186,7 +186,7 @@ def generate_and_evaluate_water_level_computations(
                    "niet leeg is, zal het script automatisch stoppen.")
 
 def generate_bekleding_som(
-        input_csv_path, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
+        input_csv_path, database_path, waterlevel_path, steentoets_path, profielen_path, output_path
 ):
     print(Path(os.path.dirname(os.path.realpath(__file__))).parent)
     bekleding_main(
