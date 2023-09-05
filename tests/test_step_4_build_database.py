@@ -26,6 +26,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # get all the input data
    # read the vakindeling shape
+   _generic_data_dir = test_data.parent.parent.joinpath("preprocessing","generic_data")
    _test_data_dir = test_data.joinpath(traject)
    assert _test_data_dir.exists(), "No test data available at {}".format(
       _test_data_dir
@@ -77,12 +78,12 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # read the data for measures
    if revetment:
-      measures_table = read_measures_data(_intermediate_dir.joinpath("base_measures_revetment.csv"))
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment.csv"))
    else:
-      measures_table = read_measures_data(_intermediate_dir.joinpath("base_measures.csv"))
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures.csv"))
 
    # read the data for profilepoints
-   profile_table = read_profilepoints_data(_intermediate_dir.joinpath("Profielen"))
+   profile_table = read_profiles_old(_intermediate_dir.joinpath("Profielen"))
 
    initialize_database(_output_path)
    assert _output_path.exists(), "Database file was not created."
