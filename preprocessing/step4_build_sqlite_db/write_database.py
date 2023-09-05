@@ -22,17 +22,17 @@ def fill_diketrajectinfo_table(traject,length):
     DikeTrajectInfo.create(
         traject_name=traject,
         omega_piping=traject_data["omega_piping"],
-        omega_stability_inner=traject_data["omega_stability_inner"],
-        omega_overflow=traject_data["omega_overflow"],
+        omega_stability_inner=0.04,
+        omega_overflow=0.24,
         a_piping=traject_data["a_piping"],
-        b_piping=traject_data["b_piping"],
-        a_stability_inner=traject_data["a_stability_inner"],
-        b_stability_inner=traject_data["b_stability_inner"],
+        b_piping=300.,
+        a_stability_inner=0.033,
+        b_stability_inner=50.,
         p_max=traject_data["p_max"],
         p_sig=traject_data["p_sig"],
         flood_damage=traject_data["flood_damage"],
         N_overflow=traject_data["N_overflow"],
-        N_blockrevetment=traject_data["N_blockrevetment"],
+        N_blockrevetment=4.,
         traject_length = length
     )
 
@@ -95,15 +95,16 @@ def fill_buildings(buildings):
                 .id
             )
 
-            for distance, number in row.iteritems():
+            for distance, number in row.items():
                 Buildings.create(
                     section_data=vak_id,
                     distance_from_toe=distance,
                     number_of_buildings=number,
                 )
         except:
-            warnings.warn("Dijkvak {} niet in SectionData".format(vaknaam))
-    # TODO check if all sections in SectionData have buildings
+            pass
+            # warnings.warn("Dijkvak {} niet in SectionData".format(vaknaam))
+    # TODO add check if all sections in SectionData have buildings
 
 
 def fill_waterleveldata(waterlevel_table, shape_file):
@@ -158,12 +159,13 @@ def fill_profiles(profile_df):
                         y_coordinate=row[pointtype]['Z'],
                     )
                 else:
-                    warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
+                    pass
+                    # warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
         except:
             warnings.warn("Dijkvak {} niet in SectionData".format(section_name))
     for id in id_dict.keys():
         CharacteristicPointType.create(id=id_dict[id], name=id)
-    pass
+
 def fill_profilepoints(profile_points, shape_file):
     # find unique values in CharacteristicPoint of profile_points
     unique_points = profile_points["CharacteristicPoint"].unique()

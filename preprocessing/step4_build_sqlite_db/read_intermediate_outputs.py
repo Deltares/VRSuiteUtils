@@ -97,6 +97,7 @@ def read_stability_data(file_path):
             "deklaagdikte",
             "pleistoceendiepte",
         ],
+        dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float, 'deklaagdikte': float, 'pleistoceendiepte': float},
     )
 
 def read_revetment_data(files_path):
