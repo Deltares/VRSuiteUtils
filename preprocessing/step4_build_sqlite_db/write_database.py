@@ -86,24 +86,23 @@ def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
 
 def fill_buildings(buildings):
     ids = []
-    for count, row in buildings.iterrows():
+    for vaknaam, row in buildings.iterrows():
         try:
             vak_id = (
                 SectionData.select(SectionData.id)
-                .where(SectionData.section_name == row.vaknaam)
+                .where(SectionData.section_name == vaknaam)
                 .get()
                 .id
             )
 
-            row_filtered = row.drop(index=["objectid", "vaknaam"])
-            for distance, number in row_filtered.iteritems():
+            for distance, number in row.iteritems():
                 Buildings.create(
                     section_data=vak_id,
                     distance_from_toe=distance,
                     number_of_buildings=number,
                 )
         except:
-            warnings.warn("Dijkvak {} niet in SectionData".format(row.vaknaam))
+            warnings.warn("Dijkvak {} niet in SectionData".format(vaknaam))
     # TODO check if all sections in SectionData have buildings
 
 
@@ -139,7 +138,8 @@ def fill_waterleveldata(waterlevel_table, shape_file):
                 waterlevel_location_id=999,
             )  # , waterlevel_location_id=waterlevel_location_id)
 
-
+def fill_profiles(profile_df):
+    pass
 def fill_profilepoints(profile_points, shape_file):
     # find unique values in CharacteristicPoint of profile_points
     unique_points = profile_points["CharacteristicPoint"].unique()
