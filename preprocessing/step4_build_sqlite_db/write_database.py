@@ -139,6 +139,30 @@ def fill_waterleveldata(waterlevel_table, shape_file):
             )  # , waterlevel_location_id=waterlevel_location_id)
 
 def fill_profiles(profile_df):
+    unique_points = profile_df.columns.get_level_values(0).unique().tolist()
+    id_dict = {k: v for k, v in zip(unique_points, range(1, len(unique_points) + 1))}
+    for section_name, row in profile_df.iterrows():
+        try:
+            section_data_id = (
+                SectionData.select(SectionData.id)
+                .where(SectionData.section_name == section_name)
+                .get()
+                .id
+            )
+            for pointtype in id_dict.keys():
+                if not any(row[pointtype].isna()):
+                    ProfilePoint.create(
+                        section_data=section_data_id,
+                        profile_point_type=id_dict[pointtype],
+                        x_coordinate=row[pointtype]['X'],
+                        y_coordinate=row[pointtype]['Z'],
+                    )
+                else:
+                    warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
+        except:
+            warnings.warn("Dijkvak {} niet in SectionData".format(section_name))
+    for id in id_dict.keys():
+        CharacteristicPointType.create(id=id_dict[id], name=id)
     pass
 def fill_profilepoints(profile_points, shape_file):
     # find unique values in CharacteristicPoint of profile_points

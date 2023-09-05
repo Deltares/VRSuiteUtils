@@ -1,7 +1,6 @@
 from pathlib import Path
 import pandas as pd
 import geopandas as gpd
-
 from vrtool.orm.orm_controllers import *
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
@@ -89,7 +88,7 @@ def write_database_main(traject_name : str,
 
     fill_waterleveldata(waterlevel_table=waterlevel_results, shape_file=vakindeling_shape)
 
-    fill_profiles(profile_points=profile_table, shape_file=vakindeling_shape)
+    fill_profiles(profile_table)
 
     # fill all the mechanisms
     fill_mechanisms(mechanism_data=mechanism_data, shape_file=vakindeling_shape)
