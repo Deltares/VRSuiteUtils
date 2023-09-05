@@ -149,8 +149,12 @@ def read_bebouwing_data(file_path):
 def read_measures_data(file_path):
     return pd.read_csv(file_path, index_col=0)
 
+def read_profile_data(file_path):
+    """reads a single csv file with profiles for each section into a dataframe"""
+    return pd.read_csv(file_path,index_col=0, header = [0,1])
 
-def read_profilepoints_data(files_path):
+def read_profiles_old(files_path):
+    "Deprecated file format still used for tests"
     profile_data = pd.DataFrame(
         columns=["vaknaam", "CharacteristicPoint", "x", "z"]
     )
