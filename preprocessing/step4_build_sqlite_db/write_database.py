@@ -574,6 +574,7 @@ def fill_measures(measure_table):
     CombinableType.create(name="full")
     CombinableType.create(name="combinable")
     CombinableType.create(name="partial")
+    CombinableType.create(name="revetment")
 
 
     # fill StandardMeasure
