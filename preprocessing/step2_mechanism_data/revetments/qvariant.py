@@ -37,13 +37,13 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
         OverflowInput.get_HRLocation(
             hrd_db_location=Path(str(list(database_path.glob('WBI2017_*.sqlite'))[0]).split('.')[0] + '.sqlite'),
             hlcd_db_location=list(database_path.glob('*hlcd.sqlite'))[0], hring_data=row.to_frame().transpose())
-        locationId = row['locationid']
+        locationId = row['hrlocation']
         orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
         # get design water levels
         valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))
         for i, year in enumerate(evaluateYears):
-            output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.HR_locatie}', 'designTable.txt')
+            output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.naam_hrlocatie}', 'designTable.txt')
             wl_frequencycurve = read_design_table(output_overflow)[['Value','Beta']]
             f = interp1d(wl_frequencycurve['Beta'], wl_frequencycurve['Value'], fill_value=('extrapolate'))
             valMHW[i,:] = f(beta)

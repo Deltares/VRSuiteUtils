@@ -62,7 +62,7 @@ class OverflowInput:
             # hr_locatie is where hlcd_locs["HRDLocationId"] == hrd_location and hlcd_locs["TrackID"] == track_id:
             hlcd_location = hlcd_locs.loc[
                 (hlcd_locs["HRDLocationId"] == hrd_location) & (hlcd_locs["TrackId"] == track_id)]["LocationId"].values[0]
-            if hring_data.loc[count, "hrlocation"] != hlcd_location:
+            if (not np.isnan(hring_data.loc[count, "hrlocation"])) & (hring_data.loc[count, "hrlocation"] != hlcd_location):
                 raise Exception("HRLocation in input sheet is different from  HLCDLocation found in database for {}".format(line["hr_koppel"]))
             else:
                 hring_data.loc[count, "hrlocation"] = hlcd_location
