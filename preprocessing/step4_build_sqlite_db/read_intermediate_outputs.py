@@ -8,49 +8,54 @@ from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
 def read_waterlevel_data(files_path):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
+    # files should be in the following structure: year_directory\location_directory\location_file.txt
     waterlevel_data = pd.DataFrame(
         columns=["WaterLevelLocationId", "Year", "WaterLevel", "Beta"]
     )
     for year_dir in files_path.iterdir():
         if year_dir.is_dir():
-            for loc_file in year_dir.iterdir():
-                if loc_file.is_file():
-                    design_table = read_design_table(loc_file)
-                    table_data = pd.DataFrame(
-                        {
-                            "WaterLevelLocationId": [loc_file.stem.split("_")[1]]
-                            * design_table.shape[0],
-                            "Year": [year_dir.name] * design_table.shape[0],
-                            "WaterLevel": list(design_table["Value"]),
-                            "Beta": list(design_table["Beta"]),
-                        }
-                    )
-                    waterlevel_data = pd.concat(
-                        (waterlevel_data, table_data), ignore_index=True
-                    )
+            for loc_dir in year_dir.iterdir():
+                if loc_dir.is_dir():
+                    for loc_file in loc_dir.iterdir():
+                        if loc_file.is_file():
+                            design_table = read_design_table(loc_file)
+                            table_data = pd.DataFrame(
+                                {
+                                    "WaterLevelLocationId": [loc_file.stem.split("_")[1]]
+                                    * design_table.shape[0],
+                                    "Year": [year_dir.name] * design_table.shape[0],
+                                    "WaterLevel": list(design_table["Value"]),
+                                    "Beta": list(design_table["Beta"]),
+                                }
+                            )
+                            waterlevel_data = pd.concat(
+                                (waterlevel_data, table_data), ignore_index=True
+                            )
     return waterlevel_data
 
 
 def read_overflow_data(files_path):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
-    overflow_data = pd.DataFrame(columns=["LocationId", "Year", "WaterLevel", "Beta"])
+    overflow_data = pd.DataFrame(columns=["LocationId", "Year", "CrestHeight", "Beta"])
     for year_dir in files_path.iterdir():
         if year_dir.is_dir():
-            for loc_file in year_dir.iterdir():
-                if loc_file.is_file():
-                    design_table = read_design_table(loc_file)
-                    table_data = pd.DataFrame(
-                        {
-                            "LocationId": [loc_file.stem] * design_table.shape[0],
-                            "Year": [year_dir.name] * design_table.shape[0],
-                            "CrestHeight": list(design_table["Value"]),
-                            "Beta": list(design_table["Beta"]),
-                        }
-                    )
-                    overflow_data = pd.concat(
-                        (overflow_data, table_data), ignore_index=True
-                    )
+            for loc_dir in year_dir.iterdir():
+                if loc_dir.is_dir():
+                    for loc_file in loc_dir.iterdir():
+                        if loc_file.is_file():
+                            design_table = read_design_table(loc_file)
+                            table_data = pd.DataFrame(
+                                {
+                                    "LocationId": [loc_file.stem] * design_table.shape[0],
+                                    "Year": [year_dir.name] * design_table.shape[0],
+                                    "CrestHeight": list(design_table["Value"]),
+                                    "Beta": list(design_table["Beta"]),
+                                }
+                            )
+                            overflow_data = pd.concat(
+                                (overflow_data, table_data), ignore_index=True
+                            )
     overflow_data = overflow_data.set_index("LocationId")
     return overflow_data
 
