@@ -313,6 +313,8 @@ def fill_piping(piping_table, shape_file):
     piping_id = (
         Mechanism.select(Mechanism.id).where(Mechanism.name == "Piping").get().id
     )
+    if 'dh_exit' in piping_table.columns:
+        piping_table = piping_table.rename(columns={'dh_exit': 'dh_exit(t)'})
     relevant_indices = [
         val
         for val in MechanismPerSection.select()
