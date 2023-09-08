@@ -95,18 +95,18 @@ def read_prfl(file_name):
     i = 0    
     for line in lines:
         if 'RICHTING' in line:
-           richting = float(line.split(" ")[1])
+           richting = float(line.split()[-1])
         
         if 'KRUINHOOGTE' in line:
-            kruinhoogte = float(line.split(" ")[1])
+            kruinhoogte = float(line.split()[-1])
         
         if 'DIJK' in line:
-            noPoints = int(line.split(" ")[1])
+            noPoints = int(line.split()[-1])
             
             for j in range(i+1, i+1+noPoints):
                 
-                x = np.append(x, float(lines[j].split("\t")[0]))
-                y = np.append(y, float(lines[j].split("\t")[1]))
+                x = np.append(x, float(lines[j].split()[0]))
+                y = np.append(y, float(lines[j].split()[1]))
         
         i += 1
         

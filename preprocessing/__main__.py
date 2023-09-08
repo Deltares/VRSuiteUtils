@@ -93,7 +93,7 @@ def generate_vakindeling_shape(
 
  
 def generate_and_evaluate_overflow_computations(
-    work_dir, database_paths, file_name
+    file_path, database_paths, profielen_dir, output_path
 ):
     overflow_main(
         Path(file_path),
@@ -184,7 +184,7 @@ def generate_and_evaluate_water_level_computations(
                    "niet leeg is, zal het script automatisch stoppen.")
 
 def generate_bekleding_som(
-        input_csv, database_path, steentoets_path, waterlevel_path, profielen_path, output_path
+        input_csv, database_path, waterlevel_path, steentoets_path, profielen_path, output_path
 ):
     print(Path(os.path.dirname(os.path.realpath(__file__))).parent)
     bekleding_main(
