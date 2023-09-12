@@ -18,7 +18,8 @@ def fill_diketrajectinfo_table(traject,length):
         generic_data.joinpath("diketrajectinfo.csv"),
         index_col=0,
     ).loc[traject]
-
+    if any(traject_data.isna()):
+        raise Exception('Traject data in preprocessing/generic_data/diketrajectinfo.csv is niet compleet voor traject {}'.format(traject))
     DikeTrajectInfo.create(
         traject_name=traject,
         omega_piping=traject_data["omega_piping"],
@@ -30,7 +31,7 @@ def fill_diketrajectinfo_table(traject,length):
         b_stability_inner=50.,
         p_max=traject_data["p_max"],
         p_sig=traject_data["p_sig"],
-        flood_damage=traject_data["flood_damage"],
+        flood_damage=traject_data["flood_damage"],  #Economische schade jaar 2050 uit factsheets
         N_overflow=traject_data["N_overflow"],
         N_blockrevetment=4.,
         traject_length = length

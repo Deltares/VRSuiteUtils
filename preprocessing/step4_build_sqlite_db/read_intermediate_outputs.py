@@ -5,14 +5,14 @@ import warnings
 from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
 
 
-def read_waterlevel_data(files_path):
+def read_waterlevel_data(files_dir):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
     # files should be in the following structure: year_directory\location_directory\location_file.txt
     waterlevel_data = pd.DataFrame(
         columns=["WaterLevelLocationId", "Year", "WaterLevel", "Beta"]
     )
-    for year_dir in files_path.iterdir():
+    for year_dir in files_dir.iterdir():
         if year_dir.is_dir():
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
@@ -34,11 +34,11 @@ def read_waterlevel_data(files_path):
     return waterlevel_data
 
 
-def read_overflow_data(files_path):
+def read_overflow_data(files_dir):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
     overflow_data = pd.DataFrame(columns=["LocationId", "Year", "CrestHeight", "Beta"])
-    for year_dir in files_path.iterdir():
+    for year_dir in files_dir.iterdir():
         if year_dir.is_dir():
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
@@ -105,13 +105,13 @@ def read_stability_data(file_path):
         dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float, 'deklaagdikte': float, 'pleistoceendiepte': float},
     )
 
-def read_revetment_data(files_path):
+def read_revetment_data(files_dir):
 
     slope_part_table = {"location": list(), "slope_part": list(), "begin_part": list(), "end_part": list(), "top_layer_thickness": list(), "top_layer_type": list(), "tan_alpha": list()}
     rel_GEBU_table = {"location": list(), "year": list(), "transition_level": list(), "beta": list()}
     rel_ZST_table = {"location": list(), "slope_part": list(), "year": list(), "top_layer_thickness": list(), "beta": list()}
 
-    for year_dir in files_path.iterdir():
+    for year_dir in files_dir.iterdir():
         if year_dir.is_dir():
             for loc_file in year_dir.iterdir():
                 if loc_file.is_file():
@@ -159,12 +159,12 @@ def read_profile_data(file_path):
     """reads a single csv file with profiles for each section into a dataframe"""
     return pd.read_csv(file_path,index_col=0, header = [0,1])
 
-def read_profiles_old(files_path):
+def read_profiles_old(files_dir):
     "Deprecated file format still used for tests"
     profile_data = pd.DataFrame(
         columns=["vaknaam", "CharacteristicPoint", "x", "z"]
     )
-    for profile_file in files_path.iterdir():
+    for profile_file in files_dir.iterdir():
         profile_name = profile_file.stem
         profile = pd.read_csv(profile_file, index_col=0)
         profile_points = pd.DataFrame(
