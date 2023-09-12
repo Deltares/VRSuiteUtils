@@ -367,11 +367,6 @@ def test_run_HydraRing(ini_file):
         ),
     )
 
-    # test to verify correct run of Hydra-Ring. Note that it requires a specific version of Riskeer that should be installed locally.
-
-
-#     # TODO: see if we need to add it to the repos.
-
 
 def test_add_piping_tool_input():
     pass

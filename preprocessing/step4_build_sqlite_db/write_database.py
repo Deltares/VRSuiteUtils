@@ -18,21 +18,22 @@ def fill_diketrajectinfo_table(traject,length):
         generic_data.joinpath("diketrajectinfo.csv"),
         index_col=0,
     ).loc[traject]
-
+    if any(traject_data.isna()):
+        raise Exception('Traject data in preprocessing/generic_data/diketrajectinfo.csv is niet compleet voor traject {}'.format(traject))
     DikeTrajectInfo.create(
         traject_name=traject,
         omega_piping=traject_data["omega_piping"],
-        omega_stability_inner=traject_data["omega_stability_inner"],
-        omega_overflow=traject_data["omega_overflow"],
+        omega_stability_inner=0.04,
+        omega_overflow=0.24,
         a_piping=traject_data["a_piping"],
-        b_piping=traject_data["b_piping"],
-        a_stability_inner=traject_data["a_stability_inner"],
-        b_stability_inner=traject_data["b_stability_inner"],
+        b_piping=300.,
+        a_stability_inner=0.033,
+        b_stability_inner=50.,
         p_max=traject_data["p_max"],
         p_sig=traject_data["p_sig"],
-        flood_damage=traject_data["flood_damage"],
+        flood_damage=traject_data["flood_damage"],  #Economische schade jaar 2050 uit factsheets
         N_overflow=traject_data["N_overflow"],
-        N_blockrevetment=traject_data["N_blockrevetment"],
+        N_blockrevetment=4.,
         traject_length = length
     )
 
@@ -86,25 +87,25 @@ def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
 
 def fill_buildings(buildings):
     ids = []
-    for count, row in buildings.iterrows():
+    for vaknaam, row in buildings.iterrows():
         try:
             vak_id = (
                 SectionData.select(SectionData.id)
-                .where(SectionData.section_name == row.vaknaam)
+                .where(SectionData.section_name == vaknaam)
                 .get()
                 .id
             )
 
-            row_filtered = row.drop(index=["objectid", "vaknaam"])
-            for distance, number in row_filtered.iteritems():
+            for distance, number in row.items():
                 Buildings.create(
                     section_data=vak_id,
                     distance_from_toe=distance,
                     number_of_buildings=number,
                 )
         except:
-            warnings.warn("Dijkvak {} niet in SectionData".format(row.vaknaam))
-    # TODO check if all sections in SectionData have buildings
+            pass
+            # warnings.warn("Dijkvak {} niet in SectionData".format(vaknaam))
+    # TODO add check if all sections in SectionData have buildings
 
 
 def fill_waterleveldata(waterlevel_table, shape_file):
@@ -139,6 +140,32 @@ def fill_waterleveldata(waterlevel_table, shape_file):
                 waterlevel_location_id=999,
             )  # , waterlevel_location_id=waterlevel_location_id)
 
+def fill_profiles(profile_df):
+    unique_points = profile_df.columns.get_level_values(0).unique().tolist()
+    id_dict = {k: v for k, v in zip(unique_points, range(1, len(unique_points) + 1))}
+    for section_name, row in profile_df.iterrows():
+        try:
+            section_data_id = (
+                SectionData.select(SectionData.id)
+                .where(SectionData.section_name == section_name)
+                .get()
+                .id
+            )
+            for pointtype in id_dict.keys():
+                if not any(row[pointtype].isna()):
+                    ProfilePoint.create(
+                        section_data=section_data_id,
+                        profile_point_type=id_dict[pointtype],
+                        x_coordinate=row[pointtype]['X'],
+                        y_coordinate=row[pointtype]['Z'],
+                    )
+                else:
+                    pass
+                    # warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
+        except:
+            warnings.warn("Dijkvak {} niet in SectionData".format(section_name))
+    for id in id_dict.keys():
+        CharacteristicPointType.create(id=id_dict[id], name=id)
 
 def fill_profilepoints(profile_points, shape_file):
     # find unique values in CharacteristicPoint of profile_points
@@ -287,6 +314,8 @@ def fill_piping(piping_table, shape_file):
     piping_id = (
         Mechanism.select(Mechanism.id).where(Mechanism.name == "Piping").get().id
     )
+    if 'dh_exit' in piping_table.columns:
+        piping_table = piping_table.rename(columns={'dh_exit': 'dh_exit(t)'})
     relevant_indices = [
         val
         for val in MechanismPerSection.select()
@@ -540,25 +569,24 @@ def fill_structures():
 
 def fill_measures(measure_table):
 
-    # fill MeasureType
-    MeasureType.create(name="Soil reinforcement")
-    MeasureType.create(name="Soil reinforcement with stability screen")
-    MeasureType.create(name="Stability Screen")
-    MeasureType.create(name="Vertical Geotextile")
-    MeasureType.create(name="Diaphragm Wall")
+    #get types from measure_table
+    types = measure_table["measure_type"].unique()
+    for type in types: MeasureType.create(name=type)
+
     # fill CombinableType
     CombinableType.create(name="full")
     CombinableType.create(name="combinable")
     CombinableType.create(name="partial")
+    CombinableType.create(name="revetment")
 
 
     # fill StandardMeasure
     for idx, row in measure_table.iterrows():
         measure_type_id = (
-            MeasureType.select().where(MeasureType.name == row["Type"]).get().id
+            MeasureType.select().where(MeasureType.name == row["measure_type"]).get().id
         )
         combinable_type_id = (
-            CombinableType.select().where(CombinableType.name == row["Class"]).get().id
+            CombinableType.select().where(CombinableType.name == row["combinable_type"]).get().id
         )
         Measure.create(
             name=idx,
@@ -570,15 +598,18 @@ def fill_measures(measure_table):
         row = row.fillna(-999)
         StandardMeasure.create(
             measure=measure_id,
-            max_inward_reinforcement=row["max_inward"],
-            max_outward_reinforcement=row["max_outward"],
-            direction=row["Direction"],
-            crest_step=0.5,
-            max_crest_increase=row["dcrest_max"],
-            stability_screen=row["StabilityScreen"],
-            prob_of_solution_failure=row["P_solution"],
-            failure_probability_with_solution=row["Pf_solution"],
-            stability_screen_s_f_increase=row["dSF"],
+            max_inward_reinforcement=row["max_inward_reinforcement"],
+            max_outward_reinforcement=row["max_outward_reinforcement"],
+            direction=row["direction"],
+            crest_step=row["crest_step"],
+            max_crest_increase=row["max_crest_increase"],
+            stability_screen=row["stability_screen"],
+            prob_of_solution_failure=row["prob_of_solution_failure"],
+            failure_probability_with_solution=row["failure_probability_with_solution"],
+            stability_screen_s_f_increase=row["stability_screen_s_f_increase"],
+            transition_level_increase_step=row["transition_level_increase_step"],
+            max_pf_factor_block=row["max_pf_factor_block"],
+            n_steps_block=row["n_steps_block"],
         )
 
     # all id from Measure

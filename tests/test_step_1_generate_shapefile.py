@@ -9,19 +9,21 @@ from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from tests import test_data, test_results
 
-@pytest.mark.parametrize("traject,vakindeling_file",
-                         [pytest.param("38-1", test_data.joinpath("38-1", "input", "vakindeling_38-1_full.csv"))])
-def test_generate_vakindeling_workflow(traject, vakindeling_file):
+@pytest.mark.parametrize("traject,vakindeling_file,case",
+                         [pytest.param("38-1", "vakindeling_38-1_full.csv", "full")])
+def test_generate_vakindeling_workflow(traject, vakindeling_file, case):
+    vakindeling_file_path = test_data.joinpath(traject, "input", "vakindeling", vakindeling_file)
+    output_folder = test_results.joinpath(traject,"output","vakindeling", case)
     # remove test results
-    if test_results.joinpath(traject,"output","vakindeling").exists():
-        shutil.rmtree(test_results.joinpath(traject,"output","vakindeling"))
+    if output_folder.exists():
+        shutil.rmtree(output_folder)
     # make test results dir
-    test_results.joinpath(traject,"output","vakindeling").mkdir(parents=True,exist_ok=True)
+    output_folder.mkdir(parents=True,exist_ok=True)
 
-    vakindeling_main(traject, vakindeling_file, test_results.joinpath(traject,"output","vakindeling"))
+    vakindeling_main(traject, vakindeling_file_path, output_folder)
 
     reference_shape = gpd.read_file(
-        vakindeling_file.parent.parent.joinpath("reference_shape.geojson"),
+        test_data.joinpath(traject, "reference_results","reference_shapes", f"reference_shape_{case}.geojson"),
         dtype={
             "objectid": int,
             "vaknaam": str,
@@ -39,7 +41,7 @@ def test_generate_vakindeling_workflow(traject, vakindeling_file):
     )
 
     new_shape = gpd.read_file(
-        test_results.joinpath(traject,"output","vakindeling",f"Vakindeling_{traject}.geojson"),
+        output_folder.joinpath(f"Vakindeling_{traject}.geojson"),
         dtype={
             "objectid": int,
             "vaknaam": str,

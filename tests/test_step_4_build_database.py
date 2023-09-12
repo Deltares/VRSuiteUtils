@@ -9,14 +9,16 @@ from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
 import pandas as pd
 
-@pytest.mark.parametrize("traject,test_name,reference_shape", [
-                                               pytest.param("38-1", "no_housing","reference_shape.geojson", id="38-1 no_housing"),
-                                               pytest.param("38-1", "overflow_no_housing", "reference_shape.geojson", id="38-1 overflow no_housing"),
-                                               pytest.param("38-1", "revetment_subset", "reference_shape_revetment.geojson", id="38-1 bekledingen"),
-                                               pytest.param("38-1", "revetment_bundling", "reference_shape_revetment_bundling.geojson", id="38-1 bekledingen case 2"),
-                                               pytest.param("38-1", "full", "reference_shape.geojson", id="38-1 volledig"),
-                                                ])
-def test_make_database(traject: str, test_name: str, reference_shape: str, request: pytest.FixtureRequest):
+@pytest.mark.parametrize("traject,test_name,revetment", [
+                                               pytest.param("38-1", "no_housing", False, id="38-1 no_housing"),
+                                               pytest.param("38-1", "overflow_no_housing", False, id="38-1 overflow no_housing"),
+                                               pytest.param("38-1", "revetment_subset", True,  id="38-1 bekledingen"),
+                                               pytest.param("38-1", "revetment_bundling", True, id="38-1 bekledingen case 2"),
+                                               pytest.param("38-1", "revetment_small", True, id="38-1 bekledingen klein"),
+                                               pytest.param("38-1", "full", False, id="38-1 volledig"),
+                                                   ])
+def test_make_database(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
+
    # remove output_path
    _output_path = test_results.joinpath(request.node.name, "{}_{}.db".format(traject,test_name))
    if _output_path.parent.exists():
@@ -24,17 +26,18 @@ def test_make_database(traject: str, test_name: str, reference_shape: str, reque
 
    # get all the input data
    # read the vakindeling shape
+   _generic_data_dir = test_data.parent.parent.joinpath("preprocessing","generic_data")
    _test_data_dir = test_data.joinpath(traject)
    assert _test_data_dir.exists(), "No test data available at {}".format(
       _test_data_dir
    )
 
-   shapefile = gpd.read_file(_test_data_dir.joinpath(reference_shape))
+   shapefile = gpd.read_file(_test_data_dir.joinpath("reference_results","reference_shapes", f"reference_shape_{test_name}.geojson"))
 
    try:
-      vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=",", lineterminator="\n")
+      vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=",", lineterminator="\n")
    except:
-      vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=";", lineterminator="\n")
+      vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=";", lineterminator="\n")
 
    #reset in_analyse in shapefile based on vakindeling_csv. This is only for testdata.
    shapefile = pd.merge(shapefile.drop(columns=['in_analyse']),vakindeling_csv[['objectid','in_analyse']],on='objectid')
@@ -74,10 +77,13 @@ def test_make_database(traject: str, test_name: str, reference_shape: str, reque
    )
 
    # read the data for measures
-   measures_table = read_measures_data(_intermediate_dir.joinpath("base_measures.csv"))
+   if revetment:
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment.csv"))
+   else:
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures.csv"))
 
    # read the data for profilepoints
-   profile_table = read_profilepoints_data(_intermediate_dir.joinpath("Profielen"))
+   profile_table = read_profiles_old(_intermediate_dir.joinpath("Profielen"))
 
    initialize_database(_output_path)
    assert _output_path.exists(), "Database file was not created."

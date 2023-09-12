@@ -163,7 +163,8 @@ def generate_and_evaluate_water_level_computations(
               type=click.Path(),
               nargs=1,
               required=True,
-              help="Link naar het bestand met resultaten van de waterstandsberekeningen.")
+              help="Link naar de map met resultaten van de waterstandsberekeningen.")
+
 @click.option("--steentoets_path",
               type=click.Path(),
               nargs=1,

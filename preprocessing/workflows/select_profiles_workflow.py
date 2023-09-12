@@ -11,13 +11,14 @@ def main_profiel_selectie(
         karakteristieke_profielen: Path,
         profiel_info_csv: Path,
         uitvoer_map: Path,
-        invoerbestand: Path,
-        selectiemethode: str):
+        invoerbestand: Path = False,
+        selectiemethode: str = 'minimum'):
     #make sure uitvoer_map does not exist: delete and recreate
     if uitvoer_map.exists():
         warnings.warn("uitvoer_map already exists. Deleting and recreating")
         #remove with shutil.rmtree
         shutil.rmtree(uitvoer_map)
+
     use_file = False
     uitvoer_map.mkdir()
     #load vakindeling_geojson
@@ -37,7 +38,8 @@ def main_profiel_selectie(
         except:
             raise FileNotFoundError(f'Could not find invoerbestand {invoerbestand}')
 
-
+    #make empty dataframe to store profiles
+    characteristic_profiles_df = pd.DataFrame([],index=pd.MultiIndex.from_product([['BUT', 'BUK', 'BIK', 'BBL', 'EBL', 'BIT'],['X','Z']]))
     #for each vak in vakindeling
     for vak in vakindeling.itertuples():
         if vak.in_analyse == 0: #skip vakken die niet worden beschouwd
@@ -56,16 +58,21 @@ def main_profiel_selectie(
             characteristic_profile = profile_from_file(custom_profiles.loc[vak.vaknaam])
         else:
             characteristic_profile = select_profile(available_profiles, karakteristieke_profielen, vak.vaknaam, selectiemethode)
-
+            #write characteristic profile to characteristic_profiles_df
         #store result
         if characteristic_profile is not None:
-            characteristic_profile.to_csv(uitvoer_map.joinpath(vak.vaknaam + '.csv'), index=True)
+            #write characteristic profile to characteristic_profiles_df
+            characteristic_profiles_df.loc[:,vak.vaknaam] = characteristic_profile.stack()
+
+            # characteristic_profile.to_csv(uitvoer_map.joinpath(vak.vaknaam + '.csv'), index=True)
+
             #plot aggregated profile, and AHN data
             plot_profile(characteristic_profile, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
         else:
+            characteristic_profiles_df.loc[:,vak.vaknaam] = None
             plot_profile(None, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
             warnings.warn(f'No profile found for vak {vak.vaknaam}')
-
+    characteristic_profiles_df.transpose().to_csv(uitvoer_map.joinpath('selected_profiles.csv'), index=True)
 def profile_from_file(profile):
     #profile is a row from the custom_profiles dataframe
     #drop the nans
@@ -339,3 +346,18 @@ def select_profile(available_profiles, karakteristieke_profielen, section, selec
 
     return characteristic_profile
 
+if __name__ == '__main__':
+    vakindeling_geojson =       Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\vakindeling_optie1\Vakindeling_53-1.geojson")
+    ahn_profielen =             Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\AHN_profiles")
+    karakteristieke_profielen = Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\characteristic_profiles")
+    profiel_info_csv =          Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\traject_profiles.csv")
+    uitvoer_map =               Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\selectie_profielen_1")
+    # invoerbestand =             Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_profielen\test20230814_6\invoerbestand.csv")
+    main_profiel_selectie(
+            vakindeling_geojson,
+            ahn_profielen,
+            karakteristieke_profielen,
+            profiel_info_csv,
+            uitvoer_map,
+            False,
+            "minimum",)
