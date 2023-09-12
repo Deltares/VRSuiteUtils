@@ -11,6 +11,14 @@ def read_csv_linesep(file_path, **kwargs):
     except:
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     return df
+
+def write_config_file(output_dir : Path, traject_name : str, database_path : Path):
+    # make a json with traject = traject_name and input_database_path = database_path
+    config = {'traject': traject_name,
+              'input_database_path': str(database_path.absolute()).replace('\\','/')}
+
+    with open(output_dir.joinpath('config.json'), 'w') as f:
+        json.dump(config, f, indent=1)
 def write_database_main(traject_name : str,
                         vakindeling_geojson : Path,
                         vakindeling_csv_path : Path,
@@ -75,7 +83,7 @@ def write_database_main(traject_name : str,
 
     db_obj = open_database(output_dir.joinpath(output_db_name))
 
-    # diketractinfo
+    # diketrajectinfo
     fill_diketrajectinfo_table(traject=traject_name, length=vakindeling_shape.m_eind.max())
     # sectiondata
     fill_sectiondata_table(
@@ -96,7 +104,9 @@ def write_database_main(traject_name : str,
 
     # fill measures
     fill_measures(measure_table=measures_table)
-    print()
+
+    #write a config file
+    write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
 
 if __name__ == '__main__':
     traject_name = "53-1"
