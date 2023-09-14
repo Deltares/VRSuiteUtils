@@ -22,7 +22,7 @@ def fill_diketrajectinfo_table(traject,length):
         raise Exception('Traject data in preprocessing/generic_data/diketrajectinfo.csv is niet compleet voor traject {}'.format(traject))
     DikeTrajectInfo.create(
         traject_name=traject,
-        omega_piping=traject_data["omega_piping"],
+        omega_piping=0.24,
         omega_stability_inner=0.04,
         omega_overflow=0.24,
         a_piping=traject_data["a_piping"],
@@ -163,7 +163,7 @@ def fill_profiles(profile_df):
                     pass
                     # warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
         except:
-            warnings.warn("Dijkvak {} niet in SectionData".format(section_name))
+            warnings.warn("Dijkvak {} niet in vakindeling. Profiel wordt niet weggeschreven.".format(section_name))
     for id in id_dict.keys():
         CharacteristicPointType.create(id=id_dict[id], name=id)
 
@@ -390,6 +390,12 @@ def add_stability_scenario(
         computation_type = (
             ComputationType.select().where(ComputationType.name == "SIMPLE").get().id
         )
+
+    beta_value = data["beta"]
+    # if nan then get SF from data
+    if np.isnan(beta_value):
+        beta_value = calculate_reliability(data[["SF"]])
+
     ComputationScenario.create(
         mechanism_per_section=mechanism_per_section_id,
         mechanism=mechanism_id,
@@ -397,7 +403,7 @@ def add_stability_scenario(
         scenario_name=scenario_name,
         scenario_probability=data["scenariokans"],
         computation_type=computation_type,
-        probability_of_failure=beta_to_pf(data["beta"]),
+        probability_of_failure=beta_to_pf(beta_value),
     )
     # for each computation_scenario fill Parameter. first get the last computation_scenario_id that matches mechanism_per_section_id
 
@@ -408,10 +414,7 @@ def add_stability_scenario(
         .dicts()
     ][-1]["id"]
 
-    beta_value = data["beta"]
-    # if nan then get SF from data
-    if np.isnan(beta_value):
-        beta_value = calculate_reliability(data["SF"])
+
     Parameter.create(
         computation_scenario=computation_scenario_id, parameter="beta", value=beta_value
     )
