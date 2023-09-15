@@ -619,9 +619,42 @@ def fill_measures(measure_table):
     measure_ids = [val["id"] for val in Measure.select().dicts()]
     section_ids = [val["id"] for val in SectionData.select().dicts()]
     for section_id in section_ids:
-        for measure_id in measure_ids:
-            MeasurePerSection.create(section=section_id, measure=measure_id)
+        kerende_hoogte = get_kerende_hoogte(section_id)
+        revetment = check_if_revetment(section_id)
 
+        #get from MechanismPerSection whether section_id has revetment
+        for measure_id in measure_ids:
+            #get name from Measure
+            measure_name = Measure.select().where(Measure.id == measure_id).get().name
+            if kerende_hoogte >2:
+                if "Kruinverhoging" in measure_name:
+                    continue
+            elif kerende_hoogte <=2:
+                if "Grondversterking" in measure_name:
+                    continue
+            if not revetment:
+                if "Aanpassing bekleding" in measure_name:
+                    continue
+
+            #Include measure:
+            MeasurePerSection.create(section=section_id, measure=measure_id)
+def check_if_revetment(section_id):
+    try:
+        MechanismPerSection.select().where(
+            (MechanismPerSection.section == section_id) & (MechanismPerSection.mechanism == 4)).get()
+        return True
+    except:
+        return False
+def get_kerende_hoogte(section_id):
+    # get id of BIT and BIK from CharacteristicPointType
+    BIT_id = CharacteristicPointType.select().where(CharacteristicPointType.name == "BIT").get().id
+    BIK_id = CharacteristicPointType.select().where(CharacteristicPointType.name == "BIK").get().id
+    # get y_coordinate of BIT and BIK for section_data_id=section_id from ProfilePoints
+    BIT_y = ProfilePoint.select().where(
+        (ProfilePoint.section_data == section_id) & (ProfilePoint.profile_point_type_id == BIT_id)).get().y_coordinate
+    BIK_y = ProfilePoint.select().where(
+        (ProfilePoint.section_data == section_id) & (ProfilePoint.profile_point_type_id == BIK_id)).get().y_coordinate
+    return BIK_y - BIT_y
 def compare_databases(path_to_generated_db, path_to_reference_db):
     import sqlite3
 

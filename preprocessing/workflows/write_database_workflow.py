@@ -68,10 +68,8 @@ def write_database_main(traject_name : str,
     bebouwing_table = read_bebouwing_data(building_csv_path)
 
     # read the data for measures
-    if revetment_path != None:
-        measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment.csv"))
-    else:
-        measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures.csv"))
+
+    measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
 
     # read the data for profilepoints
     profile_table = read_profile_data(characteristic_profile_csv)
@@ -110,17 +108,17 @@ def write_database_main(traject_name : str,
 
 if __name__ == '__main__':
     traject_name = "53-1"
-    vakindeling_geojson =       Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\preprocessing_vakindeling\Optie_1\Vakindeling_53-1.geojson')
-    vakindeling_csv_path =      Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\Vakindeling_optie_1.csv')
-    characteristic_profile_csv= Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\vakindeling1\selectie_profielen_1\selected_profiles.csv')
-    building_csv_path =         Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\vakindeling1\building_count_traject53-1.csv')
-    output_dir =                Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\test_database')
+    vakindeling_geojson =       Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\preprocessing_vakindeling\Optie_1\Vakindeling_53-1.geojson')
+    vakindeling_csv_path =      Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\Vakindeling_optie_1.csv')
+    characteristic_profile_csv= Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\vakindeling1\selectie_profielen_1\selected_profiles.csv')
+    building_csv_path =         Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\vakindeling1\building_count_traject53-1.csv')
+    output_dir =                Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\test_database')
     output_db_name =            f'53-1_database_vakindeling_1_{random.randint(0,1000)}.db'
-    hr_input_csv =              Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\HR_53-1.csv')
-    waterlevel_results_path =   Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\preprocessing_waterlevel')
-    overflow_results_path =     Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\preprocessing_overflow')
-    piping_path =               Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\Piping_53-1.csv')
-    stability_path =            Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_merel\Stabiliteit_53-1.csv')
+    hr_input_csv =              Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\HR_53-1.csv')
+    waterlevel_results_path =   Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\preprocessing_waterlevel')
+    overflow_results_path =     Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\preprocessing_overflow')
+    piping_path =               Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\Piping_53-1.csv')
+    stability_path =            Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\Stabiliteit_53-1.csv')
     revetment_path =            None
 
     write_database_main(traject_name                =   traject_name,
