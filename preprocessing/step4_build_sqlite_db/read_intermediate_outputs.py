@@ -17,7 +17,7 @@ def read_waterlevel_data(files_dir):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if loc_file.is_file():
+                        if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
                             table_data = pd.DataFrame(
                                 {
@@ -43,7 +43,7 @@ def read_overflow_data(files_dir):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if loc_file.is_file():
+                        if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
                             table_data = pd.DataFrame(
                                 {
