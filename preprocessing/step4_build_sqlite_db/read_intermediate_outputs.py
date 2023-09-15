@@ -21,7 +21,7 @@ def read_waterlevel_data(files_dir):
                             design_table = read_design_table(loc_file)
                             table_data = pd.DataFrame(
                                 {
-                                    "WaterLevelLocationId": [loc_file.stem.split("_")[1]]
+                                    "WaterLevelLocationId": [loc_dir.stem]
                                     * design_table.shape[0],
                                     "Year": [year_dir.name] * design_table.shape[0],
                                     "WaterLevel": list(design_table["Value"]),
@@ -47,7 +47,7 @@ def read_overflow_data(files_dir):
                             design_table = read_design_table(loc_file)
                             table_data = pd.DataFrame(
                                 {
-                                    "LocationId": [loc_file.stem] * design_table.shape[0],
+                                    "LocationId": [loc_dir.stem] * design_table.shape[0],
                                     "Year": [year_dir.name] * design_table.shape[0],
                                     "CrestHeight": list(design_table["Value"]),
                                     "Beta": list(design_table["Beta"]),
