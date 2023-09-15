@@ -1,3 +1,5 @@
+import copy
+
 import pandas as pd
 import numpy as np
 import json
@@ -155,9 +157,25 @@ def read_bebouwing_data(file_path):
 def read_measures_data(file_path):
     return pd.read_csv(file_path, index_col=0)
 
-def read_profile_data(file_path):
+def adjust_inner_toe(BIK, BIT, min_kerende_hoogte):
+    current_slope = (BIK.Z - BIT.Z) / (BIT.X - BIK.X)
+    new_BIT = copy.deepcopy(BIT)
+    new_BIT.Z = BIK.Z - min_kerende_hoogte
+    new_BIT.X = BIT.X + min_kerende_hoogte/current_slope
+    return new_BIT
+def read_profile_data(file_path, min_kerende_hoogte = 2.01):
     """reads a single csv file with profiles for each section into a dataframe"""
-    return pd.read_csv(file_path,index_col=0, header = [0,1])
+    profile_df = pd.read_csv(file_path,index_col=0, header = [0,1])
+    kerende_hoogte = np.subtract(profile_df[('BIK','Z')], profile_df[('BIT','Z')])
+    for count, row in profile_df.iterrows():
+        if kerende_hoogte.loc[count] <=2.0:
+            #TODO temporary fix to enable running for sections with low lerende hog
+            if np.isnan(row[('EBL','Z')]):
+                new_BIT = adjust_inner_toe(row.BIK, row.BIT, min_kerende_hoogte)
+                profile_df.loc[count,('BIT','X')] = new_BIT.X
+                profile_df.loc[count,('BIT','Z')] = new_BIT.Z
+                warnings.warn('Kerende hoogte voor profiel {} is kleiner dan 2m. BIT is aangepast zodat deze gelijk is aan 2 meter'.format(count))
+    return profile_df
 
 def read_profiles_old(files_dir):
     "Deprecated file format still used for tests"
