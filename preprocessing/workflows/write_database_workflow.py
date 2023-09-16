@@ -21,7 +21,6 @@ def write_config_file(output_dir : Path, traject_name : str, database_path : Pat
         json.dump(config, f, indent=1)
 def write_database_main(traject_name : str,
                         vakindeling_geojson : Path,
-                        vakindeling_csv_path : Path,
                         characteristic_profile_csv : Path,
                         building_csv_path : Path,
                         output_dir : Path,
@@ -42,14 +41,11 @@ def write_database_main(traject_name : str,
         #check if the output database already exists
         if (output_dir / output_db_name).exists():
             raise Exception("Uitvoerdatabase bestaat al. Verwijder deze eerst of kies een andere naam")
-    _generic_data_dir = Path().absolute().parent.joinpath('generic_data')
+
+    _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
+
     # load the vakindeling geojson
     vakindeling_shape = gpd.read_file(vakindeling_geojson,dtype={'in_analyse':int, 'stabiliteit': str, 'piping': str, 'overslag': str, 'bekledingen': str})
-
-    # load the vakindeling csv
-    vakindeling_csv = read_csv_linesep(vakindeling_csv_path)
-    # set dtype of vakindeling_csv to int
-    vakindeling_csv = vakindeling_csv.astype({'in_analyse':int})
 
     # load HR input csv
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
@@ -70,6 +66,7 @@ def write_database_main(traject_name : str,
     # read the data for measures
 
     measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
+
 
     # read the data for profilepoints
     profile_table = read_profile_data(characteristic_profile_csv)
@@ -108,22 +105,21 @@ def write_database_main(traject_name : str,
 
 if __name__ == '__main__':
     traject_name = "53-1"
-    vakindeling_geojson =       Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\preprocessing_vakindeling\Optie_1\Vakindeling_53-1.geojson')
-    vakindeling_csv_path =      Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\Vakindeling_optie_1.csv')
-    characteristic_profile_csv= Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\vakindeling1\selectie_profielen_1\selected_profiles.csv')
-    building_csv_path =         Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\vakindeling1\building_count_traject53-1.csv')
-    output_dir =                Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\test_database')
+    vakindeling_geojson =       Path(r'c:\VRM\test_database\Output\preprocessing_vakindeling\Optie_1\Vakindeling_53-1.geojson')
+    characteristic_profile_csv= Path(r'C:\VRM\test_database\resultaten\vakindeling1\selectie_profielen_1\selected_profiles.csv')
+    building_csv_path =         Path(r'C:\VRM\test_database\resultaten\vakindeling1\building_count_traject53-1.csv')
+    output_dir =                Path(r'C:\VRM\test_database\Output_database_generation_workflow5')
     output_db_name =            f'53-1_database_vakindeling_1_{random.randint(0,1000)}.db'
-    hr_input_csv =              Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\HR_53-1.csv')
-    waterlevel_results_path =   Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\preprocessing_waterlevel')
-    overflow_results_path =     Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\preprocessing_overflow')
-    piping_path =               Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\Piping_53-1.csv')
-    stability_path =            Path(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\01_voor_waterschappen\WDOD\data_WDOD_2\Stabiliteit_53-1.csv')
+    hr_input_csv =              Path(r'C:\VRM\test_database\Output\HR_53-1.csv')
+    waterlevel_results_path =   Path(r'C:\VRM\test_database\Output\preprocessing_waterlevel')
+    overflow_results_path =     Path(r'c:\VRM\test_database\Output\preprocessing_overflow')
+    piping_path =               Path(r'c:\VRM\test_database\Output\Piping_53-1.csv')
+    stability_path =            Path(r'c:\VRM\test_database\Output\Stabiliteit_53-1.csv')
     revetment_path =            None
+
 
     write_database_main(traject_name                =   traject_name,
                         vakindeling_geojson         =   vakindeling_geojson,
-                        vakindeling_csv_path        =   vakindeling_csv_path,
                         characteristic_profile_csv  =   characteristic_profile_csv,
                         building_csv_path           =   building_csv_path,
                         output_dir                  =   output_dir,
