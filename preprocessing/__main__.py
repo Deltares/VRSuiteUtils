@@ -7,6 +7,7 @@ from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from preprocessing.workflows.teenlijn_workflow import main_teenlijn
 from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
 from preprocessing.workflows.select_profiles_workflow import main_profiel_selectie
+from preprocessing.workflows.write_database_workflow import write_database_main
 
 from pathlib import Path
 import os
@@ -352,6 +353,94 @@ def tel_alle_gebouwen(
         richting
     )
 
+
+@cli.command(name="maak_database", help="Vat alle resultaten van de preprocessing samen in een database")
+
+@click.option("--traject_id",
+              type=str,
+              nargs=1,
+              required=True,
+              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'")
+@click.option("--vakindeling_geojson",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
+@click.option("--characteristic_profile_csv",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de csv van de gegenereerde karakteristieke profielen.")
+@click.option("--building_csv_path",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de csv van de gegenereerde gebouwen.")
+@click.option("--output_dir",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
+@click.option("--output_db_name",
+                type=str,
+                nargs=1,
+                required=True,
+                help="Hier geef je de naam van de database die wordt aangemaakt.")
+@click.option("--hr_input_csv",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de csv van de gegenereerde HR input.")
+@click.option("--waterlevel_results_path",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de csv van de gegenereerde waterstandresultaten.")
+@click.option("--overflow_results_path",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Hier geef je het pad naar de csv van de gegenereerde overstromingsresultaten.")
+@click.option("--piping_path",
+                nargs=1,
+                required=False,
+                help="Hier geef je het pad naar de csv van de gegenereerde pipingresultaten.")
+@click.option("--stability_path",
+                nargs=1,
+                required=False,
+                help="Hier geef je het pad naar de csv van de gegenereerde stabiliteitsresultaten.")
+@click.option("--revetment_path",
+                nargs=1,
+                required=False,
+                help="Hier geef je het pad naar de csv van de gegenereerde bekledingsresultaten.")
+
+def maak_database(traject_id,
+                    vakindeling_geojson,
+                    characteristic_profile_csv,
+                    building_csv_path,
+                    output_dir,
+                    output_db_name,
+                    hr_input_csv,
+                    waterlevel_results_path,
+                    overflow_results_path,
+                    piping_path,
+                    stability_path,
+                    revetment_path,
+                    ):
+        write_database_main(traject_id,
+                    Path(vakindeling_geojson),
+                    Path(characteristic_profile_csv),
+                    Path(building_csv_path),
+                    Path(output_dir),
+                    output_db_name,
+                    Path(hr_input_csv),
+                    Path(waterlevel_results_path),
+                    Path(overflow_results_path),
+                    piping_path,
+                    stability_path,
+                    revetment_path
+                    )
+
 @cli.command(name="selecteer_profiel", help="Selecteer per dijkvak een profiel")
 
 
@@ -396,6 +485,8 @@ def tel_alle_gebouwen(
 #               default="minimum",
 #               help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
 
+
+
 def selecteer_profiel(
     vakindeling_geojson, ahn_profielen, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand):
     if invoerbestand:
@@ -408,6 +499,8 @@ def selecteer_profiel(
         Path(uitvoer_map),
         invoerbestand,
         "minimum") #selectiemethode is nog niet in gebruik
+
+
 
 if __name__ == "__main__":
     cli()
