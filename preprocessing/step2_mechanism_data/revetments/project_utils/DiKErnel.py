@@ -92,7 +92,10 @@ def read_prfl(file_name):
     
     x = []
     y = []
-    i = 0    
+    x_voorland = []
+    y_voorland = []
+    i = 0
+    k = 0
     for line in lines:
         if 'RICHTING' in line:
            richting = float(line.split()[-1])
@@ -107,7 +110,14 @@ def read_prfl(file_name):
                 
                 x = np.append(x, float(lines[j].split()[0]))
                 y = np.append(y, float(lines[j].split()[1]))
-        
         i += 1
+        if 'VOORLAND' in line:
+            noPoints = int(line.split()[-1])
+
+            for j in range(k+1, k+1+noPoints):
+                x_voorland = np.append(x_voorland, float(lines[j].split()[0]))
+                y_voorland = np.append(y_voorland, float(lines[j].split()[1]))
+        k += 1
+
         
-    return richting, kruinhoogte, x, y
+    return richting, kruinhoogte, x, y, x_voorland, y_voorland

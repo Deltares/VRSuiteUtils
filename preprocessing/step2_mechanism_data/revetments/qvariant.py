@@ -40,14 +40,23 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
         locationId = row['hrlocation']
         orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
+        # ondergrens waterstand is hoogste punt op voorland. Als voorland niet bestaat, laagste punt op profiel.
+        # daar wordt een veiligheidsmarge van 1m bij op geteld, om droogstand te voorkomen getrokken
+        try:
+            ondergrens_wl = max(read_prfl(profielen_path.joinpath(row['prfl']))[5])+1.
+        except:
+            ondergrens_wl = min(read_prfl(profielen_path.joinpath(row['prfl']))[3])+1.
+
+        begin_grasbekleding = row['begin_grasbekleding']
+
         # get design water levels
         valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))
+
         for i, year in enumerate(evaluateYears):
             output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.naam_hrlocatie}', 'designTable.txt')
             wl_frequencycurve = read_design_table(output_overflow)[['Value','Beta']]
             f = interp1d(wl_frequencycurve['Beta'], wl_frequencycurve['Value'], fill_value=('extrapolate'))
-            valMHW[i,:] = f(beta)
-
+            valMHW[i, :] = f(beta)
 
         # Q-variant calculations
         data = {'dwarsprofiel': dwarsprofiel}
@@ -56,7 +65,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
 
             for j in range(0, len(Q_var_pgrid)):
 
-                wl = np.arange(0.0, valMHW[i, j] - 0.05, row['waterstand_stap'])
+                wl = np.arange(ondergrens_wl, valMHW[i, j] - 0.05, row['waterstand_stap'])
                 wl = np.append(wl, valMHW[i, j] - 0.05)
                 wl = np.unique(wl)
 
@@ -64,10 +73,17 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
 
                 for m in models:
 
+                    if m == "gras_golfklap":
+                        wl_filtered = wl[wl>=begin_grasbekleding]
+                    elif m == "gras_golfoploop":
+                        wl_filtered == wl
+                    elif m == "zuilen":
+                        wl_filtered = wl[wl<=begin_grasbekleding]
+
                     Qvar_Hs = []
                     Qvar_Tp = []
                     Qvar_dir = []
-                    for h in wl:
+                    for h in wl_filtered:
                         Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
                         numSettings = Qvar.get_numerical_settings(configDatabase)
                         QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), local_path, evaluateYears[i], numSettings)
@@ -88,9 +104,10 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
 
 if __name__ == '__main__':
     # inputs
-    bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
-    profielen_path = Path(r'c:\VRM\test_revetments\profielen')
-    database_path = Path(r'c:\VRM\test_revetments\database')
+    bekleding_path = Path(r'c:\VRM\bestanden Scheldestromen\Bekleding_default.csv')
+    profielen_path = Path(r'c:\VRM\bestanden Scheldestromen\Overflow\prfl')
+    database_path = Path(r'c:\VRM\bestanden Scheldestromen\Databases\V3_WBI2017')
+    waterlevel_path = Path(r'c:\VRM\bestanden Scheldestromen\Waterlevel')
     hring_path = Path("c:/Program Files (x86)/BOI/Riskeer 21.1.1.2/Application/Standalone/Deltares/HydraRing-20.1.3.10236")
     output_path = Path(r'c:/VRM/test_revetments/output_test')
 

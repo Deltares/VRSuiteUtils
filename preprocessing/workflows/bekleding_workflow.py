@@ -73,18 +73,17 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
 if __name__ == '__main__':
 
     # input paths
-    input_csv = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\Bekleding_default.csv")
-    database_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\database\WBI2017_Oosterschelde_26-3_v02")
+    bekleding_path = Path(r"c:\VRM\bestanden Scheldestromen\Bekleding_default.csv")
+    database_path = Path(r"c:\VRM\bestanden Scheldestromen\Databases\V3_WBI2017")
 
-    steentoets_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\steentoets")
-    profielen_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\profielen")
-    waterlevel_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\input_waterlevel")
+    steentoets_path = Path(r"c:\VRM\bestanden Scheldestromen\ZST_bestanden")
+    profielen_path = Path(r"c:\VRM\bestanden Scheldestromen\Overflow\prfl")
+    waterlevel_path = Path(r"c:\VRM\bestanden Scheldestromen\Waterlevel")
 
-    output_path = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\test_bekledingen\output_test_CLI4")
+    output_path = Path(r"c:\VRM\bestanden Scheldestromen\uitvoer_branch_ondergrens_wl")
 
-    hring_path = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\HydraRing-23.1.1")
-    bin_dikernel = Path(r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\externals\DiKErnel")
+    hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'HydraRing-23.1.1')
+    bin_dikernel = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'DiKErnel')
 
-    
-    bekleding_main(input_csv, database_path, waterlevel_path, steentoets_path, profielen_path,
+    bekleding_main(bekleding_path, database_path, waterlevel_path, steentoets_path, profielen_path,
                    hring_path, bin_dikernel, output_path)
