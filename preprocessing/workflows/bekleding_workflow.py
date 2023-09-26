@@ -16,7 +16,13 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
         output_path.joinpath('figures_ZST').mkdir(parents=True, exist_ok=False)
         output_path.joinpath('figures_GEBU').mkdir(parents=True, exist_ok=False)
         output_path.joinpath('temp').mkdir(parents=True, exist_ok=False)
+        print("output folders created")
     # elif output_path exists, but not empty, stop the script
+    elif output_path.exists() and len(list(output_path.iterdir())) == 0:
+        output_path.joinpath('figures_ZST').mkdir(parents=True, exist_ok=False)
+        output_path.joinpath('figures_GEBU').mkdir(parents=True, exist_ok=False)
+        output_path.joinpath('temp').mkdir(parents=True, exist_ok=False)
+        print("output folders created")
     elif output_path.exists() and len(list(output_path.iterdir())) != 0:
         #check if the length of iterdir is 3
         if len(list(output_path.iterdir())) == 3:
@@ -73,14 +79,14 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
 if __name__ == '__main__':
 
     # input paths
-    bekleding_path = Path(r"c:\VRM\bestanden Scheldestromen\Bekleding_default.csv")
-    database_path = Path(r"c:\VRM\bestanden Scheldestromen\Databases\V3_WBI2017")
+    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default_reduced.csv")
+    database_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Databases\V3_WBI2017")
 
-    steentoets_path = Path(r"c:\VRM\bestanden Scheldestromen\ZST_bestanden")
-    profielen_path = Path(r"c:\VRM\bestanden Scheldestromen\Overflow\prfl")
-    waterlevel_path = Path(r"c:\VRM\bestanden Scheldestromen\Waterlevel")
+    steentoets_path = Path(r"c:\vrm_test\scheldestromen_bekleding\ZST_bestanden")
+    profielen_path = Path(r"c:\vrm_test\scheldestromen_bekleding\prfl")
+    waterlevel_path = Path(r"c:\vrm_test\scheldestromen_bekleding\waterlevel_20230925")
 
-    output_path = Path(r"c:\VRM\bestanden Scheldestromen\uitvoer_branch_ondergrens_wl")
+    output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_bekleding2")
 
     hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'HydraRing-23.1.1')
     bin_dikernel = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'DiKErnel')

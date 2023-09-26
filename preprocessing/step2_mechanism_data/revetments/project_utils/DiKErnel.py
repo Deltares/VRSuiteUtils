@@ -86,16 +86,13 @@ def read_JSON(file_name):
     return json_object
 
 def read_prfl(file_name):
-
     with open(file_name) as f:
         lines = f.readlines()
     
     x = []
     y = []
-    x_voorland = []
-    y_voorland = []
     i = 0
-    k = 0
+
     for line in lines:
         if 'RICHTING' in line:
            richting = float(line.split()[-1])
@@ -111,13 +108,30 @@ def read_prfl(file_name):
                 x = np.append(x, float(lines[j].split()[0]))
                 y = np.append(y, float(lines[j].split()[1]))
         i += 1
+
+    return richting, kruinhoogte, x, y
+
+def read_prfl_foreland(file_name):
+    with open(file_name) as f:
+        lines = f.readlines()
+
+    x_voorland = []
+    y_voorland = []
+    k = 0
+    foreland_present = False
+
+    for line in lines:
+
         if 'VOORLAND' in line:
+            foreland_present = True
             noPoints = int(line.split()[-1])
 
-            for j in range(k+1, k+1+noPoints):
+            for j in range(k + 1, k + 1 + noPoints):
                 x_voorland = np.append(x_voorland, float(lines[j].split()[0]))
                 y_voorland = np.append(y_voorland, float(lines[j].split()[1]))
         k += 1
 
-        
-    return richting, kruinhoogte, x, y, x_voorland, y_voorland
+    if foreland_present:
+        return x_voorland, y_voorland
+    else:
+        pass

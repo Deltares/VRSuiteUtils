@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 from scipy.special import ndtri
 from preprocessing.step2_mechanism_data.revetments.project_utils.reliability import QVariantCalculations
-from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_prfl
+from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_prfl, read_prfl_foreland
 from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
 from scipy.interpolate import interp1d
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
@@ -40,10 +40,12 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
         locationId = row['hrlocation']
         orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
-        # ondergrens waterstand is hoogste punt op voorland. Als voorland niet bestaat, laagste punt op profiel.
+        # ondergrens waterstand is maximum van hoogste punt op voorland en laagste punt op profiel.
+        # Als voorland niet bestaat, laagste punt op profiel.
         # daar wordt een veiligheidsmarge van 1m bij op geteld, om droogstand te voorkomen getrokken
         try:
-            ondergrens_wl = max(read_prfl(profielen_path.joinpath(row['prfl']))[5])+1.
+            ondergrens_wl = max(max(read_prfl_foreland(profielen_path.joinpath(row['prfl']))[1])+1.,
+                                min(read_prfl(profielen_path.joinpath(row['prfl']))[3]) + 1.)
         except:
             ondergrens_wl = min(read_prfl(profielen_path.joinpath(row['prfl']))[3])+1.
 
@@ -76,7 +78,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
                     if m == "gras_golfklap":
                         wl_filtered = wl[wl>=begin_grasbekleding]
                     elif m == "gras_golfoploop":
-                        wl_filtered == wl
+                        wl_filtered = wl
                     elif m == "zuilen":
                         wl_filtered = wl[wl<=begin_grasbekleding]
 
@@ -95,7 +97,7 @@ def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring
                     data[f"Qvar {i}_{j}_{m}"] = {"zichtjaar": evaluateYears[i] / 1.0,
                                                  "beta": beta[j],
                                                  "model": m,
-                                                 "waterstand": list(wl),
+                                                 "waterstand": list(wl_filtered),
                                                  "Hs": list(Qvar_Hs),
                                                  "Tp": list(Qvar_Tp),
                                                  "dir": list(Qvar_dir)}
