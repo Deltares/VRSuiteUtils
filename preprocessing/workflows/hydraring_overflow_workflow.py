@@ -50,7 +50,7 @@ def overflow_main(file_path: Path,
     for database_path in database_paths:
         for count, location in overflow_input_object.hring_data.iterrows():
             # make output dir
-            loc_output_dir = output_path.joinpath(str(location.doorsnede))
+            loc_output_dir = output_path.joinpath(database_path.stem, str(location.doorsnede))
             if loc_output_dir.exists():
                 loc_output_dir.rmdir()
             loc_output_dir.mkdir(parents=True, exist_ok=False)
