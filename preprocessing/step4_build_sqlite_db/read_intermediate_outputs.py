@@ -67,7 +67,7 @@ def read_piping_data(file_path):
         file_path,
         index_col=0,
         usecols=[
-            "dwarsprofiel",
+            "doorsnede",
             "scenario",
             "scenariokans",
             "wbn",
@@ -82,10 +82,10 @@ def read_piping_data(file_path):
             "k",
             "gamma_sat",
             "kwelscherm",
-            "dh_exit(t)",
+            "dh_exit",
             "pf_s",
         ],
-        dtype={"dwarsprofiel": str, "scenario": int},
+        dtype={"doorsnede": str, "scenario": int},
     )
 
 

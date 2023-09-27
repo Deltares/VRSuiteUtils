@@ -1,8 +1,9 @@
-,doorsnede,scenario,scenarionaam,scenariokans,SF,beta,stixnaam,,,Kolom,,Beschrijving
-0,RW001.+096,1,RW001.+096_geaggregeerd,1,1.362281753,,,,,Doorsnede,Verplicht,Referentie naar de doorsnede zoals opgegeven in vakindeling
-1,ET_VOLDOET,1,EenvoudigeToetsOK,1,,8,,,,Scenario,Verplicht,Nummer wat verwijst naar het scenario
-2,RW089.+016,1,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4,0.19,0.87,2.738,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4.stix,,,Scenarionaam,Optioneel,Optioneel een naam of omschrijving van het scenario
-3,RW089.+016,2,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b,0.37,0.851,2.619,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b.stix,,,Scenariokans,Verplicht,Kans op het scenario. Kansen per doorsnede moeten optellen tot 1
-4,RW089.+016,3,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b,0.44,0.643,1.311,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b.stix,,,SF/Beta,Verplicht,Of SF of Beta moet worden ingevoerd. Wanneer beide worden ingevoerd worden ze vergeleken en wordt doorgerekend met beta.
-,,,,,,,,,,Stixnaam,Optioneel,Optioneel een naam voor de bijbehorende stixfile. Wanneer deze wordt opgegeven wordt met D-Stability gerekend. 
-,,,,,,,,,,Deklaagdikte,Optioneel,Optioneel de dikte van de deklaag. Wanneer niet opgegeven wordt uitgegaan van defaultwaarden voor de verlenging van de berm. NB: opgeven is niet nodig wanneer een stix wordt gebruikt.
+,doorsnede,scenario,scenarionaam,scenariokans,SF,beta,stixnaam,deklaagdikte,pleistoceendiepte,,Kolom,,Beschrijving
+0,RW001.+096,1,RW001.+096_geaggregeerd,1,1.362281753,,,,,,Doorsnede,Verplicht,Referentie naar de doorsnede zoals opgegeven in vakindeling
+1,ET_VOLDOET,1,EenvoudigeToetsOK,1,,8,,,,,Scenario,Verplicht,Nummer wat verwijst naar het scenario
+2,RW089.+016,1,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4,0.19,0.87,2.738,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4.stix,,,,Scenarionaam,Optioneel,Optioneel een naam of omschrijving van het scenario
+3,RW089.+016,2,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b,0.37,0.851,2.619,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b.stix,,,,Scenariokans,Verplicht,Kans op het scenario. Kansen per doorsnede moeten optellen tot 1
+4,RW089.+016,3,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b,0.44,0.643,1.311,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b.stix,,,,SF/Beta,Verplicht,Of SF of Beta moet worden ingevoerd. Wanneer beide worden ingevoerd worden ze vergeleken en wordt doorgerekend met beta.
+,,,,,,,,,,,Stixnaam,Optioneel,Optioneel een naam voor de bijbehorende stixfile. Wanneer deze wordt opgegeven wordt met D-Stability gerekend. 
+,,,,,,,,,,,Deklaagdikte,Optioneel,Optioneel de dikte van de deklaag. Wanneer niet opgegeven wordt uitgegaan van defaultwaarden voor de verlenging van de berm. NB: opgeven is niet nodig wanneer een stix wordt gebruikt.
+,,,,,,,,,,,pleistoceendiepte,Optioneel,Optioneel de diepte van het pleistoceen. Wanneer niet opgegeven wordt uitgegaan van defaultwaarden
