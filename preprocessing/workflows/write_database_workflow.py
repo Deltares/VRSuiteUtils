@@ -109,7 +109,7 @@ if __name__ == '__main__':
     characteristic_profile_csv= Path(r'c:\vrm_test\run_16_1\kar_profielen\profielen_per_vak\selected_profiles_gaps_filled.csv')
     building_csv_path =         Path(r'c:\vrm_test\run_16_1\Bebouwing\Bebouwing_data.csv')
     output_dir =                Path(r'c:\vrm_test\run_16_1\result')
-    output_db_name =            f'16_1_results3.db'
+    output_db_name =            f'16_1_results4.db'
     hr_input_csv =              Path(r'c:\vrm_test\run_16_1\hr_default_updated.csv')
     waterlevel_results_path =   Path(r'c:\vrm_test\run_16_1\waterstand')
     overflow_results_path =     Path(r'c:\vrm_test\run_16_1\overslag')
