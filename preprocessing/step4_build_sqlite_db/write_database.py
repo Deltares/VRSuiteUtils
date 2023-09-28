@@ -62,6 +62,9 @@ def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
     )
     # remove rows with same index
     shape_file = shape_file.loc[~shape_file.index.duplicated(keep="first")]
+    # remove rows with same vaknaam
+    shape_file = shape_file.loc[~shape_file.vaknaam.duplicated(keep="first")]
+
     # merge on index
 
     # get the id of traject from DikeTrajectInfo
