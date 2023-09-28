@@ -43,6 +43,10 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
 
+
+        #create nested dict of values in evaluateYears, p_grid and models
+        results_dict = {val1: {val2: {val3: {val4: [] for val4 in ['h_series', 'Hs_series', 'Tp_series', 'betahoek_series']} for val3 in models} for val2 in p_grid} for val1 in evaluateYears}
+
         # get time series
         h_series = []
         Hs_series = []
@@ -59,22 +63,19 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     Qvar_Hs = np.array(Qvar[f'Qvar {i}_{j}_{models[k]}']['Hs'])
                     Qvar_Tp = np.array(Qvar[f'Qvar {i}_{j}_{models[k]}']['Tp'])
                     Qvar_dir = np.array(Qvar[f'Qvar {i}_{j}_{models[k]}']['dir'])
+                    if len(Qvar_h) == 0:
+                        continue
 
                     tijd, h_hulp = waterstandsverloop(region, GWS, valMHW, Amp)
                     Hs_hulp = Hs_verloop(h_hulp, Qvar_h, Qvar_Hs)
                     Tp_hulp = Tp_verloop(h_hulp, Qvar_h, Qvar_Tp)
                     betahoek_hulp = betahoek_verloop(h_hulp, Qvar_h, Qvar_dir, orientation)
                     tijdstippen = 3600.0*tijd
+                    results_dict[year][p][model]['h_series'] = h_hulp
+                    results_dict[year][p][model]['Hs_series'] = Hs_hulp
+                    results_dict[year][p][model]['Tp_series'] = Tp_hulp
+                    results_dict[year][p][model]['betahoek_series'] = betahoek_hulp
 
-                    h_series = np.append(h_series, h_hulp)
-                    Hs_series = np.append(Hs_series, Hs_hulp)
-                    Tp_series = np.append(Tp_series, Tp_hulp)
-                    betahoek_series = np.append(betahoek_series, betahoek_hulp)
-
-        h_series = h_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
-        Hs_series = Hs_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
-        Tp_series = Tp_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
-        betahoek_series = betahoek_series.reshape(len(evaluateYears), len(p_grid), len(models), len(tijd))
 
         # run DiKErnel
         SF = []
@@ -119,23 +120,39 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     plt.close()
 
                     maxSchadegetal_golfklap = 0.0
-                    if golfklap:
-                        ind = 0 # golfklap
+                    if len(results_dict[year][probability]['gras_golfklap']['h_series'])>0:
+                        if golfklap:
+                            ind = 0 # golfklap
 
-                        for p in positions_golfklap:
-                            bek = DIKErnelCalculations(tijdstippen, h_series[i,j,ind,:], Hs_series[i,j,ind,:], Tp_series[i,j,ind,:], betahoek_series[i,j,ind,:], dijkprofiel_x, dijkprofiel_y, p)
-                            bek.gras_golfklap_input_JSON(typeZode, local_path)
-                            maxSchadegetal_golfklap = np.max([maxSchadegetal_golfklap, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
+                            for p in positions_golfklap:
+                                    bek = DIKErnelCalculations(tijdstippen, 
+                                                               results_dict[year][probability]['gras_golfklap']['h_series'], 
+                                                               results_dict[year][probability]['gras_golfklap']['Hs_series'], 
+                                                               results_dict[year][probability]['gras_golfklap']['Tp_series'], 
+                                                               results_dict[year][probability]['gras_golfklap']['betahoek_series'], 
+                                                               dijkprofiel_x, 
+                                                               dijkprofiel_y, 
+                                                               p)
+                                    bek.gras_golfklap_input_JSON(typeZode, local_path)
+                                    maxSchadegetal_golfklap = np.max([maxSchadegetal_golfklap, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
+
 
                     maxSchadegetal_golfoploop = 0.0
-                    if golfoploop:
-                        ind = 1 # golfoploop
+                    if len(results_dict[year][probability]['gras_golfoploop']['h_series'])>0:
+                        if golfoploop:
+                            ind = 1 # golfoploop
 
-                        for p in positions_golfoploop:
-                            bek = DIKErnelCalculations(tijdstippen, h_series[i,j,ind,:], Hs_series[i,j,ind,:], Tp_series[i,j,ind,:], betahoek_series[i,j,ind,:], dijkprofiel_x, dijkprofiel_y, p)
-                            bek.gras_golfoploop_input_JSON(typeZode, local_path)
-                            maxSchadegetal_golfoploop = np.max([maxSchadegetal_golfoploop, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
-
+                            for p in positions_golfoploop:
+                                bek = DIKErnelCalculations(tijdstippen, 
+                                                               results_dict[year][probability]['gras_golfoploop']['h_series'], 
+                                                               results_dict[year][probability]['gras_golfoploop']['Hs_series'], 
+                                                               results_dict[year][probability]['gras_golfoploop']['Tp_series'], 
+                                                               results_dict[year][probability]['gras_golfoploop']['betahoek_series'], 
+                                                           dijkprofiel_x, 
+                                                           dijkprofiel_y, 
+                                                           p)
+                                bek.gras_golfoploop_input_JSON(typeZode, local_path)
+                                maxSchadegetal_golfoploop = np.max([maxSchadegetal_golfoploop, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
                     maxSchadegetal = np.max([maxSchadegetal_golfklap, maxSchadegetal_golfoploop, 10**(-4)])
                     SF = np.append(SF, 1/maxSchadegetal)
 
@@ -220,21 +237,20 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
             for j, probability in enumerate(p_grid):
 
                 for k, model in enumerate(models):
-
-                    plt.plot()
-                    fig, axs = plt.subplots(2, 2)
-                    axs[0, 0].plot(tijd, h_series[i,j,k,:])
-                    axs[0, 0].set_title('Waterstand (boven), Tp (onder)', fontdict={'fontsize':8})
-                    axs[0, 0].grid()
-                    axs[0, 1].plot(tijd, Hs_series[i,j,k,:])
-                    axs[0, 1].set_title('Hs (boven), hoek (onder)', fontdict={'fontsize':8})
-                    axs[0, 1].grid()
-                    axs[1, 0].plot(tijd, Tp_series[i,j,k,:])
-                    axs[1, 0].grid()
-                    axs[1, 1].plot(tijd, betahoek_series[i,j,k,:])
-                    axs[1, 1].grid()
-                    plt.savefig(figures_GEBU.joinpath('belasting_loc={}_{}_T={}_{}.png'.format(row.doorsnede, year, int(1/probability), model)))
-                    plt.close()
+                    if len(results_dict[year][probability][model]['h_series']) > 0:
+                        fig, axs = plt.subplots(2, 2)
+                        axs[0, 0].plot(tijd, results_dict[year][probability][model]['h_series'])
+                        axs[0, 0].set_title('Waterstand (boven), Tp (onder)', fontdict={'fontsize':8})
+                        axs[0, 0].grid()
+                        axs[0, 1].plot(tijd, results_dict[year][probability][model]['Hs_series'])
+                        axs[0, 1].set_title('Hs (boven), hoek (onder)', fontdict={'fontsize':8})
+                        axs[0, 1].grid()
+                        axs[1, 0].plot(tijd, results_dict[year][probability][model]['Tp_series'])
+                        axs[1, 0].grid()
+                        axs[1, 1].plot(tijd, results_dict[year][probability][model]['betahoek_series'])
+                        axs[1, 1].grid()
+                        plt.savefig(figures_GEBU.joinpath('belasting_loc={}_{}_T={}_{}.png'.format(row.doorsnede, year, int(1/probability), model)))
+                        plt.close()
 
 if __name__ == '__main__':
     # inputs
