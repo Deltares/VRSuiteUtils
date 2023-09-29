@@ -41,7 +41,7 @@ def fill_diketrajectinfo_table(traject,length):
 def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
     # merge HR_input['dijkhoogte'] with shape_file based on doorsnede and overslag
     shape_file = shape_file.merge(
-        HR_input[["doorsnede", "dijkhoogte"]],
+        HR_input[["doorsnede", "dijkhoogte", "kruindaling"]],
         left_on=["overslag"],
         right_on=["doorsnede"],
         how="left",
@@ -62,6 +62,9 @@ def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
     )
     # remove rows with same index
     shape_file = shape_file.loc[~shape_file.index.duplicated(keep="first")]
+    # remove rows with same vaknaam
+    shape_file = shape_file.loc[~shape_file.vaknaam.duplicated(keep="first")]
+
     # merge on index
 
     # get the id of traject from DikeTrajectInfo
@@ -81,7 +84,7 @@ def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
                 in_analysis=row.in_analyse,
                 section_length=np.abs(row.m_eind - row.m_start),
                 crest_height=row.dijkhoogte,
-                annual_crest_decline=0.005,
+                annual_crest_decline=row.kruindaling,
             )
 
 

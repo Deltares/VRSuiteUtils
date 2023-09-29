@@ -104,17 +104,17 @@ def write_database_main(traject_name : str,
     write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
 
 if __name__ == '__main__':
-    traject_name = "53-1"
-    vakindeling_geojson =       Path(r'c:\VRM\test_database\Output\preprocessing_vakindeling\Optie_1\Vakindeling_53-1.geojson')
-    characteristic_profile_csv= Path(r'C:\VRM\test_database\resultaten\vakindeling1\selectie_profielen_1\selected_profiles.csv')
-    building_csv_path =         Path(r'C:\VRM\test_database\resultaten\vakindeling1\building_count_traject53-1.csv')
-    output_dir =                Path(r'C:\VRM\test_database\Output_database_generation_workflow5')
-    output_db_name =            f'53-1_database_vakindeling_1_{random.randint(0,1000)}.db'
-    hr_input_csv =              Path(r'C:\VRM\test_database\Output\HR_53-1.csv')
-    waterlevel_results_path =   Path(r'C:\VRM\test_database\Output\preprocessing_waterlevel')
-    overflow_results_path =     Path(r'c:\VRM\test_database\Output\preprocessing_overflow')
-    piping_path =               Path(r'c:\VRM\test_database\Output\Piping_53-1.csv')
-    stability_path =            Path(r'c:\VRM\test_database\Output\Stabiliteit_53-1.csv')
+    traject_name = "16-1"
+    vakindeling_geojson =       Path(r'c:\vrm_test\run_16_1\vakindeling\Vakindeling_16-1.geojson')
+    characteristic_profile_csv= Path(r'c:\vrm_test\run_16_1\kar_profielen\profielen_per_vak\selected_profiles_gaps_filled.csv')
+    building_csv_path =         Path(r'c:\vrm_test\run_16_1\Bebouwing\Bebouwing_data.csv')
+    output_dir =                Path(r'c:\vrm_test\run_16_1\result')
+    output_db_name =            f'16_1_results4.db'
+    hr_input_csv =              Path(r'c:\vrm_test\run_16_1\hr_default_updated.csv')
+    waterlevel_results_path =   Path(r'c:\vrm_test\run_16_1\waterstand')
+    overflow_results_path =     Path(r'c:\vrm_test\run_16_1\overslag')
+    piping_path =               Path(r'c:\vrm_test\run_16_1\Piping\Piping_data_integers.csv')
+    stability_path =            Path(r'c:\vrm_test\run_16_1\STBI\STBI_data.csv')
     revetment_path =            None
 
 

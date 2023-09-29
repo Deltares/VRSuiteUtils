@@ -1,6 +1,6 @@
-,doorsnede,scenario,scenarionaam,scenariokans,SF,beta,stixnaam
-0,RW001.+096,1,RW001.+096_geaggregeerd,1,1.362281753,,
-1,ET_VOLDOET,1,EenvoudigeToetsOK,1,,8,
-2,RW089.+016,1,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4,0.19,0.87,2.738,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4.stix
-3,RW089.+016,2,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b,0.37,0.851,2.619,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b.stix
-4,RW089.+016,3,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b,0.44,0.643,1.311,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b.stix
+,doorsnede,scenario,scenarionaam,scenariokans,SF,beta,stixnaam,deklaagdikte,pleistoceendiepte
+0,RW001.+096,1,RW001.+096_geaggregeerd,1,1.362281753,,,,
+1,ET_VOLDOET,1,EenvoudigeToetsOK,1,,8,,,
+2,RW089.+016,1,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4,0.19,0.87,2.738,RW089.+016_STBI_maatgevend_Segment_38004_B_1D4.stix,,
+3,RW089.+016,2,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b,0.37,0.851,2.619,RW089.+016_STBI_maatgevend_Segment_38004_B_1D6b.stix,,
+4,RW089.+016,3,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b,0.44,0.643,1.311,RW089.+016_STBI_maatgevend_Segment_38004_B_1D8b.stix,,
