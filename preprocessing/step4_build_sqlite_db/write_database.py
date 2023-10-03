@@ -40,6 +40,7 @@ def fill_diketrajectinfo_table(traject,length):
 
 def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
     # merge HR_input['dijkhoogte'] with shape_file based on doorsnede and overslag
+
     shape_file = shape_file.merge(
         HR_input[["doorsnede", "dijkhoogte", "kruindaling"]],
         left_on=["overslag"],
