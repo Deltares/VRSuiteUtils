@@ -44,8 +44,9 @@ def write_database_main(traject_name : str,
 
     _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
 
-    # load the vakindeling geojson
-    vakindeling_shape = gpd.read_file(vakindeling_geojson,dtype={'in_analyse':int, 'stabiliteit': str, 'piping': str, 'overslag': str, 'bekledingen': str})
+    # load the vakindeling geojson with in_analyse column as integer
+    vakindeling_shape = gpd.read_file(vakindeling_geojson)
+    vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'stabiliteit': str, 'piping': str, 'overslag': str, 'bekledingen': bool})
 
     # load HR input csv
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
