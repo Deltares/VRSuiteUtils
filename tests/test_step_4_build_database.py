@@ -78,7 +78,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # read the data for measures
    if revetment:
-      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment.csv"))
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment_selectie.csv"))
    else:
       measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures.csv"))
 
@@ -105,7 +105,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    fill_waterleveldata(waterlevel_table=waterlevel_table, shape_file=shapefile)
 
-   fill_profiles(profile_points=profile_table, shape_file=shapefile)
+   fill_profiles(profile_table)
 
    # fill all the mechanisms
    fill_mechanisms(mechanism_data=mechanism_data, shape_file=shapefile)
