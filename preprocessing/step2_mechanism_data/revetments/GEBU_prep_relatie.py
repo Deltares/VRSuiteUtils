@@ -36,7 +36,11 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         begin_grasbekleding = row['begin_grasbekleding']
 
         transition_levels = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
-        grasbekleding_end = kruinhoogte
+        grasbekleding_end = kruinhoogte - 0.01
+
+        if begin_grasbekleding > grasbekleding_end:
+            print('begin grasbekleding is higher than end grasbekleding. Skipping this dike section.')
+            continue
 
         beta = -ndtri(p_grid)
 
@@ -47,11 +51,6 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         #create nested dict of values in evaluateYears, p_grid and models
         results_dict = {val1: {val2: {val3: {val4: [] for val4 in ['h_series', 'Hs_series', 'Tp_series', 'betahoek_series']} for val3 in models} for val2 in p_grid} for val1 in evaluateYears}
 
-        # get time series
-        h_series = []
-        Hs_series = []
-        Tp_series = []
-        betahoek_series = []
         for i, year in enumerate(evaluateYears):
 
             for j, p in enumerate(p_grid):
@@ -65,6 +64,11 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     Qvar_dir = np.array(Qvar[f'Qvar {i}_{j}_{models[k]}']['dir'])
                     if len(Qvar_h) == 0:
                         continue
+
+                    Qvar_h = np.append(Qvar_h, valMHW)
+                    Qvar_Hs = np.append(Qvar_Hs, Qvar_Hs[-1])
+                    Qvar_Tp = np.append(Qvar_Tp, Qvar_Tp[-1])
+                    Qvar_dir = np.append(Qvar_dir, Qvar_dir[-1])
 
                     tijd, h_hulp = waterstandsverloop(region, GWS, valMHW, Amp)
                     Hs_hulp = Hs_verloop(h_hulp, Qvar_h, Qvar_Hs)
@@ -82,31 +86,27 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         for i, year in enumerate(evaluateYears):
 
             for j, probability in enumerate(p_grid):
-
                 valMHW = Qvar[f'MHW {i}_{j}']
 
                 for k, transition_level in enumerate(transition_levels):
-
                     golfklap = False
                     golfoploop = False
                     positions_golfklap = []
                     positions_golfoploop = []
 
-                    if grasbekleding_end<=valMHW: # golfklap
-                        positions = np.arange(transition_level, grasbekleding_end, 0.1)
+                    if transition_level<=valMHW: # golfklap
+                        positions = np.arange(transition_level, min(grasbekleding_end, valMHW), 0.1)
                         positions_golfklap = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
                         golfklap = True
-                    elif transition_level>=valMHW: # golfoploop
+                    elif transition_level>valMHW: # golfoploop
                         positions = np.array([transition_level])
                         positions_golfoploop = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
                         golfoploop = True
                     else: # in between --> then only golfklap
-                        positions = np.arange(transition_level, valMHW, 0.1)
-                        positions_golfklap = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
-                        positions = np.array([valMHW])
-                        positions_golfoploop = np.interp(positions, dijkprofiel_y, dijkprofiel_x)
-                        golfklap = True
-                        golfoploop = True
+                        print("transition level is not above and not below MHW...")
+                        print("transition level =", transition_level)
+                        print("valMHW =", valMHW)
+
 
                     plt.figure()
                     plt.plot(dijkprofiel_x, dijkprofiel_y,'g')

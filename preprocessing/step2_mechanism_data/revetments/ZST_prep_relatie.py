@@ -61,7 +61,9 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                         select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
 
                         if len(select)==0:
-                           raise ValueError("No points found")
+                           # raise ValueError("No points found") # this line is commented out
+                            print("no points found, average taken") # this line is added
+                            D_opt = np.append(D_opt, (row.Zo+row.Zb)/2) # this line is added
                         else:
                             D_opt = np.append(D_opt, np.max(D_help[select]))
 
@@ -121,19 +123,28 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
-    steentoets_path = Path(r'c:\VRM\test_revetments\steentoets')
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full_batch2.csv")
+    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
     figures_ZST = Path(r'c:\VRM\test_revetments\figures_ZST')
-    output_path = Path(r'c:\VRM\test_revetments\output')
+    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output2")
+    figures_ZST = output_path.joinpath('figures_ZST')
+
+
+    ondergrens = 10000.
+    signaleringswaarde = 30000.
+
+    p_grid = [1./30,
+                   1./ondergrens,
+                   1./signaleringswaarde,
+                   1./(signaleringswaarde*1000)]
 
     # read revetment file
     df = pd.read_csv(bekleding_path,
-                     usecols=['vaknaam', 'dwarsprofiel', 'signaleringswaarde', 'ondergrens', 'faalkansbijdrage',
-                              'lengte_effectfactor', 'locationid', 'hrdatabase_folder', 'hrdatabase', 'region', 'gws',
-                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'qvar_p1', 'qvar_p2',
-                              'qvar_p3', 'qvar_p4', 'qvar_stap'])
-    df = df.dropna(subset=['vaknaam']) # drop rows where vaknaam is Not a Number
-    df = df.reset_index(drop=True) # reset index
+                     usecols=['doorsnede', 'dwarsprofiel', 'naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
+                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],
+                     dtype={'doorsnede': str, 'dwarsprofiel': str})
+    df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
+    df = df.reset_index(drop=True)  # reset index
 
     # if figures_ZST doesnot exist, create it
     if not figures_ZST.exists():
@@ -144,4 +155,4 @@ if __name__ == '__main__':
         exit()
 
     # run revetment_zst
-    revetment_zst(df, steentoets_path, output_path, figures_ZST)
+    revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid)

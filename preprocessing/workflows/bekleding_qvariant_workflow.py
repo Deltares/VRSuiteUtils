@@ -2,14 +2,11 @@ from pathlib import Path
 import pandas as pd
 import os
 from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qvariant
-from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import revetment_gebu
-from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 import shutil
+
 def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: Path, steentoets_path: Path, profielen_path: Path,
                      hring_path: Path, binDIKErnel: Path, output_path: Path):
-
-
 
     # if output_path doesnot exist, create it, with subfolders for the figures and temporary files
     if not output_path.exists():
@@ -65,14 +62,8 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
     # step 1: qvariant
     revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,local_path, p_grid)
 
-    # step 2: GEBU
-    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
 
-    # step 3: ZST
-    revetment_zst(df, steentoets_path, output_path, figures_ZST, p_grid)
 
-    # remove all files in local_path using shutil
-    shutil.rmtree(local_path)
 
 
 
