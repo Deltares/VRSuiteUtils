@@ -31,9 +31,6 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
         steentoetsFile = section['steentoetsfile']
 
-
-        beta = -ndtri(p_grid)
-
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
 
@@ -61,9 +58,16 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                         select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
 
                         if len(select)==0:
-                           # raise ValueError("No points found") # this line is commented out
-                            print("no points found, average taken") # this line is added
-                            D_opt = np.append(D_opt, (row.Zo+row.Zb)/2) # this line is added
+                            if row.Zo == row.Zb: #tolerance?
+                                print("no points found, one cm above Zb taken")
+                                select = np.argmin(np.abs(h_help - row.Zb))
+                                D_opt = np.append(D_opt, np.max(D_help[select]))
+                            elif row.Zo > np.max(h_help):
+                                print("no points found, vak above water")
+                                # D_opt = np.append(D_opt, 0.05)
+                                D_opt = np.append(D_opt, row.D)
+                            else:
+                                raise  Exception("what happened?!")
                         else:
                             D_opt = np.append(D_opt, np.max(D_help[select]))
 
@@ -79,6 +83,13 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         D_opt = np.append(D_opt1, D_opt2)
 
         D_opt = D_opt.reshape(len(evaluateYears), len(p_grid), steentoets_df.shape[0])
+
+        # for locations where no points were found, because the vak is above the water level, current D is used
+        # if calculated D_opt is smaller than current D, replace current D with D_opt
+        for i in range(len(D_opt)):
+            for j in range(len(D_opt[i]) - 1, 0, -1):
+                D_opt[i, j-1] = np.min([D_opt[i, j], D_opt[i, j - 1]], axis=0)
+
 
         data = {}
         # export results to JSON
@@ -116,27 +127,28 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         plt.legend(loc="center left")
         plt.xlabel('Toplaagdikte [m]')
         plt.ylabel('Faalkans [1/jaar]')
+        plt.xlim(left=0.0)
         plt.savefig(figures_ZST.joinpath('Dikte_vs_Faalkans_doorsnede={}.png'.format(section.doorsnede)))
         plt.close()
 
-
-
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full_batch2.csv")
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full - 1.csv")
     steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
     figures_ZST = Path(r'c:\VRM\test_revetments\figures_ZST')
     output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output2")
     figures_ZST = output_path.joinpath('figures_ZST')
 
+    traject_id = "7-2"
+    _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
+    dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
+    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
+    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
 
-    ondergrens = 10000.
-    signaleringswaarde = 30000.
-
-    p_grid = [1./30,
-                   1./ondergrens,
-                   1./signaleringswaarde,
-                   1./(signaleringswaarde*1000)]
+    p_grid = [1. / 30,
+              p_ondergrens,
+              p_signaleringswaarde,
+              p_signaleringswaarde * (1. / 1000.)]
 
     # read revetment file
     df = pd.read_csv(bekleding_path,
@@ -155,4 +167,4 @@ if __name__ == '__main__':
         exit()
 
     # run revetment_zst
-    revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid)
+    revetment_zst(df, steentoets_path, output_path, figures_ZST, p_grid)

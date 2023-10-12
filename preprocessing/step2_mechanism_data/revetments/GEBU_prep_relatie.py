@@ -38,8 +38,8 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         transition_levels = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
         grasbekleding_end = kruinhoogte - 0.01
 
-        if begin_grasbekleding > grasbekleding_end:
-            print('begin grasbekleding is higher than end grasbekleding. Skipping this dike section.')
+        if begin_grasbekleding >= grasbekleding_end:
+            print('begin grasbekleding is equal to or higher than end grasbekleding. Skipping this dike section.')
             continue
 
         beta = -ndtri(p_grid)

@@ -54,7 +54,6 @@ class DIKErnelCalculations(object):
         output_json_path = output_path.joinpath('output.json')
         # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
         cmdstring = '"{}" --invoerbestand "{}" --uitvoerbestand "{}" --uitvoerniveau schade'.format(dike_kernel_exe, input_json_path, output_json_path)
-        print(cmdstring)
         #run cmdsring using subprocess
         subprocess.run(cmdstring, shell=True)
 

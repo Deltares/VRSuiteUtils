@@ -2,11 +2,9 @@ from pathlib import Path
 import pandas as pd
 import os
 from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qvariant
-from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
-import shutil
 
-def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: Path, steentoets_path: Path, profielen_path: Path,
-                     hring_path: Path, binDIKErnel: Path, output_path: Path):
+def qvariant_main(traject_id: str, bekleding_path: Path, database_path: Path, waterlevel_path: Path, profielen_path: Path,
+                     hring_path: Path, output_path: Path):
 
     # if output_path doesnot exist, create it, with subfolders for the figures and temporary files
     if not output_path.exists():
@@ -38,8 +36,6 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
             print('The output folder is not empty. Please empty the folder and run the script again.')
             exit()
 
-    figures_GEBU = output_path.joinpath('figures_GEBU')
-    figures_ZST = output_path.joinpath('figures_ZST')
     local_path = output_path.joinpath('temp')
     # read bekleding csv
     df = pd.read_csv(bekleding_path,
@@ -48,39 +44,31 @@ def bekleding_main(bekleding_path: Path, database_path: Path, waterlevel_path: P
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
 
-    #set default Q-variant probability grid:
-    #get signaleringswaarde from NBPW
-    traject_object = TrajectShape('30-1')
-    traject_object.get_traject_shape_from_NBPW()
+    # set default Q-variant probability grid:
+    this_file_path = Path(os.path.dirname(os.path.realpath(__file__)))
+    _generic_data_dir = this_file_path.absolute().parent.joinpath('generic_data')
+    dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
+    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
+    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
 
-    p_grid = [1./30,
-                   1./traject_object.ondergrens,
-                   1./traject_object.signaleringswaarde,
-                   1./(traject_object.signaleringswaarde*1000)]
+    p_grid = [1. / 30,
+              p_ondergrens,
+              p_signaleringswaarde,
+              p_signaleringswaarde * (1. / 1000.)]
 
-    # run functions
     # step 1: qvariant
     revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path,local_path, p_grid)
-
-
-
-
 
 
 if __name__ == '__main__':
 
     # input paths
+    traject_id = "30-1"
     bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default_reduced.csv")
     database_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Databases\V3_WBI2017")
-
-    steentoets_path = Path(r"c:\vrm_test\scheldestromen_bekleding\ZST_bestanden")
     profielen_path = Path(r"c:\vrm_test\scheldestromen_bekleding\prfl")
     waterlevel_path = Path(r"c:\vrm_test\scheldestromen_bekleding\waterlevel_20230925")
-
     output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_bekleding2")
-
     hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'HydraRing-23.1.1')
-    bin_dikernel = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'DiKErnel')
 
-    bekleding_main(bekleding_path, database_path, waterlevel_path, steentoets_path, profielen_path,
-                   hring_path, bin_dikernel, output_path)
+    qvariant_main(traject_id, bekleding_path, database_path, waterlevel_path, profielen_path, hring_path, output_path)
