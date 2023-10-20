@@ -146,7 +146,7 @@ def generate_and_evaluate_water_level_computations(
 
 
 @cli.command(
-    name="bekleding_qvariant", help="Genereert de q_variant input data voor bekleding voor de VRTool. Dit is de eerste"
+    name="bekleding_qvariant", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"
                                     "stap voor de bekleding sommen. Hierna volgt nog 'bekleding_gebu_zst'"
 )
 @click.option("--traject_id",
@@ -180,9 +180,7 @@ def generate_and_evaluate_water_level_computations(
               type=click.Path(),
               nargs=1,
               required=True,
-              help="Uitvoermap. Hier worden de resultaten naartoe geschreven, die invoer zijn voor de database. Als"
-                   "deze map nog niet bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar"
-                   "niet leeg is, zal het script automatisch stoppen.")
+              help="Folder waar de resultaten naartoe worden geschreven. Als deze map nog niet bestaat, wordt deze automatisch aangemaakt. Als deze map al bestaat moet deze leeg zijn.")
 
 def run_bekleding_qvariant(
         traject_id, input_csv, database_path, waterlevel_path, profielen_path, output_path
@@ -200,7 +198,7 @@ def run_bekleding_qvariant(
 
 @cli.command(
     name="bekleding_gebu_zst", help="Genereert de invoer voor gras- en steenbekleding voor de VRTool. Dit is de tweede "
-                                    "(en laatste) stap voor de bekleding sommen."
+                                    "(en laatste) stap voor het genereren van invoer voor bekledingen."
 )
 @click.option("--traject_id",
               type=str,
@@ -218,7 +216,7 @@ def run_bekleding_qvariant(
               type=click.Path(),
               nargs=1,
               required=True,
-              help="Link naar de map met de Steentoetsfile(s).")
+              help="Link naar de map met de Steentoetsfile(s). Momenteel worden versie 17.1.2.1 en 17.1.1.1 ondersteund. Het versienummer moet in de bestandsnaam staan.")
 @click.option("--profielen_path",
               type=click.Path(),
               nargs=1,
@@ -228,9 +226,7 @@ def run_bekleding_qvariant(
               type=click.Path(),
               nargs=1,
               required=True,
-              help="Uitvoermap. Hier worden de resultaten naartoe geschreven, die invoer zijn voor de database. Als"
-                   "deze map nog niet bestaat, wordt deze automatisch aangemaakt. Echter, als deze map al bestaat, maar"
-                   "niet leeg is, zal het script automatisch stoppen.")
+              help="Folder waar de resultaten naartoe worden geschreven. Als deze map nog niet bestaat, wordt deze automatisch aangemaakt. Als deze map al bestaat moet deze leeg zijn.")
 
 def run_gebu_zst(
         traject_id, input_csv, steentoets_path, profielen_path, output_path

@@ -35,7 +35,7 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
         df_profile = df_profile.drop(['Yl_oi', 'Yr_oi'], axis=1)
 
     else:
-        print("Steentoets versie is onbekend. Zorg dat het versienummer in de naam van het steentoetsbestand staat.")
+        raise Exception("Steentoets versie is onbekend. Zorg dat het versienummer in de naam van het steentoetsbestand staat.")
 
     #rename columns to match the old code
     df_profile.columns = ['Zo', 'Zb', 'tana', 'Bsegment', 'toplaagtype', 'D', 'rho_s', 'Hs_ini', 'overschot']
