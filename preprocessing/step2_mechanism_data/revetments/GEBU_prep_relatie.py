@@ -38,6 +38,9 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         transition_levels = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
         grasbekleding_end = kruinhoogte - 0.01
 
+        # check if begin grasbekleding is equal to or higher than end grasbekleding
+        # if so. we assume 2 transitions. At 1 cm below crest and 25 cm lower than that. Beta of 8 is assumed and 7.9
+        # are assumed. This is to prevent extrapolation problems in the vrtool
         if begin_grasbekleding >= grasbekleding_end:
 
             for i, year in enumerate(evaluateYears):
@@ -45,8 +48,8 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                         "dwarsprofiel": dwarsprofiel,
                         "dijkprofiel_x": list(dijkprofiel_x),
                         "dijkprofiel_y": list(dijkprofiel_y),
-                        "grasbekleding_begin": kruinhoogte - 0.01,
-                        "betaFalen": 8.}
+                        "grasbekleding_begin": [kruinhoogte - 0.26, kruinhoogte - 0.01],
+                        "betaFalen": [7.9, 8.]}
                 write_JSON_to_file(data, output_path.joinpath("GEBU_{}_{}.json".format(row.doorsnede, year)))
             print('begin grasbekleding is equal to or higher than end grasbekleding. Beta van 8 aangenomen.')
             continue
