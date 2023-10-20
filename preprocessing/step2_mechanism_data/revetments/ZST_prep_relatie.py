@@ -31,14 +31,40 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
         steentoetsFile = section['steentoetsfile']
 
-
-        beta = -ndtri(p_grid)
-
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
 
-        # read Steentoets results
-        steentoets_df = read_steentoets_file(steentoets_path.joinpath(steentoetsFile), dwarsprofiel)
+        # check if there is a steentoetsfile
+        # this piece of code is added in case there is no steentoetsfile. This means that the dike hass a complete
+        # grass cover. We write directly to a json file default values with a beta of 8.0, so the calculations can still
+        # be made for GEBU and this won't give problems later in the vrtool.
+        if pd.isna(steentoetsFile):
+            print("No steentoets file for {}.".format(section.doorsnede))
+            print("Assumed that the dike is covered by grass")
+            #####
+            for i, year in enumerate(evaluateYears):
+                data = {"zichtjaar": year,
+                        "dwarsprofiel": "Geen steenzetting",
+                        "aantal deelvakken": 1,
+                        "Zo": section.begin_grasbekleding-0.1,
+                        "Zb": section.begin_grasbekleding,
+                        "overgang huidig": section.begin_grasbekleding,
+                        "D huidig": 0.1,
+                        "tana": 1./3.,
+                        "toplaagtype": 26.1,
+                        "delta": 3.,
+                        "ratio_voldoet": 8.}
+                data[f"deelvak 0"] = {"D_opt": [0.1, 1.],
+                                      "betaFalen": [8.0, 8.0]}
+
+                write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede,
+                                                                                      evaluateYears[i])))
+            continue
+            # TODO: make sure that also for this case the plots are made
+            #####
+        else:
+            # read Steentoets results
+            steentoets_df = read_steentoets_file(steentoets_path.joinpath(steentoetsFile), dwarsprofiel)
 
         D_opt = []
         years = []
@@ -61,7 +87,16 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                         select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
 
                         if len(select)==0:
-                           raise ValueError("No points found")
+                            if row.Zo == row.Zb: #tolerance?
+                                print("no points found, one cm above Zb taken")
+                                select = np.argmin(np.abs(h_help - row.Zb))
+                                D_opt = np.append(D_opt, np.max(D_help[select]))
+                            elif row.Zo > np.max(h_help):
+                                print("no points found, vak above water")
+                                # D_opt = np.append(D_opt, 0.05)
+                                D_opt = np.append(D_opt, row.D)
+                            else:
+                                raise Exception("no points found. Not clear what happened!")
                         else:
                             D_opt = np.append(D_opt, np.max(D_help[select]))
 
@@ -77,6 +112,13 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         D_opt = np.append(D_opt1, D_opt2)
 
         D_opt = D_opt.reshape(len(evaluateYears), len(p_grid), steentoets_df.shape[0])
+
+        # for locations where no points were found, because the vak is above the water level, current D is used
+        # if calculated D_opt is smaller than current D, replace current D with D_opt
+        for i in range(len(D_opt)):
+            for j in range(len(D_opt[i]) - 1, 0, -1):
+                D_opt[i, j-1] = np.min([D_opt[i, j], D_opt[i, j - 1]], axis=0)
+
 
         data = {}
         # export results to JSON
@@ -114,26 +156,35 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         plt.legend(loc="center left")
         plt.xlabel('Toplaagdikte [m]')
         plt.ylabel('Faalkans [1/jaar]')
+        plt.xlim(left=0.0)
         plt.savefig(figures_ZST.joinpath('Dikte_vs_Faalkans_doorsnede={}.png'.format(section.doorsnede)))
         plt.close()
 
-
-
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
-    steentoets_path = Path(r'c:\VRM\test_revetments\steentoets')
-    figures_ZST = Path(r'c:\VRM\test_revetments\figures_ZST')
-    output_path = Path(r'c:\VRM\test_revetments\output')
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_geen_steentoetsfile.csv")
+    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
+    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_geen_steentoets")
+    figures_ZST = output_path.joinpath('figures_ZST')
+
+    traject_id = "7-2"
+    _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
+    dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
+    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
+    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
+
+    p_grid = [1. / 30,
+              p_ondergrens,
+              p_signaleringswaarde,
+              p_signaleringswaarde * (1. / 1000.)]
 
     # read revetment file
     df = pd.read_csv(bekleding_path,
-                     usecols=['vaknaam', 'dwarsprofiel', 'signaleringswaarde', 'ondergrens', 'faalkansbijdrage',
-                              'lengte_effectfactor', 'locationid', 'hrdatabase_folder', 'hrdatabase', 'region', 'gws',
-                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'qvar_p1', 'qvar_p2',
-                              'qvar_p3', 'qvar_p4', 'qvar_stap'])
-    df = df.dropna(subset=['vaknaam']) # drop rows where vaknaam is Not a Number
-    df = df.reset_index(drop=True) # reset index
+                     usecols=['doorsnede', 'dwarsprofiel', 'naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
+                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],
+                     dtype={'doorsnede': str, 'dwarsprofiel': str})
+    df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
+    df = df.reset_index(drop=True)  # reset index
 
     # if figures_ZST doesnot exist, create it
     if not figures_ZST.exists():
@@ -144,4 +195,4 @@ if __name__ == '__main__':
         exit()
 
     # run revetment_zst
-    revetment_zst(df, steentoets_path, output_path, figures_ZST)
+    revetment_zst(df, steentoets_path, output_path, figures_ZST, p_grid)

@@ -54,7 +54,6 @@ class DIKErnelCalculations(object):
         output_json_path = output_path.joinpath('output.json')
         # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
         cmdstring = '"{}" --invoerbestand "{}" --uitvoerbestand "{}" --uitvoerniveau schade'.format(dike_kernel_exe, input_json_path, output_json_path)
-        print(cmdstring)
         #run cmdsring using subprocess
         subprocess.run(cmdstring, shell=True)
 
@@ -86,13 +85,13 @@ def read_JSON(file_name):
     return json_object
 
 def read_prfl(file_name):
-
     with open(file_name) as f:
         lines = f.readlines()
     
     x = []
     y = []
-    i = 0    
+    i = 0
+
     for line in lines:
         if 'RICHTING' in line:
            richting = float(line.split()[-1])
@@ -107,7 +106,31 @@ def read_prfl(file_name):
                 
                 x = np.append(x, float(lines[j].split()[0]))
                 y = np.append(y, float(lines[j].split()[1]))
-        
         i += 1
-        
+
     return richting, kruinhoogte, x, y
+
+def read_prfl_foreland(file_name):
+    with open(file_name) as f:
+        lines = f.readlines()
+
+    x_voorland = []
+    y_voorland = []
+    k = 0
+    foreland_present = False
+
+    for line in lines:
+
+        if 'VOORLAND' in line:
+            foreland_present = True
+            noPoints = int(line.split()[-1])
+
+            for j in range(k + 1, k + 1 + noPoints):
+                x_voorland = np.append(x_voorland, float(lines[j].split()[0]))
+                y_voorland = np.append(y_voorland, float(lines[j].split()[1]))
+        k += 1
+
+    if foreland_present:
+        return x_voorland, y_voorland
+    else:
+        pass
