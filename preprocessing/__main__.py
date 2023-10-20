@@ -2,7 +2,6 @@ import click
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
-from preprocessing.workflows.bekleding_workflow import bekleding_main
 from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
 from preprocessing.workflows.bekleding_gebu_zst_workflow import gebu_zst_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles

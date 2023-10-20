@@ -34,8 +34,37 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
 
-        # read Steentoets results
-        steentoets_df = read_steentoets_file(steentoets_path.joinpath(steentoetsFile), dwarsprofiel)
+        # check if there is a steentoetsfile
+        # this piece of code is added in case there is no steentoetsfile. This means that the dike hass a complete
+        # grass cover. We write directly to a json file default values with a beta of 8.0, so the calculations can still
+        # be made for GEBU and this won't give problems later in the vrtool.
+        if pd.isna(steentoetsFile):
+            print("No steentoets file for {}.".format(section.doorsnede))
+            print("Assumed that the dike is covered by grass")
+            #####
+            for i, year in enumerate(evaluateYears):
+                data = {"zichtjaar": year,
+                        "dwarsprofiel": "Geen steenzetting",
+                        "aantal deelvakken": 1,
+                        "Zo": section.begin_grasbekleding-0.1,
+                        "Zb": section.begin_grasbekleding,
+                        "overgang huidig": section.begin_grasbekleding,
+                        "D huidig": 0.1,
+                        "tana": 1./3.,
+                        "toplaagtype": 26.1,
+                        "delta": 3.,
+                        "ratio_voldoet": 8.}
+                data[f"deelvak 0"] = {"D_opt": [0.1, 1.],
+                                      "betaFalen": [8.0, 8.0]}
+
+                write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede,
+                                                                                      evaluateYears[i])))
+            continue
+            # TODO: make sure that also for this case the plots are made
+            #####
+        else:
+            # read Steentoets results
+            steentoets_df = read_steentoets_file(steentoets_path.joinpath(steentoetsFile), dwarsprofiel)
 
         D_opt = []
         years = []
@@ -67,7 +96,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                                 # D_opt = np.append(D_opt, 0.05)
                                 D_opt = np.append(D_opt, row.D)
                             else:
-                                raise  Exception("what happened?!")
+                                raise Exception("no points found. Not clear what happened!")
                         else:
                             D_opt = np.append(D_opt, np.max(D_help[select]))
 
@@ -133,10 +162,9 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full - 1.csv")
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_geen_steentoetsfile.csv")
     steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    figures_ZST = Path(r'c:\VRM\test_revetments\figures_ZST')
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output2")
+    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_geen_steentoets")
     figures_ZST = output_path.joinpath('figures_ZST')
 
     traject_id = "7-2"

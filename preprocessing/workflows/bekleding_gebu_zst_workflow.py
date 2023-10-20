@@ -64,10 +64,10 @@ if __name__ == '__main__':
 
     # input paths
     traject_id = "7-2"
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full_batch2.csv")
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
     steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
     profielen_path = Path(r"c:\vrm_test\bekleding_split_workflow\PRFL")
     bindikernel = Path(__file__).parent.absolute().parent.parent.joinpath('externals', 'DiKErnel')
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output2")
+    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
 
     gebu_zst_main(traject_id, bekleding_path, steentoets_path, profielen_path, bindikernel, output_path)
