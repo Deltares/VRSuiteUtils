@@ -167,7 +167,7 @@ if __name__ == '__main__':
     output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full_final")
     figures_ZST = output_path.joinpath('figures_ZST')
 
-    traject_id = "7-2"
+    traject_id = "31-1"
     _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
     dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
     p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
