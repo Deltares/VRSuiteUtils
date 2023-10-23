@@ -46,14 +46,14 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                 data = {"zichtjaar": year,
                         "dwarsprofiel": "Geen steenzetting",
                         "aantal deelvakken": 1,
-                        "Zo": section.begin_grasbekleding-0.1,
-                        "Zb": section.begin_grasbekleding,
-                        "overgang huidig": section.begin_grasbekleding,
-                        "D huidig": 0.1,
-                        "tana": 1./3.,
-                        "toplaagtype": 26.1,
-                        "delta": 3.,
-                        "ratio_voldoet": 8.}
+                        "Zo": [section.begin_grasbekleding-0.1],
+                        "Zb": [section.begin_grasbekleding],
+                        "overgang huidig": [section.begin_grasbekleding],
+                        "D huidig": [0.1],
+                        "tana": [1./3.],
+                        "toplaagtype": [26.1],
+                        "delta": [3.],
+                        "ratio_voldoet": [8.]}
                 data[f"deelvak 0"] = {"D_opt": [0.1, 1.],
                                       "betaFalen": [8.0, 8.0]}
 
@@ -162,9 +162,9 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_geen_steentoetsfile.csv")
-    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_geen_steentoets")
+    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default.csv")
+    steentoets_path = Path(r"c:\vrm_test\scheldestromen_bekleding\ZST_bestanden_aangepast")
+    output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full_final")
     figures_ZST = output_path.joinpath('figures_ZST')
 
     traject_id = "7-2"

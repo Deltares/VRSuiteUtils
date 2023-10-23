@@ -63,11 +63,11 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
 if __name__ == '__main__':
 
     # input paths
-    traject_id = "7-2"
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
-    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    profielen_path = Path(r"c:\vrm_test\bekleding_split_workflow\PRFL")
+    traject_id = "31-1"
+    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default.csv")
+    steentoets_path = Path(r"c:\vrm_test\scheldestromen_bekleding\ZST_bestanden")
+    profielen_path = Path(r"c:\vrm_test\scheldestromen_bekleding\prfl")
     bindikernel = Path(__file__).parent.absolute().parent.parent.joinpath('externals', 'DiKErnel')
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
+    output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full")
 
     gebu_zst_main(traject_id, bekleding_path, steentoets_path, profielen_path, bindikernel, output_path)
