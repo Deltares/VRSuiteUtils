@@ -54,7 +54,7 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
     revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
 
     # step 3: ZST
-    revetment_zst(df, steentoets_path, output_path, figures_ZST, p_grid)
+    revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)
 
     # remove all files in local_path using shutil
     shutil.rmtree(local_path)

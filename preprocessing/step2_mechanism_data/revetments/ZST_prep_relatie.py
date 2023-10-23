@@ -13,14 +13,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 from preprocessing.step2_mechanism_data.revetments.project_utils.readSteentoetsFile import read_steentoets_file
-from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_JSON
+from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_JSON, read_prfl
 from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 
 
 
 
-
-def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
+def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
 
     # define variables
     evaluateYears = [2025, 2100]
@@ -30,6 +29,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         dwarsprofiel = section.dwarsprofiel
 
         steentoetsFile = section['steentoetsfile']
+
 
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
@@ -42,6 +42,9 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
             print("No steentoets file for {}.".format(section.doorsnede))
             print("Assumed that the dike is covered by grass")
 
+            # read profile
+            orientation, kruinhoogte, dijkprofiel_x, dijkprofiel_y = read_prfl(
+                profielen_path.joinpath(df['prfl'].values[index]))
 
             #####
             for i, year in enumerate(evaluateYears):
@@ -49,7 +52,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                         "dwarsprofiel": "Geen steenzetting",
                         "aantal deelvakken": 2,
                         "Zo": [section.begin_grasbekleding-0.1, section.begin_grasbekleding],
-                        "Zb": [section.begin_grasbekleding, section.begin_grasbekleding + 5],
+                        "Zb": [section.begin_grasbekleding, kruinhoogte],
                         "overgang huidig": [section.begin_grasbekleding, section.begin_grasbekleding],
                         "D huidig": [0.1, np.nan],
                         "tana": [1./3., 1./3.],
@@ -166,6 +169,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 if __name__ == '__main__':
     # paths
     bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default.csv")
+    profielen_path = Path(r'c:\vrm_test\scheldestromen_database_31_1\prfl_waterstand')
     steentoets_path = Path(r"c:\vrm_test\scheldestromen_bekleding\ZST_bestanden_aangepast")
     output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full_final")
     figures_ZST = output_path.joinpath('figures_ZST')
@@ -198,4 +202,4 @@ if __name__ == '__main__':
         exit()
 
     # run revetment_zst
-    revetment_zst(df, steentoets_path, output_path, figures_ZST, p_grid)
+    revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)
