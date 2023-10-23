@@ -44,7 +44,7 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
 
             # read profile
             orientation, kruinhoogte, dijkprofiel_x, dijkprofiel_y = read_prfl(
-                profielen_path.joinpath(df['prfl'].values[index]))
+                profielen_path.joinpath(df['prfl'].values[section_index]))
 
             #####
             for i, year in enumerate(evaluateYears):
@@ -168,13 +168,13 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
 
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default.csv")
-    profielen_path = Path(r'c:\vrm_test\scheldestromen_database_31_1\prfl_waterstand')
-    steentoets_path = Path(r"c:\vrm_test\scheldestromen_bekleding\ZST_bestanden_aangepast")
-    output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full_final")
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
+    profielen_path = Path(r'c:\vrm_test\bekleding_split_workflow\PRFL')
+    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
+    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
     figures_ZST = output_path.joinpath('figures_ZST')
 
-    traject_id = "31-1"
+    traject_id = "7-2"
     _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
     dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
     p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
