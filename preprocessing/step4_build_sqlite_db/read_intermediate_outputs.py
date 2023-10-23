@@ -121,9 +121,7 @@ def read_revetment_data(files_dir):
 
     revetment_jsons = glob.glob(os.path.join(files_dir, "*.json"))
     for loc_file in revetment_jsons:
-        # if loc_file.is_file():
         loc_file = Path(loc_file)
-        print(loc_file)
         location = str(Path(loc_file).name.split("_")[1])
         with open(loc_file, "r") as openfile:
             json_object = json.load(openfile)
