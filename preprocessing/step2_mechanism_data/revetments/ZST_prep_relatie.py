@@ -45,18 +45,19 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
             for i, year in enumerate(evaluateYears):
                 data = {"zichtjaar": year,
                         "dwarsprofiel": "Geen steenzetting",
-                        "aantal deelvakken": 1,
-                        "Zo": [section.begin_grasbekleding-0.1],
-                        "Zb": [section.begin_grasbekleding],
-                        "overgang huidig": [section.begin_grasbekleding],
-                        "D huidig": [0.1],
-                        "tana": [1./3.],
-                        "toplaagtype": [26.1],
-                        "delta": [3.],
-                        "ratio_voldoet": [8.]}
-                data[f"deelvak 0"] = {"D_opt": [0.1, 1.],
-                                      "betaFalen": [8.0, 8.0]}
-
+                        "aantal deelvakken": 2,
+                        "Zo": [section.begin_grasbekleding-0.1, section.begin_grasbekleding],
+                        "Zb": [section.begin_grasbekleding, section.begin_grasbekleding + 5],
+                        "overgang huidig": [section.begin_grasbekleding, section.begin_grasbekleding],
+                        "D huidig": [0.1, np.nan],
+                        "tana": [1./3., 1./3.],
+                        "toplaagtype": [26.1, 20.0],
+                        "delta": [3., np.nan],
+                        "ratio_voldoet": [8., np.nan]}
+                data[f"deelvak 0"] = {"D_opt": [np.nan, np.nan],
+                                      "betaFalen": [np.nan, np.nan]}
+                data[f"deelvak 1"] = {"D_opt": [np.nan, np.nan],
+                                      "betaFalen": [np.nan, np.nan]}
                 write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede,
                                                                                       evaluateYears[i])))
             continue
