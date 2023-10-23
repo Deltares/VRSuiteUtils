@@ -59,6 +59,7 @@ def write_database_main(traject_name : str,
     if piping_path != None: mechanism_data['piping'] = read_piping_data(piping_path)
     if stability_path != None: mechanism_data['stabiliteit'] = read_stability_data(stability_path)
     if revetment_path != None:
+        revetment_path = Path(revetment_path)
         mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table']  = read_revetment_data(revetment_path)
 
     # read the data for bebouwing
@@ -105,18 +106,18 @@ def write_database_main(traject_name : str,
     write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
 
 if __name__ == '__main__':
-    traject_name = "16-1"
-    vakindeling_geojson =       Path(r'c:\vrm_test\run_16_1\vakindeling\Vakindeling_16-1.geojson')
-    characteristic_profile_csv= Path(r'c:\vrm_test\run_16_1\kar_profielen\profielen_per_vak\selected_profiles_gaps_filled.csv')
-    building_csv_path =         Path(r'c:\vrm_test\run_16_1\Bebouwing\Bebouwing_data.csv')
-    output_dir =                Path(r'c:\vrm_test\run_16_1\result')
-    output_db_name =            f'16_1_results4.db'
-    hr_input_csv =              Path(r'c:\vrm_test\run_16_1\hr_default_updated.csv')
-    waterlevel_results_path =   Path(r'c:\vrm_test\run_16_1\waterstand')
-    overflow_results_path =     Path(r'c:\vrm_test\run_16_1\overslag')
-    piping_path =               Path(r'c:\vrm_test\run_16_1\Piping\Piping_data_integers.csv')
-    stability_path =            Path(r'c:\vrm_test\run_16_1\STBI\STBI_data.csv')
-    revetment_path =            None
+    traject_name = "31-1"
+    vakindeling_geojson =       Path(r'c:\vrm_test\scheldestromen_database_31_1\Vakindeling_31-1.geojson')
+    characteristic_profile_csv= Path(r'c:\vrm_test\scheldestromen_database_31_1\profielen\representative_profiles\selected_profiles.csv')
+    building_csv_path =         Path(r'c:\vrm_test\scheldestromen_database_31_1\bebouwing\building_count_traject31-1.csv')
+    output_dir =                Path(r'c:\vrm_test\scheldestromen_database_31_1\database')
+    output_db_name =            f'traject_31_1.db'
+    hr_input_csv =              Path(r'c:\vrm_test\scheldestromen_database_31_1\HR_default_31-1.csv')
+    waterlevel_results_path =   Path(r'c:\vrm_test\scheldestromen_database_31_1\waterlevel')
+    overflow_results_path =     Path(r'c:\vrm_test\scheldestromen_database_31_1\overflow')
+    piping_path =               Path(r'c:\vrm_test\scheldestromen_database_31_1\piping_default_31-1.csv')
+    stability_path =            Path(r'c:\vrm_test\scheldestromen_database_31_1\Stabiliteit_default_31-1.csv')
+    revetment_path =            Path(r"c:\vrm_test\scheldestromen_database_31_1\bekleding")
 
 
     write_database_main(traject_name                =   traject_name,
