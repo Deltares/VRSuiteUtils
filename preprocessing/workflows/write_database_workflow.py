@@ -17,7 +17,7 @@ def write_config_file(output_dir : Path, traject_name : str, database_path : Pat
     
 
     config = {'traject': traject_name,
-              'mechanisms': json.dumps(mechanisms),
+              'mechanisms': mechanisms,
               'input_database_path': str(database_path.absolute()).replace('\\','/')}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
