@@ -41,6 +41,8 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         if pd.isna(steentoetsFile):
             print("No steentoets file for {}.".format(section.doorsnede))
             print("Assumed that the dike is covered by grass")
+
+
             #####
             for i, year in enumerate(evaluateYears):
                 data = {"zichtjaar": year,
@@ -54,10 +56,10 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                         "toplaagtype": [26.1, 20.0],
                         "delta": [3., np.nan],
                         "ratio_voldoet": [8., np.nan]}
-                data[f"deelvak 0"] = {"D_opt": [np.nan, np.nan],
-                                      "betaFalen": [np.nan, np.nan]}
-                data[f"deelvak 1"] = {"D_opt": [np.nan, np.nan],
-                                      "betaFalen": [np.nan, np.nan]}
+                data[f"deelvak 0"] = {"D_opt": [0.1, 0.2, 0.3, 0.4],
+                                      "betaFalen": [8.0, 8.0, 8.0, 8.0]}
+                data[f"deelvak 1"] = {"D_opt": [np.nan, np.nan, np.nan, np.nan],
+                                      "betaFalen": [np.nan, np.nan, np.nan, np.nan]}
                 write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede,
                                                                                       evaluateYears[i])))
             continue
