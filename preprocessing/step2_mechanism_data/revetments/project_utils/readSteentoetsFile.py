@@ -66,7 +66,7 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
 
     # go backwards through df_profile. While last row has tana equal to 0 or negative, remove this row of the previous
     # tana is not positive. If tana is positive, break the loop. This ensures only crest remains (with minimal slope)
-    while df_profile['tana'].iloc[-1] < 0.0:
+    while df_profile['tana'].iloc[-1] <= 0.0:
         if df_profile['tana'].iloc[-2] > 0.0:
             df_profile['tana'].iloc[-1] = 0.001
             df_profile['Zb'].iloc[-1] = df_profile['Zb'].iloc[-1] + (0.001 * df_profile['Bsegment'].iloc[-1])
