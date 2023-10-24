@@ -57,23 +57,25 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
                 df_profile['Zo'].iloc[i] = df_profile['Zb'].iloc[i - 1] - (0.001 * df_profile['Bsegment'].iloc[i]) / 2
                 df_profile['Zb'].iloc[i] = df_profile['Zo'].iloc[i + 1] + (0.001 * df_profile['Bsegment'].iloc[i]) / 2
 
-    # go backwards through df_profile. While last row has tana equal to 0 or negative, remove this row. If tana is positive,
-    # break the loop
-    while df_profile['tana'].iloc[-1] < 0.0:
+    # go backwards through df_profile. While last row has tana equal to 0 or negative, remove this row (unless tana of
+    # the of the section in front is positive: because that is the crest
+    while df_profile['tana'].iloc[-1] <= 0.0 and df_profile['tana'].iloc[-2] > 0.0:
         print("Horizontal or negative part of the slope removed. Dijkvak:", dwarsprofiel)
         print("slope (tan alpha) was:", df_profile['tana'].index[-1])
         df_profile = df_profile.drop(df_profile.index[-1])
 
     # go backwards through df_profile. While last row has tana equal to 0 or negative, remove this row of the previous
     # tana is not positive. If tana is positive, break the loop. This ensures only crest remains (with minimal slope)
-    while df_profile['tana'].iloc[-1] <= 0.0:
-        if df_profile['tana'].iloc[-2] > 0.0:
-            df_profile['tana'].iloc[-1] = 0.001
-            df_profile['Zb'].iloc[-1] = df_profile['Zb'].iloc[-1] + (0.001 * df_profile['Bsegment'].iloc[-1])
-            # break the while loop
-            break
-        else:
-            df_profile = df_profile.drop(df_profile.index[-1])
+    # while df_profile['tana'].iloc[-1] <= 0.0:
+    #     if df_profile['tana'].iloc[-2] > 0.0:
+    #         pass
+    #     elif df_profile['tana'].iloc[-2] <= 0.0:
+    #         df_profile['tana'].iloc[-1] = 0.001
+    #         df_profile['Zb'].iloc[-1] = df_profile['Zb'].iloc[-1] + (0.001 * df_profile['Bsegment'].iloc[-1])
+    #         # break the while loop
+    #         break
+    #     else:
+    #         df_profile = df_profile.drop(df_profile.index[-1])
 
     df_profile_dict = df_profile.to_dict('list')
     for key in df_profile_dict.keys(): df_profile_dict[key] = np.array(df_profile_dict[key])
