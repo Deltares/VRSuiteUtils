@@ -12,9 +12,12 @@ def read_csv_linesep(file_path, **kwargs):
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     return df
 
-def write_config_file(output_dir : Path, traject_name : str, database_path : Path):
+def write_config_file(output_dir : Path, traject_name : str, database_path : Path, mechanisms = ['Overflow','StabilityInner', 'Piping', 'Revetment']):
     # make a json with traject = traject_name and input_database_path = database_path
+    
+
     config = {'traject': traject_name,
+              'mechanisms': mechanisms,
               'input_database_path': str(database_path.absolute()).replace('\\','/')}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
@@ -46,28 +49,38 @@ def write_database_main(traject_name : str,
 
     # load the vakindeling geojson with in_analyse column as integer
     vakindeling_shape = gpd.read_file(vakindeling_geojson)
-    vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'stabiliteit': str, 'piping': str, 'overslag': str, 'bekledingen': str})
-
+    vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'overslag': str, 'stabiliteit': str})
+    vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
+    
     # load HR input csv
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
 
     #read water levels
     waterlevel_results = read_waterlevel_data(waterlevel_results_path)
 
-    #read mechanism_data and store in dictionary. We must have overflow. Others are optional
-    mechanism_data = {'overslag': read_overflow_data(overflow_results_path)}
-    if piping_path != None: mechanism_data['piping'] = read_piping_data(piping_path)
-    if stability_path != None: mechanism_data['stabiliteit'] = read_stability_data(stability_path)
+    #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
+    mechanism_data = {'overslag': read_overflow_data(overflow_results_path), 
+                      'stabiliteit': read_stability_data(stability_path),}
+    
+    if piping_path != None: 
+        vakindeling_shape.astype({'piping': str})
+        mechanism_data['piping'] = read_piping_data(piping_path)
+    else: #drop column
+        vakindeling_shape.drop(columns=['piping'], inplace=True)            
+    
     if revetment_path != None:
-        revetment_path = Path(revetment_path)
         mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table']  = read_revetment_data(revetment_path)
+    else:
+        vakindeling_shape.drop(columns=['bekledingen'], inplace=True)
 
     # read the data for bebouwing
     bebouwing_table = read_bebouwing_data(building_csv_path)
 
     # read the data for measures
-
     measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
+    #if no revetment drop the row where measure_type is Revetment
+    if revetment_path == None:
+        measures_table.drop(measures_table[measures_table['measure_type'] == 'Revetment'].index, inplace=True)
 
 
     # read the data for profilepoints
@@ -103,21 +116,26 @@ def write_database_main(traject_name : str,
     fill_measures(measure_table=measures_table)
 
     #write a config file
-    write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
+    if revetment_path != None:
+        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
+    else:
+        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name), mechanisms = ['Overflow','StabilityInner', 'Piping'])
 
 if __name__ == '__main__':
-    traject_name = "31-1"
-    vakindeling_geojson =       Path(r'c:\vrm_test\scheldestromen_database_31_1\Vakindeling_31-1.geojson')
-    characteristic_profile_csv= Path(r'c:\vrm_test\scheldestromen_database_31_1\profielen\representative_profiles\selected_profiles.csv')
-    building_csv_path =         Path(r'c:\vrm_test\scheldestromen_database_31_1\bebouwing\building_count_traject31-1.csv')
-    output_dir =                Path(r'c:\vrm_test\scheldestromen_database_31_1\database')
-    output_db_name =            f'traject_31_1.db'
-    hr_input_csv =              Path(r'c:\vrm_test\scheldestromen_database_31_1\HR_default_31-1.csv')
-    waterlevel_results_path =   Path(r'c:\vrm_test\scheldestromen_database_31_1\waterlevel')
-    overflow_results_path =     Path(r'c:\vrm_test\scheldestromen_database_31_1\overflow')
-    piping_path =               Path(r'c:\vrm_test\scheldestromen_database_31_1\piping_default_31-1.csv')
-    stability_path =            Path(r'c:\vrm_test\scheldestromen_database_31_1\Stabiliteit_default_31-1.csv')
-    revetment_path =            Path(r"c:\vrm_test\scheldestromen_database_31_1\bekleding")
+
+    traject_name = "24-3"
+    vakindeling_geojson =       Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Vakindeling\Vakindeling_24-3.geojson')
+    characteristic_profile_csv= Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Profielen\selected_profiles_adj.csv')
+    building_csv_path =         Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Bebouwing\building_count_traject24-3.csv')
+    output_dir =                Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Database_bugfix2')
+    output_db_name =            f'24-3_results_fix.db'
+    hr_input_csv =              Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\HR_default_24-3_final.csv')
+    waterlevel_results_path =   Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Waterstand')
+    overflow_results_path =     Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Overslag')
+    piping_path =               Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\Piping_default_24-3.csv')
+    stability_path =            Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\Macro_default_final.csv')
+    revetment_path =            None
+
 
 
     write_database_main(traject_name                =   traject_name,
