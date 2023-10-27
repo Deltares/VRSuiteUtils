@@ -70,6 +70,8 @@ def count_buildings_per_vak(traject_name,
     # create an empty geodataframe called teenvakken_gdf with column for vaknaam and geometry
     teenvakken_gdf = gpd.GeoDataFrame(columns=["vaknaam", "geometry"])
 
+
+
     result = split(line_teen, splits[1].buffer(1.0E-10))
     if len(result.geoms) == 3:
         line = linemerge([result.geoms[0],result.geoms[1]])
@@ -153,15 +155,10 @@ def count_buildings_per_vak(traject_name,
 
 
 if __name__ == '__main__':
-    # traject_name = "38-1"
-    # teenlijn_geojson = Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn\teenlijn traject_38-1_line2.geojson")
-    # vakindeling_geojson = Path(r"c:\VRM\test_vakindeling_workflow\result\Vakindeling_38-1_original.geojson")
-    # intermediate_dir = Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn")
-    # all_buildings_filename = Path("c://GIS//Achtergrond//bag-light.gpkg")
 
     count_buildings_per_vak(
-        traject_name="38-1",
-        teenlijn_geojson=Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn\teenlijn traject_38-1_line2.geojson"),
-        vakindeling_geojson=Path(r"c:\VRM\test_vakindeling_workflow\result\Vakindeling_38-1_original.geojson"),
-        output_dir=Path(r"c:\VRM\Gegevens 38-1\profiles\teenlijn"),
-        all_buildings_filename=Path("c://GIS//Achtergrond//bag-light.gpkg"))
+        traject_name="31-1",
+        teenlijn_geojson=Path(r"c:\vrm_test\scheldestromen_database_31_1\Profielen3\gegenereerde_teenlijn\teenlijn2.geojson"),
+        vakindeling_geojson=Path(r"c:\vrm_test\scheldestromen_database_31_1\Vakindeling_31-1.geojson"),
+        output_dir=Path(r"c:\vrm_test\scheldestromen_database_31_1\Bebouwing"),
+        all_buildings_filename=Path(r"c:\vrm_test\gebouwen_geopackage_20231019\bag-light.gpkg"))
