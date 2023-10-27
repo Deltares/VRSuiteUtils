@@ -93,7 +93,8 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
                         select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
 
                         if len(select)==0:
-                            if row.Zo == row.Zb: #tolerance?
+                            if abs(row.Zb - row.Zo) < 0.1:
+                                # this happens for berms and crests
                                 print("no points found, one cm above Zb taken")
                                 select = np.argmin(np.abs(h_help - row.Zb))
                                 D_opt = np.append(D_opt, np.max(D_help[select]))
@@ -124,6 +125,17 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
         for i in range(len(D_opt)):
             for j in range(len(D_opt[i]) - 1, 0, -1):
                 D_opt[i, j-1] = np.min([D_opt[i, j], D_opt[i, j - 1]], axis=0)
+
+        # if D_opt in consecutive steps is equal, this will result in errors later. Therefore, a small value of 0.01
+        # is added.
+        for i in range(len(D_opt)):
+            for j in range(len(D_opt[i][:, 0]) - 1):
+                for k in range(len(D_opt[i][j])):
+                    if D_opt[i, j, k] >= D_opt[i, j + 1, k]:
+                        print(i, j, k)
+                        print("D_opt[i,j,k] =", D_opt[i, j, k])
+                        print("D_opt[i,j+1,k] =", D_opt[i, j + 1, k])
+                        D_opt[i, j+1, k] = D_opt[i, j, k] + 0.01
 
 
         data = {}
