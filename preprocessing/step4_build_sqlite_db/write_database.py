@@ -218,7 +218,8 @@ def fill_mechanisms(mechanism_data,
             .id
         )
         for count, header in enumerate(header_names):
-            if isinstance(row[header], str):
+            #check if header exists in row index
+            if header in row.index:
                 MechanismPerSection.create(
                     section=section_data_id,
                     mechanism=Mechanism.select(Mechanism.id)
