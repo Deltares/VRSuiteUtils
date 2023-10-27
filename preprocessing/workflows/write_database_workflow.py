@@ -49,7 +49,7 @@ def write_database_main(traject_name : str,
 
     # load the vakindeling geojson with in_analyse column as integer
     vakindeling_shape = gpd.read_file(vakindeling_geojson)
-    vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'overslag': str})
+    vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'overslag': str, 'stabiliteit': str})
     vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
     
     # load HR input csv
@@ -58,19 +58,15 @@ def write_database_main(traject_name : str,
     #read water levels
     waterlevel_results = read_waterlevel_data(waterlevel_results_path)
 
-    #read mechanism_data and store in dictionary. We must have overflow. Others are optional
-    mechanism_data = {'overslag': read_overflow_data(overflow_results_path)}
+    #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
+    mechanism_data = {'overslag': read_overflow_data(overflow_results_path), 
+                      'stabiliteit': read_stability_data(stability_path),}
+    
     if piping_path != None: 
         vakindeling_shape.astype({'piping': str})
         mechanism_data['piping'] = read_piping_data(piping_path)
     else: #drop column
-        vakindeling_shape.drop(columns=['piping'], inplace=True)        
-    
-    if stability_path != None: 
-        vakindeling_shape.astype({'stabiliteit': str})
-        mechanism_data['stabiliteit'] = read_stability_data(stability_path)
-    else:
-        vakindeling_shape.drop(columns=['stabiliteit'], inplace=True)        
+        vakindeling_shape.drop(columns=['piping'], inplace=True)            
     
     if revetment_path != None:
         vakindeling_shape.astype({'bekledingen': str})
