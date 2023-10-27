@@ -32,16 +32,16 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
       _test_data_dir
    )
 
-   shapefile = gpd.read_file(_test_data_dir.joinpath("reference_results","reference_shapes", f"reference_shape_{test_name}.geojson"))
+   vakindeling_shape = gpd.read_file(_test_data_dir.joinpath("reference_results","reference_shapes", f"reference_shape_{test_name}.geojson"))
 
    try:
       vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=",", lineterminator="\n")
    except:
       vakindeling_csv = pd.read_csv(_test_data_dir.joinpath("input", "vakindeling", "vakindeling_{}_{}.csv".format(traject,test_name)),dtype={'in_analyse':int},sep=";", lineterminator="\n")
 
-   #reset in_analyse in shapefile based on vakindeling_csv. This is only for testdata.
-   shapefile = pd.merge(shapefile.drop(columns=['in_analyse']),vakindeling_csv[['objectid','in_analyse']],on='objectid')
-
+   #reset in_analyse in vakindeling_shape based on vakindeling_csv. This is only for testdata.
+   vakindeling_shape = pd.merge(vakindeling_shape.drop(columns=['in_analyse']),vakindeling_csv[['objectid','in_analyse']],on='objectid')
+   vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
    # read the HR_input
    HR_input = pd.read_csv(
       _test_data_dir.joinpath("HRING_data_reference.csv")
@@ -52,24 +52,23 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    _intermediate_dir = _test_data_dir.joinpath("intermediate")
    waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"))
 
-   # read the data for overflow
-   mechanism_data = {}
-   if not all(shapefile.overslag.isna()):
-      mechanism_data["overslag"] = read_overflow_data(_intermediate_dir.joinpath("Overslag"))
 
+   #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
+   mechanism_data = {'overslag': read_overflow_data(_intermediate_dir.joinpath("Overslag")), 
+                     'stabiliteit': read_stability_data(_intermediate_dir.joinpath("STBI_data.csv")),}
+   
+   try:
+      vakindeling_shape.astype({'piping': str})
+      mechanism_data['piping'] = read_piping_data(_intermediate_dir.joinpath("Piping_data.csv"))
+   except: #drop column
+      vakindeling_shape.drop(columns=['piping'], inplace=True)            
+   
+   try:
+      vakindeling_shape.astype({'bekledingen': str})
+      mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table']  = read_revetment_data(_intermediate_dir.joinpath("Bekleding"))
+   except:
+      vakindeling_shape.drop(columns=['bekledingen'], inplace=True)
 
-   # read the data for piping
-   if not all(shapefile.piping.isna()):
-        mechanism_data["piping"] = read_piping_data(_intermediate_dir.joinpath("Piping_data.csv"))
-
-   # read the data for stability
-   if not all(shapefile.stabiliteit.isna()):
-      mechanism_data['stabiliteit'] = read_stability_data(_intermediate_dir.joinpath("STBI_data.csv"))
-
-
-   # read the data for revetments
-   if not all(shapefile.bekledingen.isna()):
-      mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table'] = read_revetment_data(_intermediate_dir.joinpath("Bekleding"))
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
@@ -78,12 +77,13 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # read the data for measures
    if revetment:
-      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment.csv"))
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment_selectie.csv"))
    else:
       measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures.csv"))
 
    # read the data for profilepoints
-   profile_table = read_profiles_old(_intermediate_dir.joinpath("Profielen"))
+   profile_table = read_profile_data(_intermediate_dir.joinpath("Profielen","profielen_38-1.csv"))
+   # profile_table = read_profiles_old(_intermediate_dir.joinpath("Profielen"))
 
    initialize_database(_output_path)
    assert _output_path.exists(), "Database file was not created."
@@ -91,23 +91,23 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    db_obj = open_database(_output_path)
 
    # diketractinfo
-   fill_diketrajectinfo_table(traject=traject,length = shapefile.m_eind.max())
+   fill_diketrajectinfo_table(traject=traject,length = vakindeling_shape.m_eind.max())
    # sectiondata
    fill_sectiondata_table(
       traject=traject,
-      shape_file=shapefile,
+      shape_file=vakindeling_shape,
       HR_input=HR_input,
       geo_input=mechanism_data['stabiliteit'][["deklaagdikte", "pleistoceendiepte"]],
    )
    # waterleveldata
    fill_buildings(buildings=bebouwing_table)
 
-   fill_waterleveldata(waterlevel_table=waterlevel_table, shape_file=shapefile)
+   fill_waterleveldata(waterlevel_table=waterlevel_table, shape_file=vakindeling_shape)
 
-   fill_profilepoints(profile_points=profile_table, shape_file=shapefile)
+   fill_profiles(profile_table)
 
    # fill all the mechanisms
-   fill_mechanisms(mechanism_data=mechanism_data, shape_file=shapefile)
+   fill_mechanisms(mechanism_data=mechanism_data, shape_file=vakindeling_shape)
 
    # fill measures
    fill_measures(measure_table=measures_table)

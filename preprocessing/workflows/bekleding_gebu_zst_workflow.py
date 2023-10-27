@@ -6,29 +6,22 @@ from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revet
 import shutil
 def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profielen_path: Path, binDIKErnel: Path, output_path: Path):
 
-    # check if output_path exists:
-    if output_path.exists():
-        print("output folder exists. Great, we move on")
-        # check if figures and temp folders exist:
-        if not output_path.joinpath('figures_GEBU').exists():
-            # make figures_GEBU folder
-            output_path.joinpath('figures_GEBU').mkdir(parents=True, exist_ok=False)
-            print("figures_GEBU folder created")
-        if not output_path.joinpath('figures_ZST').exists():
-            # make figures_ZST folder
-            output_path.joinpath('figures_ZST').mkdir(parents=True, exist_ok=False)
-            print("figures_ZST folder created")
-        if not output_path.joinpath('temp').exists():
-            # make temp folder
-            output_path.joinpath('temp').mkdir(parents=True, exist_ok=False)
-            print("temp folder created")
-    else:
-        print("output folder does not exist. Check if the path is correct. Refer to folder with qvariant output.")
-        exit()
-
+    #these folders will be used for output
     figures_GEBU = output_path.joinpath('figures_GEBU')
     figures_ZST = output_path.joinpath('figures_ZST')
     local_path = output_path.joinpath('temp')
+
+    if not output_path.exists():
+        print("output folder does not exist. Check if the path is correct. Refer to folder with qvariant output.")
+        exit()
+    #for path in list of figures_GEBU, figures_ZST and local_path, check if they exist. If not, create them.
+    for output_folder in [figures_GEBU, figures_ZST, local_path]:
+        if not output_folder.exists():
+            output_folder.mkdir(parents=True, exist_ok=False)
+        else:
+            #remove and recreate the folder.
+            shutil.rmtree(output_folder)
+            output_folder.mkdir(parents=True, exist_ok=False)
 
     # read bekleding csv
     df = pd.read_csv(bekleding_path,

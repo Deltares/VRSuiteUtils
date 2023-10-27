@@ -54,7 +54,10 @@ class OverflowComputationInput(HydraRingComputation):
             elif "ID" in line:
                 prfl["ID"] = line.split()[1]
             elif "RICHTING" in line:
-                prfl["RICHTING"] = np.int_(line.split()[1])
+                try:
+                    prfl["RICHTING"] = np.int_(line.split()[1])
+                except:
+                    prfl["RICHTING"] = np.float_(line.split()[1])
                 # TODO: maybe add a check with orientation property
             elif "VOORLAND" in line:
                 count_for = "VOORLAND"

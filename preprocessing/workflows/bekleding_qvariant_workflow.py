@@ -6,37 +6,20 @@ from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qva
 def qvariant_main(traject_id: str, bekleding_path: Path, database_path: Path, waterlevel_path: Path, profielen_path: Path,
                      hring_path: Path, output_path: Path):
 
-    # if output_path doesnot exist, create it, with subfolders for the figures and temporary files
-    if not output_path.exists():
-        output_path.joinpath('figures_ZST').mkdir(parents=True, exist_ok=False)
-        output_path.joinpath('figures_GEBU').mkdir(parents=True, exist_ok=False)
-        output_path.joinpath('temp').mkdir(parents=True, exist_ok=False)
-        print("output folders created")
-    # elif output_path exists, but not empty, stop the script
-    elif output_path.exists() and len(list(output_path.iterdir())) == 0:
-        output_path.joinpath('figures_ZST').mkdir(parents=True, exist_ok=False)
-        output_path.joinpath('figures_GEBU').mkdir(parents=True, exist_ok=False)
-        output_path.joinpath('temp').mkdir(parents=True, exist_ok=False)
-        print("output folders created")
-    elif output_path.exists() and len(list(output_path.iterdir())) != 0:
-        #check if the length of iterdir is 3
-        if len(list(output_path.iterdir())) == 3:
-            #check if the stems of the two subfolders are figures_ZST and figures_GEBU (in random order)
-            if 'figures_ZST' in [x.stem for x in list(output_path.iterdir())] and 'figures_GEBU' in [x.stem for x in list(output_path.iterdir())] and 'temp' in [x.stem for x in list(output_path.iterdir())]:
-                #ensure figures folders are empty (temporary folder can be filled)
-                if len(list(output_path.joinpath('figures_ZST').iterdir())) == 0 and len(list(output_path.joinpath('figures_GEBU').iterdir())) == 0:
-                    pass
-                else:
-                    print('The output folder is not empty. Please empty the folder and run the script again.')
-                    exit()
-            else:
-                print('The output folder is not empty. Please empty the folder and run the script again.')
-                exit()
-        else:
-            print('The output folder is not empty. Please empty the folder and run the script again.')
-            exit()
-
     local_path = output_path.joinpath('temp')
+    # if output_path doesnot exist, create it, with subfolder for tempfiles
+    if not output_path.exists():
+        local_path.mkdir(parents=True, exist_ok=False)
+        print("output folder created")
+    # elif output_path exists, but empty, continue
+    elif not any(list(output_path.iterdir())):
+        local_path.mkdir(parents=True, exist_ok=False)
+        print("output folder created")
+    #if anything in there: stop the script
+    elif any(list(output_path.iterdir())):
+        print('The output folder is not empty. Please empty the folder and run the script again.')
+        exit()
+
     # read bekleding csv
     df = pd.read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
