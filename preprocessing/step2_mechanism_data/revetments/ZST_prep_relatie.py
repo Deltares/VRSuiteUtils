@@ -13,14 +13,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 from preprocessing.step2_mechanism_data.revetments.project_utils.readSteentoetsFile import read_steentoets_file
-from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_JSON
+from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_JSON, read_prfl
 from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 
 
 
 
-
-def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
+def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
 
     # define variables
     evaluateYears = [2025, 2100]
@@ -30,6 +29,7 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         dwarsprofiel = section.dwarsprofiel
 
         steentoetsFile = section['steentoetsfile']
+
 
         # import Q-variant results
         Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
@@ -41,22 +41,28 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         if pd.isna(steentoetsFile):
             print("No steentoets file for {}.".format(section.doorsnede))
             print("Assumed that the dike is covered by grass")
+
+            # read profile
+            orientation, kruinhoogte, dijkprofiel_x, dijkprofiel_y = read_prfl(
+                profielen_path.joinpath(df['prfl'].values[section_index]))
+
             #####
             for i, year in enumerate(evaluateYears):
                 data = {"zichtjaar": year,
                         "dwarsprofiel": "Geen steenzetting",
-                        "aantal deelvakken": 1,
-                        "Zo": section.begin_grasbekleding-0.1,
-                        "Zb": section.begin_grasbekleding,
-                        "overgang huidig": section.begin_grasbekleding,
-                        "D huidig": 0.1,
-                        "tana": 1./3.,
-                        "toplaagtype": 26.1,
-                        "delta": 3.,
-                        "ratio_voldoet": 8.}
-                data[f"deelvak 0"] = {"D_opt": [0.1, 1.],
-                                      "betaFalen": [8.0, 8.0]}
-
+                        "aantal deelvakken": 2,
+                        "Zo": [section.begin_grasbekleding-0.1, section.begin_grasbekleding],
+                        "Zb": [section.begin_grasbekleding, kruinhoogte],
+                        "overgang huidig": [section.begin_grasbekleding, section.begin_grasbekleding],
+                        "D huidig": [0.1, np.nan],
+                        "tana": [1./3., 1./3.],
+                        "toplaagtype": [26.1, 20.0],
+                        "delta": [3., np.nan],
+                        "ratio_voldoet": [8., np.nan]}
+                data[f"deelvak 0"] = {"D_opt": [0.1, 0.2, 0.3, 0.4],
+                                      "betaFalen": [8.0, 8.0, 8.0, 8.0]}
+                data[f"deelvak 1"] = {"D_opt": [np.nan, np.nan, np.nan, np.nan],
+                                      "betaFalen": [np.nan, np.nan, np.nan, np.nan]}
                 write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede,
                                                                                       evaluateYears[i])))
             continue
@@ -87,7 +93,8 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
                         select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
 
                         if len(select)==0:
-                            if row.Zo == row.Zb: #tolerance?
+                            if abs(row.Zb - row.Zo) < 0.1:
+                                # this happens for berms and crests
                                 print("no points found, one cm above Zb taken")
                                 select = np.argmin(np.abs(h_help - row.Zb))
                                 D_opt = np.append(D_opt, np.max(D_help[select]))
@@ -118,6 +125,17 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
         for i in range(len(D_opt)):
             for j in range(len(D_opt[i]) - 1, 0, -1):
                 D_opt[i, j-1] = np.min([D_opt[i, j], D_opt[i, j - 1]], axis=0)
+
+        # if D_opt in consecutive steps is equal, this will result in errors later. Therefore, a small value of 0.01
+        # is added.
+        for i in range(len(D_opt)):
+            for j in range(len(D_opt[i][:, 0]) - 1):
+                for k in range(len(D_opt[i][j])):
+                    if D_opt[i, j, k] >= D_opt[i, j + 1, k]:
+                        print(i, j, k)
+                        print("D_opt[i,j,k] =", D_opt[i, j, k])
+                        print("D_opt[i,j+1,k] =", D_opt[i, j + 1, k])
+                        D_opt[i, j+1, k] = D_opt[i, j, k] + 0.01
 
 
         data = {}
@@ -162,9 +180,10 @@ def revetment_zst(df, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST =
 
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_geen_steentoetsfile.csv")
+    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
+    profielen_path = Path(r'c:\vrm_test\bekleding_split_workflow\PRFL')
     steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_geen_steentoets")
+    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
     figures_ZST = output_path.joinpath('figures_ZST')
 
     traject_id = "7-2"
@@ -195,4 +214,4 @@ if __name__ == '__main__':
         exit()
 
     # run revetment_zst
-    revetment_zst(df, steentoets_path, output_path, figures_ZST, p_grid)
+    revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)

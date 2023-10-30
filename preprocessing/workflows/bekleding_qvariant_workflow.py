@@ -46,12 +46,12 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_path: Path, wa
 if __name__ == '__main__':
 
     # input paths
-    traject_id = "30-1"
-    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default_reduced.csv")
+    traject_id = "31-1"
+    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default.csv")
     database_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Databases\V3_WBI2017")
     profielen_path = Path(r"c:\vrm_test\scheldestromen_bekleding\prfl")
     waterlevel_path = Path(r"c:\vrm_test\scheldestromen_bekleding\waterlevel_20230925")
-    output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_bekleding2")
+    output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full")
     hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'HydraRing-23.1.1')
 
     qvariant_main(traject_id, bekleding_path, database_path, waterlevel_path, profielen_path, hring_path, output_path)
