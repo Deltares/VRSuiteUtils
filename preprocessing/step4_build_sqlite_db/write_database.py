@@ -442,8 +442,12 @@ def add_piping_scenario(
         scenario_name=scenario_name,
         scenario_probability=data["scenariokans"],
         computation_type=computation_type,
-        probability_of_failure=data["pf_s"],
+        probability_of_failure= 1.0,
     )
+    # it was using probability of failure from default_piping (which is optional). This gives problems when it is not
+    # filled in by the user. Therefore, dummy value used for now.
+    # TODO: probability_of_failure should not be Required, but it is now.
+
     # for each computation_scenario fill Parameter
     computation_scenario_id = [
         val

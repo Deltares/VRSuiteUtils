@@ -69,7 +69,6 @@ def write_database_main(traject_name : str,
         vakindeling_shape.drop(columns=['piping'], inplace=True)            
     
     if revetment_path != None:
-        vakindeling_shape.astype({'bekledingen': str})
         mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table']  = read_revetment_data(revetment_path)
     else:
         vakindeling_shape.drop(columns=['bekledingen'], inplace=True)
@@ -123,6 +122,7 @@ def write_database_main(traject_name : str,
         write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name), mechanisms = ['Overflow','StabilityInner', 'Piping'])
 
 if __name__ == '__main__':
+
     traject_name = "24-3"
     vakindeling_geojson =       Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Vakindeling\Vakindeling_24-3.geojson')
     characteristic_profile_csv= Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Profielen\selected_profiles_adj.csv')
@@ -135,6 +135,7 @@ if __name__ == '__main__':
     piping_path =               Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\Piping_default_24-3.csv')
     stability_path =            Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\Macro_default_final.csv')
     revetment_path =            None
+
 
 
     write_database_main(traject_name                =   traject_name,
