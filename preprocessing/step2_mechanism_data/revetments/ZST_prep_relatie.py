@@ -54,13 +54,13 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
                         "Zo": [section.begin_grasbekleding-0.1, section.begin_grasbekleding],
                         "Zb": [section.begin_grasbekleding, kruinhoogte],
                         "overgang huidig": [section.begin_grasbekleding, section.begin_grasbekleding],
-                        "D huidig": [0.1, np.nan],
+                        "D huidig": [0.2, np.nan],
                         "tana": [1./3., 1./3.],
-                        "toplaagtype": [26.1, 20.0],
+                        "toplaagtype": [27.1, 20.0],
                         "delta": [3., np.nan],
                         "ratio_voldoet": [8., np.nan]}
                 data[f"deelvak 0"] = {"D_opt": [0.1, 0.2, 0.3, 0.4],
-                                      "betaFalen": [8.0, 8.0, 8.0, 8.0]}
+                                      "betaFalen": [8.0, 8.1, 8.2, 8.3]}
                 data[f"deelvak 1"] = {"D_opt": [np.nan, np.nan, np.nan, np.nan],
                                       "betaFalen": [np.nan, np.nan, np.nan, np.nan]}
                 write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede,
@@ -132,9 +132,6 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
             for j in range(len(D_opt[i][:, 0]) - 1):
                 for k in range(len(D_opt[i][j])):
                     if D_opt[i, j, k] >= D_opt[i, j + 1, k]:
-                        print(i, j, k)
-                        print("D_opt[i,j,k] =", D_opt[i, j, k])
-                        print("D_opt[i,j+1,k] =", D_opt[i, j + 1, k])
                         D_opt[i, j+1, k] = D_opt[i, j, k] + 0.01
 
 
