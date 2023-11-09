@@ -102,7 +102,7 @@ def fill_buildings(buildings):
 
             for distance, number in row.items():
                 Buildings.create(
-                    section_data=vak_id,
+                    section_data=vaknaam,
                     distance_from_toe=distance,
                     number_of_buildings=number,
                 )
