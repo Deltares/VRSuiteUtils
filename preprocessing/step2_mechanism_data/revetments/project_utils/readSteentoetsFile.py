@@ -55,12 +55,10 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
     for i in range(1, len(df_profile)-1):
         if df_profile['tana'].iloc[i] == 0.0:
             if (df_profile['tana'].iloc[i - 1] > 0.0) & (df_profile['tana'].iloc[i + 1] > 0.0):
-                print("horizontal outer berm adjusted: given a very mild slope")
                 df_profile['tana'].iloc[i] = tan_a_corr
                 df_profile['Zb'].iloc[i] = df_profile['Zb'].iloc[i] + df_profile['tana'].iloc[i] * df_profile['Bsegment'].iloc[i]
                 df_profile['Zo'].iloc[i + 1] = df_profile['Zb'].iloc[i]
             elif (df_profile['tana'].iloc[i - 1] > 0.0) & (df_profile['tana'].iloc[i + 1] == 0.0):
-                print("horizontal outer berm adjusted (consisting of 2 parts): given a very mild slope")
                 df_profile['tana'].iloc[i] = tan_a_corr
                 df_profile['tana'].iloc[i+1] = tan_a_corr
                 df_profile['Zb'].iloc[i] = df_profile['Zb'].iloc[i] + df_profile['tana'].iloc[i] * df_profile['Bsegment'].iloc[i]
@@ -73,13 +71,10 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
     # go backwards through df_profile. While last row has tana equal to 0 or negative, remove this row (unless tana of
     # the section in front is positive: because that is the crest
     while df_profile['tana'].iloc[-1] <= 0.0 and df_profile['tana'].iloc[-2] <= 0.0:
-        print("Horizontal or negative part of the slope removed. Dijkvak:", dwarsprofiel)
-        print("slope (tan alpha) was:", df_profile['tana'].index[-1])
         df_profile = df_profile.drop(df_profile.index[-1])
 
     # final check if to adjust the crest level if it exists
     if df_profile['tana'].iloc[-1] == 0.0:
-        print("last part is crest. Adjusted to a very mild slope")
         df_profile['tana'].iloc[-1] = tan_a_corr
         df_profile['Zb'].iloc[-1] = df_profile['Zo'].iloc[-1] + df_profile['tana'].iloc[-1] * df_profile['Bsegment'].iloc[-1]
 
