@@ -23,8 +23,6 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
     models = ['gras_golfklap', 'gras_golfoploop']
     evaluateYears = [2025, 2100]
 
-
-
     for index, row in df.iterrows():
 
         orientation, kruinhoogte, dijkprofiel_x, dijkprofiel_y = read_prfl(profielen_path.joinpath(df['prfl'].values[index]))
@@ -34,9 +32,9 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         Amp = row['getij_amplitude'] # getij amplitude
         region = row['region']
         begin_grasbekleding = row['begin_grasbekleding']
-
-        transition_levels = np.arange(begin_grasbekleding, kruinhoogte - 0.1, 0.25)
         grasbekleding_end = kruinhoogte - 0.01
+
+        transition_levels = np.arange(begin_grasbekleding, grasbekleding_end, 0.25)
 
         # check if begin grasbekleding is equal to or higher than end grasbekleding
         # if so. we assume 2 transitions. At 1 cm below crest and 25 cm lower than that. Beta of 8 is assumed and 7.9
@@ -48,11 +46,19 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                         "dwarsprofiel": dwarsprofiel,
                         "dijkprofiel_x": list(dijkprofiel_x),
                         "dijkprofiel_y": list(dijkprofiel_y),
-                        "grasbekleding_begin": [kruinhoogte - 0.26, kruinhoogte - 0.01],
+                        "grasbekleding_begin": [grasbekleding_end, grasbekleding_end + 0.25],
                         "betaFalen": [7.9, 8.]}
                 write_JSON_to_file(data, output_path.joinpath("GEBU_{}_{}.json".format(row.doorsnede, year)))
             print('begin grasbekleding is equal to or higher than end grasbekleding. Beta van 8 aangenomen.')
             continue
+
+        if len(transition_levels) == 1:
+            # add kruinhoogte as last transition level
+            transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
+
+        elif len(transition_levels) == 0:
+            print("no transition levels found")
+            break
 
         beta = -ndtri(p_grid)
 
@@ -194,24 +200,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         beta_2 = betaFalen[np.argwhere(years==evaluateYears[1])]
         beta_2 = np.min([beta_1, beta_2], axis=0)
         betaFalen = np.append(beta_1, beta_2)
-
-        # IF THERE IS ONLY 1 TRANSITION LEVEL, WE ADD A TRANSITION LEVEL 0.25M LOWER, WITH A BETA 0.1 LOWER
-        # THIS IS DONE TO PREVENT PROBLEMS WITH EXTRAPOLATION IN THE VRTOOL
-        # PLOTTING FOR THESE CASES IS SWITCHED OFF, BECAUSE THAT CAUSES PROBLEMS
-        # SOLVE LATER BY MATCHING SF. NOW ONLY BETAFALEN IS EXTENDED
-        if len(transition_levels) == 1:
-            plotting = False
-            # insert an additional transition level below the existing transition level
-            transition_levels = np.insert(transition_levels, 0, transition_levels[0] - 0.25)
-            # turn betafalen in 2x2 shape with an  additional row betaFalen values before the existing betaFalen values with values 0.1 lower than existing values
-            betaFalen = np.insert(betaFalen, 0, betaFalen[0] - 0.1)
-            betaFalen = np.insert(betaFalen, -1, betaFalen[-1] - 0.1)
-            betaFalen = betaFalen.reshape(len(evaluateYears), len(transition_levels))
-
-
-        else:
-            plotting = True
-            betaFalen = betaFalen.reshape(len(evaluateYears), len(transition_levels))
+        betaFalen = betaFalen.reshape(len(evaluateYears), len(transition_levels))
 
         # export results to JSON
         for i, year in enumerate(evaluateYears):
@@ -223,22 +212,18 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                     "betaFalen": list(betaFalen[i])}
             write_JSON_to_file(data, output_path.joinpath("GEBU_{}_{}.json".format(row.doorsnede, year)))
 
-        if not plotting:
-            continue
-
-        else:
-            # plot safety factor
-            for i, year in enumerate(evaluateYears):
-                for j, transition_level in enumerate(transition_levels):
-                    plt.figure()
-                    plt.semilogx(1/np.array(p_grid), SF[i,:,j], 'o--')
-                    plt.semilogx(1/np.array(p_grid), np.full_like(SF[i,:,j], 1.0), 'k')
-                    plt.grid()
-                    plt.xlabel('Terugkeertijd [jaar]')
-                    plt.ylabel('SF [-]')
-                    plt.title(f'Begin gras = {transition_levels[j]} m+NAP, eind gras = {grasbekleding_end} m+NAP')
-                    plt.savefig(figures_GEBU.joinpath('safetyFactor_loc={}_{}_overgang_{:.2f}.png'.format(row.doorsnede, year, transition_level)))
-                    plt.close()
+        # plot safety factor
+        for i, year in enumerate(evaluateYears):
+            for j, transition_level in enumerate(transition_levels):
+                plt.figure()
+                plt.semilogx(1/np.array(p_grid), SF[i,:,j], 'o--')
+                plt.semilogx(1/np.array(p_grid), np.full_like(SF[i,:,j], 1.0), 'k')
+                plt.grid()
+                plt.xlabel('Terugkeertijd [jaar]')
+                plt.ylabel('SF [-]')
+                plt.title(f'Begin gras = {transition_levels[j]} m+NAP, eind gras = {grasbekleding_end} m+NAP')
+                plt.savefig(figures_GEBU.joinpath('safetyFactor_loc={}_{}_overgang_{:.2f}.png'.format(row.doorsnede, year, transition_level)))
+                plt.close()
 
             # plot beta
             plt.figure()
