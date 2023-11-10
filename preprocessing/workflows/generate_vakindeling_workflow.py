@@ -3,7 +3,7 @@ from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 
-from postprocessing.plot_functions import plot_vakindeling
+from preprocessing.visualization.plot_functions import plot_vakindeling
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 
 
