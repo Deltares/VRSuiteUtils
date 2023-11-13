@@ -18,7 +18,7 @@ def write_config_file(output_dir : Path, traject_name : str, database_path : Pat
 
     config = {'traject': traject_name,
               'mechanisms': mechanisms,
-              'input_database_path': str(database_path.absolute()).replace('\\','/')}
+              'input_database_name': str(database_path.absolute()).replace('\\','/')}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
@@ -127,8 +127,8 @@ if __name__ == '__main__':
     vakindeling_geojson =       Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Vakindeling\Vakindeling_24-3.geojson')
     characteristic_profile_csv= Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Profielen\selected_profiles_adj.csv')
     building_csv_path =         Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Bebouwing\building_count_traject24-3.csv')
-    output_dir =                Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Database_bugfix2')
-    output_db_name =            f'24-3_results_fix.db'
+    output_dir =                Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Database_vrtool_0_1_1')
+    output_db_name =            f'24-3_results_vrtool_0_1_1.db'
     hr_input_csv =              Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\HR_default_24-3_final.csv')
     waterlevel_results_path =   Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Waterstand')
     overflow_results_path =     Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Overslag')
