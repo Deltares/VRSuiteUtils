@@ -12,13 +12,16 @@ def read_csv_linesep(file_path, **kwargs):
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     return df
 
-def write_config_file(output_dir : Path, traject_name : str, database_path : Path, mechanisms = ['Overflow','StabilityInner', 'Piping', 'Revetment']):
+def write_config_file(output_dir : Path, traject_name : str, database_path : Path, exclude_mechanisms = None):
     # make a json with traject = traject_name and input_database_path = database_path
     
-
-    config = {'traject': traject_name,
-              'mechanisms': mechanisms,
-              'input_database_name': str(database_path.absolute()).replace('\\','/')}
+    if exclude_mechanisms is None:
+        config = {'traject': traject_name,
+                  'input_database_name': str(database_path.absolute()).replace('\\','/')}
+    else:
+        config = {'traject': traject_name,
+                  'excluded_mechanisms': exclude_mechanisms,
+                  'input_database_name': str(database_path.absolute()).replace('\\','/')}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
@@ -117,9 +120,9 @@ def write_database_main(traject_name : str,
 
     #write a config file
     if revetment_path != None:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
+        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name), exclude_mechanisms = ['Revetment'] )
     else:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name), mechanisms = ['Overflow','StabilityInner', 'Piping'])
+        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
 
 if __name__ == '__main__':
 
