@@ -120,9 +120,11 @@ def write_database_main(traject_name : str,
 
     #write a config file
     if revetment_path != None:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name), exclude_mechanisms = ['Revetment'] )
+        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name),
+                          exclude_mechanisms=['REVETMENT', 'HYRDAULIC_STRUCTURES'])
     else:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
+        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name),
+                          exclude_mechanisms=['HYRDAULIC_STRUCTURES'])
 
 if __name__ == '__main__':
 
