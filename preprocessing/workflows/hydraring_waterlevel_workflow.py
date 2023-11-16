@@ -20,7 +20,7 @@ def waterlevel_main(file_path: Path,
 
     """This is the main function of the workflow.
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
-
+    _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
     # read HRING reference csv
     hring_data = pd.read_csv(file_path, index_col=0)
 
@@ -55,24 +55,23 @@ def waterlevel_main(file_path: Path,
             # get config from hydraulic database:
             computation.get_HRING_config(database_path)
             # make sql file. Make sure that range is adjusted for 2100
-            from tests import test_data
             if "2100" not in str(database_path):
                 computation.make_SQL_file(
                     loc_output_dir,
-                    test_data.joinpath("general", "sql_reference_waterlevel.sql"
+                    _generic_data_dir.joinpath("hr_default_files","sql_reference_waterlevel.sql"
                     ),
                 )
             else:
                 computation.make_SQL_file(
                     loc_output_dir,
-                    test_data.joinpath("general", "sql_reference_waterlevel.sql"
+                    _generic_data_dir.joinpath("hr_default_files","sql_reference_waterlevel.sql"
                     ),
                     t_2100=True,
                 )
             # make ini file:
             computation.make_ini_file(
                 loc_output_dir,
-                test_data.joinpath("general", "ini_reference_waterlevel.ini"),
+                _generic_data_dir.joinpath("hr_default_files","ini_reference_waterlevel.ini"),
                 database_path,
                 hydraring_path.joinpath("config.sqlite"),
             )
@@ -84,14 +83,14 @@ def waterlevel_main(file_path: Path,
 # #     output_path: Path
 #
 
-# if __name__ == '__main__':
-#     # input paths
-#     # Path_prf = Path(
-#     #     r'C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\prfl')
-#     Path_results = Path(
-#         r'C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\Result test')
-#     Path_HR = [Path(
-#         r"C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\DatabaseWBI")]
-#     Path_file = r"C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\GEKBdata_base.csv"
-#
-#     waterlevel_main(Path_file,Path_HR, Path_results)
+if __name__ == '__main__':
+    # input paths
+    # Path_prf = Path(
+    #     r'C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\prfl')
+    Path_results = Path(
+        r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\output_waterstand2')
+    Path_HR = [Path(
+        r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\Databases\2023")]
+    Path_file = r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\HR_20231018.csv"
+
+    waterlevel_main(Path_file,Path_HR, Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals','HydraRing-23.1.1'), Path_results)
