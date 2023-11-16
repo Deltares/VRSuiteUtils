@@ -101,7 +101,7 @@ def generate_and_evaluate_overflow_computations(
         Path(file_path),
         list(map(Path, database_paths)),
         Path(profielen_dir),
-        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1'),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
 
@@ -138,7 +138,7 @@ def generate_and_evaluate_water_level_computations(
     waterlevel_main(
         Path(file_path),
         list(map(Path, database_paths)),
-        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals','HydraRing-23.1.1'),
         Path(output_path),
     )
 
@@ -191,7 +191,7 @@ def run_bekleding_qvariant(
         Path(database_path),
         Path(waterlevel_path),
         Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1'),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
 ########################################################################################################################
@@ -236,7 +236,7 @@ def run_gebu_zst(
         Path(input_csv),
         Path(steentoets_path),
         Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'DiKErnel'),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'DiKErnel'),
         Path(output_path),
     )
 

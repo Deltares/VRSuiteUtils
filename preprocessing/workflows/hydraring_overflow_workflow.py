@@ -97,4 +97,4 @@ if __name__ == '__main__':
         r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\Databases\2023")]
     Path_file = r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\HR_20231018.csv"
 
-    overflow_main(Path_file,Path_HR, Path_prf,Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals','HydraRing-23.1.1'), Path_results)
+    overflow_main(Path_file,Path_HR, Path_prf,Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'), Path_results)

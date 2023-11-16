@@ -61,4 +61,3 @@ tests/test_data/38-1/input/db/2100/hlcd_W_2100.txt
 tests/test_data/38-1/input/db/2100/WBI2017_Bovenrijn_38-1_v04.config.sqlite
 tests/test_data/38-1/input/db/2100/WBI2017_Bovenrijn_38-1_v04.sqlite
 tests/test_results/
-postprocessing/.ipynb_checkpoints/
