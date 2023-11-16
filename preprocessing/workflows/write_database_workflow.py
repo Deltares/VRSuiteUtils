@@ -12,16 +12,22 @@ def read_csv_linesep(file_path, **kwargs):
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     return df
 
-def write_config_file(output_dir : Path, traject_name : str, database_path : Path, exclude_mechanisms = None):
+def write_config_file(output_dir : Path, traject_name : str, database_name : str, exclude_mechanisms = None):
     # make a json with traject = traject_name and input_database_path = database_path
     
     if exclude_mechanisms is None:
         config = {'traject': traject_name,
-                  'input_database_name': str(database_path.absolute()).replace('\\','/')}
+                  'T': [0, 20, 25, 50, 75, 100],
+                  'input_database_name': str(database_name),
+                  'input_directory': None,
+                  'output_directory': "Basisberekening"}
     else:
         config = {'traject': traject_name,
+                  'T': [0, 20, 25, 50, 75, 100],
                   'excluded_mechanisms': exclude_mechanisms,
-                  'input_database_name': str(database_path.absolute()).replace('\\','/')}
+                  'input_database_name': str(database_name),
+                  'input_directory': None,
+                  'output_directory': "Basisberekening"}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
@@ -120,11 +126,11 @@ def write_database_main(traject_name : str,
 
     #write a config file
     if revetment_path != None:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name),
-                          exclude_mechanisms=['REVETMENT', 'HYRDAULIC_STRUCTURES'])
-    else:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name),
+        write_config_file(output_dir, traject_name, output_db_name,
                           exclude_mechanisms=['HYRDAULIC_STRUCTURES'])
+    else:
+        write_config_file(output_dir, traject_name, output_db_name,
+                          exclude_mechanisms=['REVETMENT', 'HYRDAULIC_STRUCTURES'])
 
 if __name__ == '__main__':
 
