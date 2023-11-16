@@ -59,7 +59,7 @@ if __name__ == '__main__':
     bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
     steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
     profielen_path = Path(r"c:\vrm_test\bekleding_split_workflow\PRFL")
-    bindikernel = Path(__file__).parent.absolute().parent.parent.joinpath('externals', 'DiKErnel')
+    bindikernel = Path(__file__).parent.absolute().parent.joinpath('externals', 'DiKErnel')
     output_path = Path(r"c:\vrm_test\bekleding_split_workflow\uitvoer_20231023")
 
     gebu_zst_main(traject_id, bekleding_path, steentoets_path, profielen_path, bindikernel, output_path)
