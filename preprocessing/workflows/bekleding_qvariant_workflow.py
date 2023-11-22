@@ -52,6 +52,6 @@ if __name__ == '__main__':
     profielen_path = Path(r"c:\vrm_test\scheldestromen_bekleding\prfl")
     waterlevel_path = Path(r"c:\vrm_test\scheldestromen_bekleding\waterlevel_20230925")
     output_path = Path(r"c:\vrm_test\scheldestromen_bekleding\uitvoer_full")
-    hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.parent.joinpath('externals', 'HydraRing-23.1.1')
+    hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1')
 
     qvariant_main(traject_id, bekleding_path, database_path, waterlevel_path, profielen_path, hring_path, output_path)
