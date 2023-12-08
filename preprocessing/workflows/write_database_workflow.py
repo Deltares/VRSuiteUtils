@@ -12,13 +12,22 @@ def read_csv_linesep(file_path, **kwargs):
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     return df
 
-def write_config_file(output_dir : Path, traject_name : str, database_path : Path, mechanisms = ['Overflow','StabilityInner', 'Piping', 'Revetment']):
+def write_config_file(output_dir : Path, traject_name : str, database_name : str, exclude_mechanisms = None):
     # make a json with traject = traject_name and input_database_path = database_path
     
-
-    config = {'traject': traject_name,
-              'mechanisms': mechanisms,
-              'input_database_path': str(database_path.absolute()).replace('\\','/')}
+    if exclude_mechanisms is None:
+        config = {'traject': traject_name,
+                  'T': [0, 20, 25, 50, 75, 100],
+                  'input_database_name': str(database_name),
+                  'input_directory': None,
+                  'output_directory': "Basisberekening"}
+    else:
+        config = {'traject': traject_name,
+                  'T': [0, 20, 25, 50, 75, 100],
+                  'excluded_mechanisms': exclude_mechanisms,
+                  'input_database_name': str(database_name),
+                  'input_directory': None,
+                  'output_directory': "Basisberekening"}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
@@ -117,9 +126,11 @@ def write_database_main(traject_name : str,
 
     #write a config file
     if revetment_path != None:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name))
+        write_config_file(output_dir, traject_name, output_db_name,
+                          exclude_mechanisms=['HYDRAULIC_STRUCTURES'])
     else:
-        write_config_file(output_dir, traject_name, output_dir.joinpath(output_db_name), mechanisms = ['Overflow','StabilityInner', 'Piping'])
+        write_config_file(output_dir, traject_name, output_db_name,
+                          exclude_mechanisms=['REVETMENT', 'HYDRAULIC_STRUCTURES'])
 
 if __name__ == '__main__':
 
@@ -127,8 +138,8 @@ if __name__ == '__main__':
     vakindeling_geojson =       Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Vakindeling\Vakindeling_24-3.geojson')
     characteristic_profile_csv= Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Profielen\selected_profiles_adj.csv')
     building_csv_path =         Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Bebouwing\building_count_traject24-3.csv')
-    output_dir =                Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Database_bugfix2')
-    output_db_name =            f'24-3_results_fix.db'
+    output_dir =                Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Database_vrtool_0_1_1')
+    output_db_name =            f'24-3_results_vrtool_0_1_1.db'
     hr_input_csv =              Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\HR_default_24-3_final.csv')
     waterlevel_results_path =   Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Waterstand')
     overflow_results_path =     Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Overslag')

@@ -420,7 +420,7 @@ def add_stability_scenario(
     ][-1]["id"]
 
 
-    Parameter.create(
+    ComputationScenarioParameter.create(
         computation_scenario=computation_scenario_id, parameter="beta", value=beta_value
     )
     if isinstance(data.stixnaam, str):
@@ -471,7 +471,7 @@ def add_piping_scenario(
         "dh_exit(t)",
     ]
     for parameter_name in parameters_to_add:
-        Parameter.create(
+        ComputationScenarioParameter.create(
             computation_scenario=computation_scenario_id,
             parameter=parameter_name,
             value=data[parameter_name],
