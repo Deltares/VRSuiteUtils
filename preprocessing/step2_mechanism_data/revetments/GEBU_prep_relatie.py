@@ -202,6 +202,19 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         betaFalen = np.append(beta_1, beta_2)
         betaFalen = betaFalen.reshape(len(evaluateYears), len(transition_levels))
 
+        # add a transitionlevel of 1 cm below the crest. and add a beta of 8.0 add the end of betaFalen
+        # if there already is a transitionlevel of 1 cm below the crest, then do not add it again. But then replace the
+        # last beta with 8.0
+        if np.max(transition_levels) >= kruinhoogte - 0.01:
+            betaFalen[:, -1] = 8.0
+            SF[:, :, -1] = 10000.0
+        else:
+            transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
+            # add beta of 8.0 to betaFalen add the end of all rows of matrix betaFalen
+            betaFalen = np.append(betaFalen, np.full((len(evaluateYears), 1), 8.0), axis=1)
+            # add SF = 10000 to SF add the end of all rows of matrix SF
+            SF = np.append(SF, np.full((len(evaluateYears), len(p_grid), 1), 10000.0), axis=2)
+
         # export results to JSON
         for i, year in enumerate(evaluateYears):
             data = {"zichtjaar": year,
