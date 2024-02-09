@@ -389,7 +389,7 @@ def add_stability_scenario(
 ):
     if isinstance(data["stixnaam"], str):
         computation_type = (
-            ComputationType.select().where(ComputationType.name == "SIMPLE").get().id
+            ComputationType.select().where(ComputationType.name == "DSTABILITY").get().id
         )
     else:
         computation_type = (
@@ -579,18 +579,15 @@ def fill_structures():
     pass
 
 
-def fill_measures(measure_table):
-
+def fill_measures(measure_table, list_of_sections):
     #get types from measure_table
     types = measure_table["measure_type"].unique()
     for type in types: MeasureType.create(name=type)
 
-    # fill CombinableType
-    CombinableType.create(name="full")
-    CombinableType.create(name="combinable")
-    CombinableType.create(name="partial")
-    CombinableType.create(name="revetment")
-
+    # fill CombinableType if they are not already in the database
+    for combinable_types in ["full", "combinable", "partial", "revetment"]:
+        if not CombinableType.select().where(CombinableType.name == combinable_types).exists():
+            CombinableType.create(name=combinable_types)
 
     # fill StandardMeasure
     for idx, row in measure_table.iterrows():
