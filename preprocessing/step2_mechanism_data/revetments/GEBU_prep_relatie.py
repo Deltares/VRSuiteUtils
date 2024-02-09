@@ -305,11 +305,11 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
 
 if __name__ == '__main__':
     # inputs
-    bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
-    profielen_path = Path(r'c:\VRM\test_revetments\profielen')
-    output_path = Path(r'c:\VRM\test_revetments\output')
-    binDIKErnel = Path('c:/VRM/test_revetments/bin_DiKErnel')
-    figures_GEBU = Path(r'c:\VRM\test_revetments\figures_GEBU')
+    bekleding_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\Bekleding_20230830.csv')
+    profielen_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\profielen')
+    output_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\bekleding_bovengrens')
+    binDIKErnel = Path(__file__).parent.absolute().parent.joinpath('externals', 'DiKErnel')
+    figures_GEBU = output_path.joinpath('figures_GEBU')
 
     # read csv file as dataframe
     df = pd.read_csv(bekleding_path,
