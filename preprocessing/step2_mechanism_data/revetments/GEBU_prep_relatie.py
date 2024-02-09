@@ -16,7 +16,8 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
 
-def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid):
+def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid,
+                   gebu_alternative="upper_limit"):
 
     # define variables
     typeZode = 'grasGeslotenZode'
@@ -202,6 +203,39 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         betaFalen = np.append(beta_1, beta_2)
         betaFalen = betaFalen.reshape(len(evaluateYears), len(transition_levels))
 
+        # It can happen that within the "regular" measure space for GEBU no sufficient beta can be achieved. This is
+        # strange, because when the transition level is increased until the crest, GEBU cannot occur. Therefore, we
+        # include alternative calculation methods, which can only be set from the sandbox, not CLI. These methods are:
+        #   1. Regular calculation: possibly leading to insufficient betas
+        #   2. Upper limit approach: when transition level is at crest level (or actually 1 cm below crest level), the
+        #      beta is set to 8.0.
+        #   3. Lower limit approach: For each transition level, the beta is set to 8.0. This way, GEBU will not play anyt
+        #      role in the vrtool optimization.
+        # gebu_alternative = "regular", "upper_limit", "lower_limit"
+
+
+        if gebu_alternative == "upper_limit":
+            # add a transitionlevel of 1 cm below the crest. and add a beta of 8.0 add the end of betaFalen
+            # if there already is a transitionlevel of 1 cm below the crest, then do not add it again. But then replace the
+            # last beta with 8.0
+            if np.max(transition_levels) >= kruinhoogte - 0.01:
+                betaFalen[:, -1] = 8.0
+                SF[:, :, -1] = 10000.0
+            else:
+                # If tha last transition level is more than 1cm below the crest, add a transition level of 1 cm below
+                # the crest and add a beta of 8.0 add the end of betaFalen
+                transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
+                # add beta of 8.0 to betaFalen add the end of all rows of matrix betaFalen
+                betaFalen = np.append(betaFalen, np.full((len(evaluateYears), 1), 8.0), axis=1)
+                # add SF = 10000 to SF add the end of all rows of matrix SF
+                SF = np.append(SF, np.full((len(evaluateYears), len(p_grid), 1), 10000.0), axis=1)
+        elif gebu_alternative == "lower_limit":
+            # set all betas to 8.0 and all SF to 10000.0
+            betaFalen = np.full_like(betaFalen, 8.0)
+            SF = np.full_like(SF, 10000.0)
+        elif gebu_alternative == "regular":
+            pass
+
         # export results to JSON
         for i, year in enumerate(evaluateYears):
             data = {"zichtjaar": year,
@@ -271,11 +305,11 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
 
 if __name__ == '__main__':
     # inputs
-    bekleding_path = Path(r'c:\VRM\test_revetments\Bekleding_default.csv')
-    profielen_path = Path(r'c:\VRM\test_revetments\profielen')
-    output_path = Path(r'c:\VRM\test_revetments\output')
-    binDIKErnel = Path('c:/VRM/test_revetments/bin_DiKErnel')
-    figures_GEBU = Path(r'c:\VRM\test_revetments\figures_GEBU')
+    bekleding_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\Bekleding_20230830.csv')
+    profielen_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\profielen')
+    output_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\bekleding_bovengrens')
+    binDIKErnel = Path(__file__).parent.absolute().parent.joinpath('externals', 'DiKErnel')
+    figures_GEBU = output_path.joinpath('figures_GEBU')
 
     # read csv file as dataframe
     df = pd.read_csv(bekleding_path,
