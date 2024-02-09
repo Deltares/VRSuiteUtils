@@ -222,18 +222,13 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                 betaFalen[:, -1] = 8.0
                 SF[:, :, -1] = 10000.0
             else:
-                # Ideally, a transition level is added 1cm below the crest. But this is not working yet in combination with
-                # the VRTool. When this issue is solved, the following lines can be uncommented.
-                # transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
+                # If tha last transition level is more than 1cm below the crest, add a transition level of 1 cm below
+                # the crest and add a beta of 8.0 add the end of betaFalen
+                transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
                 # add beta of 8.0 to betaFalen add the end of all rows of matrix betaFalen
-                # betaFalen = np.append(betaFalen, np.full((len(evaluateYears), 1), 8.0), axis=1)
+                betaFalen = np.append(betaFalen, np.full((len(evaluateYears), 1), 8.0), axis=1)
                 # add SF = 10000 to SF add the end of all rows of matrix SF
-                # SF = np.append(SF, np.full((len(evaluateYears), len(p_grid), 1), 10000.0), axis=2)
-
-                # replace the last beta and SF with 8.0
-                # when the issue mentioned above is solved in the VRTool the following 2 lines can be deleted
-                betaFalen[:, -1] = 8.0
-                SF[:, :, -1] = 10000.0
+                SF = np.append(SF, np.full((len(evaluateYears), len(p_grid), 1), 10000.0), axis=1)
         elif gebu_alternative == "lower_limit":
             # set all betas to 8.0 and all SF to 10000.0
             betaFalen = np.full_like(betaFalen, 8.0)
