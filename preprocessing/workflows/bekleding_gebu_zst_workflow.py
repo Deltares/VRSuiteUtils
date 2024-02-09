@@ -47,7 +47,7 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
     revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
 
     # step 3: ZST
-    revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)
+    # revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)
 
     # remove all files in local_path using shutil
     shutil.rmtree(local_path)
@@ -56,10 +56,14 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
 if __name__ == '__main__':
     # input paths
     traject_id = "7-2"
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
-    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    profielen_path = Path(r"c:\vrm_test\bekleding_split_workflow\PRFL")
+    bekleding_path = Path(r"c:\vrm_test\traject7_2_jan2024\Bekleding_20230830.csv")
+    steentoets_path = Path(r"c:\vrm_test\traject7_2_jan2024\Steentoets")
+    profielen_path = Path(r"c:\vrm_test\traject7_2_jan2024\PRFL")
+    # traject_id = "31-1"
+    # bekleding_path = Path(r"c:\vrm_test\gebu_beta_eight\Bekleding_default.csv")
+    # steentoets_path = Path(r"c:\vrm_test\gebu_beta_eight\bekleding_31_1")
+    # profielen_path = Path(r"c:\vrm_test\gebu_beta_eight\prfl_waterstand")
     bindikernel = Path(__file__).parent.absolute().parent.joinpath('externals', 'DiKErnel')
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\uitvoer_20231023")
+    output_path = Path(r"c:\vrm_test\traject7_2_jan2024\bekleding_regulier")
 
     gebu_zst_main(traject_id, bekleding_path, steentoets_path, profielen_path, bindikernel, output_path)

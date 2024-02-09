@@ -134,18 +134,18 @@ def write_database_main(traject_name : str,
 
 if __name__ == '__main__':
 
-    traject_name = "24-3"
-    vakindeling_geojson =       Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Vakindeling\Vakindeling_24-3.geojson')
-    characteristic_profile_csv= Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Profielen\selected_profiles_adj.csv')
-    building_csv_path =         Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Bebouwing\building_count_traject24-3.csv')
-    output_dir =                Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Database_vrtool_0_1_1')
-    output_db_name =            f'24-3_results_vrtool_0_1_1.db'
-    hr_input_csv =              Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\HR_default_24-3_final.csv')
-    waterlevel_results_path =   Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Waterstand')
-    overflow_results_path =     Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Overslag')
-    piping_path =               Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\Piping_default_24-3.csv')
-    stability_path =            Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WSRL\24-3\Mechanisme\Macro_default_final.csv')
-    revetment_path =            None
+    traject_name = "7-2"
+    vakindeling_geojson =       Path(r'c:\vrm_test\traject7_2_jan2024\vakindeling\Vakindeling_7-2.geojson')
+    characteristic_profile_csv= Path(r'c:\vrm_test\traject7_2_jan2024\afgeleide_profielen\representatieve_profielen\selected_profiles_extra_vak.csv')
+    building_csv_path =         Path(r'c:\vrm_test\traject7_2_jan2024\bebouwing\building_count_traject7-2_aangepast.csv')
+    output_dir =                Path(r'c:\vrm_test\traject7_2_jan2024\database_bekleding_bovengrens')
+    output_db_name =            f'traject_7_2.db'
+    hr_input_csv =              Path(r'c:\vrm_test\traject7_2_jan2024\HR\HR_20230713.csv')
+    waterlevel_results_path =   Path(r'c:\vrm_test\traject7_2_jan2024\HR\Hydra-Ring waterstanden')
+    overflow_results_path =     Path(r'c:\vrm_test\traject7_2_jan2024\HR\Hydra-Ring overslag')
+    piping_path =               Path(r'c:\vrm_test\traject7_2_jan2024\Piping_20240122.csv')
+    stability_path =            Path(r'c:\vrm_test\traject7_2_jan2024\Stabiliteit_20240122_SF_workaround.csv')
+    revetment_path =            Path(r'c:\vrm_test\traject7_2_jan2024\bekleding_bovengrens')
 
 
 
