@@ -167,7 +167,8 @@ def fill_profiles(profile_df):
                     pass
                     # warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
         except:
-            warnings.warn("Dijkvak {} niet in vakindeling. Profiel wordt niet weggeschreven.".format(section_name))
+            pass
+            # warnings.warn("Dijkvak {} niet in vakindeling. Profiel wordt niet weggeschreven.".format(section_name))
     for id in id_dict.keys():
         CharacteristicPointType.create(id=id_dict[id], name=id)
 
@@ -220,13 +221,14 @@ def fill_mechanisms(mechanism_data,
         for count, header in enumerate(header_names):
             #check if header exists in row index
             if header in row.index:
-                MechanismPerSection.create(
-                    section=section_data_id,
-                    mechanism=Mechanism.select(Mechanism.id)
-                    .where(Mechanism.name == default_mechanisms[count])
-                    .get()
-                    .id,
-                )
+                if row[header] is not None:
+                    MechanismPerSection.create(
+                        section=section_data_id,
+                        mechanism=Mechanism.select(Mechanism.id)
+                        .where(Mechanism.name == default_mechanisms[count])
+                        .get()
+                        .id,
+                    )
     # next fill ComputationScenario table and children for each mechanism
     # first fill the ComputationType table
     for computation_type in ["HRING", "SEMIPROB", "SIMPLE", "DSTABILITY"]:
@@ -579,10 +581,12 @@ def fill_structures():
     pass
 
 
-def fill_measures(measure_table, list_of_sections):
-    #get types from measure_table
-    types = measure_table["measure_type"].unique()
-    for type in types: MeasureType.create(name=type)
+def fill_measures(measure_table, list_of_sections = []):
+
+    # fill MeasureType if they are not already in the database
+    for type in measure_table["measure_type"].unique():
+        if not MeasureType.select().where(MeasureType.name == type).exists():
+            MeasureType.create(name=type)
 
     # fill CombinableType if they are not already in the database
     for combinable_types in ["full", "combinable", "partial", "revetment"]:
@@ -590,6 +594,7 @@ def fill_measures(measure_table, list_of_sections):
             CombinableType.create(name=combinable_types)
 
     # fill StandardMeasure
+    measure_ids = []
     for idx, row in measure_table.iterrows():
         measure_type_id = (
             MeasureType.select().where(MeasureType.name == row["measure_type"]).get().id
@@ -603,10 +608,12 @@ def fill_measures(measure_table, list_of_sections):
             combinable_type=combinable_type_id,
             year=row["year"],
         )
-        measure_id = [val for val in Measure.select().dicts()][-1]["id"]
+        #only the just added measure_id is added to the list
+        measure_ids.append(Measure.select().dicts()[-1]["id"])
+        
         row = row.fillna(-999)
         StandardMeasure.create(
-            measure=measure_id,
+            measure=measure_ids[-1],
             max_inward_reinforcement=row["max_inward_reinforcement"],
             max_outward_reinforcement=row["max_outward_reinforcement"],
             direction=row["direction"],
@@ -621,10 +628,12 @@ def fill_measures(measure_table, list_of_sections):
             n_steps_block=row["n_steps_block"],
         )
 
-    # all id from Measure
-    measure_ids = [val["id"] for val in Measure.select().dicts()]
-    section_ids = [val["id"] for val in SectionData.select().dicts()]
-    for section_id in section_ids:
+
+    if len(list_of_sections) == 0:
+        section_ids = [val["id"] for val in SectionData.select().dicts()]
+    else:
+        section_ids = [val["id"] for val in SectionData.select().where(SectionData.section_name << list_of_sections).dicts()]
+    for section_id in sorted(section_ids):
         kerende_hoogte = get_kerende_hoogte(section_id)
         revetment = check_if_revetment(section_id)
 
