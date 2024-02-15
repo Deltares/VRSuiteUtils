@@ -1,0 +1,153 @@
+{
+    "zichtjaar": 2025,
+    "dwarsprofiel": "227",
+    "aantal deelvakken": 6,
+    "Zo": [
+        0.01,
+        2.47,
+        6.65,
+        6.69,
+        6.88,
+        7.77
+    ],
+    "Zb": [
+        2.47,
+        6.65,
+        6.69,
+        6.88,
+        7.77,
+        7.82
+    ],
+    "overgang huidig": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+    ],
+    "D huidig": [
+        0.4,
+        0.5,
+        0.06,
+        NaN,
+        NaN,
+        NaN
+    ],
+    "tana": [
+        0.29181,
+        0.24218,
+        0.01307,
+        0.05723,
+        0.35887,
+        0.01672
+    ],
+    "toplaagtype": [
+        7.0,
+        27.3,
+        1.0,
+        20.0,
+        20.0,
+        20.0
+    ],
+    "delta": [
+        NaN,
+        1.2439024390243902,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+    ],
+    "ratio_voldoet": [
+        NaN,
+        3.8273133311825642,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+    ],
+    "deelvak 0": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 1": {
+        "D_opt": [
+            0.26018292270828214,
+            0.46494453873801833,
+            0.48872623417915956,
+            0.8077799856767637
+        ],
+        "betaFalen": [
+            3.341478956038596,
+            4.7081297157535635,
+            4.927590187213489,
+            6.138603624939706
+        ]
+    },
+    "deelvak 2": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 3": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 4": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 5": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    }
+}
