@@ -106,6 +106,121 @@ optimization_step = optimization_step.drop(columns="id_y")
 optimization_step = optimization_step.rename(columns={"id_x": "id"})
 print(optimization_step)
 
+# get all unique values from the "name" column in measure_result_parameter
+sql_query = 'SELECT DISTINCT name FROM MeasureResultParameter'
+measure_result_parameter = pd.read_sql_query(sql_query, conn)
+# print them as a list
+print(measure_result_parameter["name"].tolist())
+# add new columns to optimization_step named after measure_result_parameter["name"].tolist() and fill it with the value -999.0
+for name in measure_result_parameter["name"].tolist():
+    optimization_step[name] = -999.0
+
+# now find for each id in optimization_step database where "measure_result_id" corresponds with "measure_result_id" in
+# MeasureResultParameter. If the name in the column "name" in MeasureResultParameter corresponds with a column in
+# optimization_step, fill the value from the "value" column in MeasureResultParameter in the corresponding column in
+# optimization_step
+sql_query = 'SELECT * FROM MeasureResultParameter WHERE measure_result_id IN ({})'.format(
+    ', '.join([str(i) for i in optimization_step["measure_result_id"].tolist()]))
+measure_result_parameter = pd.read_sql_query(sql_query, conn)
+for index, row in measure_result_parameter.iterrows():
+    if row["name"] in optimization_step.columns:
+        optimization_step.loc[optimization_step["measure_result_id"] == row["measure_result_id"], row["name"]] = row["value"]
+
+optimization_step.head()
+
+# copy optimization_step to a new dataframe called "df_copy"
+df_copy = optimization_step.copy()
+# sort by optimization_selected_measure_id
+df_copy = df_copy.sort_values(by="optimization_selected_measure_id")
+# print df_copy where optimization_selected_measure_id ==703
+print(df_copy[df_copy["optimization_selected_measure_id"] == 703])
+
+# determine cost for optimization_step with id = 230. Subtract total_lcc where id = 230 from total_lcc where id = 229
+# and print the result
+print(df_copy[df_copy["id"] == 230]["total_lcc"].values[0] - df_copy[df_copy["id"] == 229]["total_lcc"].values[0])
+
+# find the cost from MeasureResultSection where the measure_result_id matches measure_result_id in optimization_step df
+# Then select only the cost where time = 0 and add these to a new column in optimization_step
+sql_query = 'SELECT * FROM MeasureResultSection WHERE measure_result_id IN ({})'.format(
+    ', '.join([str(i) for i in optimization_step["measure_result_id"].tolist()]))
+measure_result_section = pd.read_sql_query(sql_query, conn)
+# measure_result_section = measure_result_section[measure_result_section["time"] == 0] # klopt het om time=0 te gebruiken, of moet time gelijk zijn aan investment_year?
+# the above line is incorrect. We don't want time == 0, but we want to select the cost where time == investment_year
+# add the "cost" column from the measure_result_section dataframe to the optimization_step dataframe
+# measure_result_section = measure_result_section[measure_result_section["time"] == optimization_step["investment_year"].values[0]]
+# merge on measure_result_id, and add the cost column to optimization_step. The cost has several time steps. Merge on where
+# time is equal to investment_year
+optimization_step = pd.merge(optimization_step, measure_result_section[measure_result_section["time"] == optimization_step["investment_year"].values[0]][["measure_result_id", "cost"]],
+                                left_on="measure_result_id", right_on="measure_result_id", how="left")
+# optimization_step = pd.merge(optimization_step, measure_result_section[["measure_result_id", "cost"]],
+#                                 left_on="measure_result_id", right_on="measure_result_id", how="left")
+# rename cost to standalone_cost
+optimization_step = optimization_step.rename(columns={"cost": "standalone_cost"})
+optimization_step.head()
+
+import numpy as np
+# get a list of the unique sorted section_id in optimization_step
+section_id_list = np.sort(optimization_step["section_id"].unique())
+print(section_id_list)
+# get a list of the unique sorted measure_type_id in optimization_step
+measure_type_id_list = np.sort(optimization_step["measure_type_id"].unique())
+print(measure_type_id_list)
+
+# now add a column "marginal_cost" to optimization_step and fill it with the value -999.0
+optimization_step["marginal_cost"] = -999.0
+# for each section_id in section_id_list, find the rows in optimization_step where section_id == section_id. The
+# marginal_cost is the difference between the standalone_cost of the current row and the standalone_cost of the previous
+# with the same measure_type_id. If there is no previous row with the same measure_type_id, the marginal_cost is the same
+# as the standalone_cost. Fill the marginal_cost column with the calculated values.
+for section_id in section_id_list:
+    for measure_type_id in measure_type_id_list:
+        mask = (optimization_step["section_id"] == section_id) & (optimization_step["measure_type_id"] == measure_type_id)
+        optimization_step.loc[mask, "marginal_cost"] = optimization_step[mask]["standalone_cost"].diff()
+        optimization_step.loc[mask, "marginal_cost"] = optimization_step[mask]["marginal_cost"].fillna(optimization_step[mask]["standalone_cost"])
+
+# add a colum "check_cost_total" to optimization_step and fill it with the value -999.0
+# now per time step, calculate the check_cost_total for each step_number. The check_cost_total is the sum of the
+# marginal_cost for each step_number. Fill the check_cost_total column with the calculated values.
+optimization_step["check_cost_total"] = -999.0
+# loop through the unique and sorted values of step_number in optimization_step
+for step_number in np.sort(optimization_step["step_number"].unique()):
+    # sum marginal costs of the current step_number
+    step_cost = optimization_step[optimization_step["step_number"] == step_number]["marginal_cost"].sum()
+    # fill the check_cost_total column with the calculated values + the check_cost_total of the previous step_number
+    # if there is no previous step_number, fill the check_cost_total with the calculated value
+    if step_number == 0:
+        optimization_step.loc[optimization_step["step_number"] == step_number, "check_cost_total"] = step_cost
+    else:
+        optimization_step.loc[optimization_step["step_number"] == step_number, "check_cost_total"] = step_cost + optimization_step[optimization_step["step_number"] == step_number - 1]["check_cost_total"].values[0]
+
+# find the exact step numbers this is not true: optimization_step["total_lcc"] == optimization_step["check_cost_total"]
+# and save them to a list
+step_number_list = optimization_step[optimization_step["total_lcc"] != optimization_step["check_cost_total"]]["step_number"].unique()
+
+
+# now in optimization_step add a column check_cost, where check_cost is accumulated cost for each optimization_step
+# so the first row will have the same value as cost, the second row will have the sum of the first and second row, etc.
+optimization_step["check_cost"] = optimization_step["cost"].cumsum()
+optimization_step.head()
+
+# check if the check_cost column is equal to the total_lcc column
+print(optimization_step["check_cost"] == optimization_step["total_lcc"])
+
+# print last check_cost - total_lcc
+print(optimization_step["check_cost_total"].values[-1] - optimization_step["total_lcc"].values[-1])
+
+# count number of unique measure_result_id in optimization_step
+print(optimization_step["measure_result_id"].nunique())
+
+# now for
+
+# get the discount_rate from OptimizationRun
+optimization_run_id
+sql_query = 'SELECT * FROM OptimizationRun WHERE optimization_run_id = {}'.format(optimization_run_id)
+optimization_run = pd.read_sql_query(sql_query, conn)
+discount_rate = optimization_run["discount_rate"].values[0]
+
+
 # Closing the connection to the database
 conn.close()
 
