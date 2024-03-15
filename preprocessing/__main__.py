@@ -9,13 +9,75 @@ from preprocessing.workflows.teenlijn_workflow import main_teenlijn
 from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
 from preprocessing.workflows.select_profiles_workflow import main_profiel_selectie
 from preprocessing.workflows.write_database_workflow import write_database_main
-
+import configparser
 from pathlib import Path
 import os
+
+
+
+def read_config_file(file_path, mandatory_parameters):
+    config = configparser.ConfigParser()
+    config.read(file_path)
+
+    # Check if mandatory parameters are present
+    for param in mandatory_parameters:
+        if param not in config['DEFAULT']:
+            raise ValueError(f"'{param}' is missing in the configuration file.")
+
+    return config['DEFAULT']
 
 @click.group()
 def cli():
     pass
+
+############
+# Create a cli command where instead of all the paths and settings, one link is given to a configuration file. This
+# configuration file contains all the paths and settings. This is a more user-friendly way of running the script.
+# The user only has to provide the link to the configuration file and the script will do the rest.
+# The configuration file is a .json file and is read in the main function of the script. Do this for the vakindeling
+# workflow
+@cli.command(
+    name="vakindeling_config", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
+)
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
+
+# write a function that reads the configuration file and runs the vakindeling workflow
+def generate_vakindeling_shape_config(config_file):
+    mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_folder']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    vakindeling_csv = parameters['vakindeling_csv']
+    output_folder = Path(r"{}".format(parameters['output_folder']))
+    traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
+    flip = parameters.getboolean('flip', fallback=False)  # set default value to False if not present
+
+    print(f"Running vakindeling workflow with the following parameters: \n"
+          f"traject_id: {traject_id}\n"
+          f"vakindeling_csv: {vakindeling_csv}\n"
+          f"output_folder: {output_folder}\n"
+          f"traject_shape: {traject_shape}\n"
+          f"flip: {flip}\n")
+
+
+    vakindeling_main(
+        traject_id,
+        vakindeling_csv,
+        Path(output_folder),
+        traject_shape,
+        flip,
+    )
+
 
 @cli.command(
     name="vakindeling", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
