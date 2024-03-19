@@ -12,27 +12,27 @@ from preprocessing.workflows.write_database_workflow import write_database_main
 import configparser
 from pathlib import Path
 import os
-import csv
 
-def read_config_file_csv(file_path, mandatory_parameters):
-    parameters = {}
 
-    # Read the CSV file
-    with open(file_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            parameters[row['parameter']] = row['value']
-
-    # Check if mandatory parameters are present
-    for param in mandatory_parameters:
-        if param not in parameters:
-            raise ValueError(f"'{param}' is missing in the configuration file.")
-
-    return parameters
 
 def read_config_file(file_path, mandatory_parameters):
     config = configparser.ConfigParser()
-    config.read(file_path)
+
+    # Read the configuration file line by line
+    with open(file_path, 'r') as f:
+        lines = f.readlines()
+
+    for line in lines:
+        # Split the line at the first occurrence of '#' to separate parameter and comment
+        parts = line.split('#', 1)
+        param_comment = parts[0].strip()
+        if not param_comment:
+            continue  # Skip empty lines or lines containing only comments
+
+        # Split parameter and value
+        param, value = map(str.strip, param_comment.split('=', 1))
+
+        config['DEFAULT'][param] = value
 
     # Check if mandatory parameters are present
     for param in mandatory_parameters:
@@ -41,16 +41,23 @@ def read_config_file(file_path, mandatory_parameters):
 
     return config['DEFAULT']
 
+# def read_config_file(file_path, mandatory_parameters):
+#     config = configparser.ConfigParser()
+#     config.read(file_path)
+#
+#     # Check if mandatory parameters are present
+#     for param in mandatory_parameters:
+#         if param not in config['DEFAULT']:
+#             raise ValueError(f"'{param}' is missing in the configuration file.")
+#
+#     return config['DEFAULT']
+
+
 @click.group()
 def cli():
     pass
 
-############
-# Create a cli command where instead of all the paths and settings, one link is given to a configuration file. This
-# configuration file contains all the paths and settings. This is a more user-friendly way of running the script.
-# The user only has to provide the link to the configuration file and the script will do the rest.
-# The configuration file is a .json file and is read in the main function of the script. Do this for the vakindeling
-# workflow
+
 @cli.command(
     name="vakindeling_config", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
 )
@@ -62,7 +69,7 @@ def cli():
 
 # write a function that reads the configuration file and runs the vakindeling workflow
 def generate_vakindeling_shape_config(config_file):
-    mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_folder']
+    mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_map_vakindeling']
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -73,14 +80,21 @@ def generate_vakindeling_shape_config(config_file):
     # Accessing parameters
     traject_id = parameters['traject_id']
     vakindeling_csv = parameters['vakindeling_csv']
-    output_folder = Path(r"{}".format(parameters['output_folder']))
-    traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
-    flip = parameters.getboolean('flip', fallback=False)  # set default value to False if not present
+    output_folder_vakindeling = Path(r"{}".format(parameters['output_map_vakindeling']))
+    traject_shape = parameters.getboolean('traject_shapefile', fallback=False)  # set default value to False if not present
+    flip = parameters.getboolean('flip_vakindeling', fallback=False)  # set default value to False if not present
+
+# print the parameters
+    print(f"traject_id: {traject_id}")
+    print(f"vakindeling_csv: {vakindeling_csv}")
+    print(f"output_folder_vakindeling: {output_folder_vakindeling}")
+    print(f"traject_shape: {traject_shape}")
+    print(f"flip: {flip}")
 
     vakindeling_main(
         traject_id,
         vakindeling_csv,
-        Path(output_folder),
+        Path(output_folder_vakindeling),
         traject_shape,
         flip,
     )
@@ -96,7 +110,7 @@ def generate_vakindeling_shape_config(config_file):
                 help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
 
 def generate_and_evaluate_overflow_computations_config(config_file):
-    mandatory_parameters = ['file_path', 'database_path_current', 'database_path_future', 'profielen_dir', 'output_path']
+    mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'hr_profielen_dir', 'output_map_overslag']
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -105,11 +119,11 @@ def generate_and_evaluate_overflow_computations_config(config_file):
         return
 
     # Accessing parameters
-    file_path = parameters['file_path']
-    database_path_current = parameters['database_path_current']
-    database_path_future = parameters['database_path_future']
-    profielen_dir = parameters['profielen_dir']
-    output_path = parameters['output_path']
+    file_path = parameters['hr_input_csv']
+    database_path_current = parameters['database_path_HR_current']
+    database_path_future = parameters['database_path_HR_future']
+    profielen_dir = parameters['hr_profielen_dir']
+    output_path = parameters['output_map_overslag']
 
     overflow_main(
         Path(file_path),
@@ -118,91 +132,76 @@ def generate_and_evaluate_overflow_computations_config(config_file):
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
-########################################################################################################################
 
-#
+
 @cli.command(
-    name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
+    name="waterlevel_config", help="Generates and evaluates the Hydra-Ring water level computations."
 )
-@click.option("--file_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar het invoerbestand (HR_default.csv).")
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
-@click.option("--database_paths",
-              type=click.Path(),
-              multiple=True,
-              required=True,
-              help="Link naar de map met de Hydraulische database. "
-                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
-                   "moet deze optie twee keer worden opgegeven. Dus:"
-                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
-                   "voor de 2100 situatie>.")
+def generate_and_evaluate_water_level_computations_config(config_file):
+    mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'output_map_waterstand']
 
-@click.option("--profielen_dir",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met alle profielen.")
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
 
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is de werkmap, waarin je de resultaten van de overslagsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map voorafgaand aan het runnen leeg moet zijn.")
+    # Accessing parameters
+    file_path = parameters['hr_input_csv']
+    database_path_current = parameters['database_path_HR_current']
+    database_path_future = parameters['database_path_HR_future']
+    output_path = parameters['output_map_waterstand']
 
- 
-def generate_and_evaluate_overflow_computations(
-    file_path, database_paths, profielen_dir, output_path
-):
-    overflow_main(
+    waterlevel_main(
         Path(file_path),
-        list(map(Path, database_paths)),
-        Path(profielen_dir),
+        [Path(database_path_current), Path(database_path_future)],
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
 
-########################################################################################################################
 @cli.command(
-    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
+    name="bekleding_qvariant_config", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"
+                                           "stap voor de bekleding sommen. Hierna volgt nog 'bekleding_gebu_zst'"
 )
-@click.option("--file_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar het invoerbestand (HR_default.csv).")
 
-@click.option("--database_paths",
-              type=click.Path(),
-              multiple=True,
-              required=True,
-              help="Link naar de map met de Hydraulische database. "
-                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
-                   "moet deze optie twee keer worden opgegeven. Dus:"
-                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
-                   "voor de 2100 situatie>")
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is de werkmap, waarin je de resultaten van de waterstandsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map voorafgaand aan het runnen leeg moet zijn.")
+def run_bekleding_qvariant_config(config_file):
+    mandatory_parameters = ['traject_id', 'input_csv', 'database_path', 'waterlevel_path', 'profielen_path', 'output_path']
 
-def generate_and_evaluate_water_level_computations(
-        file_path, database_paths, output_path
-):
-    waterlevel_main(
-        Path(file_path),
-        list(map(Path, database_paths)),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals','HydraRing-23.1.1'),
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    input_csv = parameters['input_csv']
+    database_path = parameters['database_path']
+    waterlevel_path = parameters['waterlevel_path']
+    profielen_path = parameters['profielen_path']
+    output_path = parameters['output_path']
+
+    qvariant_main(
+        traject_id,
+        Path(input_csv),
+        Path(database_path),
+        Path(waterlevel_path),
+        Path(profielen_path),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
-
-########################################################################################################################
 
 
 @cli.command(
@@ -600,6 +599,85 @@ def selecteer_profiel(
         Path(uitvoer_map),
         invoerbestand,
         "minimum") #selectiemethode is nog niet in gebruik
+
+#### switched to config:
+
+@cli.command(
+    name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
+)
+@click.option("--file_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het invoerbestand (HR_default.csv).")
+@click.option("--database_paths",
+              type=click.Path(),
+              multiple=True,
+              required=True,
+              help="Link naar de map met de Hydraulische database. "
+                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
+                   "moet deze optie twee keer worden opgegeven. Dus:"
+                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
+                   "voor de 2100 situatie>.")
+@click.option("--profielen_dir",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de map met alle profielen.")
+@click.option("--output_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Dit is de werkmap, waarin je de resultaten van de overslagsommen wilt uitvoeren. Belangrijk is dat"
+                   "deze map voorafgaand aan het runnen leeg moet zijn.")
+def generate_and_evaluate_overflow_computations(
+        file_path, database_paths, profielen_dir, output_path
+):
+    overflow_main(
+        Path(file_path),
+        list(map(Path, database_paths)),
+        Path(profielen_dir),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
+        Path(output_path),
+    )
+
+@cli.command(
+    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
+)
+@click.option("--file_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar het invoerbestand (HR_default.csv).")
+
+@click.option("--database_paths",
+              type=click.Path(),
+              multiple=True,
+              required=True,
+              help="Link naar de map met de Hydraulische database. "
+                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
+                   "moet deze optie twee keer worden opgegeven. Dus:"
+                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
+                   "voor de 2100 situatie>")
+
+@click.option("--output_path",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Dit is de werkmap, waarin je de resultaten van de waterstandsommen wilt uitvoeren. Belangrijk is dat"
+                   "deze map voorafgaand aan het runnen leeg moet zijn.")
+
+def generate_and_evaluate_water_level_computations(
+        file_path, database_paths, output_path
+):
+    waterlevel_main(
+        Path(file_path),
+        list(map(Path, database_paths)),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals','HydraRing-23.1.1'),
+        Path(output_path),
+    )
+
+########################################################################################################################
 
 
 
