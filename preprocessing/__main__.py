@@ -12,8 +12,23 @@ from preprocessing.workflows.write_database_workflow import write_database_main
 import configparser
 from pathlib import Path
 import os
+import csv
 
+def read_config_file_csv(file_path, mandatory_parameters):
+    parameters = {}
 
+    # Read the CSV file
+    with open(file_path, newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            parameters[row['parameter']] = row['value']
+
+    # Check if mandatory parameters are present
+    for param in mandatory_parameters:
+        if param not in parameters:
+            raise ValueError(f"'{param}' is missing in the configuration file.")
+
+    return parameters
 
 def read_config_file(file_path, mandatory_parameters):
     config = configparser.ConfigParser()
@@ -62,14 +77,6 @@ def generate_vakindeling_shape_config(config_file):
     traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
     flip = parameters.getboolean('flip', fallback=False)  # set default value to False if not present
 
-    print(f"Running vakindeling workflow with the following parameters: \n"
-          f"traject_id: {traject_id}\n"
-          f"vakindeling_csv: {vakindeling_csv}\n"
-          f"output_folder: {output_folder}\n"
-          f"traject_shape: {traject_shape}\n"
-          f"flip: {flip}\n")
-
-
     vakindeling_main(
         traject_id,
         vakindeling_csv,
@@ -80,49 +87,40 @@ def generate_vakindeling_shape_config(config_file):
 
 
 @cli.command(
-    name="vakindeling", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
+    name="overflow_config", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
-@click.option("--traject_id",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
-@click.option("--vakindeling_csv",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Link naar de CSV met de vakindeling ")
-@click.option("--output_folder",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
-@click.option("--traject_shape",
-              type=str,
-              nargs=1,
-              required=False,
-              help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
-                   " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
-                   "gebruikt.")
-@click.option("--flip",
-              type=bool,
-              nargs=1,
-              required=False,
-              help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
-                   "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
-                   "de shapefile worden omgedraaid door deze optie op True te zetten.")
-def generate_vakindeling_shape(
-    traject_id, vakindeling_csv, output_folder, traject_shape, flip
-):
-    vakindeling_main(
-        traject_id,
-        vakindeling_csv,
-        Path(output_folder),
-        traject_shape,
-        flip,
-    )
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
 
+def generate_and_evaluate_overflow_computations_config(config_file):
+    mandatory_parameters = ['file_path', 'database_path_current', 'database_path_future', 'profielen_dir', 'output_path']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    file_path = parameters['file_path']
+    database_path_current = parameters['database_path_current']
+    database_path_future = parameters['database_path_future']
+    profielen_dir = parameters['profielen_dir']
+    output_path = parameters['output_path']
+
+    overflow_main(
+        Path(file_path),
+        [Path(database_path_current), Path(database_path_future)],
+        Path(profielen_dir),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
+        Path(output_path),
+    )
 ########################################################################################################################
+
+#
 @cli.command(
     name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
