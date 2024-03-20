@@ -1,0 +1,17 @@
+[DEFAULT]
+
+traject_id = 	7-2 	# trajectnaam
+
+vakindeling_csv = 	c:/vrm_test/database_7_2/Vakindeling/Vakindeling_20230724.csv 	# pad naar de csv met de vakindeling
+hr_input_csv =		c:/vrm_test/traject7_2_jan2024/HR/HR_20230713.csv 		# pad naar de csv met de HR info
+
+hr_profielen_dir = c:/vrm_test/traject7_2_jan2024/PRFL 					# pad naar de map met de profielen voor de HR sommen
+database_path_HR_current = 	c:/vrm_test/database_7_2/Bekleding/waterstand/2023 	# pad met de database voor de HR sommen (huidig)
+database_path_HR_future = 	c:/vrm_test/database_7_2/Bekleding/waterstand/2100 	# pad met de database voor de HR sommen (toekomst)
+
+output_map_waterstand = 	c:/vrm_test/database_7_2/waterstand_test_config 		# aan te maken uitvoer folder voor de HR sommen voor waterstand
+output_map_overslag = 		c:/vrm_test/database_7_2/overslag_test_config 			# aan te maken uitvoer folder voor de HR sommen voor overslag
+output_map_vakindeling = 	c:/vrm_test/database_7_2/Vakindeling/vakindeling test_ini 	# aan te maken uitvoer folder voor de vakindeling
+
+traject_shapefile = 	False 	# als deze op false staat, wordt de trajectshapefile uit het NBPW. Als het bestand afwijkt, moet hier een pad naar de juiste shapefile worden meegegeven
+flip_vakindeling = 	True 	# gooit de vakindeling om, indien het de shapefile in de andere richting is gedefinieerd als de vakindeling

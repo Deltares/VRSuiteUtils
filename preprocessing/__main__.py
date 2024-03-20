@@ -33,17 +33,6 @@ def read_config_file(file_path, mandatory_parameters):
 
     return config['DEFAULT']
 
-# def read_config_file(file_path, mandatory_parameters):
-#     config = configparser.ConfigParser()
-#     config.read(file_path)
-#
-#     # Check if mandatory parameters are present
-#     for param in mandatory_parameters:
-#         if param not in config['DEFAULT']:
-#             raise ValueError(f"'{param}' is missing in the configuration file.")
-#
-#     return config['DEFAULT']
-
 
 @click.group()
 def cli():
@@ -76,13 +65,14 @@ def generate_vakindeling_shape_config(config_file):
     traject_shape = parameters.getboolean('traject_shapefile', fallback=False)  # set default value to False if not present
     flip = parameters.getboolean('flip_vakindeling', fallback=False)  # set default value to False if not present
 
-# print the parameters
+    # print the parameters
     print(f"traject_id: {traject_id}")
     print(f"vakindeling_csv: {vakindeling_csv}")
     print(f"output_folder_vakindeling: {output_folder_vakindeling}")
     print(f"traject_shape: {traject_shape}")
     print(f"flip: {flip}")
 
+    # run the vakindeling workflow
     vakindeling_main(
         traject_id,
         vakindeling_csv,
@@ -117,6 +107,14 @@ def generate_and_evaluate_overflow_computations_config(config_file):
     profielen_dir = parameters['hr_profielen_dir']
     output_path = parameters['output_map_overslag']
 
+    # print the parameters
+    print(f"file_path: {file_path}")
+    print(f"database_path_current: {database_path_current}")
+    print(f"database_path_future: {database_path_future}")
+    print(f"profielen_dir: {profielen_dir}")
+    print(f"output_path: {output_path}")
+
+    # run the overflow computations
     overflow_main(
         Path(file_path),
         [Path(database_path_current), Path(database_path_future)],
@@ -150,6 +148,13 @@ def generate_and_evaluate_water_level_computations_config(config_file):
     database_path_future = parameters['database_path_HR_future']
     output_path = parameters['output_map_waterstand']
 
+    # print the parameters
+    print(f"file_path: {file_path}")
+    print(f"database_path_current: {database_path_current}")
+    print(f"database_path_future: {database_path_future}")
+    print(f"output_path: {output_path}")
+
+    # run the water level computations
     waterlevel_main(
         Path(file_path),
         [Path(database_path_current), Path(database_path_future)],
