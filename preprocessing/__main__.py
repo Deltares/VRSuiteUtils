@@ -12,27 +12,19 @@ from preprocessing.workflows.write_database_workflow import write_database_main
 import configparser
 from pathlib import Path
 import os
-
-
+import re
 
 def read_config_file(file_path, mandatory_parameters):
     config = configparser.ConfigParser()
 
     # Read the configuration file line by line
     with open(file_path, 'r') as f:
-        lines = f.readlines()
-
-    for line in lines:
-        # Split the line at the first occurrence of '#' to separate parameter and comment
-        parts = line.split('#', 1)
-        param_comment = parts[0].strip()
-        if not param_comment:
-            continue  # Skip empty lines or lines containing only comments
-
-        # Split parameter and value
-        param, value = map(str.strip, param_comment.split('=', 1))
-
-        config['DEFAULT'][param] = value
+        for line in f:
+            # Use regular expression to match parameter, value, and comment
+            match = re.match(r"^\s*([^#]+?)\s*=\s*([^#]+?)\s*(?:#.*)?$", line)
+            if match:
+                param, value = map(str.strip, match.groups())
+                config['DEFAULT'][param] = value
 
     # Check if mandatory parameters are present
     for param in mandatory_parameters:
@@ -677,9 +669,10 @@ def generate_and_evaluate_water_level_computations(
         Path(output_path),
     )
 
-########################################################################################################################
 
 
 
 if __name__ == "__main__":
     cli()
+
+
