@@ -174,7 +174,12 @@ def generate_and_evaluate_water_level_computations_config(config_file):
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
 def run_bekleding_qvariant_config(config_file):
-    mandatory_parameters = ['traject_id', 'input_csv', 'database_path', 'waterlevel_path', 'profielen_path', 'output_path']
+    mandatory_parameters = ['traject_id',
+                            'bekleding_input_csv',
+                            'database_path_bekleding',
+                            'output_map_waterstand',
+                            'hr_profielen_dir',
+                            'output_map_bekleding']
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -184,11 +189,11 @@ def run_bekleding_qvariant_config(config_file):
 
     # Accessing parameters
     traject_id = parameters['traject_id']
-    input_csv = parameters['input_csv']
-    database_path = parameters['database_path']
-    waterlevel_path = parameters['waterlevel_path']
-    profielen_path = parameters['profielen_path']
-    output_path = parameters['output_path']
+    input_csv = parameters['bekleding_input_csv']
+    database_path = parameters['database_path_bekleding']
+    waterlevel_path = parameters['output_map_waterstand']
+    profielen_path = parameters['hr_profielen_dir']
+    output_path = parameters['output_map_bekleding']
 
     qvariant_main(
         traject_id,
