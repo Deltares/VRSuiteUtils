@@ -66,6 +66,7 @@ def generate_vakindeling_shape_config(config_file):
     flip = parameters.getboolean('flip_vakindeling', fallback=False)  # set default value to False if not present
 
     # print the parameters
+    print("The following parameters are read from the configuration file:")
     print(f"traject_id: {traject_id}")
     print(f"vakindeling_csv: {vakindeling_csv}")
     print(f"output_folder_vakindeling: {output_folder_vakindeling}")
@@ -108,6 +109,7 @@ def generate_and_evaluate_overflow_computations_config(config_file):
     output_path = parameters['output_map_overslag']
 
     # print the parameters
+    print("The following parameters are read from the configuration file:")
     print(f"file_path: {file_path}")
     print(f"database_path_current: {database_path_current}")
     print(f"database_path_future: {database_path_future}")
@@ -149,6 +151,7 @@ def generate_and_evaluate_water_level_computations_config(config_file):
     output_path = parameters['output_map_waterstand']
 
     # print the parameters
+    print("The following parameters are read from the configuration file:")
     print(f"file_path: {file_path}")
     print(f"database_path_current: {database_path_current}")
     print(f"database_path_future: {database_path_future}")
@@ -195,6 +198,16 @@ def run_bekleding_qvariant_config(config_file):
     profielen_path = parameters['hr_profielen_dir']
     output_path = parameters['output_map_bekleding']
 
+    # print the parameters
+    print("The following parameters are read from the configuration file:")
+    print(f"traject_id: {traject_id}")
+    print(f"bekleding_input_csv: {input_csv}")
+    print(f"database_path_bekleding: {database_path}")
+    print(f"output_map_waterstand: {waterlevel_path}")
+    print(f"hr_profielen_dir: {profielen_path}")
+    print(f"output_map_bekleding: {output_path}")
+
+    # run the bekleding_qvariant workflow
     qvariant_main(
         traject_id,
         Path(input_csv),
@@ -207,93 +220,43 @@ def run_bekleding_qvariant_config(config_file):
 
 
 @cli.command(
-    name="bekleding_qvariant", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"
-                                    "stap voor de bekleding sommen. Hierna volgt nog 'bekleding_gebu_zst'"
-)
-@click.option("--traject_id",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
-@click.option("--input_csv",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is het pad naar het CSV bestand dat de invoer voor bekledingen bevat. Een standaard format voor"
-                   "dit bestand is te vinden in de VRTool repository: "
-                   "'preprocessing/default_files/Bekleding_default.csv'")
-@click.option("--database_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Hydraulische database(s).")
-@click.option("--waterlevel_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met resultaten van de waterstandsberekeningen.")
-@click.option("--profielen_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de profielen.")
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Folder waar de resultaten naartoe worden geschreven. Als deze map nog niet bestaat, wordt deze automatisch aangemaakt. Als deze map al bestaat moet deze leeg zijn.")
-
-def run_bekleding_qvariant(
-        traject_id, input_csv, database_path, waterlevel_path, profielen_path, output_path
-):
-    qvariant_main(
-        str(traject_id),
-        Path(input_csv),
-        Path(database_path),
-        Path(waterlevel_path),
-        Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
-    )
-########################################################################################################################
-
-@cli.command(
-    name="bekleding_gebu_zst", help="Genereert de invoer voor gras- en steenbekleding voor de VRTool. Dit is de tweede "
+    name="bekleding_gebu_zst_config", help="Genereert de invoer voor gras- en steenbekleding voor de VRTool. Dit is de tweede "
                                     "(en laatste) stap voor het genereren van invoer voor bekledingen."
 )
-@click.option("--traject_id",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
-@click.option("--input_csv",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is het pad naar het CSV bestand dat de invoer voor bekledingen bevat. Een standaard format voor"
-                   "dit bestand is te vinden in de VRTool repository: "
-                   "'preprocessing/default_files/Bekleding_default.csv'")
-@click.option("--steentoets_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de Steentoetsfile(s). Momenteel worden versie 17.1.2.1 en 17.1.1.1 ondersteund. Het versienummer moet in de bestandsnaam staan.")
-@click.option("--profielen_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met de profielen.")
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Folder waar de resultaten naartoe worden geschreven. Als deze map nog niet bestaat, wordt deze automatisch aangemaakt. Als deze map al bestaat moet deze leeg zijn.")
 
-def run_gebu_zst(
-        traject_id, input_csv, steentoets_path, profielen_path, output_path
-):
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+
+def run_gebu_zst_config(config_file):
+    mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    input_csv = parameters['bekleding_input_csv']
+    steentoets_path = parameters['steentoets_map']
+    profielen_path = parameters['hr_profielen_dir']
+    output_path = parameters['output_map_bekleding']
+
+    # print the parameters
+    print("The following parameters are read from the configuration file:")
+    print(f"traject_id: {traject_id}")
+    print(f"bekleding_input_csv: {input_csv}")
+    print(f"steentoets_map: {steentoets_path}")
+    print(f"hr_profielen_dir: {profielen_path}")
+    print(f"output_map_bekleding: {output_path}")
+
+    # run the bekleding_gebu_zst workflow
     gebu_zst_main(
-        str(traject_id),
+        traject_id,
         Path(input_csv),
         Path(steentoets_path),
         Path(profielen_path),
@@ -301,7 +264,7 @@ def run_gebu_zst(
         Path(output_path),
     )
 
-########################################################################################################################
+
 @cli.command(
     name="genereer_dijkprofielen", help="Voor het afleiden van karakteristieke dijkprofielen af voor een gegeven "
                                         "dijktraject"
@@ -601,84 +564,6 @@ def selecteer_profiel(
         Path(uitvoer_map),
         invoerbestand,
         "minimum") #selectiemethode is nog niet in gebruik
-
-#### switched to config:
-
-@cli.command(
-    name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
-)
-@click.option("--file_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar het invoerbestand (HR_default.csv).")
-@click.option("--database_paths",
-              type=click.Path(),
-              multiple=True,
-              required=True,
-              help="Link naar de map met de Hydraulische database. "
-                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
-                   "moet deze optie twee keer worden opgegeven. Dus:"
-                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
-                   "voor de 2100 situatie>.")
-@click.option("--profielen_dir",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar de map met alle profielen.")
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is de werkmap, waarin je de resultaten van de overslagsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map voorafgaand aan het runnen leeg moet zijn.")
-def generate_and_evaluate_overflow_computations(
-        file_path, database_paths, profielen_dir, output_path
-):
-    overflow_main(
-        Path(file_path),
-        list(map(Path, database_paths)),
-        Path(profielen_dir),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
-    )
-
-@cli.command(
-    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
-)
-@click.option("--file_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Link naar het invoerbestand (HR_default.csv).")
-
-@click.option("--database_paths",
-              type=click.Path(),
-              multiple=True,
-              required=True,
-              help="Link naar de map met de Hydraulische database. "
-                   "Omdat er zowel een map voor de situatie huidig, als voor 2100 is,"
-                   "moet deze optie twee keer worden opgegeven. Dus:"
-                   "--database_paths <pad naar de database voor huidige situatie> --database_paths <pad naar database "
-                   "voor de 2100 situatie>")
-
-@click.option("--output_path",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is de werkmap, waarin je de resultaten van de waterstandsommen wilt uitvoeren. Belangrijk is dat"
-                   "deze map voorafgaand aan het runnen leeg moet zijn.")
-
-def generate_and_evaluate_water_level_computations(
-        file_path, database_paths, output_path
-):
-    waterlevel_main(
-        Path(file_path),
-        list(map(Path, database_paths)),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals','HydraRing-23.1.1'),
-        Path(output_path),
-    )
-
 
 
 

@@ -222,7 +222,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                 betaFalen[:, -1] = 8.0
                 SF[:, :, -1] = 10000.0
             else:
-                # If tha last transition level is more than 1cm below the crest, add a transition level of 1 cm below
+                # If the last transition level is more than 1cm below the crest, add a transition level of 1 cm below
                 # the crest and add a beta of 8.0 add the end of betaFalen
                 transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
                 # add beta of 8.0 to betaFalen add the end of all rows of matrix betaFalen
