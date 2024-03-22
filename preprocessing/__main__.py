@@ -264,62 +264,49 @@ def run_gebu_zst_config(config_file):
         Path(output_path),
     )
 
-
 @cli.command(
-    name="genereer_dijkprofielen", help="Voor het afleiden van karakteristieke dijkprofielen af voor een gegeven "
-                                        "dijktraject"
+    name="genereer_profielen", help="Voor het selecteren van karakteristieke profielen voor een gegeven dijktraject"
 )
-@click.option("--traject_id",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
-@click.option("--output_folder",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
-@click.option("--traject_shape",
-              nargs=1,
-              default=False,
-              help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
-                   " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
-                   "gebruikt.")
-@click.option("--flip_traject",
-              type=bool,
-              nargs=1,
-              default=False,
-              help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
-                   "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
-                   "de shapefile worden omgedraaid door deze optie op True te zetten.")
-@click.option("--flip_waterkant",
-              type=bool,
-              nargs=1,
-              default=False,
-              help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
-                   "nummering van de vakken volgt. Als het water aan de andere linkerkant loopt, moet hier True worden "
-                   "ingevuld. Default is False. ")
-@click.option("--dx",
-                type=int,
-                nargs=1,
-                default=25,
-                help="De afstand tussen de profielen. Optioneel, default is 25 meter.")
-@click.option("--voorland_lengte",
-                type=int,
-                nargs=1,
-                default=50,
-                help="De lengte van het voorland. Optioneel, default is 50 meter.")
-@click.option("--achterland_lengte",
-                type=int,
-                nargs=1,
-                default=75,
-                help="De lengte van het voorland. Optioneel, default is 75 meter.")
 
-def obtain_the_AHN_profiles_for_traject(
-    traject_id, output_folder, traject_shape, flip_traject, flip_waterkant, dx, voorland_lengte, achterland_lengte
-):
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+
+def obtain_the_AHN_profiles_for_traject(config_file):
+    mandatory_parameters = ['traject_id', 'output_map_profielen']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    output_folder = parameters['output_map_profielen']
+    dx = parameters.getint('dx', fallback=25)  # set default value to 25 if not present
+    voorland_lengte = parameters.getint('voorland_lengte', fallback=50)  # set default value to 50 if not present
+    achterland_lengte = parameters.getint('achterland_lengte', fallback=75)  # set default value to 75 if not present
+    traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
+    flip_traject = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
+    flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"traject_id: {traject_id}")
+    print(f"output_folder: {output_folder}")
+    print(f"dx: {dx}")
+    print(f"voorland_lengte: {voorland_lengte}")
+    print(f"achterland_lengte: {achterland_lengte}")
+    print(f"traject_shape: {traject_shape}")
+    print(f"flip_traject: {flip_traject}")
+    print(f"flip_waterkant: {flip_waterkant}")
+
+    # run the get_profiles_workflow
     main_traject_profiles(
-        str(traject_id),
+        traject_id,
         Path(output_folder),
         dx,
         voorland_lengte,
@@ -328,6 +315,71 @@ def obtain_the_AHN_profiles_for_traject(
         flip_traject,
         flip_waterkant,
     )
+
+
+# @cli.command(
+#     name="genereer_dijkprofielen", help="Voor het afleiden van karakteristieke dijkprofielen af voor een gegeven "
+#                                         "dijktraject"
+# )
+# @click.option("--traject_id",
+#               type=str,
+#               nargs=1,
+#               required=True,
+#               help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
+# @click.option("--output_folder",
+#               type=click.Path(),
+#               nargs=1,
+#               required=True,
+#               help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
+# @click.option("--traject_shape",
+#               nargs=1,
+#               default=False,
+#               help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
+#                    " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
+#                    "gebruikt.")
+# @click.option("--flip_traject",
+#               type=bool,
+#               nargs=1,
+#               default=False,
+#               help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
+#                    "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
+#                    "de shapefile worden omgedraaid door deze optie op True te zetten.")
+# @click.option("--flip_waterkant",
+#               type=bool,
+#               nargs=1,
+#               default=False,
+#               help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
+#                    "nummering van de vakken volgt. Als het water aan de andere linkerkant loopt, moet hier True worden "
+#                    "ingevuld. Default is False. ")
+# @click.option("--dx",
+#                 type=int,
+#                 nargs=1,
+#                 default=25,
+#                 help="De afstand tussen de profielen. Optioneel, default is 25 meter.")
+# @click.option("--voorland_lengte",
+#                 type=int,
+#                 nargs=1,
+#                 default=50,
+#                 help="De lengte van het voorland. Optioneel, default is 50 meter.")
+# @click.option("--achterland_lengte",
+#                 type=int,
+#                 nargs=1,
+#                 default=75,
+#                 help="De lengte van het voorland. Optioneel, default is 75 meter.")
+#
+# def obtain_the_AHN_profiles_for_traject(
+#     traject_id, output_folder, traject_shape, flip_traject, flip_waterkant, dx, voorland_lengte, achterland_lengte
+# ):
+#     main_traject_profiles(
+#         str(traject_id),
+#         Path(output_folder),
+#         dx,
+#         voorland_lengte,
+#         achterland_lengte,
+#         traject_shape,
+#         flip_traject,
+#         flip_waterkant,
+#     )
 
 @cli.command(name="genereer_teenlijn", help="Voor het afleiden van de teenlijn van een dijktraject"
 )

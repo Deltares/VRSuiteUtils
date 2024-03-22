@@ -228,7 +228,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
                 # add beta of 8.0 to betaFalen add the end of all rows of matrix betaFalen
                 betaFalen = np.append(betaFalen, np.full((len(evaluateYears), 1), 8.0), axis=1)
                 # add SF = 10000 to SF add the end of all rows of matrix SF
-                SF = np.append(SF, np.full((len(evaluateYears), len(p_grid), 1), 10000.0), axis=1)
+                SF = np.append(SF, np.full((len(evaluateYears), len(p_grid), 1), 10000.0), axis=2)
         elif gebu_alternative == "lower_limit":
             # set all betas to 8.0 and all SF to 10000.0
             betaFalen = np.full_like(betaFalen, 8.0)
