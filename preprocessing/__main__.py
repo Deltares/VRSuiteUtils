@@ -468,95 +468,74 @@ def count_buildings(config_file):
     name="maak_database", help="Vat alle resultaten van de preprocessing samen in een database"
 )
 
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
+def create_database(config_file):
+    mandatory_parameters = ['traject_id',
+                            'vakindeling_geojson',
+                            'karakteristieke_profielen_csv',
+                            'gebouwen_csv',
+                            'output_map_database',
+                            'vrtool_database_naam',
+                            'hr_input_csv',
+                            'output_map_waterstand',
+                            'output_map_overslag']
 
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
 
-@cli.command(name="maak_database", help="Vat alle resultaten van de preprocessing samen in een database")
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    vakindeling_geojson = parameters['vakindeling_geojson']
+    characteristic_profile_csv = parameters['karakteristieke_profielen_csv']
+    building_csv_path = parameters['gebouwen_csv']
+    output_dir = parameters['output_map_database']
+    output_db_name = parameters['vrtool_database_naam']
+    hr_input_csv = parameters['hr_input_csv']
+    waterlevel_results_path = parameters['output_map_waterstand']
+    overflow_results_path = parameters['output_map_overslag']
+    piping_path = parameters.get('piping_input_csv', fallback=False)
+    stability_path = parameters.get('stabiliteit_input_csv', fallback=False)
+    revetment_path = parameters.get('output_map_bekleding', fallback=False)
 
-@click.option("--traject_id",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'")
-@click.option("--vakindeling_geojson",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
-@click.option("--characteristic_profile_csv",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de csv van de gegenereerde karakteristieke profielen.")
-@click.option("--building_csv_path",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de csv van de gegenereerde gebouwen.")
-@click.option("--output_dir",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
-@click.option("--output_db_name",
-                type=str,
-                nargs=1,
-                required=True,
-                help="Hier geef je de naam van de database die wordt aangemaakt.")
-@click.option("--hr_input_csv",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de csv van de gegenereerde HR input.")
-@click.option("--waterlevel_results_path",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de csv van de gegenereerde waterstandresultaten.")
-@click.option("--overflow_results_path",
-                type=click.Path(),
-                nargs=1,
-                required=True,
-                help="Hier geef je het pad naar de csv van de gegenereerde overstromingsresultaten.")
-@click.option("--piping_path",
-                nargs=1,
-                required=False,
-                help="Hier geef je het pad naar de csv van de gegenereerde pipingresultaten.")
-@click.option("--stability_path",
-                nargs=1,
-                required=False,
-                help="Hier geef je het pad naar de csv van de gegenereerde stabiliteitsresultaten.")
-@click.option("--revetment_path",
-                nargs=1,
-                required=False,
-                help="Hier geef je het pad naar de csv van de gegenereerde bekledingsresultaten.")
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"traject_id: {traject_id}")
+    print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"characteristic_profile_csv: {characteristic_profile_csv}")
+    print(f"building_csv_path: {building_csv_path}")
+    print(f"output_dir: {output_dir}")
+    print(f"output_db_name: {output_db_name}")
+    print(f"hr_input_csv: {hr_input_csv}")
+    print(f"waterlevel_results_path: {waterlevel_results_path}")
+    print(f"overflow_results_path: {overflow_results_path}")
+    print(f"piping_path: {piping_path}")
+    print(f"stability_path: {stability_path}")
+    print(f"revetment_path: {revetment_path}")
 
-def maak_database(traject_id,
-                    vakindeling_geojson,
-                    characteristic_profile_csv,
-                    building_csv_path,
-                    output_dir,
-                    output_db_name,
-                    hr_input_csv,
-                    waterlevel_results_path,
-                    overflow_results_path,
-                    piping_path,
-                    stability_path,
-                    revetment_path,
-                    ):
-        write_database_main(traject_id,
-                    Path(vakindeling_geojson),
-                    Path(characteristic_profile_csv),
-                    Path(building_csv_path),
-                    Path(output_dir),
-                    output_db_name,
-                    Path(hr_input_csv),
-                    Path(waterlevel_results_path),
-                    Path(overflow_results_path),
-                    piping_path,
-                    stability_path,
-                    revetment_path
-                    )
+    # run the write_database_workflow
+    write_database_main(
+        traject_id,
+        Path(vakindeling_geojson),
+        Path(characteristic_profile_csv),
+        Path(building_csv_path),
+        Path(output_dir),
+        output_db_name,
+        Path(hr_input_csv),
+        Path(waterlevel_results_path),
+        Path(overflow_results_path),
+        piping_path,
+        stability_path,
+        revetment_path
+    )
+
 
 
 if __name__ == "__main__":
