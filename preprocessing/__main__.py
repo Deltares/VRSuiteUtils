@@ -407,52 +407,53 @@ def obtain_inner_toe_line(config_file):
     )
 
 
-@cli.command(name="tel_gebouwen", help="Voor het afleiden van het aantal gebouwen bij ieder dijkvak vanaf 0 tot 50 meter"
-                                       " vanaf de teenlijn landinwaarts"
+@cli.command(
+    name="tel_gebouwen", help="Voor het afleiden van het aantal gebouwen bij ieder dijkvak vanaf 0 tot 50 meter"
+                              " vanaf de teenlijn landinwaarts"
 )
-@click.option("--traject_id",
-              type=str,
-              nargs=1,
-              required=True,
-              help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'")
-@click.option("--teenlijn_geojson",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je het pad naar de GeoJSON van de gegenereerde teenlijn. Deze GeoJSON zou teenlijn.geojson"
-                   " moeten heten, tenzij de gebruiker de naam heeft aangepast.")
-@click.option("--vakindeling_geojson",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
-@click.option("--uitvoer_map",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je de het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
-@click.option("--gebouwen_geopackage",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je de het pad naar de geopackage van de BAG. Dit bestand is te downloaden via "
-                    "https://service.pdok.nl/lv/bag/atom/bag.xml. Dit is nodig, omdat de BAG het niet toelaat alle "
-                   "objecten vanuit het script te downloaden. Het aantal objecten is gelimiteerd tot 1000.")
-@click.option("--flip_waterkant",
-              type=bool,
-              nargs=1,
-              default=False,
-              help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
-                   "nummering van de vakken volgt. Als het water aan de linkerkant loopt, moet hier True worden "
-                   "ingevuld. Default is False. Instelling is identiek aan die bij de workflow voor het genereren van profielen.")
 
-def tel_alle_gebouwen(
-    traject_id, teenlijn_geojson, vakindeling_geojson, uitvoer_map, gebouwen_geopackage, flip_waterkant
-):
+@click.option("--config_file",
+              type=click.Path(),
+              nargs=1,
+              required=True,
+              help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+
+def count_buildings(config_file):
+    mandatory_parameters = ['traject_id',
+                            'teenlijn_geojson',
+                            'vakindeling_geojson',
+                            'output_map_bebouwing',
+                            'bag_gebouwen_geopackage']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    teenlijn_geojson = parameters['teenlijn_geojson']
+    vakindeling_geojson = parameters['vakindeling_geojson']
+    uitvoer_map = parameters['output_map_bebouwing']
+    gebouwen_geopackage = parameters['bag_gebouwen_geopackage']
+    flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)
+
     if flip_waterkant == True:
         richting = -1
     else:
         richting = 1
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"traject_id: {traject_id}")
+    print(f"teenlijn_geojson: {teenlijn_geojson}")
+    print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"uitvoer_map: {uitvoer_map}")
+    print(f"gebouwen_geopackage: {gebouwen_geopackage}")
+    print(f"flip_waterkant: {flip_waterkant}")
+
+    # run the derive_buildings_workflow
     main_bebouwing(
         traject_id,
         Path(teenlijn_geojson),
@@ -461,6 +462,13 @@ def tel_alle_gebouwen(
         Path(gebouwen_geopackage),
         richting
     )
+
+
+@cli.command(
+    name="maak_database", help="Vat alle resultaten van de preprocessing samen in een database"
+)
+
+
 
 
 @cli.command(name="maak_database", help="Vat alle resultaten van de preprocessing samen in een database")
