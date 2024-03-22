@@ -40,7 +40,7 @@ def cli():
 
 
 @cli.command(
-    name="vakindeling_config", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
+    name="vakindeling", help="Creert een shapefile voor de vakindeling op basis van de ingegeven vakindeling CSV."
 )
 @click.option("--config_file",
                 type=click.Path(),
@@ -49,7 +49,7 @@ def cli():
                 help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
 
 # write a function that reads the configuration file and runs the vakindeling workflow
-def generate_vakindeling_shape_config(config_file):
+def generate_vakindeling_shape(config_file):
     mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_map_vakindeling']
 
     try:
@@ -63,7 +63,7 @@ def generate_vakindeling_shape_config(config_file):
     vakindeling_csv = parameters['vakindeling_csv']
     output_folder_vakindeling = Path(r"{}".format(parameters['output_map_vakindeling']))
     traject_shape = parameters.getboolean('traject_shapefile', fallback=False)  # set default value to False if not present
-    flip = parameters.getboolean('flip_vakindeling', fallback=False)  # set default value to False if not present
+    flip = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
 
     # print the parameters
     print("The following parameters are read from the configuration file:")
@@ -71,7 +71,7 @@ def generate_vakindeling_shape_config(config_file):
     print(f"vakindeling_csv: {vakindeling_csv}")
     print(f"output_folder_vakindeling: {output_folder_vakindeling}")
     print(f"traject_shape: {traject_shape}")
-    print(f"flip: {flip}")
+    print(f"flip_traject: {flip}")
 
     # run the vakindeling workflow
     vakindeling_main(
@@ -264,6 +264,7 @@ def run_gebu_zst_config(config_file):
         Path(output_path),
     )
 
+
 @cli.command(
     name="genereer_profielen", help="Voor het selecteren van karakteristieke profielen voor een gegeven dijktraject"
 )
@@ -316,103 +317,94 @@ def obtain_the_AHN_profiles_for_traject(config_file):
         flip_waterkant,
     )
 
-
-# @cli.command(
-#     name="genereer_dijkprofielen", help="Voor het afleiden van karakteristieke dijkprofielen af voor een gegeven "
-#                                         "dijktraject"
-# )
-# @click.option("--traject_id",
-#               type=str,
-#               nargs=1,
-#               required=True,
-#               help="Hier geef je aan om welk traject het gaat. Dit is een string, bijvoorbeeld '38-1'.")
-# @click.option("--output_folder",
-#               type=click.Path(),
-#               nargs=1,
-#               required=True,
-#               help="Het pad naar de map waar de uitvoer naartoe wordt geschreven")
-# @click.option("--traject_shape",
-#               nargs=1,
-#               default=False,
-#               help="Link naar de trajectshapefile. Let op: voer deze alleen in als de gebruikte shapefile afwijkt van"
-#                    " de shapefile in het NBPW. Als je deze optie niet gebruikt, wordt de shapefile uit het NBPW "
-#                    "gebruikt.")
-# @click.option("--flip_traject",
-#               type=bool,
-#               nargs=1,
-#               default=False,
-#               help="Soms staat de shapefile in het NBPW in de tegenovergestelde richting van je vakindeling. Met andere"
-#                    "woorden: de vakindeling begint aan de 'verkeerde' kant van de shapefile. Als dit het geval is, kan"
-#                    "de shapefile worden omgedraaid door deze optie op True te zetten.")
-# @click.option("--flip_waterkant",
-#               type=bool,
-#               nargs=1,
-#               default=False,
-#               help="Standaard wordt hier aangenomen dat het water aan de rechterkant van het traject loopt als je de "
-#                    "nummering van de vakken volgt. Als het water aan de andere linkerkant loopt, moet hier True worden "
-#                    "ingevuld. Default is False. ")
-# @click.option("--dx",
-#                 type=int,
-#                 nargs=1,
-#                 default=25,
-#                 help="De afstand tussen de profielen. Optioneel, default is 25 meter.")
-# @click.option("--voorland_lengte",
-#                 type=int,
-#                 nargs=1,
-#                 default=50,
-#                 help="De lengte van het voorland. Optioneel, default is 50 meter.")
-# @click.option("--achterland_lengte",
-#                 type=int,
-#                 nargs=1,
-#                 default=75,
-#                 help="De lengte van het voorland. Optioneel, default is 75 meter.")
-#
-# def obtain_the_AHN_profiles_for_traject(
-#     traject_id, output_folder, traject_shape, flip_traject, flip_waterkant, dx, voorland_lengte, achterland_lengte
-# ):
-#     main_traject_profiles(
-#         str(traject_id),
-#         Path(output_folder),
-#         dx,
-#         voorland_lengte,
-#         achterland_lengte,
-#         traject_shape,
-#         flip_traject,
-#         flip_waterkant,
-#     )
-
-@cli.command(name="genereer_teenlijn", help="Voor het afleiden van de teenlijn van een dijktraject"
+@cli.command(
+    name="selecteer_profiel", help="Selecteer per dijkvak een profiel"
 )
-@click.option("--karakteristieke_profielen_map",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je het pad naar de map waar de gegenereerde karakteristieke punten (uit een eerdere stap:"
-                   " 'genereer dijkprofielen') zijn opgeslagen")
-@click.option("--profiel_info_csv",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is het pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: "
-                     "'genereer dijkprofielen'). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker "
-                   "de naam heeft aangepast.")
-@click.option("--teenlijn_map",
-              type=click.Path(),
-              nargs=1,
-              default=False,
-              help="Hier geef je de het pad naar de map waar de teenlijn naartoe moet worden geschreven. De gebruiker"
-                   "mag deze map zelf aanmaken, maar als de map niet bestaat, wordt deze automatisch aangemaakt. Het "
-                   "uitvoerbestand heet 'teenlijn.geojson'.")
 
-def obtain_inner_toe_line(
-    karakteristieke_profielen_map, profiel_info_csv, teenlijn_map
-):
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+
+def selecteer_profiel(config_file):
+    mandatory_parameters = ['vakindeling_geojson',
+                            'output_map_ahn_profielen',
+                            'karakteristieke_profielen_map',
+                            'profiel_info_csv',
+                            'output_map_representatieve_profielen']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    vakindeling_geojson = parameters['vakindeling_geojson']
+    ahn_profielen = parameters['output_map_ahn_profielen']
+    karakteristieke_profielen = parameters['karakteristieke_profielen_map']
+    profiel_info_csv = parameters['profiel_info_csv']
+    uitvoer_map = parameters['output_map_representatieve_profielen']
+    invoerbestand = parameters.get('ingevoerde_profielen', fallback=False)
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"ahn_profielen: {ahn_profielen}")
+    print(f"karakteristieke_profielen: {karakteristieke_profielen}")
+    print(f"profiel_info_csv: {profiel_info_csv}")
+    print(f"uitvoer_map: {uitvoer_map}")
+    print(f"invoerbestand: {invoerbestand}")
+
+    # run the select_profiles_workflow
+    main_profiel_selectie(
+        Path(vakindeling_geojson),
+        Path(ahn_profielen),
+        Path(karakteristieke_profielen),
+        Path(profiel_info_csv),
+        Path(uitvoer_map),
+        invoerbestand,
+        "minimum"
+    )
+
+
+@cli.command(
+    name="genereer_teenlijn", help="Voor het afleiden van de teenlijn van een dijktraject"
+)
+
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+
+def obtain_inner_toe_line(config_file):
+    mandatory_parameters = ['karakteristieke_profielen_map', 'profiel_info_csv', 'output_map_teenlijn']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    karakteristieke_profielen_map = parameters['karakteristieke_profielen_map']
+    profiel_info_csv = parameters['profiel_info_csv']
+    teenlijn_map = parameters['output_map_teenlijn']
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"karakteristieke_profielen_map: {karakteristieke_profielen_map}")
+    print(f"profiel_info_csv: {profiel_info_csv}")
+    print(f"teenlijn_map: {teenlijn_map}")
+
+    # run the teenlijn_workflow
     main_teenlijn(
         Path(karakteristieke_profielen_map),
         Path(profiel_info_csv),
         Path(teenlijn_map),
     )
-
 
 
 @cli.command(name="tel_gebouwen", help="Voor het afleiden van het aantal gebouwen bij ieder dijkvak vanaf 0 tot 50 meter"
@@ -557,66 +549,6 @@ def maak_database(traject_id,
                     stability_path,
                     revetment_path
                     )
-
-@cli.command(name="selecteer_profiel", help="Selecteer per dijkvak een profiel")
-
-
-@click.option("--vakindeling_geojson",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je het pad naar de GeoJSON van de gegenereerde vakindeling.")
-
-@click.option("--ahn_profielen",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je het pad naar de map waar de ahn hoogtedata (uit een eerdere stap:"
-                   " 'genereer dijkprofielen') zijn opgeslagen")
-
-@click.option("--karakteristieke_profielen",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je het pad naar de map waar de gegenereerde karakteristieke punten (uit een eerdere stap:"
-                   " 'genereer dijkprofielen') zijn opgeslagen")
-@click.option("--profiel_info_csv",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Dit is het pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: "
-                     "'genereer dijkprofielen'). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker "
-                   "de naam heeft aangepast.")
-
-@click.option("--uitvoer_map",
-              type=click.Path(),
-              nargs=1,
-              required=True,
-              help="Hier geef je de het pad naar de map waar de uitvoer naartoe moet worden geschreven.")
-@click.option("--invoerbestand",
-              nargs=1,
-              default=False,
-              help="Het is mogelijk om een invoerbestand op te geven waar voor sommige vakken al profielen zijn ingevoerd.")
-# @click.option("--selectiemethode",
-#               nargs=1,
-#               default="minimum",
-#               help="Dit bepaalt de selectiemethode. De opties zijn: minimum (het smalste profiel), gemiddeld (het gemiddelde profiel), en de mediaan")
-
-
-
-def selecteer_profiel(
-    vakindeling_geojson, ahn_profielen, karakteristieke_profielen, profiel_info_csv, uitvoer_map, invoerbestand):
-    if invoerbestand:
-        invoerbestand = Path(invoerbestand)
-    main_profiel_selectie(
-        Path(vakindeling_geojson),
-        Path(ahn_profielen),
-        Path(karakteristieke_profielen),
-        Path(profiel_info_csv),
-        Path(uitvoer_map),
-        invoerbestand,
-        "minimum") #selectiemethode is nog niet in gebruik
-
 
 
 if __name__ == "__main__":
