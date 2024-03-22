@@ -84,7 +84,7 @@ def generate_vakindeling_shape(config_file):
 
 
 @cli.command(
-    name="overflow_config", help="Generates and evaluates the Hydra-Ring overflow computations."
+    name="overflow", help="Generates and evaluates the Hydra-Ring overflow computations."
 )
 @click.option("--config_file",
                 type=click.Path(),
@@ -92,7 +92,7 @@ def generate_vakindeling_shape(config_file):
                 required=True,
                 help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
 
-def generate_and_evaluate_overflow_computations_config(config_file):
+def generate_and_evaluate_overflow_computations(config_file):
     mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'hr_profielen_dir', 'output_map_overslag']
 
     try:
@@ -127,7 +127,7 @@ def generate_and_evaluate_overflow_computations_config(config_file):
 
 
 @cli.command(
-    name="waterlevel_config", help="Generates and evaluates the Hydra-Ring water level computations."
+    name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
 )
 @click.option("--config_file",
                 type=click.Path(),
@@ -135,7 +135,7 @@ def generate_and_evaluate_overflow_computations_config(config_file):
                 required=True,
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
-def generate_and_evaluate_water_level_computations_config(config_file):
+def generate_and_evaluate_water_level_computations(config_file):
     mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'output_map_waterstand']
 
     try:
@@ -166,7 +166,7 @@ def generate_and_evaluate_water_level_computations_config(config_file):
     )
 
 @cli.command(
-    name="bekleding_qvariant_config", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"
+    name="bekleding_qvariant", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"
                                            "stap voor de bekleding sommen. Hierna volgt nog 'bekleding_gebu_zst'"
 )
 
@@ -176,7 +176,7 @@ def generate_and_evaluate_water_level_computations_config(config_file):
                 required=True,
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
-def run_bekleding_qvariant_config(config_file):
+def run_bekleding_qvariant(config_file):
     mandatory_parameters = ['traject_id',
                             'bekleding_input_csv',
                             'database_path_bekleding',
@@ -220,7 +220,7 @@ def run_bekleding_qvariant_config(config_file):
 
 
 @cli.command(
-    name="bekleding_gebu_zst_config", help="Genereert de invoer voor gras- en steenbekleding voor de VRTool. Dit is de tweede "
+    name="bekleding_gebu_zst", help="Genereert de invoer voor gras- en steenbekleding voor de VRTool. Dit is de tweede "
                                     "(en laatste) stap voor het genereren van invoer voor bekledingen."
 )
 
@@ -230,7 +230,7 @@ def run_bekleding_qvariant_config(config_file):
                 required=True,
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
-def run_gebu_zst_config(config_file):
+def run_gebu_zst(config_file):
     mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
 
     try:
