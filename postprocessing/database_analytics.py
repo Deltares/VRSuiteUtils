@@ -110,6 +110,15 @@ def get_reliability_for_each_step(database_path, measures_per_step):
     return restructure_reliability_per_step(list(reliability_values))
 
 def assessment_for_each_step(assessment_input, reliability_per_step):
+    """ Combines the assessment input with the reliability per step to get the reliability assessment for each step.
+
+    Args:
+    assessment_input (dict): dictionary containing the reliability of each section and mechanism for the initial step.
+    reliability_per_step (dict): dictionary containing the reliability of the section with an investment for each mechanism for each step.
+
+    Returns:
+    list: list of dictionaries containing the reliability of each section and mechanism for each step.
+        """
     assessment_per_step = [copy.deepcopy(assessment_input)]
     for step, data in reliability_per_step.items():
         traject_reliability = copy.deepcopy(assessment_per_step[-1])
@@ -167,3 +176,41 @@ def calculate_traject_probability_for_steps(stepwise_assessment):
     for step in stepwise_assessment:
         traject_probability.append(compute_system_failure_probability(step))
     return traject_probability
+
+def get_measures_per_section_for_step(measures_per_step, final_step_no):
+    """ Get the measures per section for a given step number.
+    
+    Args:
+    measures_per_step: dict with step number as key and a list of optimization_step_id, optimization_selected_measure, measure_result, investment_year, measure_per_section, section_id as values
+    final_step_no: int, the final step number to consider
+    
+    Returns:
+    dict: dictionary with section_id as key and a tuple of measure_result and investment_year as values
+    """
+    measures_per_section = {}
+    for step_no, step in measures_per_step.items():
+        if step_no <= final_step_no:
+            if step['section_id'][0] not in measures_per_section:
+                measures_per_section[step['section_id'][0]] = []
+            measures_per_section[step['section_id'][0]] = (step['measure_result'], step['investment_year'])
+    return dict(sorted(measures_per_section.items()))
+
+
+def get_beta_for_each_section_and_mech_at_t(assessment_of_step, t):
+    """Get the beta for each section and mechanism at a specific time t.
+
+    Args:
+    assessment_of_step: dict with step number as key and a dict with mechanism as key and a dict with section as key and a list of time and beta as values
+    t: int, the time at which the beta is requested
+
+    Returns:
+    dict: dictionary with section_id as key and a dict with mechanism as key and beta as value
+    """
+    beta_per_section = {}
+    for section_id, section_betas in assessment_of_step.items():
+        beta_per_section[section_id] = {}
+        for mechanism, mechanism_assessment in section_betas.items():
+            #get index of value in list where element is t
+            t_idx = np.where(np.array(mechanism_assessment['time']) == t)[0].item()
+            beta_per_section[section_id][mechanism] = mechanism_assessment['beta'][t_idx]
+    return beta_per_section
