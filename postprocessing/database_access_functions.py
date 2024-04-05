@@ -2,6 +2,7 @@ from vrtool.orm.models import *
 from vrtool.orm.orm_controllers import open_database
 from vrtool.common.enums import MechanismEnum
 
+
 def get_overview_of_runs(db_path):
     """Get an overview of the optimization runs in the database.
 
@@ -71,6 +72,15 @@ def import_original_assessment(database_path,mechanism: MechanismEnum):
     return result
 
 def get_measures_for_run_id(database_path, run_id):
+    """Get the measures for a specific run id.
+
+    Args:
+    database_path: str, path to the database
+    run_id: int, the run id for which the measures are requested
+
+    Returns:
+    list of dicts, each dict contains the optimization step number, optimization_selected_measure_id, measure_result_id, investment_year, measure_per_section_id, section_id
+    """
     with open_database(database_path) as db:
         measures = (OptimizationStep.select(OptimizationStep.id, OptimizationStep.step_number, OptimizationStep.optimization_selected_measure_id, OptimizationSelectedMeasure.measure_result_id, 
                                             OptimizationSelectedMeasure.investment_year, MeasureResult.measure_per_section_id, MeasurePerSection.section_id).join(
@@ -81,3 +91,54 @@ def get_measures_for_run_id(database_path, run_id):
                 OptimizationStep.id
             ).dicts())
         return list(measures)
+    
+
+def get_measure_costs(measure_result_id, database_path):
+    """ Get the costs of a measure.
+
+    Args:
+    measure_result_id: int, the measure result id for which the costs are requested
+    database_path: str, path to the database
+
+    Returns:
+    dict, containing the cost of the measure
+    """
+    with open_database(database_path) as db:
+        measure = MeasureResult.get(MeasureResult.id == measure_result_id)
+        measure_cost = MeasureResultSection.get(MeasureResultSection.measure_result == measure).cost
+    return {'cost': measure_cost}
+
+def get_measure_parameters(measure_result_id, database_path):
+    """ Get the parameters of a measure.
+
+    Args:
+    measure_result_id: int, the measure result id for which the parameters are requested
+    database_path: str, path to the database
+
+    Returns:
+    dict, containing the parameters of the measure
+    """
+    #get parameters from MeasureResultParameter where measure_result_id = measure_result_id
+    with open_database(database_path) as db:
+        measure = MeasureResult.get(MeasureResult.id == measure_result_id)
+        #get parameters from MeasureResultParameter where measure_result_id = measure_result_id
+        try:
+            parameters = MeasureResultParameter.select().where(MeasureResultParameter.measure_result == measure)
+            return {parameter.name.lower(): parameter.value for parameter in parameters}
+        except:
+            return {}
+
+def get_measure_type(measure_result_id, database_path):
+    """ Get the type of a measure.
+
+    Args:
+    measure_result_id: int, the measure result id for which the type is requested
+    database_path: str, path to the database
+
+    Returns:
+    dict, containing the type of the measure
+    """
+    with open_database(database_path) as db:
+        measure = MeasureResult.get(MeasureResult.id == measure_result_id)
+        measure_name = MeasurePerSection.select(MeasurePerSection, Measure.name).join(Measure).where(MeasurePerSection.id == measure.measure_per_section_id).get().measure.name
+    return {'name': measure_name}
