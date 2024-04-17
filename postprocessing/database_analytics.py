@@ -214,3 +214,18 @@ def get_beta_for_each_section_and_mech_at_t(assessment_of_step, t):
             t_idx = np.where(np.array(mechanism_assessment['time']) == t)[0].item()
             beta_per_section[section_id][mechanism] = mechanism_assessment['beta'][t_idx]
     return beta_per_section
+
+def get_unique_years(measures_per_section):
+    """Get the unique years from the measures per section.	
+
+    Args:
+    measures_per_section: dict with section_id as key and a tuple of measure_result and investment_year as values
+
+    Returns:
+    set: set of unique years
+    """
+
+    years = []
+    for measure in measures_per_section.values():
+        years.append(measure[1])
+    return set([item for sublist in years for item in sublist])
