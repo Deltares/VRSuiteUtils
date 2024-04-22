@@ -40,9 +40,13 @@ def create_project_structure(project_folder, traject_id):
 
     # Subdirectories of input_files
     hr_databases_dir = os.path.join(input_files_dir, "HR_databases")
-    hr_profielen_dir = os.path.join(input_files_dir, "HR_profielen")
+    #TOEVOEGEN: MAP HUIDIG 2023 EN MAP TOEKOMST 2100
+    # TOEVOEGEN IN CALL: CHECK OF ER BEKLEDINGEN ZIJN> EN DAN WEL OF NIET MAPPEN VOOR BEKLEDING TOEVOEGEN.
+    # MAAK ALLE PADEN RELATIEF TEN OPZICHTE VAN PROJECT_DIR
+    # VOEG OOK ALLE CONFIGUR
+
+    hr_profielen_dir = os.path.join(input_files_dir, "prfl")
     default_files_dir = os.path.join(input_files_dir, "default_files")
-    database_bekleding_dir = os.path.join(input_files_dir, "database_bekleding")
     steentoets_dir = os.path.join(input_files_dir, "steentoets")
     bag_gebouwen_dir = os.path.join(input_files_dir, "bag_gebouwen")
 
@@ -66,7 +70,6 @@ def create_project_structure(project_folder, traject_id):
     os.makedirs(hr_databases_dir)
     os.makedirs(hr_profielen_dir)
     os.makedirs(default_files_dir)
-    os.makedirs(database_bekleding_dir)
     os.makedirs(steentoets_dir)
     os.makedirs(bag_gebouwen_dir)
     os.makedirs(vakindeling_dir)
@@ -95,7 +98,6 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"hr_databases_dir =    {hr_databases_dir}     # HR databases directory\n")
         f.write(f"hr_profielen_dir =    {hr_profielen_dir}     # HR profielen directory\n")
         f.write(f"default_files_dir =   {default_files_dir}   # Default files directory\n")
-        f.write(f"database_bekleding_dir =      {database_bekleding_dir}     # Database bekleding directory\n")
         f.write(f"steentoets_dir =      {steentoets_dir}     # Steentoets directory\n")
         f.write(f"bag_gebouwen_dir =    {bag_gebouwen_dir}     # BAG gebouwen directory\n\n")
 
