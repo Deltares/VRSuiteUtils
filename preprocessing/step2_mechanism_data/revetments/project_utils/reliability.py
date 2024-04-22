@@ -144,9 +144,7 @@ class QVariantCalculations(object):
         if year==2025:
             fileNameHLCD = HRdatabase + '/hlcd.sqlite'
         elif year==2100:
-            fileNameHLCD = HRdatabase + '/hlcd_W_2100.sqlite'
-        else:
-            print('Unknown evaluation year')
+        fileNameHLCD = HRdatabase + '/hlcd_W_2100.sqlite'
         
         if self.mechanism == 'MHW':
             make_sql_MHW(fileNameSQL, self.locationId, self.beta, numSettings)

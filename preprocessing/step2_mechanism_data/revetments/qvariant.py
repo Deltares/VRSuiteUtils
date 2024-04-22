@@ -16,93 +16,97 @@ from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowI
 
 import warnings
 
-def revetment_qvariant(df, profielen_path, database_path, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
+def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
 # define variables
     models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
-
-    evaluateYears = [2025, 2100]
+    # evaluateYears is the last folder in each path in database_paths:
+    evaluateYears = [int(str(path).split('\\')[-1]) for path in database_paths] # only works if paths end with the years
+    # evaluateYears = [2023, 2100]
     beta = -ndtri(Q_var_pgrid)
 
     # check if hlcd and hlcd_W_2100 are in HRdatabase
-    if len(list(database_path.glob('*hlcd.sqlite')))==0: raise ValueError('No hlcd.sqlite file found in database_path.')
-    if len(list(database_path.glob('*hlcd_W_2100.sqlite')))==0: raise ValueError('No hlcd_W_2100.sqlite file found in database_path.')
+    for database_path in database_paths:
+        if len(list(database_path.glob('*hlcd*.sqlite')))!=1: raise ValueError('zero or multiple hlcd.sqlite file found in database_path: {}.'.format(database_path))
+        hlcd =
+        #path to config database:
+        if len(list(database_path.glob('*.config.sqlite'))) == 0: raise Exception(
+            'No config.sqlite found in database_path')
+        configDatabase = list(database_path.glob('*.config.sqlite'))[0]
+        if len(list(database_path.glob('*.config.sqlite'))) > 1: warnings.warn(
+            'Warning: multiple config.sqlite files found in database_path. Using first file found.')
 
-    #path to config database:
-    configDatabase = list(database_path.glob('*.config.sqlite'))[0]
-    if len(list(database_path.glob('*.config.sqlite')))>1: warnings.warn('Warning: multiple config.sqlite files found in database_path. Using first file found.')
-    if len(list(database_path.glob('*.config.sqlite')))==0: raise Exception('No config.sqlite found in database_path')
-    for index,row in df.iterrows():
-        dwarsprofiel = row['dwarsprofiel']
+        for index,row in df.iterrows():
+            dwarsprofiel = row['dwarsprofiel']
 
-        OverflowInput.get_HRLocation(
-            hrd_db_location=Path(str(list(database_path.glob('WBI2017_*.sqlite'))[0]).split('.')[0] + '.sqlite'),
-            hlcd_db_location=list(database_path.glob('*hlcd.sqlite'))[0], hring_data=row.to_frame().transpose())
-        locationId = row['hrlocation']
-        orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
+            OverflowInput.get_HRLocation(
+                hrd_db_location=Path(str(list(database_path.glob('WBI2017_*.sqlite'))[0]).split('.')[0] + '.sqlite'),
+                hlcd_db_location=list(database_path.glob('*hlcd.sqlite'))[0], hring_data=row.to_frame().transpose())
+            locationId = row['hrlocation']
+            orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
-        # ondergrens waterstand is maximum van hoogste punt op voorland en laagste punt op profiel.
-        # Als voorland niet bestaat, laagste punt op profiel.
-        # daar wordt een veiligheidsmarge van 1m bij op geteld, om droogstand te voorkomen getrokken
-        try:
-            ondergrens_wl = max(max(read_prfl_foreland(profielen_path.joinpath(row['prfl']))[1])+1.,
-                                min(read_prfl(profielen_path.joinpath(row['prfl']))[3]) + 1.)
-        except:
-            ondergrens_wl = min(read_prfl(profielen_path.joinpath(row['prfl']))[3])+1.
+            # ondergrens waterstand is maximum van hoogste punt op voorland en laagste punt op profiel.
+            # Als voorland niet bestaat, laagste punt op profiel.
+            # daar wordt een veiligheidsmarge van 1m bij op geteld, om droogstand te voorkomen getrokken
+            try:
+                ondergrens_wl = max(max(read_prfl_foreland(profielen_path.joinpath(row['prfl']))[1])+1.,
+                                    min(read_prfl(profielen_path.joinpath(row['prfl']))[3]) + 1.)
+            except:
+                ondergrens_wl = min(read_prfl(profielen_path.joinpath(row['prfl']))[3])+1.
 
-        begin_grasbekleding = row['begin_grasbekleding']
+            begin_grasbekleding = row['begin_grasbekleding']
 
-        # get design water levels
-        valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))
+            # get design water levels
+            valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))
 
-        for i, year in enumerate(evaluateYears):
-            output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.naam_hrlocatie}', 'designTable.txt')
-            wl_frequencycurve = read_design_table(output_overflow)[['Value','Beta']]
-            f = interp1d(wl_frequencycurve['Beta'], wl_frequencycurve['Value'], fill_value=('extrapolate'))
-            valMHW[i, :] = f(beta)
+            for i, year in enumerate(evaluateYears):
+                output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.naam_hrlocatie}', 'designTable.txt')
+                wl_frequencycurve = read_design_table(output_overflow)[['Value','Beta']]
+                f = interp1d(wl_frequencycurve['Beta'], wl_frequencycurve['Value'], fill_value=('extrapolate'))
+                valMHW[i, :] = f(beta)
 
-        # Q-variant calculations
-        data = {'dwarsprofiel': dwarsprofiel}
-        mechanism = 'Qvariant'
-        for i in range(0, len(evaluateYears)):
+            # Q-variant calculations
+            data = {'dwarsprofiel': dwarsprofiel}
+            mechanism = 'Qvariant'
+            for i in range(0, len(evaluateYears)):
 
-            for j in range(0, len(Q_var_pgrid)):
+                for j in range(0, len(Q_var_pgrid)):
 
-                wl = np.arange(ondergrens_wl, valMHW[i, j] - 0.05, row['waterstand_stap'])
-                wl = np.append(wl, valMHW[i, j] - 0.05)
-                wl = np.unique(wl)
+                    wl = np.arange(ondergrens_wl, valMHW[i, j] - 0.05, row['waterstand_stap'])
+                    wl = np.append(wl, valMHW[i, j] - 0.05)
+                    wl = np.unique(wl)
 
-                data[f'MHW {i}_{j}'] = valMHW[i, j]
+                    data[f'MHW {i}_{j}'] = valMHW[i, j]
 
-                for m in models:
+                    for m in models:
 
-                    if m == "gras_golfklap":
-                        wl_filtered = wl[wl>=begin_grasbekleding]
-                    elif m == "gras_golfoploop":
-                        wl_filtered = wl
-                    elif m == "zuilen":
-                        wl_filtered = wl[wl<=begin_grasbekleding]
+                        if m == "gras_golfklap":
+                            wl_filtered = wl[wl>=begin_grasbekleding]
+                        elif m == "gras_golfoploop":
+                            wl_filtered = wl
+                        elif m == "zuilen":
+                            wl_filtered = wl[wl<=begin_grasbekleding]
 
-                    Qvar_Hs = []
-                    Qvar_Tp = []
-                    Qvar_dir = []
-                    for h in wl_filtered:
-                        Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
-                        numSettings = Qvar.get_numerical_settings(configDatabase)
-                        QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), local_path, evaluateYears[i], numSettings)
+                        Qvar_Hs = []
+                        Qvar_Tp = []
+                        Qvar_dir = []
+                        for h in wl_filtered:
+                            Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
+                            numSettings = Qvar.get_numerical_settings(configDatabase)
+                            QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), local_path, evaluateYears[i], numSettings)
 
-                        Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
-                        Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
-                        Qvar_dir = np.append(Qvar_dir, QvarRes['dir'])
+                            Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
+                            Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
+                            Qvar_dir = np.append(Qvar_dir, QvarRes['dir'])
 
-                    data[f"Qvar {i}_{j}_{m}"] = {"zichtjaar": evaluateYears[i] / 1.0,
-                                                 "beta": beta[j],
-                                                 "model": m,
-                                                 "waterstand": list(wl_filtered),
-                                                 "Hs": list(Qvar_Hs),
-                                                 "Tp": list(Qvar_Tp),
-                                                 "dir": list(Qvar_dir)}
+                        data[f"Qvar {i}_{j}_{m}"] = {"zichtjaar": evaluateYears[i] / 1.0,
+                                                     "beta": beta[j],
+                                                     "model": m,
+                                                     "waterstand": list(wl_filtered),
+                                                     "Hs": list(Qvar_Hs),
+                                                     "Tp": list(Qvar_Tp),
+                                                     "dir": list(Qvar_dir)}
 
-        write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
+            write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
 
 if __name__ == '__main__':
     # inputs
