@@ -27,7 +27,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
     # check if hlcd and hlcd_W_2100 are in HRdatabase
     for database_path in database_paths:
         if len(list(database_path.glob('*hlcd*.sqlite')))!=1: raise ValueError('zero or multiple hlcd.sqlite file found in database_path: {}.'.format(database_path))
-        hlcd =
+        hlcd = list(database_path.glob('*hlcd*.sqlite'))[0]
         #path to config database:
         if len(list(database_path.glob('*.config.sqlite'))) == 0: raise Exception(
             'No config.sqlite found in database_path')
@@ -92,7 +92,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
                         for h in wl_filtered:
                             Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
                             numSettings = Qvar.get_numerical_settings(configDatabase)
-                            QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), local_path, evaluateYears[i], numSettings)
+                            QvarRes = Qvar.run_HydraRing(hring_path, str(hlcd), local_path, evaluateYears[i], numSettings)
 
                             Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                             Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
