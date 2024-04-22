@@ -25,14 +25,14 @@ class TestHydraRingComputation:
         pytest.param([1, 2, 3, 4, 5], [0.1, 0.2, 0.3, 0.4, 0.5], id="ordered values"),
     ])
     def test_hydraring_input_with_ordered_values_succeeds(self, values, betas):
-        #check if it raises an error:
+        #check if it succeeds:
         HydraRingComputation.check_and_justify_HydraRing_data(values, betas, "test", "test")
 
     @pytest.mark.parametrize("values, betas", [
         pytest.param([1, 2, 3, 4, 5], [0.1, 0.2, 0.3, 0.2, 0.5], id="non-increasing values"),
     ])
     def test_hydraring_input_with_non_increasing_values_succeeds(self, values, betas):
-        #check if it raises an error:
+        #check if it gives the right output:
         values, betas = HydraRingComputation.check_and_justify_HydraRing_data(values, betas, "test", "test")
         expected_betas = [0.1, 0.2, 0.3, 0.3, 0.5]
         assert betas == expected_betas
