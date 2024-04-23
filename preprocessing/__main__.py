@@ -30,7 +30,6 @@ def cli():
                 nargs=1,
                 required=True,
                 help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
-
 # write a function that reads the configuration file and runs the vakindeling workflow
 def vakindeling(config_file):
     print(f"Start genereren geojson van vakindeling met configuratie file: {config_file}")
@@ -46,39 +45,11 @@ def vakindeling(config_file):
                 nargs=1,
                 required=True,
                 help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
-
 def generate_and_evaluate_overflow_computations(config_file):
-    mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'hr_profielen_dir', 'output_map_overslag']
-
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    file_path = parameters['hr_input_csv']
-    database_path_current = parameters['database_path_HR_current']
-    database_path_future = parameters['database_path_HR_future']
-    profielen_dir = parameters['hr_profielen_dir']
-    output_path = parameters['output_map_overslag']
-
-    # print the parameters
-    print("The following parameters are read from the configuration file:")
-    print(f"file_path: {file_path}")
-    print(f"database_path_current: {database_path_current}")
-    print(f"database_path_future: {database_path_future}")
-    print(f"profielen_dir: {profielen_dir}")
-    print(f"output_path: {output_path}")
-
-    # run the overflow computations
-    overflow_main(
-        Path(file_path),
-        [Path(database_path_current), Path(database_path_future)],
-        Path(profielen_dir),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
-    )
+    
+    print(f"Start overslagberekeningen met Hydra-Ring met configuratie file: {config_file}")
+    
+    api.generate_and_evaluate_overflow_computations(config_file)
 
 
 @cli.command(
