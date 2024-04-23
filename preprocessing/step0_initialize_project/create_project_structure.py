@@ -87,7 +87,7 @@ def create_project_structure(project_folder, traject_id):
 
 
     # Write paths to input.txt file
-    with open(os.path.join(input_files_dir, "preprocessor.config"), "w") as f:
+    with open(os.path.join(project_dir, "preprocessor.config"), "w") as f:
         f.write(f"[DEFAULT]\n\n")
         f.write(f"traject_id                = {traject_id} # Trajectnaam\n\n")
 
