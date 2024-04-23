@@ -1,7 +1,7 @@
 import click
+import preprocessing.api
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
-from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
 from preprocessing.workflows.bekleding_gebu_zst_workflow import gebu_zst_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
@@ -13,25 +13,8 @@ import configparser
 from pathlib import Path
 import os
 import re
+import api
 
-def read_config_file(file_path, mandatory_parameters):
-    config = configparser.ConfigParser()
-
-    # Read the configuration file line by line
-    with open(file_path, 'r') as f:
-        for line in f:
-            # Use regular expression to match parameter, value, and comment
-            match = re.match(r"^\s*([^#]+?)\s*=\s*([^#]+?)\s*(?:#.*)?$", line)
-            if match:
-                param, value = map(str.strip, match.groups())
-                config['DEFAULT'][param] = value
-
-    # Check if mandatory parameters are present
-    for param in mandatory_parameters:
-        if param not in config['DEFAULT']:
-            raise ValueError(f"'{param}' is missing in the configuration file.")
-
-    return config['DEFAULT']
 
 
 @click.group()
@@ -49,38 +32,10 @@ def cli():
                 help="Link naar de configuratie file. Dit is een .json bestand met alle benodigde paden en instellingen.")
 
 # write a function that reads the configuration file and runs the vakindeling workflow
-def generate_vakindeling_shape(config_file):
-    mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_map_vakindeling']
+def vakindeling(config_file):
+    print(f"Start genereren geojson van vakindeling met configuratie file: {config_file}")
+    api.generate_vakindeling_shape(config_file)
 
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    traject_id = parameters['traject_id']
-    vakindeling_csv = parameters['vakindeling_csv']
-    output_folder_vakindeling = Path(r"{}".format(parameters['output_map_vakindeling']))
-    traject_shape = parameters.getboolean('traject_shapefile', fallback=False)  # set default value to False if not present
-    flip = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
-
-    # print the parameters
-    print("The following parameters are read from the configuration file:")
-    print(f"traject_id: {traject_id}")
-    print(f"vakindeling_csv: {vakindeling_csv}")
-    print(f"output_folder_vakindeling: {output_folder_vakindeling}")
-    print(f"traject_shape: {traject_shape}")
-    print(f"flip_traject: {flip}")
-
-    # run the vakindeling workflow
-    vakindeling_main(
-        traject_id,
-        vakindeling_csv,
-        Path(output_folder_vakindeling),
-        traject_shape,
-        flip,
-    )
 
 
 @cli.command(
