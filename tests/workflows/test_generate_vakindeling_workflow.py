@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import preprocessing.api as api
 import geopandas as gpd
 import pytest
 import shutil
@@ -8,40 +8,23 @@ from geopandas.testing import assert_geodataframe_equal, assert_geoseries_equal
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from tests import test_data, test_results
+from preprocessing.common_functions import read_config_file
 
-@pytest.mark.parametrize("traject,vakindeling_file,case",
-                         [pytest.param("38-1", "vakindeling_38-1_full.csv", "full")])
-def test_generate_vakindeling_workflow(traject, vakindeling_file, case):
-    vakindeling_file_path = test_data.joinpath(traject, "input", "vakindeling", vakindeling_file)
-    output_folder = test_results.joinpath(traject,"output","vakindeling", case)
-    # remove test results
-    if output_folder.exists():
-        shutil.rmtree(output_folder)
-    # make test results dir
-    output_folder.mkdir(parents=True,exist_ok=True)
+@pytest.mark.parametrize("project_folder",
+                         [pytest.param("31-1_v2", id = '31-1')])
+def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.FixtureRequest):
+    #read the preprocessor.config in the project_folder
+    _output_path = test_results.joinpath(request.node.name)
+    if _output_path.exists():
+        shutil.rmtree(_output_path)
+    api.generate_vakindeling_shape(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
+    
+    #get the relative path from the config
+    _output_file = read_config_file(test_data.joinpath(project_folder, "preprocessor.config"), ['vakindeling_geojson'])['vakindeling_geojson']
 
-    vakindeling_main(traject, vakindeling_file_path, output_folder)
-
-    reference_shape = gpd.read_file(
-        test_data.joinpath(traject, "reference_results","reference_shapes", f"reference_shape_{case}.geojson"),
-        dtype={
-            "objectid": int,
-            "vaknaam": str,
-            "m_start": float,
-            "m_eind": float,
-            "in_analyse": int,
-            "van_dp": str,
-            "tot_dp": str,
-            "stabiliteit": str,
-            "piping": str,
-            "overslag": str,
-            "bekledingen": object,
-            "kunstwerken": object,
-        },
-    )
-
+    #read the generated vakindeling shapefile
     new_shape = gpd.read_file(
-        output_folder.joinpath(f"Vakindeling_{traject}.geojson"),
+       _output_path.joinpath(_output_file),
         dtype={
             "objectid": int,
             "vaknaam": str,
@@ -56,7 +39,24 @@ def test_generate_vakindeling_workflow(traject, vakindeling_file, case):
             "bekledingen": object,
             "kunstwerken": object,
         },
-    )
+    )    
+    #read the reference shapefile
+    reference_shape = gpd.read_file(test_data.joinpath(project_folder, _output_file),
+        dtype={
+            "objectid": int,
+            "vaknaam": str,
+            "m_start": float,
+            "m_eind": float,
+            "in_analyse": int,
+            "van_dp": str,
+            "tot_dp": str,
+            "stabiliteit": str,
+            "piping": str,
+            "overslag": str,
+            "bekledingen": object,
+            "kunstwerken": object,
+        },)
+
     # compare geometry
     assert_geoseries_equal(
         reference_shape.geometry,

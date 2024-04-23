@@ -1,0 +1,19 @@
+objectid,vaknaam,m_start,m_eind,in_analyse,van_dp,tot_dp,stabiliteit,piping,overslag,bekledingen,kunstwerken,opmerkingen,,Kolom,,Beschrijving
+1,WsNoo_Stab_004150_005000,0,843.64,TRUE,41.5,50,43,44,42,0,,,,objectid,Verplicht,Unieke identifier (moeten verschillende getallen zijn)
+2,WsNoo_Stab_005000_008800,843.64,4643.64,TRUE,50,88,69,88,80,1,,,,vaknaam,Verplicht,Nummer van het dijkvak (moet uniek zijn. kan identiek zijn aan OBJECTID)
+3,WsNoo_Stab_008800_009300,4643.64,5143.64,TRUE,88,93,90,90,93,2,,,,m_start,Verplicht,startpunt op lijn in SHP van traject
+4,WsNoo_Stab_009300_010000,5143.64,5843.64,TRUE,93,100,98,95,94,3,,,,m_eind,Verplicht,eindpunt op lijn in SHP van traject
+5,WsNoo_Stab_010000_011600,5843.64,7443.64,TRUE,100,116,107,108,115,4,,,,in_analyse,Verplicht,Vak meenemen in analyse of niet (TRUE/FALSE)
+6,WsNoo_Stab_011600_012000,7443.64,7843.64,TRUE,116,120,117,117,120,5,,,,van_dp,Optioneel,Begrenzing dijkpaalnummers
+7,WsNoo_Stab_012000_014100,7843.64,9943.64,TRUE,120,141,136,123,124,6,,,,tot_dp,Optioneel,Begrenzing dijkpaalnummers
+8,WsNoo_Stab_014100_014700,9943.64,10543.64,TRUE,141,147,146,142,142,7,,,,{},Optioneel,Doorsnede voor een mechanisme. Wanneer dit niet wordt ingevuld moet dit later worden afgeleid uit bijv een shapefile met uittredepunten. Daarvoor zijn specifieke workflows beschikbaar.
+9,WsNoo_Stab_014700_015400,10543.64,11243.64,TRUE,147,154,151,152,154,8,,,,opmerkingen,Optioneel,extra opmerkingen. moet altijd de laatste kolom zijn
+10,WsNoo_Stab_015400_016200,11243.64,12043.64,TRUE,154,162,155,158,155,9,,,,,,
+11,WsNoo_Stab_016200_017400,12043.64,13243.64,TRUE,162,174,164,164,164,10,,,,,,
+12,WsNoo_Stab_017400_018000,13243.64,13843.64,TRUE,174,180,178,175,175,11,,,,,,
+13,WsNoo_Stab_018000_019000,13843.64,14843.64,TRUE,180,190,183,184,186,12,,,,,,
+14,WsNoo_Stab_019000_019800,14843.64,15643.64,TRUE,190,198,194,197,191,13,,,,,,
+15,WsNoo_Stab_019800_020400,15643.64,16208.47,TRUE,198,204,200,199,201,14,,,,,,
+16,WsNoo_Stab_021200_021900,16208.47,16865.22,TRUE,212,219,215,217,215,15,,,,,,
+17,WsNoo_Stab_021900_022600,16865.22,17565.22,TRUE,219,226,220,220,220,16,,,,,,
+18,WsNoo_Stab_022600_024350,17565.22,19312.7,TRUE,226,243.5,238,242,227,17,,,,,,
