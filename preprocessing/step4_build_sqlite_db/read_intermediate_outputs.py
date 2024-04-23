@@ -5,8 +5,30 @@ import numpy as np
 import json
 import warnings
 import os, glob
-from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
 from pathlib import Path
+from itertools import pairwise
+
+from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
+
+
+def read_design_table(filename: Path):
+    import re
+
+    values = []
+    count = 0
+    f = open(filename, "r")
+    for line in f:
+        if count == 0:
+            headers = re.split("  +", line)[1:]
+        else:
+            val = re.split("  +", line)[1:]
+            val = [i.replace("\n", "") for i in val]
+            val = [float(i) for i in val]
+            values.append(val)
+        count += 1
+    data = pd.DataFrame(values, columns=headers).rename(columns={"Beta\n": "Beta"})
+    f.close()
+    return data
 
 def read_waterlevel_data(files_dir):
     # create dict with dirs as keys for subdirs in files_path
@@ -22,6 +44,8 @@ def read_waterlevel_data(files_dir):
                     for loc_file in loc_dir.iterdir():
                         if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
+                            design_table['Value'], design_table['Beta'] = HydraRingComputation().check_and_justify_HydraRing_data(design_table['Value'], design_table['Beta'], 
+                                                                                                           calculation_type='Waterstand', section_name=loc_dir.name)
                             table_data = pd.DataFrame(
                                 {
                                     "WaterLevelLocationId": [loc_dir.name]
@@ -48,6 +72,9 @@ def read_overflow_data(files_dir):
                     for loc_file in loc_dir.iterdir():
                         if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
+                            design_table['Value'], design_table['Beta'] = HydraRingComputation().check_and_justify_HydraRing_data(design_table['Value'], design_table['Beta'], 
+                                                                                                           calculation_type='Waterstand', section_name=loc_dir.name)
+
                             table_data = pd.DataFrame(
                                 {
                                     "LocationId": [loc_dir.name] * design_table.shape[0],

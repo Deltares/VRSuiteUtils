@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
+from itertools import pairwise
 
 class HydraRingComputation:
     def __init__(self):
@@ -55,3 +55,19 @@ class HydraRingComputation:
         for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
             sys.stdout.write(line.replace("CONFIGDBPATH", str(config_db_path)))
         self.ini_path = new_ini
+    
+    @staticmethod
+    def check_and_justify_HydraRing_data(values:list, betas:list, calculation_type:str, section_name:str = '' ):
+        #check if values are increasing
+        if not all(a < b for a, b in pairwise(values)):
+            raise ValueError(f"Geimporteerde waarden voor {calculation_type} voor dijkvak {section_name} stijgen niet. Controleer de Hydra-Ring resultaten.")
+        #check if betas are increasing
+        if not all(a < b for a, b in pairwise(betas)):
+            #modify betas to be increasing
+            new_betas = [betas[0]] + [max(betas[i], betas[i-1]) for i in range(1, len(betas))]
+            print(f"Waarden voor {calculation_type} op dijkvak {section_name} stijgen niet, waarden zijn aangepast.")
+            #print original and new betas
+            print(f"Originele waarden: {betas}")
+            print(f"Nieuwe waarden: {new_betas}")
+            return values, new_betas
+        return values, betas
