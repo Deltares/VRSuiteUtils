@@ -1,0 +1,41 @@
+[DEFAULT]
+
+traject_id = 	7-2 	# trajectnaam
+
+vakindeling_csv = 	c:/vrm_test/database_7_2/Vakindeling/Vakindeling_20230724.csv 	# pad naar de csv met de vakindeling
+hr_input_csv =		c:/vrm_test/traject7_2_jan2024/HR/HR_20230713.csv 		# pad naar de csv met de HR info
+bekleding_input_csv = 	c:/vrm_test/database_7_2/Bekleding/Bekleding_20230830_full.csv	# pad naar de csv met bekleding info
+piping_input_csv =	c:\vrm_test\database_7_2\Piping\Piping_20230906.csv		# pad naar de csv met piping input info
+stabiliteit_input_csv = c:\vrm_test\database_7_2\Stabiliteit\Stabiliteit_20230726.csv	# pad naar de csv met stabiliteit input info
+bag_gebouwen_geopackage = c:\vrm_test\gebouwen_geopackage_20231019\bag-light.gpkg	# Hier geef je de het pad naar de geopackage van de BAG. Dit bestand is te downloaden via https://service.pdok.nl/lv/bag/atom/bag.xml. Dit is nodig, omdat de BAG het niet toelaat alle objecten vanuit het script te downloaden. Het aantal objecten is gelimiteerd tot 1000.
+
+profiel_info_csv =	c:/vrm_test/database_7_2/profielen_config/traject_profiles.csv	# pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: genereer_dijkprofielen). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker de naam heeft aangepast
+vakindeling_geojson = 	c:\vrm_test\database_7_2\Vakindeling\Vakindeling_7-2.geojson    # pad naar de geojson (die gegenereerd is in stap vakindeling).
+teenlijn_geojson = 	c:\vrm_test\database_7_2\profielen_config\teenlijn\teenlijn_aangepast.geojson # pad naar de GeoJSON van de gegenereerde teenlijn. Deze GeoJSON zou teenlijn.geojson moeten heten, tenzij de gebruiker de naam heeft aangepast.
+
+karakteristieke_profielen_csv = c:\vrm_test\database_7_2\profielen_config\representatieve_profielen\selected_profiles.csv	# pad naar csv met karakteristieke profielen. Wordt afgeleid in stap selecteer_profiel en staat in output_map_representatieve_profielen. Normaliter met de naam selected_profiles.csv, tenzij aangepast door gebruiker.
+gebouwen_csv = 			c:\vrm_test\database_7_2\gebouwen_config\building_count_traject7-2.csv				# pad naar csv met getelde gebouwen. Wordt afgeleid in stap tel_gebouwen en staat in output_map_bebouwing met naam building_count_traject{traject_ID}.csv, tenzij aangepast door gebruiker. 
+vrtool_database_naam = 		config_database_7_2										# hier geef je de naam van de database die wordt aangemaakt als input voor de vrtool.
+
+hr_profielen_dir = c:/vrm_test/traject7_2_jan2024/PRFL 					# pad naar de map met de profielen voor de HR sommen
+database_path_HR_current = 	c:/vrm_test/database_7_2/Bekleding/waterstand/2023 	# pad met de database voor de HR sommen (huidig)
+database_path_HR_future = 	c:/vrm_test/database_7_2/Bekleding/waterstand/2100 	# pad met de database voor de HR sommen (toekomst)
+database_path_bekleding = 	c:/vrm_test/database_7_2/Bekleding/WBI2017_IJsselmeer_7-2_v02_sameng	# pad naar de databases die voor bekleding worden gebruikt. Zelfde als voor HR_current en HR_future, maar dan in dezelfde map. Dit moet nog worden samengevoegd, want nu moet je dezelfde databases 2x op een andere manier aanbieden
+steentoets_map = 		c:/vrm_test/database_7_2/Bekleding/Steentoets		# pad naar de map met de Steentoetsfile(s). Momenteel worden versie 17.1.2.1 en 17.1.1.1 ondersteund. Het versienummer moet in de bestandsnaam staan. Voorbeeld "Steentoets v17.1.1.1_WBI2017_database_normtraject_7-2_v02.xlsm"
+karakteristieke_profielen_map = c:/vrm_test/database_7_2/profielen_config/characteristic_profiles # pad naar de map waar de gegenereerde karakteristieke punten (uit een eerdere stap: genereer_profielen) zijn opgeslagen
+
+output_map_waterstand = 	c:/vrm_test/database_7_2/waterstand_test_config 		# aan te maken uitvoermap voor de HR sommen voor waterstand. Voor de 'bekleding_qvariant' workflow is dit een invoerparameter
+output_map_overslag = 		c:/vrm_test/database_7_2/overslag_test_config3 			# aan te maken uitvoermap voor de HR sommen voor overslag
+output_map_vakindeling = 	c:/vrm_test/database_7_2/Vakindeling/vakindeling test_ini 	# aan te maken uitvoermap voor de vakindeling
+output_map_bekleding =		c:/vrm_test/database_7_2/Bekleding/resultaten_config		# aan te maken uitvoermap voor de bekleding. Hier worden de resultaten van de qvariant-som naartoe geschreven. De bekleding_gebu_zst workflow kan alleen worden gerund, als de qvariant resultaten al in deze map staan.
+output_map_profielen = 		c:/vrm_test/database_7_2/profielen_config			# aan te maken uitvoermap voor de subfolders die te maken hebben met afleiden van profielen afgeleid van AHN
+output_map_ahn_profielen = 	c:/vrm_test/database_7_2/profielen_config/AHN_profiles		# uitvoermap die is aangemaakt bij het trekken van de profielen (stap genereer_profielen), waarin alle afgeleide AHN profielen zijn opgeslagen
+output_map_representatieve_profielen = c:/vrm_test/database_7_2/profielen_config/representatieve_profielen # aan te maken uitvoermap waarin per vak het representatieve profiel word geselecteerd
+output_map_teenlijn = 		c:/vrm_test/database_7_2/profielen_config/teenlijn
+output_map_bebouwing =		c:/vrm_test/database_7_2/gebouwen_config			# aan te maken uitvoermap waarin de getelde gebouwen achter ieder dijkvak worden opgeslagen.
+output_map_database = 		c:/vrm_test/database_7_2/database_config			# aan te maken uitvoermap waarin database wordt opgeslagen.
+
+dx = 				2500	# stapgrootte bij het afleiden van dijkprofielen uit het AHN. Default is 25
+traject_shapefile = 	False 		# als deze op false staat, wordt de trajectshapefile uit het NBPW. Als het bestand afwijkt, moet hier een pad naar de juiste shapefile worden meegegeven
+flip_traject = 		True 		# gooit de vakindeling om, indien het de shapefile in de andere richting is gedefinieerd als de vakindeling. Werkt ook voor het genereren van AHN profielen
+flip_waterkant = 	False 		# belangrijk bij het genereren van AHN profielen. Er wordt een profiel getrokken met voor- en achterland. By default (False) wordt aangenomen dat het water rechts van de kering ligt, in de richting van oplopende vakindeling. Anders moet deze parameter op True worden gezet. Let op, als flip_traject op True staat, ligt het water rechts t.o.v. het geflipte traject!

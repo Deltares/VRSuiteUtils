@@ -129,7 +129,7 @@ class QVariantCalculations(object):
 
         # def run_HydraRing(self, binHydraRing, HRdatabase, year, numSettings):
 
-    def run_HydraRing(self, binHydraRing, HRdatabase, working_dir, year, numSettings):
+    def run_HydraRing(self, binHydraRing, fileNameHLCD, working_dir, year, numSettings):
         
 
         fileNameConfig = binHydraRing.joinpath('config.sqlite')
@@ -140,14 +140,7 @@ class QVariantCalculations(object):
         # fileNameSQL = '1.sql'
         # fileNameIni = '1.ini'
         # outputfile = '1-output.sqlite'
-        
-        if year==2025:
-            fileNameHLCD = HRdatabase + '/hlcd.sqlite'
-        elif year==2100:
-            fileNameHLCD = HRdatabase + '/hlcd_W_2100.sqlite'
-        else:
-            print('Unknown evaluation year')
-        
+
         if self.mechanism == 'MHW':
             make_sql_MHW(fileNameSQL, self.locationId, self.beta, numSettings)
         elif self.mechanism == 'Qvariant':
