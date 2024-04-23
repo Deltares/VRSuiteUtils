@@ -44,15 +44,14 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
 
 
 if __name__ == '__main__':
-
     # input paths
-    traject_id = "31-1"
-    bekleding_path = Path(r"c:\vrm_test\scheldestromen_bekleding\Bekleding_default.csv")
-    database_paths = [Path(r"c:/vrm_test/database_7_2/Bekleding/waterstand/2023"),
-                      Path(r"c:/vrm_test/database_7_2/Bekleding/waterstand/2100")]
-    profielen_path = Path(r"c:\vrm_test\scheldestromen_bekleding\prfl")
-    waterlevel_path = Path(r"c:\vrm_test\scheldestromen_bekleding\waterlevel_20230925")
-    output_path = Path(r"c:\vrm_test/database_7_2/Bekleding/20240422_uitvoer")
+    traject_id = "7-2"
+    bekleding_path = Path(r"c:/Users/rikkert/OneDrive - Stichting Deltares/Desktop/Projecten/Veiligheidsrendement/tests/20240422_qvariant/Bekleding_20230830_full.csv")
+    database_paths = [Path(r"c:/Users/rikkert/OneDrive - Stichting Deltares/Desktop/Projecten/Veiligheidsrendement/tests/20240422_qvariant/HR_database/2023"),
+                      Path(r'c:/Users/rikkert/OneDrive - Stichting Deltares/Desktop/Projecten/Veiligheidsrendement/tests/20240422_qvariant/HR_database/2100')]
+    profielen_path = Path(r"c:/Users/rikkert/OneDrive - Stichting Deltares/Desktop/Projecten/Veiligheidsrendement/tests/20240422_qvariant/PRFL")
+    waterlevel_path = Path(r"c:/Users/rikkert/OneDrive - Stichting Deltares/Desktop/Projecten/Veiligheidsrendement/tests/20240422_qvariant/waterstand")
+    output_path = Path(r"c:/Users/rikkert/OneDrive - Stichting Deltares/Desktop/Projecten/Veiligheidsrendement/tests/20240422_qvariant/output")
     hring_path = Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals', 'HydraRing-23.1.1')
 
     qvariant_main(traject_id, bekleding_path, database_paths, waterlevel_path, profielen_path, hring_path, output_path)

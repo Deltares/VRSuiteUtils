@@ -19,24 +19,28 @@ import warnings
 def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
 # define variables
     models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
-
-    evaluateYears = [2025, 2100]
+    # evaluateYears is the last folder in each path in database_paths:
+    evaluateYears = [int(str(path).split('\\')[-1]) for path in database_paths] # only works if paths end with the years
+    # evaluateYears = [2023, 2100]
     beta = -ndtri(Q_var_pgrid)
 
     # check if hlcd and hlcd_W_2100 are in HRdatabase
     for database_path in database_paths:
-        if len(list(database_path.glob('*hlcd*.sqlite')))!=1: raise ValueError('No or multiple hlcd.sqlite file found in database_path.')
-
+        if len(list(database_path.glob('*hlcd*.sqlite')))!=1: raise ValueError('zero or multiple hlcd.sqlite file found in database_path: {}.'.format(database_path))
+        hlcd = list(database_path.glob('*hlcd*.sqlite'))[0]
         #path to config database:
+        if len(list(database_path.glob('*.config.sqlite'))) == 0: raise Exception(
+            'No config.sqlite found in database_path')
         configDatabase = list(database_path.glob('*.config.sqlite'))[0]
-        if len(list(database_path.glob('*.config.sqlite')))>1: warnings.warn('Warning: multiple config.sqlite files found in database_path. Using first file found.')
-        if len(list(database_path.glob('*.config.sqlite')))==0: raise Exception('No config.sqlite found in database_path')
+        if len(list(database_path.glob('*.config.sqlite'))) > 1: warnings.warn(
+            'Warning: multiple config.sqlite files found in database_path. Using first file found.')
+
         for index,row in df.iterrows():
             dwarsprofiel = row['dwarsprofiel']
 
             OverflowInput.get_HRLocation(
                 hrd_db_location=Path(str(list(database_path.glob('WBI2017_*.sqlite'))[0]).split('.')[0] + '.sqlite'),
-                hlcd_db_location=list(database_path.glob('*hlcd*.sqlite'))[0], hring_data=row.to_frame().transpose())
+                hlcd_db_location=list(database_path.glob('*hlcd.sqlite'))[0], hring_data=row.to_frame().transpose())
             locationId = row['hrlocation']
             orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
@@ -88,7 +92,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
                         for h in wl_filtered:
                             Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
                             numSettings = Qvar.get_numerical_settings(configDatabase)
-                            QvarRes = Qvar.run_HydraRing(hring_path, str(database_path), local_path, evaluateYears[i], numSettings)
+                            QvarRes = Qvar.run_HydraRing(hring_path, str(hlcd), local_path, evaluateYears[i], numSettings)
 
                             Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                             Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])

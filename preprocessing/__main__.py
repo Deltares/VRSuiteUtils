@@ -179,7 +179,8 @@ def generate_and_evaluate_water_level_computations(config_file):
 def run_bekleding_qvariant(config_file):
     mandatory_parameters = ['traject_id',
                             'bekleding_input_csv',
-                            'database_path_bekleding',
+                            'database_path_HR_current',
+                            'database_path_HR_future',
                             'output_map_waterstand',
                             'hr_profielen_dir',
                             'output_map_bekleding']
@@ -193,7 +194,8 @@ def run_bekleding_qvariant(config_file):
     # Accessing parameters
     traject_id = parameters['traject_id']
     input_csv = parameters['bekleding_input_csv']
-    database_path = parameters['database_path_bekleding']
+    database_path_current = parameters['database_path_HR_current']
+    database_path_future = parameters['database_path_HR_future']
     waterlevel_path = parameters['output_map_waterstand']
     profielen_path = parameters['hr_profielen_dir']
     output_path = parameters['output_map_bekleding']
@@ -202,7 +204,8 @@ def run_bekleding_qvariant(config_file):
     print("The following parameters are read from the configuration file:")
     print(f"traject_id: {traject_id}")
     print(f"bekleding_input_csv: {input_csv}")
-    print(f"database_path_bekleding: {database_path}")
+    print(f"database_path_current: {database_path_current}")
+    print(f"database_path_future: {database_path_future}")
     print(f"output_map_waterstand: {waterlevel_path}")
     print(f"hr_profielen_dir: {profielen_path}")
     print(f"output_map_bekleding: {output_path}")
@@ -211,7 +214,7 @@ def run_bekleding_qvariant(config_file):
     qvariant_main(
         traject_id,
         Path(input_csv),
-        Path(database_path),
+        [Path(database_path_current), Path(database_path_future)],
         Path(waterlevel_path),
         Path(profielen_path),
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
