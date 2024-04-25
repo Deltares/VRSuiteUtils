@@ -140,6 +140,6 @@ def create_project_structure(project_folder, traject_id):
     print(f"Project structure created for '{os.path.basename(project_folder)}'.")
 
 if __name__ == "__main__":
-    project_folder = r"c:\Users\rikkert\OneDrive - Stichting Deltares\Desktop\Projecten\Veiligheidsrendement\tests\20240423_create_folders\test1"
-    traject_id = "18-4"
+    project_folder = r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\tests\test_data\31-1_v2"
+    traject_id = "31-1"
     create_project_structure(project_folder, traject_id)
