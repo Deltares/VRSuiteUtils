@@ -13,7 +13,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
 from scipy.interpolate import interp1d
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
-
+import os
 import warnings
 
 def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
@@ -27,7 +27,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
     # check if hlcd and hlcd_W_2100 are in HRdatabase
     for database_path in database_paths:
         if len(list(database_path.glob('*hlcd*.sqlite')))!=1: raise ValueError('zero or multiple hlcd.sqlite file found in database_path: {}.'.format(database_path))
-        hlcd = list(database_path.glob('*hlcd*.sqlite'))[0]
+        hlcd = Path(os.getcwd()).joinpath(list(database_path.glob('*hlcd*.sqlite'))[0])
         #path to config database:
         if len(list(database_path.glob('*.config.sqlite'))) == 0: raise Exception(
             'No config.sqlite found in database_path')
@@ -59,7 +59,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
             valMHW = np.empty((len(evaluateYears), len(Q_var_pgrid)))
 
             for i, year in enumerate(evaluateYears):
-                output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.naam_hrlocatie}', 'designTable.txt')
+                output_overflow = waterlevel_path.joinpath(f'{year}', f'{row.naam_hrlocatie}', f'DESIGNTABLE_{row.naam_hrlocatie}.txt')
                 wl_frequencycurve = read_design_table(output_overflow)[['Value','Beta']]
                 f = interp1d(wl_frequencycurve['Beta'], wl_frequencycurve['Value'], fill_value=('extrapolate'))
                 valMHW[i, :] = f(beta)

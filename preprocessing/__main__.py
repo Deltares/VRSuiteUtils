@@ -78,49 +78,9 @@ def generate_and_evaluate_water_level_computations(config_file):
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
 def run_bekleding_qvariant(config_file):
-    mandatory_parameters = ['traject_id',
-                            'bekleding_input_csv',
-                            'database_path_HR_current',
-                            'database_path_HR_future',
-                            'output_map_waterstand',
-                            'hr_profielen_dir',
-                            'output_map_bekleding']
+    print(f"Start Q-variant berekeningen met configuratie file: {config_file}")
+    api.run_bekleding_qvariant(config_file)
 
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    traject_id = parameters['traject_id']
-    input_csv = parameters['bekleding_input_csv']
-    database_path_current = parameters['database_path_HR_current']
-    database_path_future = parameters['database_path_HR_future']
-    waterlevel_path = parameters['output_map_waterstand']
-    profielen_path = parameters['hr_profielen_dir']
-    output_path = parameters['output_map_bekleding']
-
-    # print the parameters
-    print("The following parameters are read from the configuration file:")
-    print(f"traject_id: {traject_id}")
-    print(f"bekleding_input_csv: {input_csv}")
-    print(f"database_path_current: {database_path_current}")
-    print(f"database_path_future: {database_path_future}")
-    print(f"output_map_waterstand: {waterlevel_path}")
-    print(f"hr_profielen_dir: {profielen_path}")
-    print(f"output_map_bekleding: {output_path}")
-
-    # run the bekleding_qvariant workflow
-    qvariant_main(
-        traject_id,
-        Path(input_csv),
-        [Path(database_path_current), Path(database_path_future)],
-        Path(waterlevel_path),
-        Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
-    )
 
 
 @cli.command(

@@ -1,6 +1,7 @@
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
+from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
 import os
@@ -155,6 +156,59 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
         Path(file_path),
         [database_path_current, database_path_future],
         Path(profielen_dir),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
+        Path(output_path),
+    )
+
+def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
+    mandatory_parameters = ['traject_id',
+                            'bekleding_input_csv',
+                            'database_path_HR_current',
+                            'database_path_HR_future',
+                            'output_map_waterstand',
+                            'hr_profielen_dir',
+                            'output_map_bekleding']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    input_csv = parameters['bekleding_input_csv']
+    database_path_current = parameters['database_path_HR_current']
+    database_path_future = parameters['database_path_HR_future']
+    waterlevel_path = parameters['output_map_waterstand']
+    profielen_path = parameters['hr_profielen_dir']
+
+    if results_folder is None:
+        output_path = Path(parameters['output_map_bekleding'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_bekleding'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+
+    # print the parameters
+    print("The following parameters are read from the configuration file:")
+    print(f"traject_id: {traject_id}")
+    print(f"bekleding_input_csv: {input_csv}")
+    print(f"database_path_current: {database_path_current}")
+    print(f"database_path_future: {database_path_future}")
+    print(f"output_map_waterstand: {waterlevel_path}")
+    print(f"hr_profielen_dir: {profielen_path}")
+    print(f"output_map_bekleding: {output_path}")
+
+    # run the bekleding_qvariant workflow
+    qvariant_main(
+        traject_id,
+        Path(input_csv),
+        [Path(database_path_current), Path(database_path_future)],
+        Path(waterlevel_path),
+        Path(profielen_path),
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
