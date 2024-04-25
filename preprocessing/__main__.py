@@ -139,52 +139,14 @@ def run_gebu_zst(config_file):
                 required=True,
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
-def obtain_the_AHN_profiles_for_traject(config_file):
-    mandatory_parameters = ['traject_id', 'output_map_profielen']
+def run_characteristic_profiles_for_traject(config_file):
+    print(f"Start genereren van karakteristieke profielen op basis van AHN met configuratie file: {config_file}")
+    api.get_characteristic_profiles_for_traject(config_file)
 
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    traject_id = parameters['traject_id']
-    output_folder = parameters['output_map_profielen']
-    dx = parameters.getint('dx', fallback=25)  # set default value to 25 if not present
-    voorland_lengte = parameters.getint('voorland_lengte', fallback=50)  # set default value to 50 if not present
-    achterland_lengte = parameters.getint('achterland_lengte', fallback=75)  # set default value to 75 if not present
-    traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
-    flip_traject = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
-    flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
-
-    # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
-    print(f"traject_id: {traject_id}")
-    print(f"output_folder: {output_folder}")
-    print(f"dx: {dx}")
-    print(f"voorland_lengte: {voorland_lengte}")
-    print(f"achterland_lengte: {achterland_lengte}")
-    print(f"traject_shape: {traject_shape}")
-    print(f"flip_traject: {flip_traject}")
-    print(f"flip_waterkant: {flip_waterkant}")
-
-    # run the get_profiles_workflow
-    main_traject_profiles(
-        traject_id,
-        Path(output_folder),
-        dx,
-        voorland_lengte,
-        achterland_lengte,
-        traject_shape,
-        flip_traject,
-        flip_waterkant,
-    )
 
 @cli.command(
     name="selecteer_profiel", help="Selecteer per dijkvak een profiel"
 )
-
 @click.option("--config_file",
                 type=click.Path(),
                 nargs=1,

@@ -2,6 +2,8 @@ from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_ma
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
+from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
+
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
 import os
@@ -211,4 +213,55 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
         Path(profielen_path),
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
+    )
+
+
+def get_characteristic_profiles_for_traject(config_file: str, results_folder: Path = None):   
+    mandatory_parameters = ['traject_id', 'output_map_profielen']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    if results_folder is None:
+        output_path = Path(parameters['output_map_profielen'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_profielen'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+    
+    dx = parameters.getint('dx', fallback=25)  # set default value to 25 if not present
+    voorland_lengte = parameters.getint('voorland_lengte', fallback=50)  # set default value to 50 if not present
+    achterland_lengte = parameters.getint('achterland_lengte', fallback=75)  # set default value to 75 if not present
+    traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
+    flip_traject = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
+    flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"traject_id: {traject_id}")
+    print(f"output_path: {output_path.__str__}")
+    print(f"dx: {dx}")
+    print(f"voorland_lengte: {voorland_lengte}")
+    print(f"achterland_lengte: {achterland_lengte}")
+    print(f"traject_shape: {traject_shape}")
+    print(f"flip_traject: {flip_traject}")
+    print(f"flip_waterkant: {flip_waterkant}")
+
+    # run the get_profiles_workflow
+    main_traject_profiles(
+        traject_id,
+        output_path,
+        dx,
+        voorland_lengte,
+        achterland_lengte,
+        traject_shape,
+        flip_traject,
+        flip_waterkant,
     )
