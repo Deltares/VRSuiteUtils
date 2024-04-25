@@ -74,8 +74,9 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
 
     # Accessing parameters
     file_path = parameters['hr_input_csv']
-    database_path_current = parameters['database_path_HR_current']
-    database_path_future = parameters['database_path_HR_future']
+    database_path_current = Path(parameters['database_path_HR_current'])
+    database_path_future = Path(parameters['database_path_HR_future'])
+    
     if results_folder is None:
         output_path = Path(parameters['output_map_waterstand'])
     else: # used for testing
@@ -96,7 +97,7 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
     # run the water level computations
     waterlevel_main(
         Path(file_path),
-        [Path(database_path_current), Path(database_path_future)],
+        [database_path_current, database_path_future],
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
     )
@@ -128,8 +129,9 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
 
     # Accessing parameters
     file_path = parameters['hr_input_csv']
-    database_path_current = parameters['database_path_HR_current']
-    database_path_future = parameters['database_path_HR_future']
+    database_path_current = Path(parameters['database_path_HR_current'])
+    database_path_future = Path(parameters['database_path_HR_future'])
+    
     profielen_dir = parameters['hr_profielen_dir']
     output_path = parameters['output_map_overslag']
     if results_folder is None:
@@ -151,7 +153,7 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
     # run the overflow computations
     overflow_main(
         Path(file_path),
-        [Path(database_path_current), Path(database_path_future)],
+        [database_path_current, database_path_future],
         Path(profielen_dir),
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
