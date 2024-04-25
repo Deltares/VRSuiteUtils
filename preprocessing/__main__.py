@@ -62,34 +62,9 @@ def generate_and_evaluate_overflow_computations(config_file):
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
 def generate_and_evaluate_water_level_computations(config_file):
-    mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'output_map_waterstand']
+    print(f"Start waterstandberekeningen met Hydra-Ring met configuratie file: {config_file}")
+    api.generate_and_evaluate_waterlevel_computations(config_file)
 
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    file_path = parameters['hr_input_csv']
-    database_path_current = parameters['database_path_HR_current']
-    database_path_future = parameters['database_path_HR_future']
-    output_path = parameters['output_map_waterstand']
-
-    # print the parameters
-    print("The following parameters are read from the configuration file:")
-    print(f"file_path: {file_path}")
-    print(f"database_path_current: {database_path_current}")
-    print(f"database_path_future: {database_path_future}")
-    print(f"output_path: {output_path}")
-
-    # run the water level computations
-    waterlevel_main(
-        Path(file_path),
-        [Path(database_path_current), Path(database_path_future)],
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
-    )
 
 @cli.command(
     name="bekleding_qvariant", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"

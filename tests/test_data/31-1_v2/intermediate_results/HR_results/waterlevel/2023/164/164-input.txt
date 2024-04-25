@@ -1,0 +1,2283 @@
+==============================================================================================================================================
+Executable name    : C:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\preprocessing\externals\HydraRing-23.1.1\MechanismComputation.exe
+Executable version : 23.1.1.0
+Hydra-Ring Project: Sprint
+Area number: 1
+Area name: Nederland
+Date: 25-04-2024
+Time: 17:02:55
+Section Id        :     1
+Failure mechanism : Reference water level
+Layer             :     1
+Alternative       :     1
+Calculation scheme: FBC
+HLCD              : c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\tests\test_data\31-1_v2\input_files\HR_databases\2023\HLCD.sqlite
+==============================================================================================================================================
+
+Numerical control data
+Submechanism Referentiewaterstand
+----------------------------------------------------------------------------------------------------------------------------------------------
+Probabilistic method        : FORM+DS
+Form startmethod            :     4
+Form max. nr. of iterations :   150
+Form relaxation factor      :   0.150
+Form Epsilon Beta           :   0.010
+Form FdU                    :   0.300
+Form Epsilon Z              :   0.010
+DS startmethod              :     2
+DS iteration method         :     3
+DS min. nr. of iterations   : 10000
+DS max. nr. of iterations   : 20000
+DS variation coefficient    :   0.100
+DS epsilon du               :   0.001
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Section data
+----------------------------------------------------------------------------------------------------------------------------------------------
+Section Id                     : 1
+Name                           : 164
+Description                    : 164
+Ring coord. begin section [m]  :   -999.
+Ring coord. end section   [m]  :   -999.
+X coord. section [m] RD        :   -999.
+Y coord. section [m] RD        :   -999.
+Reference to HD station 1      : 1500305
+Normal of section              :   180.0
+Length of mechanism in section :     1.0
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Calculation profile
+----------------------------------------------------------------------------------------------------------------------------------------------
+Toeheight dike                                       [m] :     4.0
+Crestheight dike                                     [m] :    16.0
+Height between outside crestline and crestheight     [m] :     0.0
+Slope upper part of dike                           [tan] :     0.3
+Slope lower part of dike                           [tan] :     0.3
+Height shoulder                                      [m] :     4.0
+Width shoulder                                       [m] :     0.0
+Roughness of slope upper part of dike                [m] :     1.0
+----------------------------------------------------------------------------------------------------------------------------------------------
+  x-coord  z-coord  x-coord  z-coord    Talud  Roughness
+    begin    begin     end      end     slope    factor
+      [m]      [m]      [m]      [m]    [tan]      [-]
+----------------------------------------------------------------------------------------------------------------------------------------------
+     0.00     4.00    36.00    16.00     0.33     1.00
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Foreland
+----------------------------------------------------------------------------------------------------------------------------------------------
+  x-coord  z-coord  x-coord  z-coord    Talud
+    begin    begin     end      end     slope
+      [m]      [m]      [m]      [m]    [tan]
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Stochastic strength variables
+----------------------------------------------------------------------------------------------------------------------------------------------
+Id  Stochastic variable                                                   Rho_x     Rho_t     Rho_w
+                                                                           [-]       [-]        [-]
+----------------------------------------------------------------------------------------------------------------------------------------------
+ 26 Referentie waterstand (m+NAP)                                         1.000     1.000     1.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Stochastic strength variables
+----------------------------------------------------------------------------------------------------------------------------------------------
+Id  Stochastic variables                                             Distribution   Det. val.  Parameter   Parameter   Parameter   Variation    Correlation
+                                                                         Type      or Param. 1     2           3           4      Coefficient      Length
+                                                                                                                                     [-]             [m]
+----------------------------------------------------------------------------------------------------------------------------------------------
+No stochastic variables
+----------------------------------------------------------------------------------------------------------------------------------------------
+Deterministic variables
+----------------------------------------------------------------------------------------------------------------------------------------------
+Id  Deterministic variable                                      Value
+----------------------------------------------------------------------------------------------------------------------------------------------
+ 26 Referentie waterstand (m+NAP)                             0.00000
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Load stochastic variables
+----------------------------------------------------------------------------------------------------------------------------------------------
+Id  Load stochastic variable
+----------------------------------------------------------------------------------------------------------------------------------------------
+  1 Windrichting (-)
+ 33 Waterstand Hansweert (m+NAP)
+ 42 Waterstand Vlissingen (m+NAP)
+ 43 Waterstand Vlissingen (Additioneel) (m+NAP)
+ 58 Windsnelheid Vlissingen | wl VL (m/s)
+133 Onzekerheid waterstand Hansweert (m)
+142 Onzekerheid waterstand Vlissingen (m)
+143 Onzekerheid waterstand Vlissingen (Additioneel) (m
+158 Onzekerheid windsnelheid Vlissingen | wl VL (-)
+200 Modelonzekerheid lokale waterstand (m)
+201 Modelonzekerheid golfhoogte (-)
+202 Modelonzekerheid golfperiode (-)
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    33
+Loadvariable name                  Waterstand Hansweert
+Unit                               m+NAP
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12.00000 hours
+------------------------------------------------------------
+Wind direction                     1
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.337
+  Parameter 2                               1.150
+  Parameter 3                               3.370
+  Parameter 4                               0.007
+------------------------------------------------------------
+Wind direction                     2
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.320
+  Parameter 2                               1.490
+  Parameter 3                               3.370
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     3
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.320
+  Parameter 2                               1.490
+  Parameter 3                               3.370
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     4
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.320
+  Parameter 2                               1.490
+  Parameter 3                               3.370
+  Parameter 4                               0.000
+------------------------------------------------------------
+Wind direction                     5
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.320
+  Parameter 2                               1.490
+  Parameter 3                               3.370
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     6
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.320
+  Parameter 2                               1.490
+  Parameter 3                               3.370
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     7
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.320
+  Parameter 2                               1.490
+  Parameter 3                               3.370
+  Parameter 4                               0.000
+------------------------------------------------------------
+Wind direction                     8
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.341
+  Parameter 2                               1.240
+  Parameter 3                               3.370
+  Parameter 4                               0.002
+------------------------------------------------------------
+Wind direction                     9
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.370
+  Parameter 2                               1.200
+  Parameter 3                               3.370
+  Parameter 4                               0.012
+------------------------------------------------------------
+Wind direction                     10
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.462
+  Parameter 2                               1.200
+  Parameter 3                               3.370
+  Parameter 4                               0.033
+------------------------------------------------------------
+Wind direction                     11
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.505
+  Parameter 2                               1.160
+  Parameter 3                               3.370
+  Parameter 4                               0.045
+------------------------------------------------------------
+Wind direction                     12
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.329
+  Parameter 2                               1.040
+  Parameter 3                               3.370
+  Parameter 4                               0.033
+------------------------------------------------------------
+All wind directions
+Parameters statistical uncertainties
+Distribution type                  Normal
+     value      Parameter 1  Parameter 2  Parameter 3  Parameter 4
+      4.19      0.00000      0.02500      0.00000      0.00000
+      4.29      0.00000      0.02500      0.00000      0.00000
+      4.93      0.00000      0.07500      0.00000      0.00000
+      5.59      0.00000      0.15250      0.00000      0.00000
+      6.25      0.00000      0.26250      0.00000      0.00000
+      6.92      0.00000      0.40500      0.00000      0.00000
+------------------------------------------------------------
+All wind directions
+Correlation model                  Complete
+------------------------------------------------------------
+Rise per wind direction
+Wind direction id = 1                       0.000
+Wind direction id = 2                       0.000
+Wind direction id = 3                       0.000
+Wind direction id = 4                       0.000
+Wind direction id = 5                       0.000
+Wind direction id = 6                       0.000
+Wind direction id = 7                       0.000
+Wind direction id = 8                       0.000
+Wind direction id = 9                       0.000
+Wind direction id = 10                      0.000
+Wind direction id = 11                      0.000
+Wind direction id = 12                      0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    42
+Loadvariable name                  Waterstand Vlissingen
+Unit                               m+NAP
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12.00000 hours
+------------------------------------------------------------
+Wind direction                     1
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.336
+  Parameter 2                               1.200
+  Parameter 3                               2.950
+  Parameter 4                               0.010
+------------------------------------------------------------
+Wind direction                     2
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.002
+------------------------------------------------------------
+Wind direction                     3
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     4
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     5
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     6
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     7
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     8
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.334
+  Parameter 2                               1.350
+  Parameter 3                               2.950
+  Parameter 4                               0.002
+------------------------------------------------------------
+Wind direction                     9
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.514
+  Parameter 2                               1.450
+  Parameter 3                               2.950
+  Parameter 4                               0.011
+------------------------------------------------------------
+Wind direction                     10
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.469
+  Parameter 2                               1.270
+  Parameter 3                               2.950
+  Parameter 4                               0.033
+------------------------------------------------------------
+Wind direction                     11
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.657
+  Parameter 2                               1.350
+  Parameter 3                               2.950
+  Parameter 4                               0.045
+------------------------------------------------------------
+Wind direction                     12
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.673
+  Parameter 2                               1.350
+  Parameter 3                               2.950
+  Parameter 4                               0.035
+------------------------------------------------------------
+All wind directions
+Parameters statistical uncertainties
+Distribution type                  Normal
+     value      Parameter 1  Parameter 2  Parameter 3  Parameter 4
+      3.69      0.00000      0.02500      0.00000      0.00000
+      3.79      0.00000      0.02500      0.00000      0.00000
+      4.35      0.00000      0.07250      0.00000      0.00000
+      4.90      0.00000      0.14500      0.00000      0.00000
+      5.45      0.00000      0.24250      0.00000      0.00000
+      6.00      0.00000      0.36750      0.00000      0.00000
+------------------------------------------------------------
+Rise per wind direction
+Wind direction id = 1                       0.000
+Wind direction id = 2                       0.000
+Wind direction id = 3                       0.000
+Wind direction id = 4                       0.000
+Wind direction id = 5                       0.000
+Wind direction id = 6                       0.000
+Wind direction id = 7                       0.000
+Wind direction id = 8                       0.000
+Wind direction id = 9                       0.000
+Wind direction id = 10                      0.000
+Wind direction id = 11                      0.000
+Wind direction id = 12                      0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    43
+Loadvariable name                  Waterstand Vlissingen (Additioneel)
+Unit                               m+NAP
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12.00000 hours
+------------------------------------------------------------
+Wind direction                     1
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.336
+  Parameter 2                               1.200
+  Parameter 3                               2.950
+  Parameter 4                               0.010
+------------------------------------------------------------
+Wind direction                     2
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.002
+------------------------------------------------------------
+Wind direction                     3
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     4
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     5
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     6
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     7
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.476
+  Parameter 2                               1.810
+  Parameter 3                               2.950
+  Parameter 4                               0.001
+------------------------------------------------------------
+Wind direction                     8
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.334
+  Parameter 2                               1.350
+  Parameter 3                               2.950
+  Parameter 4                               0.002
+------------------------------------------------------------
+Wind direction                     9
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.514
+  Parameter 2                               1.450
+  Parameter 3                               2.950
+  Parameter 4                               0.011
+------------------------------------------------------------
+Wind direction                     10
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.469
+  Parameter 2                               1.270
+  Parameter 3                               2.950
+  Parameter 4                               0.033
+------------------------------------------------------------
+Wind direction                     11
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.657
+  Parameter 2                               1.350
+  Parameter 3                               2.950
+  Parameter 4                               0.045
+------------------------------------------------------------
+Wind direction                     12
+Distribution type                  Conditional Weibull
+  Parameter 1                               0.673
+  Parameter 2                               1.350
+  Parameter 3                               2.950
+  Parameter 4                               0.035
+------------------------------------------------------------
+All wind directions
+Parameters statistical uncertainties
+Distribution type                  Normal
+     value      Parameter 1  Parameter 2  Parameter 3  Parameter 4
+      3.69      0.00000      0.02500      0.00000      0.00000
+      3.79      0.00000      0.02500      0.00000      0.00000
+      4.35      0.00000      0.07250      0.00000      0.00000
+      4.90      0.00000      0.14500      0.00000      0.00000
+      5.45      0.00000      0.24250      0.00000      0.00000
+      6.00      0.00000      0.36750      0.00000      0.00000
+------------------------------------------------------------
+All wind directions
+Correlation model                  Complete
+------------------------------------------------------------
+Rise per wind direction
+Wind direction id = 1                       0.000
+Wind direction id = 2                       0.000
+Wind direction id = 3                       0.000
+Wind direction id = 4                       0.000
+Wind direction id = 5                       0.000
+Wind direction id = 6                       0.000
+Wind direction id = 7                       0.000
+Wind direction id = 8                       0.000
+Wind direction id = 9                       0.000
+Wind direction id = 10                      0.000
+Wind direction id = 11                      0.000
+Wind direction id = 12                      0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    58
+Loadvariable name                  Windsnelheid Vlissingen | wl VL
+Unit                               m/s
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12 hour
+------------------------------------------------------------
+Wind direction                     1
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.842829E-01
+Row   3               2.500000E+00  9.587426E-01
+Row   4               3.000000E+00  9.125737E-01
+Row   5               3.500000E+00  8.683694E-01
+Row   6               4.000000E+00  7.701375E-01
+Row   7               4.500000E+00  7.151277E-01
+Row   8               5.000000E+00  6.031434E-01
+Row   9               5.500000E+00  5.500982E-01
+Row  10               6.000000E+00  4.597250E-01
+Row  11               6.500000E+00  4.086444E-01
+Row  12               7.000000E+00  3.379175E-01
+Row  13               7.500000E+00  2.888016E-01
+Row  14               8.000000E+00  2.200393E-01
+Row  15               8.500000E+00  1.846758E-01
+Row  16               9.000000E+00  1.355599E-01
+Row  17               9.500000E+00  1.119843E-01
+Row  18               1.000000E+01  8.154356E-02
+Row  19               1.050000E+01  5.937754E-02
+Row  20               1.100000E+01  4.323693E-02
+Row  21               1.150000E+01  3.148382E-02
+Row  22               1.200000E+01  2.292556E-02
+Row  23               1.250000E+01  1.669370E-02
+Row  24               1.300000E+01  1.215584E-02
+Row  25               1.350000E+01  8.851517E-03
+Row  26               1.400000E+01  6.445406E-03
+Row  27               1.450000E+01  4.693349E-03
+Row  28               1.500000E+01  3.194821E-03
+Row  29               1.550000E+01  2.174754E-03
+Row  30               1.600000E+01  1.480382E-03
+Row  31               1.650000E+01  1.007715E-03
+Row  32               1.700000E+01  6.859638E-04
+Row  33               1.750000E+01  4.669441E-04
+Row  34               1.800000E+01  3.178546E-04
+Row  35               1.850000E+01  2.163676E-04
+Row  36               1.900000E+01  1.472841E-04
+Row  37               1.950000E+01  1.002581E-04
+Row  38               2.000000E+01  6.824694E-05
+Row  39               2.050000E+01  4.645654E-05
+Row  40               2.100000E+01  3.162354E-05
+Row  41               2.150000E+01  2.152654E-05
+Row  42               2.200000E+01  1.465338E-05
+Row  43               2.250000E+01  9.974737E-06
+Row  44               2.300000E+01  6.789927E-06
+Row  45               2.350000E+01  4.621988E-06
+Row  46               2.400000E+01  3.146244E-06
+Row  47               2.450000E+01  2.141688E-06
+Row  48               2.500000E+01  1.457873E-06
+Row  49               2.550000E+01  9.923924E-07
+Row  50               2.600000E+01  6.755338E-07
+Row  51               2.650000E+01  4.598442E-07
+Row  52               2.700000E+01  3.130217E-07
+Row  53               2.750000E+01  2.130777E-07
+Row  54               2.800000E+01  1.450447E-07
+Row  55               2.850000E+01  9.873370E-08
+Row  56               2.900000E+01  6.720925E-08
+Row  57               2.950000E+01  4.575017E-08
+Row  58               3.000000E+01  3.114271E-08
+Row  59               3.050000E+01  2.119923E-08
+Row  60               3.100000E+01  1.443058E-08
+Row  61               3.150000E+01  9.823073E-09
+Row  62               3.200000E+01  6.686687E-09
+Row  63               3.250000E+01  4.551711E-09
+Row  64               3.300000E+01  3.098406E-09
+Row  65               3.350000E+01  2.109123E-09
+Row  66               3.400000E+01  1.435706E-09
+Row  67               3.450000E+01  9.773031E-10
+Row  68               3.500000E+01  6.652624E-10
+Row  69               3.550000E+01  4.528524E-10
+Row  70               3.600000E+01  3.082622E-10
+Row  71               3.650000E+01  2.098379E-10
+Row  72               3.700000E+01  1.428393E-10
+Row  73               3.750000E+01  9.723244E-11
+Row  74               3.800000E+01  6.618728E-11
+Row  75               3.850000E+01  4.505463E-11
+Row  76               3.900000E+01  3.066924E-11
+Row  77               3.950000E+01  2.087686E-11
+Row  78               4.000000E+01  1.421119E-11
+Row  79               4.050000E+01  9.673706E-12
+Row  80               4.100000E+01  6.584955E-12
+Row  81               4.150000E+01  4.482525E-12
+Row  82               4.200000E+01  3.051337E-12
+------------------------------------------------------------
+Wind direction                     2
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.839901E-01
+Row   3               2.500000E+00  9.630542E-01
+Row   4               3.000000E+00  8.965517E-01
+Row   5               3.500000E+00  8.435961E-01
+Row   6               4.000000E+00  7.266010E-01
+Row   7               4.500000E+00  6.625616E-01
+Row   8               5.000000E+00  5.677340E-01
+Row   9               5.500000E+00  5.098522E-01
+Row  10               6.000000E+00  4.088670E-01
+Row  11               6.500000E+00  3.669951E-01
+Row  12               7.000000E+00  2.857143E-01
+Row  13               7.500000E+00  2.302956E-01
+Row  14               8.000000E+00  1.736453E-01
+Row  15               8.500000E+00  1.477833E-01
+Row  16               9.000000E+00  1.108374E-01
+Row  17               9.500000E+00  7.569984E-02
+Row  18               1.000000E+01  5.170153E-02
+Row  19               1.050000E+01  3.531115E-02
+Row  20               1.100000E+01  2.411684E-02
+Row  21               1.150000E+01  1.647134E-02
+Row  22               1.200000E+01  1.124961E-02
+Row  23               1.250000E+01  7.683265E-03
+Row  24               1.300000E+01  5.247522E-03
+Row  25               1.350000E+01  3.100118E-03
+Row  26               1.400000E+01  1.831480E-03
+Row  27               1.450000E+01  1.081997E-03
+Row  28               1.500000E+01  6.392197E-04
+Row  29               1.550000E+01  3.776366E-04
+Row  30               1.600000E+01  2.230992E-04
+Row  31               1.650000E+01  1.318020E-04
+Row  32               1.700000E+01  7.786566E-05
+Row  33               1.750000E+01  4.600128E-05
+Row  34               1.800000E+01  2.717652E-05
+Row  35               1.850000E+01  1.605528E-05
+Row  36               1.900000E+01  9.485097E-06
+Row  37               1.950000E+01  5.603582E-06
+Row  38               2.000000E+01  3.310470E-06
+Row  39               2.050000E+01  1.955751E-06
+Row  40               2.100000E+01  1.155414E-06
+Row  41               2.150000E+01  6.825926E-07
+Row  42               2.200000E+01  4.032604E-07
+Row  43               2.250000E+01  2.382371E-07
+Row  44               2.300000E+01  1.407452E-07
+Row  45               2.350000E+01  8.314907E-08
+Row  46               2.400000E+01  4.912260E-08
+Row  47               2.450000E+01  2.902053E-08
+Row  48               2.500000E+01  1.714468E-08
+Row  49               2.550000E+01  1.012869E-08
+Row  50               2.600000E+01  5.983802E-09
+Row  51               2.650000E+01  3.535095E-09
+Row  52               2.700000E+01  2.088455E-09
+Row  53               2.750000E+01  1.233812E-09
+Row  54               2.800000E+01  7.289085E-10
+Row  55               2.850000E+01  4.306228E-10
+Row  56               2.900000E+01  2.544023E-10
+Row  57               2.950000E+01  1.502951E-10
+Row  58               3.000000E+01  8.879097E-11
+Row  59               3.050000E+01  5.245571E-11
+Row  60               3.100000E+01  3.098966E-11
+Row  61               3.150000E+01  1.830802E-11
+Row  62               3.200000E+01  1.081590E-11
+Row  63               3.250000E+01  6.389778E-12
+Row  64               3.300000E+01  3.774980E-12
+Row  65               3.350000E+01  2.230105E-12
+Row  66               3.400000E+01  1.317502E-12
+Row  67               3.450000E+01  7.783774E-13
+Row  68               3.500000E+01  4.598544E-13
+Row  69               3.550000E+01  2.716716E-13
+Row  70               3.600000E+01  1.605382E-13
+Row  71               3.650000E+01  9.481305E-14
+Row  72               3.700000E+01  5.595524E-14
+Row  73               3.750000E+01  3.308465E-14
+Row  74               3.800000E+01  1.953993E-14
+Row  75               3.850000E+01  1.154632E-14
+Row  76               3.900000E+01  6.772360E-15
+Row  77               3.950000E+01  3.996803E-15
+Row  78               4.000000E+01  2.331468E-15
+Row  79               4.050000E+01  1.443290E-15
+Row  80               4.100000E+01  7.771561E-16
+Row  81               4.150000E+01  4.440892E-16
+Row  82               4.200000E+01  2.220446E-16
+------------------------------------------------------------
+Wind direction                     3
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.887133E-01
+Row   3               2.500000E+00  9.826938E-01
+Row   4               3.000000E+00  9.413093E-01
+Row   5               3.500000E+00  9.066968E-01
+Row   6               4.000000E+00  8.133935E-01
+Row   7               4.500000E+00  7.531979E-01
+Row   8               5.000000E+00  6.553800E-01
+Row   9               5.500000E+00  5.786305E-01
+Row  10               6.000000E+00  4.778029E-01
+Row  11               6.500000E+00  4.356659E-01
+Row  12               7.000000E+00  3.483822E-01
+Row  13               7.500000E+00  2.633559E-01
+Row  14               8.000000E+00  2.182092E-01
+Row  15               8.500000E+00  1.617758E-01
+Row  16               9.000000E+00  1.264108E-01
+Row  17               9.500000E+00  9.029345E-02
+Row  18               1.000000E+01  6.960120E-02
+Row  19               1.050000E+01  4.672475E-02
+Row  20               1.100000E+01  3.136731E-02
+Row  21               1.150000E+01  2.105753E-02
+Row  22               1.200000E+01  1.413636E-02
+Row  23               1.250000E+01  9.490038E-03
+Row  24               1.300000E+01  6.370862E-03
+Row  25               1.350000E+01  4.276893E-03
+Row  26               1.400000E+01  2.871168E-03
+Row  27               1.450000E+01  1.912125E-03
+Row  28               1.500000E+01  1.273426E-03
+Row  29               1.550000E+01  8.480691E-04
+Row  30               1.600000E+01  5.647923E-04
+Row  31               1.650000E+01  3.761372E-04
+Row  32               1.700000E+01  2.504977E-04
+Row  33               1.750000E+01  1.668251E-04
+Row  34               1.800000E+01  1.111012E-04
+Row  35               1.850000E+01  7.399058E-05
+Row  36               1.900000E+01  4.927583E-05
+Row  37               1.950000E+01  3.281644E-05
+Row  38               2.000000E+01  2.185491E-05
+Row  39               2.050000E+01  1.455481E-05
+Row  40               2.100000E+01  9.693130E-06
+Row  41               2.150000E+01  6.455376E-06
+Row  42               2.200000E+01  4.299115E-06
+Row  43               2.250000E+01  2.863101E-06
+Row  44               2.300000E+01  1.906752E-06
+Row  45               2.350000E+01  1.269848E-06
+Row  46               2.400000E+01  8.456861E-07
+Row  47               2.450000E+01  5.632053E-07
+Row  48               2.500000E+01  3.750803E-07
+Row  49               2.550000E+01  2.497939E-07
+Row  50               2.600000E+01  1.663563E-07
+Row  51               2.650000E+01  1.107891E-07
+Row  52               2.700000E+01  7.378267E-08
+Row  53               2.750000E+01  4.913737E-08
+Row  54               2.800000E+01  3.272423E-08
+Row  55               2.850000E+01  2.179350E-08
+Row  56               2.900000E+01  1.451391E-08
+Row  57               2.950000E+01  9.665894E-09
+Row  58               3.000000E+01  6.437238E-09
+Row  59               3.050000E+01  4.287035E-09
+Row  60               3.100000E+01  2.855056E-09
+Row  61               3.150000E+01  1.901394E-09
+Row  62               3.200000E+01  1.266280E-09
+Row  63               3.250000E+01  8.433099E-10
+Row  64               3.300000E+01  5.616227E-10
+Row  65               3.350000E+01  3.740264E-10
+Row  66               3.400000E+01  2.490920E-10
+Row  67               3.450000E+01  1.658889E-10
+Row  68               3.500000E+01  1.104777E-10
+Row  69               3.550000E+01  7.357537E-11
+Row  70               3.600000E+01  4.899925E-11
+Row  71               3.650000E+01  3.263223E-11
+Row  72               3.700000E+01  2.173217E-11
+Row  73               3.750000E+01  1.447309E-11
+Row  74               3.800000E+01  9.638734E-12
+Row  75               3.850000E+01  6.419087E-12
+Row  76               3.900000E+01  4.275025E-12
+Row  77               3.950000E+01  2.847056E-12
+Row  78               4.000000E+01  1.896039E-12
+Row  79               4.050000E+01  1.262657E-12
+Row  80               4.100000E+01  8.408829E-13
+Row  81               4.150000E+01  5.599965E-13
+Row  82               4.200000E+01  3.729239E-13
+------------------------------------------------------------
+Wind direction                     4
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.962121E-01
+Row   3               2.500000E+00  9.810606E-01
+Row   4               3.000000E+00  9.532828E-01
+Row   5               3.500000E+00  9.141414E-01
+Row   6               4.000000E+00  8.282828E-01
+Row   7               4.500000E+00  7.714646E-01
+Row   8               5.000000E+00  6.931818E-01
+Row   9               5.500000E+00  6.060606E-01
+Row  10               6.000000E+00  5.378788E-01
+Row  11               6.500000E+00  4.393939E-01
+Row  12               7.000000E+00  3.712121E-01
+Row  13               7.500000E+00  2.815657E-01
+Row  14               8.000000E+00  2.297980E-01
+Row  15               8.500000E+00  1.679293E-01
+Row  16               9.000000E+00  1.287879E-01
+Row  17               9.500000E+00  1.047980E-01
+Row  18               1.000000E+01  6.818182E-02
+Row  19               1.050000E+01  5.050505E-02
+Row  20               1.100000E+01  3.056352E-02
+Row  21               1.150000E+01  1.849575E-02
+Row  22               1.200000E+01  1.119285E-02
+Row  23               1.250000E+01  6.773439E-03
+Row  24               1.300000E+01  4.098999E-03
+Row  25               1.350000E+01  2.480541E-03
+Row  26               1.400000E+01  1.698404E-03
+Row  27               1.450000E+01  1.162881E-03
+Row  28               1.500000E+01  7.962143E-04
+Row  29               1.550000E+01  5.451606E-04
+Row  30               1.600000E+01  3.732665E-04
+Row  31               1.650000E+01  2.555721E-04
+Row  32               1.700000E+01  1.749879E-04
+Row  33               1.750000E+01  1.198126E-04
+Row  34               1.800000E+01  8.203460E-05
+Row  35               1.850000E+01  5.616834E-05
+Row  36               1.900000E+01  3.845795E-05
+Row  37               1.950000E+01  2.633180E-05
+Row  38               2.000000E+01  1.802914E-05
+Row  39               2.050000E+01  1.234439E-05
+Row  40               2.100000E+01  8.452091E-06
+Row  41               2.150000E+01  5.787069E-06
+Row  42               2.200000E+01  3.962353E-06
+Row  43               2.250000E+01  2.712987E-06
+Row  44               2.300000E+01  1.857557E-06
+Row  45               2.350000E+01  1.271852E-06
+Row  46               2.400000E+01  8.708257E-07
+Row  47               2.450000E+01  5.962464E-07
+Row  48               2.500000E+01  4.082444E-07
+Row  49               2.550000E+01  2.795212E-07
+Row  50               2.600000E+01  1.913856E-07
+Row  51               2.650000E+01  1.310400E-07
+Row  52               2.700000E+01  8.972187E-08
+Row  53               2.750000E+01  6.143174E-08
+Row  54               2.800000E+01  4.206175E-08
+Row  55               2.850000E+01  2.879930E-08
+Row  56               2.900000E+01  1.971861E-08
+Row  57               2.950000E+01  1.350115E-08
+Row  58               3.000000E+01  9.244116E-09
+Row  59               3.050000E+01  6.329362E-09
+Row  60               3.100000E+01  4.333656E-09
+Row  61               3.150000E+01  2.967215E-09
+Row  62               3.200000E+01  2.031625E-09
+Row  63               3.250000E+01  1.391035E-09
+Row  64               3.300000E+01  9.524288E-10
+Row  65               3.350000E+01  6.521192E-10
+Row  66               3.400000E+01  4.465002E-10
+Row  67               3.450000E+01  3.057146E-10
+Row  68               3.500000E+01  2.093200E-10
+Row  69               3.550000E+01  1.433195E-10
+Row  70               3.600000E+01  9.812950E-11
+Row  71               3.650000E+01  6.718848E-11
+Row  72               3.700000E+01  4.600331E-11
+Row  73               3.750000E+01  3.149814E-11
+Row  74               3.800000E+01  2.156642E-11
+Row  75               3.850000E+01  1.476641E-11
+Row  76               3.900000E+01  1.011036E-11
+Row  77               3.950000E+01  6.922463E-12
+Row  78               4.000000E+01  4.739764E-12
+Row  79               4.050000E+01  3.245293E-12
+Row  80               4.100000E+01  2.222000E-12
+Row  81               4.150000E+01  1.521450E-12
+Row  82               4.200000E+01  1.041722E-12
+------------------------------------------------------------
+Wind direction                     5
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.908397E-01
+Row   3               2.500000E+00  9.694656E-01
+Row   4               3.000000E+00  9.465649E-01
+Row   5               3.500000E+00  8.992366E-01
+Row   6               4.000000E+00  8.091603E-01
+Row   7               4.500000E+00  7.221374E-01
+Row   8               5.000000E+00  6.396947E-01
+Row   9               5.500000E+00  5.236641E-01
+Row  10               6.000000E+00  4.656489E-01
+Row  11               6.500000E+00  3.770992E-01
+Row  12               7.000000E+00  3.099237E-01
+Row  13               7.500000E+00  2.305344E-01
+Row  14               8.000000E+00  1.694656E-01
+Row  15               8.500000E+00  1.267176E-01
+Row  16               9.000000E+00  7.175573E-02
+Row  17               9.500000E+00  5.249720E-02
+Row  18               1.000000E+01  3.840748E-02
+Row  19               1.050000E+01  2.809929E-02
+Row  20               1.100000E+01  2.055772E-02
+Row  21               1.150000E+01  1.504023E-02
+Row  22               1.200000E+01  1.100359E-02
+Row  23               1.250000E+01  8.050333E-03
+Row  24               1.300000E+01  5.889704E-03
+Row  25               1.350000E+01  4.308966E-03
+Row  26               1.400000E+01  2.975248E-03
+Row  27               1.450000E+01  2.054345E-03
+Row  28               1.500000E+01  1.418481E-03
+Row  29               1.550000E+01  9.794309E-04
+Row  30               1.600000E+01  6.762760E-04
+Row  31               1.650000E+01  4.669541E-04
+Row  32               1.700000E+01  3.224218E-04
+Row  33               1.750000E+01  2.226253E-04
+Row  34               1.800000E+01  1.537180E-04
+Row  35               1.850000E+01  1.061390E-04
+Row  36               1.900000E+01  7.328670E-05
+Row  37               1.950000E+01  5.060289E-05
+Row  38               2.000000E+01  3.494021E-05
+Row  39               2.050000E+01  2.412547E-05
+Row  40               2.100000E+01  1.665812E-05
+Row  41               2.150000E+01  1.150207E-05
+Row  42               2.200000E+01  7.941935E-06
+Row  43               2.250000E+01  5.483736E-06
+Row  44               2.300000E+01  3.786402E-06
+Row  45               2.350000E+01  2.614429E-06
+Row  46               2.400000E+01  1.805207E-06
+Row  47               2.450000E+01  1.246457E-06
+Row  48               2.500000E+01  8.606518E-07
+Row  49               2.550000E+01  5.942616E-07
+Row  50               2.600000E+01  4.103249E-07
+Row  51               2.650000E+01  2.833205E-07
+Row  52               2.700000E+01  1.956267E-07
+Row  53               2.750000E+01  1.350761E-07
+Row  54               2.800000E+01  9.326713E-08
+Row  55               2.850000E+01  6.439895E-08
+Row  56               2.900000E+01  4.446610E-08
+Row  57               2.950000E+01  3.070289E-08
+Row  58               3.000000E+01  2.119968E-08
+Row  59               3.050000E+01  1.463793E-08
+Row  60               3.100000E+01  1.010717E-08
+Row  61               3.150000E+01  6.978787E-09
+Row  62               3.200000E+01  4.818703E-09
+Row  63               3.250000E+01  3.327211E-09
+Row  64               3.300000E+01  2.297368E-09
+Row  65               3.350000E+01  1.586283E-09
+Row  66               3.400000E+01  1.095295E-09
+Row  67               3.450000E+01  7.562774E-10
+Row  68               3.500000E+01  5.221934E-10
+Row  69               3.550000E+01  3.605634E-10
+Row  70               3.600000E+01  2.489613E-10
+Row  71               3.650000E+01  1.719024E-10
+Row  72               3.700000E+01  1.186949E-10
+Row  73               3.750000E+01  8.195633E-11
+Row  74               3.800000E+01  5.658907E-11
+Row  75               3.850000E+01  3.907352E-11
+Row  76               3.900000E+01  2.697953E-11
+Row  77               3.950000E+01  1.862877E-11
+Row  78               4.000000E+01  1.286282E-11
+Row  79               4.050000E+01  8.881451E-12
+Row  80               4.100000E+01  6.132428E-12
+Row  81               4.150000E+01  4.234391E-12
+Row  82               4.200000E+01  2.923772E-12
+------------------------------------------------------------
+Wind direction                     6
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.926650E-01
+Row   3               2.500000E+00  9.804401E-01
+Row   4               3.000000E+00  9.559902E-01
+Row   5               3.500000E+00  9.168704E-01
+Row   6               4.000000E+00  8.545232E-01
+Row   7               4.500000E+00  7.750611E-01
+Row   8               5.000000E+00  7.139364E-01
+Row   9               5.500000E+00  6.063570E-01
+Row  10               6.000000E+00  5.488998E-01
+Row  11               6.500000E+00  4.364303E-01
+Row  12               7.000000E+00  3.704156E-01
+Row  13               7.500000E+00  2.848411E-01
+Row  14               8.000000E+00  2.396088E-01
+Row  15               8.500000E+00  1.858191E-01
+Row  16               9.000000E+00  1.479218E-01
+Row  17               9.500000E+00  1.002445E-01
+Row  18               1.000000E+01  7.823961E-02
+Row  19               1.050000E+01  6.601467E-02
+Row  20               1.100000E+01  4.726197E-02
+Row  21               1.150000E+01  3.383632E-02
+Row  22               1.200000E+01  2.422448E-02
+Row  23               1.250000E+01  1.734307E-02
+Row  24               1.300000E+01  1.241644E-02
+Row  25               1.350000E+01  8.889321E-03
+Row  26               1.400000E+01  6.364143E-03
+Row  27               1.450000E+01  4.556289E-03
+Row  28               1.500000E+01  3.261990E-03
+Row  29               1.550000E+01  2.282325E-03
+Row  30               1.600000E+01  1.596880E-03
+Row  31               1.650000E+01  1.117293E-03
+Row  32               1.700000E+01  7.817393E-04
+Row  33               1.750000E+01  5.469616E-04
+Row  34               1.800000E+01  3.826940E-04
+Row  35               1.850000E+01  2.677605E-04
+Row  36               1.900000E+01  1.873446E-04
+Row  37               1.950000E+01  1.310799E-04
+Row  38               2.000000E+01  9.171301E-05
+Row  39               2.050000E+01  6.416907E-05
+Row  40               2.100000E+01  4.489734E-05
+Row  41               2.150000E+01  3.141343E-05
+Row  42               2.200000E+01  2.197912E-05
+Row  43               2.250000E+01  1.537818E-05
+Row  44               2.300000E+01  1.075969E-05
+Row  45               2.350000E+01  7.528262E-06
+Row  46               2.400000E+01  5.267318E-06
+Row  47               2.450000E+01  3.685398E-06
+Row  48               2.500000E+01  2.578572E-06
+Row  49               2.550000E+01  1.804156E-06
+Row  50               2.600000E+01  1.262318E-06
+Row  51               2.650000E+01  8.832094E-07
+Row  52               2.700000E+01  6.179574E-07
+Row  53               2.750000E+01  4.323678E-07
+Row  54               2.800000E+01  3.025159E-07
+Row  55               2.850000E+01  2.116621E-07
+Row  56               2.900000E+01  1.480941E-07
+Row  57               2.950000E+01  1.036174E-07
+Row  58               3.000000E+01  7.249825E-08
+Row  59               3.050000E+01  5.072503E-08
+Row  60               3.100000E+01  3.549091E-08
+Row  61               3.150000E+01  2.483202E-08
+Row  62               3.200000E+01  1.737428E-08
+Row  63               3.250000E+01  1.215631E-08
+Row  64               3.300000E+01  8.505434E-09
+Row  65               3.350000E+01  5.951018E-09
+Row  66               3.400000E+01  4.163764E-09
+Row  67               3.450000E+01  2.913271E-09
+Row  68               3.500000E+01  2.038336E-09
+Row  69               3.550000E+01  1.426168E-09
+Row  70               3.600000E+01  9.978504E-10
+Row  71               3.650000E+01  6.981685E-10
+Row  72               3.700000E+01  4.884894E-10
+Row  73               3.750000E+01  3.417826E-10
+Row  74               3.800000E+01  2.391358E-10
+Row  75               3.850000E+01  1.673168E-10
+Row  76               3.900000E+01  1.170670E-10
+Row  77               3.950000E+01  8.190859E-11
+Row  78               4.000000E+01  5.730916E-11
+Row  79               4.050000E+01  4.009770E-11
+Row  80               4.100000E+01  2.805522E-11
+Row  81               4.150000E+01  1.962941E-11
+Row  82               4.200000E+01  1.373424E-11
+------------------------------------------------------------
+Wind direction                     7
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.973230E-01
+Row   3               2.500000E+00  9.904819E-01
+Row   4               3.000000E+00  9.803688E-01
+Row   5               3.500000E+00  9.613325E-01
+Row   6               4.000000E+00  9.226651E-01
+Row   7               4.500000E+00  8.857823E-01
+Row   8               5.000000E+00  8.494943E-01
+Row   9               5.500000E+00  7.894111E-01
+Row  10               6.000000E+00  7.537180E-01
+Row  11               6.500000E+00  6.757882E-01
+Row  12               7.000000E+00  6.180845E-01
+Row  13               7.500000E+00  5.324212E-01
+Row  14               8.000000E+00  4.878049E-01
+Row  15               8.500000E+00  4.116597E-01
+Row  16               9.000000E+00  3.545509E-01
+Row  17               9.500000E+00  3.033908E-01
+Row  18               1.000000E+01  2.349792E-01
+Row  19               1.050000E+01  1.986913E-01
+Row  20               1.100000E+01  1.516954E-01
+Row  21               1.150000E+01  1.326591E-01
+Row  22               1.200000E+01  1.023200E-01
+Row  23               1.250000E+01  7.792980E-02
+Row  24               1.300000E+01  5.948840E-02
+Row  25               1.350000E+01  4.045211E-02
+Row  26               1.400000E+01  3.509816E-02
+Row  27               1.450000E+01  2.533138E-02
+Row  28               1.500000E+01  1.828241E-02
+Row  29               1.550000E+01  1.319496E-02
+Row  30               1.600000E+01  9.523192E-03
+Row  31               1.650000E+01  6.873170E-03
+Row  32               1.700000E+01  4.960571E-03
+Row  33               1.750000E+01  3.580191E-03
+Row  34               1.800000E+01  2.583930E-03
+Row  35               1.850000E+01  1.864899E-03
+Row  36               1.900000E+01  1.330253E-03
+Row  37               1.950000E+01  9.488840E-04
+Row  38               2.000000E+01  6.768493E-04
+Row  39               2.050000E+01  4.828040E-04
+Row  40               2.100000E+01  3.443894E-04
+Row  41               2.150000E+01  2.456567E-04
+Row  42               2.200000E+01  1.752296E-04
+Row  43               2.250000E+01  1.249932E-04
+Row  44               2.300000E+01  8.915903E-05
+Row  45               2.350000E+01  6.359812E-05
+Row  46               2.400000E+01  4.536523E-05
+Row  47               2.450000E+01  3.235952E-05
+Row  48               2.500000E+01  2.308240E-05
+Row  49               2.550000E+01  1.646493E-05
+Row  50               2.600000E+01  1.174461E-05
+Row  51               2.650000E+01  8.377561E-06
+Row  52               2.700000E+01  5.975806E-06
+Row  53               2.750000E+01  4.262608E-06
+Row  54               2.800000E+01  3.040565E-06
+Row  55               2.850000E+01  2.168868E-06
+Row  56               2.900000E+01  1.547077E-06
+Row  57               2.950000E+01  1.103547E-06
+Row  58               3.000000E+01  7.871724E-07
+Row  59               3.050000E+01  5.614987E-07
+Row  60               3.100000E+01  4.005231E-07
+Row  61               3.150000E+01  2.856975E-07
+Row  62               3.200000E+01  2.037912E-07
+Row  63               3.250000E+01  1.453665E-07
+Row  64               3.300000E+01  1.036915E-07
+Row  65               3.350000E+01  7.396429E-08
+Row  66               3.400000E+01  5.275954E-08
+Row  67               3.450000E+01  3.763395E-08
+Row  68               3.500000E+01  2.684471E-08
+Row  69               3.550000E+01  1.914863E-08
+Row  70               3.600000E+01  1.365893E-08
+Row  71               3.650000E+01  9.743061E-09
+Row  72               3.700000E+01  6.949832E-09
+Row  73               3.750000E+01  4.957391E-09
+Row  74               3.800000E+01  3.536161E-09
+Row  75               3.850000E+01  2.522383E-09
+Row  76               3.900000E+01  1.799243E-09
+Row  77               3.950000E+01  1.283420E-09
+Row  78               4.000000E+01  9.154775E-10
+Row  79               4.050000E+01  6.530201E-10
+Row  80               4.100000E+01  4.658064E-10
+Row  81               4.150000E+01  3.322648E-10
+Row  82               4.200000E+01  2.370081E-10
+------------------------------------------------------------
+Wind direction                     8
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.971410E-01
+Row   3               2.500000E+00  9.941520E-01
+Row   4               3.000000E+00  9.851852E-01
+Row   5               3.500000E+00  9.762183E-01
+Row   6               4.000000E+00  9.567251E-01
+Row   7               4.500000E+00  9.317739E-01
+Row   8               5.000000E+00  8.955166E-01
+Row   9               5.500000E+00  8.538012E-01
+Row  10               6.000000E+00  8.237817E-01
+Row  11               6.500000E+00  7.656920E-01
+Row  12               7.000000E+00  7.126706E-01
+Row  13               7.500000E+00  6.436647E-01
+Row  14               8.000000E+00  6.077973E-01
+Row  15               8.500000E+00  5.403509E-01
+Row  16               9.000000E+00  4.814815E-01
+Row  17               9.500000E+00  4.331384E-01
+Row  18               1.000000E+01  3.582846E-01
+Row  19               1.050000E+01  3.181287E-01
+Row  20               1.100000E+01  2.666667E-01
+Row  21               1.150000E+01  2.428850E-01
+Row  22               1.200000E+01  1.953216E-01
+Row  23               1.250000E+01  1.676413E-01
+Row  24               1.300000E+01  1.333333E-01
+Row  25               1.350000E+01  1.013645E-01
+Row  26               1.400000E+01  8.265107E-02
+Row  27               1.450000E+01  6.198830E-02
+Row  28               1.500000E+01  5.068226E-02
+Row  29               1.550000E+01  3.781676E-02
+Row  30               1.600000E+01  3.235867E-02
+Row  31               1.650000E+01  2.160398E-02
+Row  32               1.700000E+01  1.442370E-02
+Row  33               1.750000E+01  9.629852E-03
+Row  34               1.800000E+01  6.429283E-03
+Row  35               1.850000E+01  4.292453E-03
+Row  36               1.900000E+01  2.865817E-03
+Row  37               1.950000E+01  1.913337E-03
+Row  38               2.000000E+01  1.277422E-03
+Row  39               2.050000E+01  9.153128E-04
+Row  40               2.100000E+01  6.558503E-04
+Row  41               2.150000E+01  4.699373E-04
+Row  42               2.200000E+01  3.367248E-04
+Row  43               2.250000E+01  2.412738E-04
+Row  44               2.300000E+01  1.728803E-04
+Row  45               2.350000E+01  1.238741E-04
+Row  46               2.400000E+01  8.875969E-05
+Row  47               2.450000E+01  6.359909E-05
+Row  48               2.500000E+01  4.557074E-05
+Row  49               2.550000E+01  3.265286E-05
+Row  50               2.600000E+01  2.339680E-05
+Row  51               2.650000E+01  1.676454E-05
+Row  52               2.700000E+01  1.201232E-05
+Row  53               2.750000E+01  8.607201E-06
+Row  54               2.800000E+01  6.167329E-06
+Row  55               2.850000E+01  4.419085E-06
+Row  56               2.900000E+01  3.166412E-06
+Row  57               2.950000E+01  2.268834E-06
+Row  58               3.000000E+01  1.625690E-06
+Row  59               3.050000E+01  1.164858E-06
+Row  60               3.100000E+01  8.346573E-07
+Row  61               3.150000E+01  5.980581E-07
+Row  62               3.200000E+01  4.285273E-07
+Row  63               3.250000E+01  3.070532E-07
+Row  64               3.300000E+01  2.200133E-07
+Row  65               3.350000E+01  1.576464E-07
+Row  66               3.400000E+01  1.129586E-07
+Row  67               3.450000E+01  8.093836E-08
+Row  68               3.500000E+01  5.799487E-08
+Row  69               3.550000E+01  4.155514E-08
+Row  70               3.600000E+01  2.977556E-08
+Row  71               3.650000E+01  2.133512E-08
+Row  72               3.700000E+01  1.528728E-08
+Row  73               3.750000E+01  1.095382E-08
+Row  74               3.800000E+01  7.848752E-09
+Row  75               3.850000E+01  5.623876E-09
+Row  76               3.900000E+01  4.029683E-09
+Row  77               3.950000E+01  2.887394E-09
+Row  78               4.000000E+01  2.068908E-09
+Row  79               4.050000E+01  1.482438E-09
+Row  80               4.100000E+01  1.062213E-09
+Row  81               4.150000E+01  7.611088E-10
+Row  82               4.200000E+01  5.453583E-10
+------------------------------------------------------------
+Wind direction                     9
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.977011E-01
+Row   3               2.500000E+00  9.947126E-01
+Row   4               3.000000E+00  9.829885E-01
+Row   5               3.500000E+00  9.760920E-01
+Row   6               4.000000E+00  9.494253E-01
+Row   7               4.500000E+00  9.291954E-01
+Row   8               5.000000E+00  8.873563E-01
+Row   9               5.500000E+00  8.533333E-01
+Row  10               6.000000E+00  8.239080E-01
+Row  11               6.500000E+00  7.701149E-01
+Row  12               7.000000E+00  7.310345E-01
+Row  13               7.500000E+00  6.740230E-01
+Row  14               8.000000E+00  6.436782E-01
+Row  15               8.500000E+00  5.839080E-01
+Row  16               9.000000E+00  5.439080E-01
+Row  17               9.500000E+00  4.910345E-01
+Row  18               1.000000E+01  4.344828E-01
+Row  19               1.050000E+01  4.027586E-01
+Row  20               1.100000E+01  3.632184E-01
+Row  21               1.150000E+01  3.324138E-01
+Row  22               1.200000E+01  2.827586E-01
+Row  23               1.250000E+01  2.597701E-01
+Row  24               1.300000E+01  2.128736E-01
+Row  25               1.350000E+01  1.866667E-01
+Row  26               1.400000E+01  1.558621E-01
+Row  27               1.450000E+01  1.172414E-01
+Row  28               1.500000E+01  1.016092E-01
+Row  29               1.550000E+01  7.494253E-02
+Row  30               1.600000E+01  6.344828E-02
+Row  31               1.650000E+01  4.735632E-02
+Row  32               1.700000E+01  3.908046E-02
+Row  33               1.750000E+01  2.804598E-02
+Row  34               1.800000E+01  2.188238E-02
+Row  35               1.850000E+01  1.707334E-02
+Row  36               1.900000E+01  1.332118E-02
+Row  37               1.950000E+01  1.039362E-02
+Row  38               2.000000E+01  8.109436E-03
+Row  39               2.050000E+01  6.327245E-03
+Row  40               2.100000E+01  4.936722E-03
+Row  41               2.150000E+01  3.851791E-03
+Row  42               2.200000E+01  3.005292E-03
+Row  43               2.250000E+01  2.344827E-03
+Row  44               2.300000E+01  1.829510E-03
+Row  45               2.350000E+01  1.392115E-03
+Row  46               2.400000E+01  1.059291E-03
+Row  47               2.450000E+01  8.060382E-04
+Row  48               2.500000E+01  6.133325E-04
+Row  49               2.550000E+01  4.666983E-04
+Row  50               2.600000E+01  3.551212E-04
+Row  51               2.650000E+01  2.702196E-04
+Row  52               2.700000E+01  2.056161E-04
+Row  53               2.750000E+01  1.564579E-04
+Row  54               2.800000E+01  1.190523E-04
+Row  55               2.850000E+01  9.058955E-05
+Row  56               2.900000E+01  6.893161E-05
+Row  57               2.950000E+01  5.245160E-05
+Row  58               3.000000E+01  3.991159E-05
+Row  59               3.050000E+01  3.036962E-05
+Row  60               3.100000E+01  2.310892E-05
+Row  61               3.150000E+01  1.758409E-05
+Row  62               3.200000E+01  1.338013E-05
+Row  63               3.250000E+01  1.018124E-05
+Row  64               3.300000E+01  7.747130E-06
+Row  65               3.350000E+01  5.894964E-06
+Row  66               3.400000E+01  4.485609E-06
+Row  67               3.450000E+01  3.413200E-06
+Row  68               3.500000E+01  2.597180E-06
+Row  69               3.550000E+01  1.976252E-06
+Row  70               3.600000E+01  1.503774E-06
+Row  71               3.650000E+01  1.144255E-06
+Row  72               3.700000E+01  8.706895E-07
+Row  73               3.750000E+01  6.625270E-07
+Row  74               3.800000E+01  5.041316E-07
+Row  75               3.850000E+01  3.836049E-07
+Row  76               3.900000E+01  2.918936E-07
+Row  77               3.950000E+01  2.221083E-07
+Row  78               4.000000E+01  1.690072E-07
+Row  79               4.050000E+01  1.286013E-07
+Row  80               4.100000E+01  9.785561E-08
+Row  81               4.150000E+01  7.446051E-08
+Row  82               4.200000E+01  5.665866E-08
+------------------------------------------------------------
+Wind direction                     10
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.979644E-01
+Row   3               2.500000E+00  9.946565E-01
+Row   4               3.000000E+00  9.812977E-01
+Row   5               3.500000E+00  9.694656E-01
+Row   6               4.000000E+00  9.389313E-01
+Row   7               4.500000E+00  9.183206E-01
+Row   8               5.000000E+00  8.702290E-01
+Row   9               5.500000E+00  8.206107E-01
+Row  10               6.000000E+00  7.862595E-01
+Row  11               6.500000E+00  7.442748E-01
+Row  12               7.000000E+00  6.946565E-01
+Row  13               7.500000E+00  6.435115E-01
+Row  14               8.000000E+00  6.000000E-01
+Row  15               8.500000E+00  5.419847E-01
+Row  16               9.000000E+00  4.984733E-01
+Row  17               9.500000E+00  4.465649E-01
+Row  18               1.000000E+01  3.969466E-01
+Row  19               1.050000E+01  3.564885E-01
+Row  20               1.100000E+01  3.221374E-01
+Row  21               1.150000E+01  2.854962E-01
+Row  22               1.200000E+01  2.419847E-01
+Row  23               1.250000E+01  2.000000E-01
+Row  24               1.300000E+01  1.709924E-01
+Row  25               1.350000E+01  1.541985E-01
+Row  26               1.400000E+01  1.244275E-01
+Row  27               1.450000E+01  1.053435E-01
+Row  28               1.500000E+01  9.236641E-02
+Row  29               1.550000E+01  7.786260E-02
+Row  30               1.600000E+01  6.030534E-02
+Row  31               1.650000E+01  4.885496E-02
+Row  32               1.700000E+01  4.045802E-02
+Row  33               1.750000E+01  3.045257E-02
+Row  34               1.800000E+01  2.292152E-02
+Row  35               1.850000E+01  1.725292E-02
+Row  36               1.900000E+01  1.298620E-02
+Row  37               1.950000E+01  9.774655E-03
+Row  38               2.000000E+01  7.357340E-03
+Row  39               2.050000E+01  5.537838E-03
+Row  40               2.100000E+01  4.168306E-03
+Row  41               2.150000E+01  3.137466E-03
+Row  42               2.200000E+01  2.361557E-03
+Row  43               2.250000E+01  1.822581E-03
+Row  44               2.300000E+01  1.406615E-03
+Row  45               2.350000E+01  1.085585E-03
+Row  46               2.400000E+01  8.378229E-04
+Row  47               2.450000E+01  6.466075E-04
+Row  48               2.500000E+01  4.990329E-04
+Row  49               2.550000E+01  3.851392E-04
+Row  50               2.600000E+01  2.972392E-04
+Row  51               2.650000E+01  2.294006E-04
+Row  52               2.700000E+01  1.770448E-04
+Row  53               2.750000E+01  1.366380E-04
+Row  54               2.800000E+01  1.054533E-04
+Row  55               2.850000E+01  8.138578E-05
+Row  56               2.900000E+01  6.281119E-05
+Row  57               2.950000E+01  4.847586E-05
+Row  58               3.000000E+01  3.741226E-05
+Row  59               3.050000E+01  2.887370E-05
+Row  60               3.100000E+01  2.228389E-05
+Row  61               3.150000E+01  1.719806E-05
+Row  62               3.200000E+01  1.327296E-05
+Row  63               3.250000E+01  1.024369E-05
+Row  64               3.300000E+01  7.905782E-06
+Row  65               3.350000E+01  6.101453E-06
+Row  66               3.400000E+01  4.708925E-06
+Row  67               3.450000E+01  3.634212E-06
+Row  68               3.500000E+01  2.804780E-06
+Row  69               3.550000E+01  2.164648E-06
+Row  70               3.600000E+01  1.670612E-06
+Row  71               3.650000E+01  1.289330E-06
+Row  72               3.700000E+01  9.950677E-07
+Row  73               3.750000E+01  7.679644E-07
+Row  74               3.800000E+01  5.926927E-07
+Row  75               3.850000E+01  4.574231E-07
+Row  76               3.900000E+01  3.530259E-07
+Row  77               3.950000E+01  2.724551E-07
+Row  78               4.000000E+01  2.102730E-07
+Row  79               4.050000E+01  1.622826E-07
+Row  80               4.100000E+01  1.252450E-07
+Row  81               4.150000E+01  9.666047E-08
+Row  82               4.200000E+01  7.459975E-08
+------------------------------------------------------------
+Wind direction                     11
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.966704E-01
+Row   3               2.500000E+00  9.877913E-01
+Row   4               3.000000E+00  9.522752E-01
+Row   5               3.500000E+00  9.300777E-01
+Row   6               4.000000E+00  8.890122E-01
+Row   7               4.500000E+00  8.546060E-01
+Row   8               5.000000E+00  7.846837E-01
+Row   9               5.500000E+00  7.425083E-01
+Row  10               6.000000E+00  6.703663E-01
+Row  11               6.500000E+00  6.248613E-01
+Row  12               7.000000E+00  5.382908E-01
+Row  13               7.500000E+00  4.872364E-01
+Row  14               8.000000E+00  4.217536E-01
+Row  15               8.500000E+00  3.784684E-01
+Row  16               9.000000E+00  3.074362E-01
+Row  17               9.500000E+00  2.663707E-01
+Row  18               1.000000E+01  2.164262E-01
+Row  19               1.050000E+01  1.908990E-01
+Row  20               1.100000E+01  1.509434E-01
+Row  21               1.150000E+01  1.187569E-01
+Row  22               1.200000E+01  9.544950E-02
+Row  23               1.250000E+01  7.436182E-02
+Row  24               1.300000E+01  5.771365E-02
+Row  25               1.350000E+01  4.538125E-02
+Row  26               1.400000E+01  3.568407E-02
+Row  27               1.450000E+01  2.805900E-02
+Row  28               1.500000E+01  2.206328E-02
+Row  29               1.550000E+01  1.734874E-02
+Row  30               1.600000E+01  1.364162E-02
+Row  31               1.650000E+01  1.072664E-02
+Row  32               1.700000E+01  8.434546E-03
+Row  33               1.750000E+01  6.632230E-03
+Row  34               1.800000E+01  5.215038E-03
+Row  35               1.850000E+01  4.100675E-03
+Row  36               1.900000E+01  3.224432E-03
+Row  37               1.950000E+01  2.406947E-03
+Row  38               2.000000E+01  1.796718E-03
+Row  39               2.050000E+01  1.341199E-03
+Row  40               2.100000E+01  1.001167E-03
+Row  41               2.150000E+01  7.473427E-04
+Row  42               2.200000E+01  5.578701E-04
+Row  43               2.250000E+01  4.164342E-04
+Row  44               2.300000E+01  3.108563E-04
+Row  45               2.350000E+01  2.320454E-04
+Row  46               2.400000E+01  1.732153E-04
+Row  47               2.450000E+01  1.293003E-04
+Row  48               2.500000E+01  9.651904E-05
+Row  49               2.550000E+01  7.204872E-05
+Row  50               2.600000E+01  5.378233E-05
+Row  51               2.650000E+01  4.014698E-05
+Row  52               2.700000E+01  2.996858E-05
+Row  53               2.750000E+01  2.237070E-05
+Row  54               2.800000E+01  1.669909E-05
+Row  55               2.850000E+01  1.246540E-05
+Row  56               2.900000E+01  9.305066E-06
+Row  57               2.950000E+01  6.945968E-06
+Row  58               3.000000E+01  5.184968E-06
+Row  59               3.050000E+01  3.870431E-06
+Row  60               3.100000E+01  2.889167E-06
+Row  61               3.150000E+01  2.156681E-06
+Row  62               3.200000E+01  1.609902E-06
+Row  63               3.250000E+01  1.201746E-06
+Row  64               3.300000E+01  8.970692E-07
+Row  65               3.350000E+01  6.696367E-07
+Row  66               3.400000E+01  4.998648E-07
+Row  67               3.450000E+01  3.731349E-07
+Row  68               3.500000E+01  2.785346E-07
+Row  69               3.550000E+01  2.079182E-07
+Row  70               3.600000E+01  1.552050E-07
+Row  71               3.650000E+01  1.158562E-07
+Row  72               3.700000E+01  8.648333E-08
+Row  73               3.750000E+01  6.455735E-08
+Row  74               3.800000E+01  4.819023E-08
+Row  75               3.850000E+01  3.597264E-08
+Row  76               3.900000E+01  2.685256E-08
+Row  77               3.950000E+01  2.004467E-08
+Row  78               4.000000E+01  1.496278E-08
+Row  79               4.050000E+01  1.116929E-08
+Row  80               4.100000E+01  8.337558E-09
+Row  81               4.150000E+01  6.223751E-09
+Row  82               4.200000E+01  4.645853E-09
+------------------------------------------------------------
+Wind direction                     12
+Distribution type                  Exceedance Probability Table
+Table with distribution
+                      Parameter  1  Parameter  2
+Row   1               0.000000E+00  1.000000E+00
+Row   2               2.000000E+00  9.999990E-01
+Row   3               2.500000E+00  9.835575E-01
+Row   4               3.000000E+00  9.387145E-01
+Row   5               3.500000E+00  8.998505E-01
+Row   6               4.000000E+00  8.221226E-01
+Row   7               4.500000E+00  7.832586E-01
+Row   8               5.000000E+00  6.875934E-01
+Row   9               5.500000E+00  6.307922E-01
+Row  10               6.000000E+00  5.381166E-01
+Row  11               6.500000E+00  4.992526E-01
+Row  12               7.000000E+00  4.260090E-01
+Row  13               7.500000E+00  3.736921E-01
+Row  14               8.000000E+00  2.914798E-01
+Row  15               8.500000E+00  2.526158E-01
+Row  16               9.000000E+00  1.793722E-01
+Row  17               9.500000E+00  1.464873E-01
+Row  18               1.000000E+01  1.180867E-01
+Row  19               1.050000E+01  1.016442E-01
+Row  20               1.100000E+01  7.785578E-02
+Row  21               1.150000E+01  5.963468E-02
+Row  22               1.200000E+01  4.567799E-02
+Row  23               1.250000E+01  3.498767E-02
+Row  24               1.300000E+01  2.679928E-02
+Row  25               1.350000E+01  2.052727E-02
+Row  26               1.400000E+01  1.572314E-02
+Row  27               1.450000E+01  1.204335E-02
+Row  28               1.500000E+01  9.224766E-03
+Row  29               1.550000E+01  7.065833E-03
+Row  30               1.600000E+01  5.412170E-03
+Row  31               1.650000E+01  3.936055E-03
+Row  32               1.700000E+01  2.862535E-03
+Row  33               1.750000E+01  2.081807E-03
+Row  34               1.800000E+01  1.514015E-03
+Row  35               1.850000E+01  1.101082E-03
+Row  36               1.900000E+01  8.007729E-04
+Row  37               1.950000E+01  5.823701E-04
+Row  38               2.000000E+01  4.235344E-04
+Row  39               2.050000E+01  3.080196E-04
+Row  40               2.100000E+01  2.240103E-04
+Row  41               2.150000E+01  1.629137E-04
+Row  42               2.200000E+01  1.184806E-04
+Row  43               2.250000E+01  8.616621E-05
+Row  44               2.300000E+01  6.266523E-05
+Row  45               2.350000E+01  4.557391E-05
+Row  46               2.400000E+01  3.314408E-05
+Row  47               2.450000E+01  2.410436E-05
+Row  48               2.500000E+01  1.753013E-05
+Row  49               2.550000E+01  1.274896E-05
+Row  50               2.600000E+01  9.271811E-06
+Row  51               2.650000E+01  6.743017E-06
+Row  52               2.700000E+01  4.903926E-06
+Row  53               2.750000E+01  3.566429E-06
+Row  54               2.800000E+01  2.593721E-06
+Row  55               2.850000E+01  1.886309E-06
+Row  56               2.900000E+01  1.371837E-06
+Row  57               2.950000E+01  9.976820E-07
+Row  58               3.000000E+01  7.255742E-07
+Row  59               3.050000E+01  5.276810E-07
+Row  60               3.100000E+01  3.837613E-07
+Row  61               3.150000E+01  2.790942E-07
+Row  62               3.200000E+01  2.029740E-07
+Row  63               3.250000E+01  1.476149E-07
+Row  64               3.300000E+01  1.073544E-07
+Row  65               3.350000E+01  7.807453E-08
+Row  66               3.400000E+01  5.678048E-08
+Row  67               3.450000E+01  4.129417E-08
+Row  68               3.500000E+01  3.003159E-08
+Row  69               3.550000E+01  2.184077E-08
+Row  70               3.600000E+01  1.588392E-08
+Row  71               3.650000E+01  1.155174E-08
+Row  72               3.700000E+01  8.401116E-09
+Row  73               3.750000E+01  6.109795E-09
+Row  74               3.800000E+01  4.443409E-09
+Row  75               3.850000E+01  3.231513E-09
+Row  76               3.900000E+01  2.350150E-09
+Row  77               3.950000E+01  1.709170E-09
+Row  78               4.000000E+01  1.243011E-09
+Row  79               4.050000E+01  9.039920E-10
+Row  80               4.100000E+01  6.574371E-10
+Row  81               4.150000E+01  4.781276E-10
+Row  82               4.200000E+01  3.477231E-10
+------------------------------------------------------------
+All wind directions
+Parameters statistical uncertainties
+Distribution type                  Normal
+  Parameter 1                               1.000
+  Parameter 2                               0.043
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+Wind direction                     1
+Correlation model                  PCR
+Correlation parameter1                      1.846
+Correlation parameter2                      0.000
+Correlation parameter3                      0.000
+Correlation parameter4                      0.000
+------------------------------------------------------------
+Wind direction                     9
+Correlation model                  PCR
+Correlation parameter1                      1.683
+Correlation parameter2                      0.000
+Correlation parameter3                      0.000
+Correlation parameter4                      0.000
+------------------------------------------------------------
+Wind direction                     10
+Correlation model                  PCR
+Correlation parameter1                      1.655
+Correlation parameter2                      0.000
+Correlation parameter3                      0.000
+Correlation parameter4                      0.000
+------------------------------------------------------------
+Wind direction                     11
+Correlation model                  PCR
+Correlation parameter1                      1.620
+Correlation parameter2                      0.000
+Correlation parameter3                      0.000
+Correlation parameter4                      0.000
+------------------------------------------------------------
+Wind direction                     12
+Correlation model                  PCR
+Correlation parameter1                      1.651
+Correlation parameter2                      0.000
+Correlation parameter3                      0.000
+Correlation parameter4                      0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    133
+Loadvariable name                  Onzekerheid waterstand Hansweert
+Unit                               m
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12.00000 hours
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+All wind directions
+Correlation model                  Complete
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    142
+Loadvariable name                  Onzekerheid waterstand Vlissingen
+Unit                               m
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12.00000 hours
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    143
+Loadvariable name                  Onzekerheid waterstand Vlissingen (Additioneel)
+Unit                               m
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12.00000 hours
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+All wind directions
+Correlation model                  Complete
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    158
+Loadvariable name                  Onzekerheid windsnelheid Vlissingen | wl VL
+Unit                               -
+Rho X                                       1.000
+Rho T                                       0.000
+Rho W                                       0.000
+Time scale                         12 hour
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+All wind directions
+Correlation model                  Complete
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    200
+Loadvariable name                  Modelonzekerheid lokale waterstand
+Unit                               m
+Rho X                                       0.500
+Rho T                                       1.000
+Rho W                                       1.000
+Time scale                         Constant
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    201
+Loadvariable name                  Modelonzekerheid golfhoogte
+Unit                               -
+Rho X                                       0.700
+Rho T                                       1.000
+Rho W                                       1.000
+Time scale                         Constant
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+------------------------------------------------------------
+Loadvariable Id                    202
+Loadvariable name                  Modelonzekerheid golfperiode
+Unit                               -
+Rho X                                       0.700
+Rho T                                       1.000
+Rho W                                       1.000
+Time scale                         Constant
+------------------------------------------------------------
+All wind directions
+Distribution type                  Normal
+  Parameter 1                               0.000
+  Parameter 2                               1.000
+  Parameter 3                               0.000
+  Parameter 4                               0.000
+------------------------------------------------------------
+------------------------------------------------------------
+
+Fetch and swell
+----------------------------------------------------------------------------------------------------------------------------------------------
+Swell height   [m] :     0.0
+Swell period   [s] :     0.0
+----------------------------------------------------------------------------------------------------------------------------------------------
+Wind direction  Wave reduction   Fetch   Bottom  Fetch   Bottom  Fetch   Bottom  Fetch   Bottom  Fetch   Bottom
+                   factor       length          length          length          length          length
+      [gr]            [-]          [m]     [m]     [m]     [m]     [m]     [m]     [m]     [m]     [m]     [m]
+----------------------------------------------------------------------------------------------------------------------------------------------
+No fetches
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Wave setup height
+----------------------------------------------------------------------------------------------------------------------------------------------
+Wind direction       Setup height
+      [gr]                 [m]
+----------------------------------------------------------------------------------------------------------------------------------------------
+       0.0                0.00
+      30.0                0.00
+      60.0                0.00
+      90.0                0.00
+     120.0                0.00
+     150.0                0.00
+     180.0                0.00
+     210.0                0.00
+     240.0                0.00
+     270.0                0.00
+     300.0                0.00
+     330.0                0.00
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Hydraulic data
+----------------------------------------------------------------------------------------------------------------------------------------------
+Region            :   Western Scheldt
+Location
+  HRD Location    :   305
+  Name            :   WS_1_31-1_dk_00055
+  Location Type   :   Near shore coastal
+  Coordinate      :    62597   381445
+Local water level correction : 0.00 m
+----------------------------------------------------------------------------------------------------------------------------------------------
+Closing Situation : 1 regular
+Result variable   : Significant wave height (Hs) m
+----------------------------------------------------------------------------------------------------------------------------------------------
+Model factor for the uncertainties:
+Mean              : 0.990
+Standard deviation: 0.190
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =      0.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.521      0.722      0.910      1.085      1.247
+     2.000      0.000      0.569      0.783      0.984      1.173      1.347
+     3.000      0.000      0.619      0.846      1.061      1.262      1.450
+     4.000      0.000      0.671      0.911      1.138      1.353      1.554
+     5.000      0.000      0.724      0.977      1.218      1.445      1.659
+     6.000      0.000      0.779      1.045      1.299      1.539      1.766
+     7.000      0.000      0.835      1.115      1.381      1.635      1.875
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     30.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.521      0.722      0.910      1.085      1.247
+     2.000      0.000      0.569      0.783      0.984      1.173      1.347
+     3.000      0.000      0.619      0.846      1.061      1.262      1.450
+     4.000      0.000      0.671      0.911      1.138      1.353      1.554
+     5.000      0.000      0.724      0.977      1.218      1.445      1.659
+     6.000      0.000      0.779      1.045      1.299      1.539      1.766
+     7.000      0.000      0.835      1.115      1.381      1.635      1.875
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     60.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.686      0.820      0.956      1.093      1.231
+     2.000      0.000      0.785      0.951      1.117      1.286      1.455
+     3.000      0.000      0.833      1.029      1.228      1.427      1.627
+     4.000      0.000      0.829      1.057      1.286      1.516      1.748
+     5.000      0.000      0.773      1.032      1.293      1.554      1.817
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     90.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.686      0.820      0.956      1.093      1.231
+     2.000      0.000      0.785      0.951      1.117      1.286      1.455
+     3.000      0.000      0.833      1.029      1.228      1.427      1.627
+     4.000      0.000      0.829      1.057      1.286      1.516      1.748
+     5.000      0.000      0.773      1.032      1.293      1.554      1.817
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    120.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.686      0.820      0.956      1.093      1.231
+     2.000      0.000      0.785      0.951      1.117      1.286      1.455
+     3.000      0.000      0.833      1.029      1.228      1.427      1.627
+     4.000      0.000      0.829      1.057      1.286      1.516      1.748
+     5.000      0.000      0.773      1.032      1.293      1.554      1.817
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    150.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.949      1.164      1.340      1.477      1.576
+     2.000      0.000      1.109      1.391      1.633      1.837      2.002
+     3.000      0.000      1.207      1.555      1.864      2.134      2.366
+     4.000      0.000      1.243      1.657      2.033      2.369      2.667
+     5.000      0.000      1.216      1.697      2.139      2.542      2.906
+     6.000      0.000      1.127      1.674      2.182      2.651      3.082
+     7.000      0.000      0.975      1.589      2.163      2.699      3.196
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    180.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.949      1.164      1.340      1.477      1.576
+     2.000      0.000      1.109      1.391      1.633      1.837      2.002
+     3.000      0.000      1.207      1.555      1.864      2.134      2.366
+     4.000      0.000      1.243      1.657      2.033      2.369      2.667
+     5.000      0.000      1.216      1.697      2.139      2.542      2.906
+     6.000      0.000      1.127      1.674      2.182      2.651      3.082
+     7.000      0.000      0.975      1.589      2.163      2.699      3.196
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    210.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.901      1.113      1.311      1.494      1.664
+     2.000      0.000      1.064      1.323      1.567      1.798      2.014
+     3.000      0.000      1.174      1.479      1.770      2.047      2.310
+     4.000      0.000      1.230      1.582      1.920      2.244      2.553
+     5.000      0.000      1.233      1.632      2.016      2.387      2.743
+     6.000      0.000      1.183      1.628      2.059      2.476      2.879
+     7.000      0.000      1.079      1.571      2.048      2.512      2.961
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    240.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.881      1.133      1.371      1.598      1.812
+     2.000      0.000      1.017      1.302      1.573      1.833      2.079
+     3.000      0.000      1.132      1.449      1.754      2.046      2.326
+     4.000      0.000      1.226      1.576      1.914      2.239      2.552
+     5.000      0.000      1.299      1.682      2.052      2.410      2.756
+     6.000      0.000      1.350      1.766      2.170      2.561      2.940
+     7.000      0.000      1.381      1.830      2.267      2.691      3.102
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    270.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.883      1.183      1.487      1.794      2.104
+     2.000      0.000      1.003      1.327      1.655      1.985      2.320
+     3.000      0.000      1.113      1.460      1.811      2.165      2.523
+     4.000      0.000      1.210      1.581      1.956      2.334      2.716
+     5.000      0.000      1.297      1.692      2.090      2.491      2.896
+     6.000      0.000      1.372      1.790      2.212      2.637      3.066
+     7.000      0.000      1.435      1.877      2.323      2.772      3.224
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    300.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.791      1.119      1.486      1.894      2.343
+     2.000      0.000      0.878      1.211      1.584      1.998      2.452
+     3.000      0.000      0.966      1.305      1.684      2.103      2.563
+     4.000      0.000      1.056      1.401      1.785      2.210      2.676
+     5.000      0.000      1.148      1.498      1.888      2.319      2.791
+     6.000      0.000      1.241      1.597      1.993      2.430      2.907
+     7.000      0.000      1.336      1.698      2.099      2.542      3.025
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    330.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      0.670      0.947      1.236      1.536      1.847
+     2.000      0.000      0.730      1.014      1.310      1.617      1.936
+     3.000      0.000      0.796      1.087      1.390      1.705      2.031
+     4.000      0.000      0.869      1.168      1.478      1.800      2.133
+     5.000      0.000      0.950      1.255      1.572      1.901      2.241
+     6.000      0.000      1.036      1.349      1.674      2.010      2.357
+     7.000      0.000      1.130      1.450      1.782      2.125      2.479
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Closing Situation : 1 regular
+Result variable   : Spectral wave period (Tm-1,0) s
+----------------------------------------------------------------------------------------------------------------------------------------------
+Model factor for the uncertainties:
+Mean              : 0.960
+Standard deviation: 0.110
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =      0.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.335      2.539      2.729      2.904      3.064
+     2.000      0.000      2.357      2.566      2.760      2.940      3.105
+     3.000      0.000      2.402      2.615      2.814      2.998      3.168
+     4.000      0.000      2.468      2.686      2.890      3.079      3.253
+     5.000      0.000      2.557      2.779      2.987      3.181      3.360
+     6.000      0.000      2.667      2.894      3.107      3.305      3.489
+     7.000      0.000      2.799      3.031      3.249      3.452      3.640
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     30.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.335      2.539      2.729      2.904      3.064
+     2.000      0.000      2.357      2.566      2.760      2.940      3.105
+     3.000      0.000      2.402      2.615      2.814      2.998      3.168
+     4.000      0.000      2.468      2.686      2.890      3.079      3.253
+     5.000      0.000      2.557      2.779      2.987      3.181      3.360
+     6.000      0.000      2.667      2.894      3.107      3.305      3.489
+     7.000      0.000      2.799      3.031      3.249      3.452      3.640
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     60.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.760      2.883      2.980      3.053      3.099
+     2.000      0.000      2.977      3.126      3.248      3.345      3.418
+     3.000      0.000      3.166      3.339      3.487      3.610      3.707
+     4.000      0.000      3.325      3.524      3.697      3.845      3.967
+     5.000      0.000      3.455      3.679      3.878      4.051      4.199
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     90.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.760      2.883      2.980      3.053      3.099
+     2.000      0.000      2.977      3.126      3.248      3.345      3.418
+     3.000      0.000      3.166      3.339      3.487      3.610      3.707
+     4.000      0.000      3.325      3.524      3.697      3.845      3.967
+     5.000      0.000      3.455      3.679      3.878      4.051      4.199
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    120.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.760      2.883      2.980      3.053      3.099
+     2.000      0.000      2.977      3.126      3.248      3.345      3.418
+     3.000      0.000      3.166      3.339      3.487      3.610      3.707
+     4.000      0.000      3.325      3.524      3.697      3.845      3.967
+     5.000      0.000      3.455      3.679      3.878      4.051      4.199
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    150.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      3.064      3.315      3.499      3.619      3.672
+     2.000      0.000      3.258      3.555      3.787      3.953      4.054
+     3.000      0.000      3.381      3.726      4.005      4.219      4.367
+     4.000      0.000      3.436      3.828      4.154      4.415      4.610
+     5.000      0.000      3.421      3.860      4.233      4.541      4.784
+     6.000      0.000      3.336      3.822      4.243      4.599      4.888
+     7.000      0.000      3.182      3.716      4.184      4.586      4.923
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    180.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      3.064      3.315      3.499      3.619      3.672
+     2.000      0.000      3.258      3.555      3.787      3.953      4.054
+     3.000      0.000      3.381      3.726      4.005      4.219      4.367
+     4.000      0.000      3.436      3.828      4.154      4.415      4.610
+     5.000      0.000      3.421      3.860      4.233      4.541      4.784
+     6.000      0.000      3.336      3.822      4.243      4.599      4.888
+     7.000      0.000      3.182      3.716      4.184      4.586      4.923
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    210.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.935      3.183      3.404      3.599      3.767
+     2.000      0.000      3.167      3.440      3.685      3.903      4.095
+     3.000      0.000      3.337      3.632      3.902      4.144      4.359
+     4.000      0.000      3.442      3.761      4.054      4.321      4.560
+     5.000      0.000      3.483      3.827      4.144      4.434      4.697
+     6.000      0.000      3.461      3.828      4.169      4.483      4.770
+     7.000      0.000      3.375      3.766      4.130      4.468      4.779
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    240.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.977      3.275      3.506      3.669      3.766
+     2.000      0.000      3.147      3.454      3.694      3.867      3.972
+     3.000      0.000      3.303      3.619      3.869      4.051      4.165
+     4.000      0.000      3.447      3.772      4.030      4.221      4.345
+     5.000      0.000      3.577      3.911      4.178      4.379      4.512
+     6.000      0.000      3.694      4.037      4.314      4.523      4.665
+     7.000      0.000      3.797      4.150      4.436      4.654      4.806
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    270.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      3.103      3.409      3.642      3.803      3.890
+     2.000      0.000      3.227      3.540      3.781      3.948      4.043
+     3.000      0.000      3.347      3.668      3.915      4.090      4.192
+     4.000      0.000      3.465      3.792      4.047      4.229      4.338
+     5.000      0.000      3.578      3.913      4.175      4.364      4.480
+     6.000      0.000      3.688      4.030      4.299      4.496      4.619
+     7.000      0.000      3.795      4.144      4.421      4.624      4.754
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    300.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      3.002      3.348      3.668      3.963      4.232
+     2.000      0.000      3.061      3.400      3.715      4.003      4.266
+     3.000      0.000      3.133      3.466      3.774      4.056      4.312
+     4.000      0.000      3.218      3.545      3.846      4.122      4.372
+     5.000      0.000      3.316      3.637      3.932      4.201      4.445
+     6.000      0.000      3.427      3.741      4.030      4.293      4.530
+     7.000      0.000      3.551      3.859      4.141      4.398      4.629
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    330.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000      0.000      2.702      3.005      3.309      3.615      3.923
+     2.000      0.000      2.711      3.000      3.291      3.584      3.879
+     3.000      0.000      2.752      3.029      3.307      3.587      3.868
+     4.000      0.000      2.827      3.090      3.355      3.622      3.890
+     5.000      0.000      2.934      3.184      3.436      3.690      3.945
+     6.000      0.000      3.075      3.312      3.550      3.791      4.033
+     7.000      0.000      3.248      3.472      3.697      3.925      4.154
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Closing Situation : 1 regular
+Result variable   : Wave direction degrees
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =      0.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    360.000    303.484    303.213    302.777    302.185    301.446
+     2.000    360.000    306.523    306.495    306.291    305.916    305.376
+     3.000    360.000    308.299    308.528    308.573    308.438    308.127
+     4.000    360.000    308.824    309.313    309.617    309.736    309.673
+     5.000    360.000    308.115    308.865    309.432    309.813    310.010
+     6.000    360.000    306.192    307.196    308.025    308.672    309.136
+     7.000    360.000    303.084    304.325    305.406    306.315    307.046
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     30.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000     30.000    303.484    303.213    302.777    302.185    301.446
+     2.000     30.000    306.523    306.495    306.291    305.916    305.376
+     3.000     30.000    308.299    308.528    308.573    308.438    308.127
+     4.000     30.000    308.824    309.313    309.617    309.736    309.673
+     5.000     30.000    308.115    308.865    309.432    309.813    310.010
+     6.000     30.000    306.192    307.196    308.025    308.672    309.136
+     7.000     30.000    303.084    304.325    305.406    306.315    307.046
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     60.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000     60.000    156.794    154.772    152.626    150.343    147.908
+     2.000     60.000    149.778    150.220    150.510    150.652    150.645
+     3.000     60.000    143.501    146.308    148.982    151.532    153.969
+     4.000     60.000    137.770    142.868    147.971    153.040    158.041
+     5.000     60.000    132.389    139.757    147.456    155.297    163.067
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =     90.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000     90.000    156.794    154.772    152.626    150.343    147.908
+     2.000     90.000    149.778    150.220    150.510    150.652    150.645
+     3.000     90.000    143.501    146.308    148.982    151.532    153.969
+     4.000     90.000    137.770    142.868    147.971    153.040    158.041
+     5.000     90.000    132.389    139.757    147.456    155.297    163.067
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    120.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    120.000    156.794    154.772    152.626    150.343    147.908
+     2.000    120.000    149.778    150.220    150.510    150.652    150.645
+     3.000    120.000    143.501    146.308    148.982    151.532    153.969
+     4.000    120.000    137.770    142.868    147.971    153.040    158.041
+     5.000    120.000    132.389    139.757    147.456    155.297    163.067
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    150.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    150.000    197.046    198.303    198.668    198.156    196.761
+     2.000    150.000    191.326    193.185    194.136    194.196    193.367
+     3.000    150.000    186.086    188.523    190.055    190.690    190.431
+     4.000    150.000    181.321    184.305    186.405    187.610    187.921
+     5.000    150.000    177.001    180.501    183.154    184.927    185.807
+     6.000    150.000    173.082    177.072    180.269    182.610    184.065
+     7.000    150.000    169.514    173.976    177.715    180.633    182.677
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    180.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    180.000    197.046    198.303    198.668    198.156    196.761
+     2.000    180.000    191.326    193.185    194.136    194.196    193.367
+     3.000    180.000    186.086    188.523    190.055    190.690    190.431
+     4.000    180.000    181.321    184.305    186.405    187.610    187.921
+     5.000    180.000    177.001    180.501    183.154    184.927    185.807
+     6.000    180.000    173.082    177.072    180.269    182.610    184.065
+     7.000    180.000    169.514    173.976    177.715    180.633    182.677
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    210.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    210.000    216.037    216.413    216.139    215.223    213.668
+     2.000    210.000    213.105    213.578    213.395    212.565    211.098
+     3.000    210.000    210.759    211.327    211.236    210.497    209.121
+     4.000    210.000    209.010    209.672    209.673    209.024    207.739
+     5.000    210.000    207.863    208.619    208.710    208.149    206.950
+     6.000    210.000    207.322    208.170    208.350    207.873    206.755
+     7.000    210.000    207.396    208.335    208.599    208.202    207.160
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    240.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    240.000    239.320    237.715    235.608    233.026    230.013
+     2.000    240.000    241.056    239.790    238.007    235.726    232.981
+     3.000    240.000    242.691    241.772    240.327    238.368    235.918
+     4.000    240.000    244.216    243.649    242.550    240.927    238.795
+     5.000    240.000    245.624    245.409    244.661    243.383    241.586
+     6.000    240.000    246.909    247.046    246.648    245.720    244.266
+     7.000    240.000    248.067    248.552    248.502    247.922    246.816
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    270.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    270.000    260.729    259.561    257.770    255.388    252.466
+     2.000    270.000    263.485    262.749    261.370    259.368    256.775
+     3.000    270.000    265.604    265.314    264.370    262.784    260.576
+     4.000    270.000    267.081    267.240    266.742    265.593    263.804
+     5.000    270.000    267.919    268.528    268.480    267.776    266.424
+     6.000    270.000    268.122    269.182    269.583    269.328    268.421
+     7.000    270.000    267.696    269.205    270.056    270.250    269.791
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    300.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    300.000    275.605    272.862    268.940    263.980    258.213
+     2.000    300.000    278.786    276.976    273.922    269.697    264.448
+     3.000    300.000    280.852    279.997    277.875    274.518    270.000
+     4.000    300.000    281.815    281.915    280.745    278.315    274.658
+     5.000    300.000    281.687    282.739    282.521    281.038    278.303
+     6.000    300.000    280.478    282.482    283.212    282.678    280.885
+     7.000    300.000    278.193    281.145    282.828    283.241    282.393
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+R =    330.000
+
+Water level m + NAP
+      ||      Wind speed m/s
+      \/           0.000     20.000     25.000     30.000     35.000     40.000
+----------------------------------------------------------------------------------------------------------------------------------------------
+     1.000    330.000    287.487    285.037    281.929    278.235    274.054
+     2.000    330.000    291.765    290.140    287.806    284.799    281.176
+     3.000    330.000    294.476    293.694    292.191    289.980    287.085
+     4.000    330.000    295.662    295.717    295.052    293.669    291.579
+     5.000    330.000    295.362    296.248    296.414    295.862    294.597
+     6.000    330.000    293.592    295.310    296.306    296.582    296.142
+     7.000    330.000    290.348    292.896    294.728    295.838    296.226
+----------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
