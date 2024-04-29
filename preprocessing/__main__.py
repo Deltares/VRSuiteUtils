@@ -60,7 +60,6 @@ def generate_and_evaluate_overflow_computations(config_file):
                 nargs=1,
                 required=True,
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
-
 def generate_and_evaluate_water_level_computations(config_file):
     print(f"Start waterstandberekeningen met Hydra-Ring met configuratie file: {config_file}")
     api.generate_and_evaluate_waterlevel_computations(config_file)
