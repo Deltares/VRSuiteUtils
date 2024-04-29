@@ -124,46 +124,8 @@ def run_characteristic_profiles_for_traject(config_file):
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
 def selecteer_profiel(config_file):
-    mandatory_parameters = ['vakindeling_geojson',
-                            'output_map_ahn_profielen',
-                            'karakteristieke_profielen_map',
-                            'profiel_info_csv',
-                            'output_map_representatieve_profielen']
-
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    vakindeling_geojson = parameters['vakindeling_geojson']
-    ahn_profielen = parameters['output_map_ahn_profielen']
-    karakteristieke_profielen = parameters['karakteristieke_profielen_map']
-    profiel_info_csv = parameters['profiel_info_csv']
-    uitvoer_map = parameters['output_map_representatieve_profielen']
-    invoerbestand = parameters.get('ingevoerde_profielen', fallback=False)
-
-    # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
-    print(f"vakindeling_geojson: {vakindeling_geojson}")
-    print(f"ahn_profielen: {ahn_profielen}")
-    print(f"karakteristieke_profielen: {karakteristieke_profielen}")
-    print(f"profiel_info_csv: {profiel_info_csv}")
-    print(f"uitvoer_map: {uitvoer_map}")
-    print(f"invoerbestand: {invoerbestand}")
-
-    # run the select_profiles_workflow
-    main_profiel_selectie(
-        Path(vakindeling_geojson),
-        Path(ahn_profielen),
-        Path(karakteristieke_profielen),
-        Path(profiel_info_csv),
-        Path(uitvoer_map),
-        invoerbestand,
-        "minimum"
-    )
-
+    print(f"Start selecteren van karakteristieke profielen per dijkvak met configuratie file: {config_file}")
+    api.selecteer_profiel(config_file)
 
 @cli.command(
     name="genereer_teenlijn", help="Voor het afleiden van de teenlijn van een dijktraject"
