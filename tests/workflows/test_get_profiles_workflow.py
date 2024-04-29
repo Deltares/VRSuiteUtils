@@ -16,10 +16,10 @@ from preprocessing.common_functions import read_config_file
 def test_get_profiles_workflow(project_folder:str,  request: pytest.FixtureRequest):
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
-    # if _output_path.exists():
-    #     shutil.rmtree(_output_path)
+    if _output_path.exists():
+        shutil.rmtree(_output_path)
 
-    # #run the hydraring overflow workflow to generate the relevant results
+    #run the hydraring overflow workflow to generate the relevant results
     api.get_characteristic_profiles_for_traject(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
 
     #compare traject_profiles.csv in both dirs
