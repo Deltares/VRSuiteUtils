@@ -22,8 +22,6 @@ def test_hydraring_overflow_workflow(project_folder:str,  request: pytest.Fixtur
     #run the hydraring overflow workflow to generate the relevant results
     api.generate_and_evaluate_overflow_computations(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
 
-    #get the relative path from the config
-    _reference_dir = read_config_file(test_data.joinpath(project_folder, "preprocessor.config"), ['output_map_overslag'])['output_map_overslag']
 
     #compare the results with the reference results for all designtable.txt files in the subdirectories of the subdirectories in _output_dir
     for file in _output_path.rglob("DESIGNTABLE_*.txt"):

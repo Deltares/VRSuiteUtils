@@ -187,7 +187,9 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
 
     if results_folder is None:
         output_path = Path(parameters['output_map_bekleding'])
+        paths_to_databases = [Path(database_path_current), Path(database_path_future)]
     else: # used for testing
+        paths_to_databases = [Path(database_path_current)]
         output_path = results_folder.joinpath(parameters['output_map_bekleding'])
         # Recreate the output folder
         if output_path.exists():
@@ -208,7 +210,7 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
     qvariant_main(
         traject_id,
         Path(input_csv),
-        [Path(database_path_current), Path(database_path_future)],
+        paths_to_databases,
         Path(waterlevel_path),
         Path(profielen_path),
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),

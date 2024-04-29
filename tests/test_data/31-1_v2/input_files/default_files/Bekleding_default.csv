@@ -1,19 +1,2 @@
 doorsnede,naam_hrlocatie,hrlocation,locationid,hr_koppel,region,gws,getij_amplitude,steentoetsfile,dwarsprofiel,prfl,begin_grasbekleding,waterstand_stap
-0,42,1500357,1500357,WS_1_31-1_dk_00001,kust,0.16,2.47,stt Ws 42-82 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,42,WsNoo_004200.prfl,7.27,1
-1,80,1500342,1500342,WS_1_31-1_dk_00016,kust,0.16,2.47,stt Ws 42-82 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,80,WsNoo_008000.prfl,7.18,1
-2,93,1500337,1500337,WS_1_31-1_dk_00022,kust,0.16,2.47,stt Ws 83-119 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,93,WsNoo_009300.prfl,6.5,1
-3,94,1500337,1500337,WS_1_31-1_dk_00022,kust,0.16,2.47,stt Ws 83-119 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,94,WsNoo_009400.prfl,6.51,1
-4,115,1500328,1500328,WS_1_31-1_dk_00031,kust,0.16,2.47,stt Ws 83-119 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,115,WsNoo_011500.prfl,6.71,1
-5,120,1500326,1500326,WS_1_31-1_dk_00033,kust,0.16,2.47,,,WsNoo_012000.prfl,2.88,1
-6,124,1500324,1500324,WS_1_31-1_dk_00035,kust,0.16,2.47,,,WsNoo_012400.prfl,2.88,1
-7,142,1500316,1500316,WS_1_31-1_dk_00043,kust,0.16,2.47,,,WsNoo_014200.prfl,3.02,1
-8,154,1500310,1500310,WS_1_31-1_dk_00050,kust,0.16,2.47,stt Ws 147-185 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,154,WsNoo_015400.prfl,6.42,1
-9,155,1500310,1500310,WS_1_31-1_dk_00050,kust,0.16,2.47,stt Ws 147-185 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,155,WsNoo_015500.prfl,6.43,1
-10,164,1500305,1500305,WS_1_31-1_dk_00055,kust,0.16,2.47,stt Ws 147-185 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,164,WsNoo_016400.prfl,6.22,1
-11,175,1500300,1500300,WS_1_31-1_dk_00060,kust,0.16,2.47,stt Ws 147-185 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,175,WsNoo_017500.prfl,6.33,1
-12,186,1500294,1500294,WS_1_31-1_dk_00066,kust,0.16,2.47,stt Ws 186-198 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,186,WsNoo_018600.prfl,6.75,1
-13,191,1500292,1500292,WS_1_31-1_dk_00068,kust,0.16,2.47,stt Ws 186-198 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,191,WsNoo_019100.prfl,6.79,1
-14,201,1500287,1500287,WS_1_31-1_dk_00073,kust,0.16,2.47,stt Ws 199-215 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,201,WsNoo_020100.prfl,6.95,1
-15,215,1500286,1500286,WS_1_31-1_dk_00074,kust,0.16,2.47,stt Ws 199-215 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,201,WsNoo_021500.prfl,6.91,1
-16,220,1500283,1500283,WS_1_31-1_dk_00077,kust,0.16,2.47,stt Ws 216-225 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,220,WsNoo_022000.prfl,6.8,1
-17,227,1500280,1500280,WS_1_31-1_dk_00080,kust,0.16,2.47,stt Ws 226-242 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,227,WsNoo_022700.prfl,6.69,1
+1,80,1500342,1500342,WS_1_31-1_dk_00016,kust,0.16,2.47,stt Ws 42-82 20201118 steentoets 2017 versie 17.1.2.1 ZST_cat_A.xlsm,80,WsNoo_008000.prfl,8.4,9
