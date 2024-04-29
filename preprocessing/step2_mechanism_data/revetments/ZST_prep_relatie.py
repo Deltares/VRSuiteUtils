@@ -19,7 +19,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integ
 
 
 
-def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
+def revetment_zst(df, profielen_path, steentoets_path, qvar_path,  output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
 
     # define variables
     evaluateYears = [2025, 2100]
@@ -32,7 +32,7 @@ def revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST,
 
 
         # import Q-variant results
-        Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
+        Qvar = read_JSON(qvar_path.joinpath("Qvar_{}.json".format(section.doorsnede)))
 
         # check if there is a steentoetsfile
         # this piece of code is added in case there is no steentoetsfile. This means that the dike hass a complete

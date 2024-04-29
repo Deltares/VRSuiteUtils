@@ -95,38 +95,9 @@ def run_bekleding_qvariant(config_file):
                 help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
 
 def run_gebu_zst(config_file):
-    mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
+    print(f"Start gras- en steenbekleding berekeningen met configuratie file: {config_file}")
+    api.run_gebu_zst(config_file)
 
-    try:
-        parameters = read_config_file(config_file, mandatory_parameters)
-    except ValueError as e:
-        print(f"Error reading configuration: {e}")
-        return
-
-    # Accessing parameters
-    traject_id = parameters['traject_id']
-    input_csv = parameters['bekleding_input_csv']
-    steentoets_path = parameters['steentoets_map']
-    profielen_path = parameters['hr_profielen_dir']
-    output_path = parameters['output_map_bekleding']
-
-    # print the parameters
-    print("The following parameters are read from the configuration file:")
-    print(f"traject_id: {traject_id}")
-    print(f"bekleding_input_csv: {input_csv}")
-    print(f"steentoets_map: {steentoets_path}")
-    print(f"hr_profielen_dir: {profielen_path}")
-    print(f"output_map_bekleding: {output_path}")
-
-    # run the bekleding_gebu_zst workflow
-    gebu_zst_main(
-        traject_id,
-        Path(input_csv),
-        Path(steentoets_path),
-        Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'DiKErnel'),
-        Path(output_path),
-    )
 
 
 @cli.command(

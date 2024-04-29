@@ -3,6 +3,7 @@ from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
+from preprocessing.workflows.bekleding_gebu_zst_workflow import gebu_zst_main
 
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
@@ -266,4 +267,50 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
         traject_shape,
         flip_traject,
         flip_waterkant,
+    )
+
+def run_gebu_zst(config_file: str, results_folder: Path = None):
+    mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    input_csv = parameters['bekleding_input_csv']
+    steentoets_path = parameters['steentoets_map']
+    profielen_path = parameters['hr_profielen_dir']
+    output_path = parameters['output_map_bekleding']
+    if results_folder is None:
+        output_path_qvar = Path(parameters['output_map_bekleding'])
+        output_path_results = Path(parameters['output_map_bekleding'])
+    else: # used for testing
+        output_path_results = results_folder.joinpath(parameters['output_map_bekleding'])
+        # Recreate the output folder
+        if output_path_results.exists():
+            output_path_results.rmdir()
+        output_path_results.mkdir(parents=True, exist_ok=True)
+        #get Q-var from testdata
+        output_path_qvar = Path(parameters['output_map_bekleding'])
+
+    # print the parameters
+    print("The following parameters are read from the configuration file:")
+    print(f"traject_id: {traject_id}")
+    print(f"bekleding_input_csv: {input_csv}")
+    print(f"steentoets_map: {steentoets_path}")
+    print(f"hr_profielen_dir: {profielen_path}")
+    print(f"output_map_bekleding: {output_path}")
+
+    # run the bekleding_gebu_zst workflow
+    gebu_zst_main(
+        traject_id,
+        Path(input_csv),
+        Path(steentoets_path),
+        Path(profielen_path),
+        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'DiKErnel'),
+        Path(output_path_qvar),
+        Path(output_path_results),
     )

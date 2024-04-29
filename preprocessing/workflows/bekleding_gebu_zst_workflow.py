@@ -4,7 +4,7 @@ import os
 from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import revetment_gebu
 from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
 import shutil
-def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profielen_path: Path, binDIKErnel: Path, output_path: Path):
+def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profielen_path: Path, binDIKErnel: Path, qvar_path: Path, output_path: Path):
 
     #these folders will be used for output
     figures_GEBU = output_path.joinpath('figures_GEBU')
@@ -44,10 +44,10 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
 
     # run functions
     # step 2: GEBU
-    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
+    revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
 
     # step 3: ZST
-    revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)
+    revetment_zst(df, profielen_path, steentoets_path, qvar_path, output_path, figures_ZST, p_grid)
 
     # remove all files in local_path using shutil
     shutil.rmtree(local_path)
