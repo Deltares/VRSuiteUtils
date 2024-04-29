@@ -24,7 +24,7 @@ def test_bekleding_gebu_zst(project_folder:str,  request: pytest.FixtureRequest)
 
     #compare the json file
     for file in _output_path.rglob("*.json"):
-        _reference_file = test_data.joinpath(project_folder, f'{file.relative_to(_output_path).with_suffix("")}_qvar_workflow.json')
+        _reference_file = test_data.joinpath(project_folder, file.relative_to(_output_path))
         assert filecmp.cmp(file, _reference_file, shallow=False) == True
 
 
