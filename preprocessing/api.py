@@ -8,6 +8,10 @@ from preprocessing.workflows.bekleding_gebu_zst_workflow import gebu_zst_main
 
 from preprocessing.workflows.get_profiles_workflow import main_traject_profiles
 from preprocessing.workflows.select_profiles_workflow import main_profiel_selectie
+from preprocessing.workflows.teenlijn_workflow import main_teenlijn
+from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
+
+from preprocessing.workflows.write_database_workflow import write_database_main
 
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
@@ -364,4 +368,160 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
         Path(output_path),
         invoerbestand,
         "minimum"
+    )
+
+def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
+    mandatory_parameters = ['karakteristieke_profielen_map', 'profiel_info_csv', 'output_map_teenlijn']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    karakteristieke_profielen_map = parameters['karakteristieke_profielen_map']
+    profiel_info_csv = parameters['profiel_info_csv']
+    if results_folder is None:
+        output_path = Path(parameters['output_map_teenlijn'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_teenlijn'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"karakteristieke_profielen_map: {karakteristieke_profielen_map}")
+    print(f"profiel_info_csv: {profiel_info_csv}")
+    print(f"teenlijn_uitvoer: {output_path}")
+
+    # run the teenlijn_workflow
+    main_teenlijn(
+        Path(karakteristieke_profielen_map),
+        Path(profiel_info_csv),
+        Path(output_path),
+    )
+
+def count_buildings(config_file: str, results_folder: Path = None):
+    mandatory_parameters = ['traject_id',
+                            'teenlijn_geojson',
+                            'vakindeling_geojson',
+                            'output_map_bebouwing',
+                            'bag_gebouwen_geopackage']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    teenlijn_geojson = parameters['teenlijn_geojson']
+    vakindeling_geojson = parameters['vakindeling_geojson']
+    gebouwen_geopackage = parameters['bag_gebouwen_geopackage']
+    flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)
+    
+    if results_folder is None:
+        output_path = Path(parameters['output_map_bebouwing'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_bebouwing'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+
+    if flip_waterkant == True:
+        richting = -1
+    else:
+        richting = 1
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"traject_id: {traject_id}")
+    print(f"teenlijn_geojson: {teenlijn_geojson}")
+    print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"uitvoer_map: {output_path}")
+    print(f"gebouwen_geopackage: {gebouwen_geopackage}")
+    print(f"flip_waterkant: {flip_waterkant}")
+
+    # run the derive_buildings_workflow
+    main_bebouwing(
+        traject_id,
+        Path(teenlijn_geojson),
+        Path(vakindeling_geojson),
+        Path(output_path),
+        Path(gebouwen_geopackage),
+        richting
+    )
+
+def create_database(config_file: str, results_folder: Path = None):
+    mandatory_parameters = ['traject_id',
+                            'vakindeling_geojson',
+                            'karakteristieke_profielen_csv',
+                            'gebouwen_csv',
+                            'output_map_database',
+                            'vrtool_database_naam',
+                            'hr_input_csv',
+                            'output_map_waterstand',
+                            'output_map_overslag']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    traject_id = parameters['traject_id']
+    vakindeling_geojson = parameters['vakindeling_geojson']
+    characteristic_profile_csv = parameters['karakteristieke_profielen_csv']
+    building_csv_path = parameters['gebouwen_csv']
+    output_db_name = parameters['vrtool_database_naam']
+    hr_input_csv = parameters['hr_input_csv']
+    waterlevel_results_path = parameters['output_map_waterstand']
+    overflow_results_path = parameters['output_map_overslag']
+    piping_path = parameters.get('piping_input_csv', fallback=False)
+    stability_path = parameters.get('stabiliteit_input_csv', fallback=False)
+    revetment_path = parameters.get('output_map_bekleding', fallback=False)
+    if results_folder is None:
+        output_path = Path(parameters['output_map_database'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_database'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+
+    # print the parameters
+    print("\nThe following parameters are read from the configuration file:\n")
+    print(f"traject_id: {traject_id}")
+    print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"characteristic_profile_csv: {characteristic_profile_csv}")
+    print(f"building_csv_path: {building_csv_path}")
+    print(f"output_dir: {output_path}")
+    print(f"output_db_name: {output_db_name}")
+    print(f"hr_input_csv: {hr_input_csv}")
+    print(f"waterlevel_results_path: {waterlevel_results_path}")
+    print(f"overflow_results_path: {overflow_results_path}")
+    print(f"piping_path: {piping_path}")
+    print(f"stability_path: {stability_path}")
+    print(f"revetment_path: {revetment_path}")
+
+    # run the write_database_workflow
+    write_database_main(
+        traject_id,
+        Path(vakindeling_geojson),
+        Path(characteristic_profile_csv),
+        Path(building_csv_path),
+        Path(output_path),
+        output_db_name,
+        Path(hr_input_csv),
+        Path(waterlevel_results_path),
+        Path(overflow_results_path),
+        piping_path,
+        stability_path,
+        revetment_path
     )
