@@ -1,0 +1,215 @@
+{
+    "dwarsprofiel": "80",
+    "MHW 0_0": 4.959406334209174,
+    "Qvar 0_0_gras_golfklap": {
+        "zichtjaar": 2023.0,
+        "beta": 1.8339146358159146,
+        "model": "gras_golfklap",
+        "waterstand": [],
+        "Hs": [],
+        "Tp": [],
+        "dir": []
+    },
+    "Qvar 0_0_gras_golfoploop": {
+        "zichtjaar": 2023.0,
+        "beta": 1.8339146358159146,
+        "model": "gras_golfoploop",
+        "waterstand": [
+            3.69,
+            4.909406334209174
+        ],
+        "Hs": [
+            0.583762,
+            0.837071
+        ],
+        "Tp": [
+            3.63545,
+            4.12579
+        ],
+        "dir": [
+            188.497,
+            202.302
+        ]
+    },
+    "Qvar 0_0_zuilen": {
+        "zichtjaar": 2023.0,
+        "beta": 1.8339146358159146,
+        "model": "zuilen",
+        "waterstand": [
+            3.69,
+            4.909406334209174
+        ],
+        "Hs": [
+            0.583762,
+            0.837071
+        ],
+        "Tp": [
+            3.63545,
+            4.12579
+        ],
+        "dir": [
+            188.497,
+            202.302
+        ]
+    },
+    "MHW 0_1": 6.845581923379548,
+    "Qvar 0_1_gras_golfklap": {
+        "zichtjaar": 2023.0,
+        "beta": 3.7190164854556804,
+        "model": "gras_golfklap",
+        "waterstand": [],
+        "Hs": [],
+        "Tp": [],
+        "dir": []
+    },
+    "Qvar 0_1_gras_golfoploop": {
+        "zichtjaar": 2023.0,
+        "beta": 3.7190164854556804,
+        "model": "gras_golfoploop",
+        "waterstand": [
+            3.69,
+            6.795581923379548
+        ],
+        "Hs": [
+            0.697496,
+            1.57654
+        ],
+        "Tp": [
+            4.33623,
+            4.38034
+        ],
+        "dir": [
+            190.1,
+            213.516
+        ]
+    },
+    "Qvar 0_1_zuilen": {
+        "zichtjaar": 2023.0,
+        "beta": 3.7190164854556804,
+        "model": "zuilen",
+        "waterstand": [
+            3.69,
+            6.795581923379548
+        ],
+        "Hs": [
+            0.815069,
+            1.57654
+        ],
+        "Tp": [
+            3.83688,
+            4.38034
+        ],
+        "dir": [
+            191.053,
+            213.516
+        ]
+    },
+    "MHW 0_2": 7.24535613821149,
+    "Qvar 0_2_gras_golfklap": {
+        "zichtjaar": 2023.0,
+        "beta": 3.988116350195192,
+        "model": "gras_golfklap",
+        "waterstand": [],
+        "Hs": [],
+        "Tp": [],
+        "dir": []
+    },
+    "Qvar 0_2_gras_golfoploop": {
+        "zichtjaar": 2023.0,
+        "beta": 3.988116350195192,
+        "model": "gras_golfoploop",
+        "waterstand": [
+            3.69,
+            7.195356138211491
+        ],
+        "Hs": [
+            0.723778,
+            1.75722
+        ],
+        "Tp": [
+            4.41911,
+            4.48612
+        ],
+        "dir": [
+            190.642,
+            214.543
+        ]
+    },
+    "Qvar 0_2_zuilen": {
+        "zichtjaar": 2023.0,
+        "beta": 3.988116350195192,
+        "model": "zuilen",
+        "waterstand": [
+            3.69,
+            7.195356138211491
+        ],
+        "Hs": [
+            0.807026,
+            1.75722
+        ],
+        "Tp": [
+            3.97134,
+            4.48612
+        ],
+        "dir": [
+            189.26,
+            214.543
+        ]
+    },
+    "MHW 0_3": 9.966752392792477,
+    "Qvar 0_3_gras_golfklap": {
+        "zichtjaar": 2023.0,
+        "beta": 5.400110126986531,
+        "model": "gras_golfklap",
+        "waterstand": [
+            9.916752392792477
+        ],
+        "Hs": [
+            3.49971
+        ],
+        "Tp": [
+            6.38366
+        ],
+        "dir": [
+            197.564
+        ]
+    },
+    "Qvar 0_3_gras_golfoploop": {
+        "zichtjaar": 2023.0,
+        "beta": 5.400110126986531,
+        "model": "gras_golfoploop",
+        "waterstand": [
+            3.69,
+            9.916752392792477
+        ],
+        "Hs": [
+            0.853377,
+            3.49971
+        ],
+        "Tp": [
+            4.83796,
+            6.38366
+        ],
+        "dir": [
+            190.712,
+            197.564
+        ]
+    },
+    "Qvar 0_3_zuilen": {
+        "zichtjaar": 2023.0,
+        "beta": 5.400110126986531,
+        "model": "zuilen",
+        "waterstand": [
+            3.69
+        ],
+        "Hs": [
+            1.00324
+        ],
+        "Tp": [
+            4.02705
+        ],
+        "dir": [
+            190.644
+        ]
+    }
+}

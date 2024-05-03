@@ -16,7 +16,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
 
-def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid,
+def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid,
                    gebu_alternative="upper_limit"):
 
     # define variables
@@ -64,7 +64,7 @@ def revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU, l
         beta = -ndtri(p_grid)
 
         # import Q-variant results
-        Qvar = read_JSON(output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
+        Qvar = read_JSON(qvar_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
 
 
         #create nested dict of values in evaluateYears, p_grid and models

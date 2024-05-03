@@ -19,7 +19,7 @@ def main_traject_profiles(traject_id: str,
         print("dijkinfo folder created")
 
     # check if output_path.joinpath(AHN_profiles) exists, if not create it
-    ahn_profiles_folder = output_path.joinpath("AHN_profiles")
+    ahn_profiles_folder = output_path.joinpath("ahn_profielen")
     if not ahn_profiles_folder.exists():
         ahn_profiles_folder.mkdir()
         print("AHN_profiles folder created")
@@ -34,7 +34,7 @@ def main_traject_profiles(traject_id: str,
 
 
     # check if output_path.joinpath(characteristic_profiles) exists, if not create it
-    characteristic_profiles_folder = output_path.joinpath("characteristic_profiles")
+    characteristic_profiles_folder = output_path.joinpath("kar_profielen")
     if not characteristic_profiles_folder.exists():
         characteristic_profiles_folder.mkdir()
         print("characteristic_profiles folder created")

@@ -49,8 +49,13 @@ class HydraRingComputation:
         for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
             sys.stdout.write(line.replace("DIJKPAAL", self.name))
         for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
+            hlcds = list(db_path.glob("*hlcd*.sqlite"))
+            if len(hlcds) > 1:
+                raise ValueError(
+                    "Meer dan 1 hlcd database gevonden in de database folder. Er mag maar 1 hlcd database aanwezig zijn."
+                )
             sys.stdout.write(
-                line.replace("DATABASEPATH", str(Path(os.getcwd()).joinpath(db_path)))
+                line.replace("DATABASEPATH", str(Path(os.getcwd()).joinpath(hlcds[0])))
             )
         for j, line in enumerate(fileinput.input(new_ini, inplace=1)):
             sys.stdout.write(line.replace("CONFIGDBPATH", str(config_db_path)))
