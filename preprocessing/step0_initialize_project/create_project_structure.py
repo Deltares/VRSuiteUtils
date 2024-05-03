@@ -60,7 +60,7 @@ def create_project_structure(project_folder, traject_id):
     bebouwing_dir = os.path.join(intermediate_results_dir, "bebouwing")
 
     # remove first part (with project_dir) from bebouwing_dir:
-    print(os.path.relpath(bebouwing_dir, project_dir))
+    # print(os.path.relpath(bebouwing_dir, project_dir))
 
     # Create directories
     os.makedirs(project_dir)
@@ -137,7 +137,7 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"flip_traject              = False # gooit de vakindeling om, indien het de shapefile in de andere richting is gedefinieerd als de vakindeling. Werkt ook voor het genereren van AHN profielen.\n")
         f.write(f"flip_waterkant            = False # belangrijk bij het genereren van AHN profielen. Er wordt een profiel getrokken met voor- en achterland. By default (False) wordt aangenomen dat het water rechts van de kering ligt, in de richting van oplopende vakindeling. Anders moet deze parameter op True worden gezet. Let op, als flip_traject op True staat, ligt het water rechts t.o.v. het geflipte traject!\n")
 
-    print(f"Project structure created for '{os.path.basename(project_folder)}'.")
+    print(f"\nProject structure created for '{os.path.basename(project_folder)}'.")
 
 if __name__ == "__main__":
     project_folder = r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\tests\test_data\31-1_v2"

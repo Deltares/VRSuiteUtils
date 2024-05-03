@@ -1,3 +1,4 @@
+from preprocessing.step0_initialize_project.create_project_structure import create_project_structure
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
@@ -16,6 +17,36 @@ from preprocessing.workflows.write_database_workflow import write_database_main
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
 import os
+
+
+def create_project(project_folder: Path, traject_id: str):
+    """
+    Generates all the necessary files for a project based on a given folder directory and traject_id.
+
+    Parameters
+    ----------
+    project_folder : Path, required
+        The folder where the project will be created. If None, the project will not be created.
+    traject_id : str, required
+
+    Returns
+    -------
+    None
+    """
+
+    project_folder = Path(project_folder)
+
+    # Check if there is not already a project_folder containing files
+    if project_folder.exists():
+        raise ValueError(f"Project folder bestaat al: {project_folder}. Kies een andere project folder.")
+
+    traject_id = traject_id
+
+    print(f"\nCreating project in folder: {project_folder}")
+    print(f"Traject ID: {traject_id}")
+
+    create_project_structure(project_folder, traject_id)
+
 
 def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
     """
