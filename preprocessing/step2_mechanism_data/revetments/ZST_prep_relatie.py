@@ -22,7 +22,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integ
 def revetment_zst(df, profielen_path, steentoets_path, qvar_path,  output_path, figures_ZST,p_grid, fb_ZST = 0.05, N = 4):
 
     # define variables
-    evaluateYears = [2025, 2100]
+    evaluateYears = evaluateYears = [2023, 2100] # ideally not hardcoded, but for now it is
 
     for section_index,section in df.iterrows():
 
@@ -74,25 +74,40 @@ def revetment_zst(df, profielen_path, steentoets_path, qvar_path,  output_path, 
 
         D_opt = []
         years = []
+        p_kans = []
+        row_nr = []
+
         for i, year in enumerate(evaluateYears):
 
             for j, p in enumerate(p_grid):
-
+                print(j, p)
                 Qvar_Hs = np.array(Qvar[f'Qvar {i}_{j}_zuilen']['Hs'])
                 Qvar_h = np.array(Qvar[f'Qvar {i}_{j}_zuilen']['waterstand'])
                 h_help = np.arange(min(Qvar_h), max(Qvar_h), 0.01)
                 Hs_help = np.interp(h_help, Qvar_h, Qvar_Hs)
 
+                if len(h_help) == 0:
+                    print("Not enough points were found for Qvar_h")
+                    h_help = np.min(Qvar_h)
+                    Hs_help = np.min(Qvar_Hs)
+                    print("for h_help, the minimum value of Qvar_h is taken: {}".format(h_help)
+                            + "for Hs_help, the minimum value of Qvar_Hs is taken: {}".format(Hs_help))
+                    
                 # determine relation clay thickness vs beta for each vlak
                 # for k, Zo in range(0, len(Zo)):
                 for index, row in steentoets_df.iterrows():
 
                     if issteen(row.toplaagtype):
-
                         D_help = Hs_help/(row.delta * row.ratio_voldoet)
-                        select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
+                        # check if there are multiple values in h_help
+                        if isinstance(h_help, float) or isinstance(h_help, int):
+                            select = np.array([0])
+                        else:
+                            select = np.argwhere((h_help >= row.Zo) & (h_help <= row.Zb))
+                            
 
-                        if len(select)==0:
+                        # check if select contains values:
+                        if select.size == 0:
                             if abs(row.Zb - row.Zo) < 0.1:
                                 # this happens for berms and crests
                                 print("no points found, one cm above Zb taken")
@@ -105,14 +120,19 @@ def revetment_zst(df, profielen_path, steentoets_path, qvar_path,  output_path, 
                             else:
                                 raise Exception("no points found. Not clear what happened!")
                         else:
-                            D_opt = np.append(D_opt, np.max(D_help[select]))
+                            if isinstance(h_help, float) or isinstance(h_help, int):
+                                D_opt = np.append(D_opt, D_help)
+                            else:
+                                D_opt = np.append(D_opt, np.max(D_help[select]))
 
                     else:
                         D_opt= np.append(D_opt, np.nan)
 
                     years = np.append(years, evaluateYears[i])
+                    p_kans = np.append(p_kans, p)
+                    row_nr = np.append(row_nr, index)
 
-        # scenario 2025 cannot be worse than scenario 2100
+        # scenario 2023 cannot be worse than scenario 2100
         D_opt1 = D_opt[np.argwhere(years==evaluateYears[0])]
         D_opt2 = D_opt[np.argwhere(years==evaluateYears[1])]
         D_opt1 = np.min([D_opt1, D_opt2], axis=0)
@@ -177,13 +197,19 @@ def revetment_zst(df, profielen_path, steentoets_path, qvar_path,  output_path, 
 
 if __name__ == '__main__':
     # paths
-    bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
-    profielen_path = Path(r'c:\vrm_test\bekleding_split_workflow\PRFL')
-    steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
+    # bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
+    # profielen_path = Path(r'c:\vrm_test\bekleding_split_workflow\PRFL')
+    # steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
+    # output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
+
+    bekleding_path = Path(r"c:\VRM\preprocess_test\20240510_test_31_1\input_files\default_files\Bekleding_default_31-1.csv")
+    profielen_path = Path(r'c:\VRM\preprocess_test\20240510_test_31_1\input_files\prfl')
+    steentoets_path = Path(r"c:\VRM\preprocess_test\20240510_test_31_1\input_files\steentoets")
+    output_path = Path(r"c:\VRM\preprocess_test\20240510_test_31_1\intermediate_results\bekleding")
     figures_ZST = output_path.joinpath('figures_ZST')
 
-    traject_id = "7-2"
+
+    traject_id = "31-1"
     _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
     dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
     p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
@@ -211,4 +237,4 @@ if __name__ == '__main__':
         exit()
 
     # run revetment_zst
-    revetment_zst(df, profielen_path, steentoets_path, output_path, figures_ZST, p_grid)
+    revetment_zst(df, profielen_path, steentoets_path, output_path, output_path, figures_ZST, p_grid)

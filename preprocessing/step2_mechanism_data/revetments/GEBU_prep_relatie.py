@@ -22,7 +22,8 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
     # define variables
     typeZode = 'grasGeslotenZode'
     models = ['gras_golfklap', 'gras_golfoploop']
-    evaluateYears = [2025, 2100]
+    evaluateYears = [2023, 2100] # ideally not hardcoded, but for now it is
+    
 
     for index, row in df.iterrows():
 
