@@ -10,7 +10,7 @@ from pathlib import Path
 from scipy.special import ndtri
 from preprocessing.step2_mechanism_data.revetments.project_utils.reliability import QVariantCalculations
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_prfl, read_prfl_foreland
-from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
+from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
 from scipy.interpolate import interp1d
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 import os
