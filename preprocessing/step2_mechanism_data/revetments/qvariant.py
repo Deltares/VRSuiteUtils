@@ -40,7 +40,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
 
             OverflowInput.get_HRLocation(
                 hrd_db_location=Path(str(list(database_path.glob('WBI2017_*.sqlite'))[0]).split('.')[0] + '.sqlite'),
-                hlcd_db_location=list(hlcd, hring_data=row.to_frame().transpose())
+                hlcd_db_location=hlcd, hring_data=row.to_frame().transpose())
             locationId = row['hrlocation']
             orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
