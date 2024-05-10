@@ -121,23 +121,23 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"piping_input_csv          = {os.path.relpath(os.path.join(default_files_dir, 'Piping_default.csv'), project_dir)}                 # pad naar de csv met de piping info.\n")
         f.write(f"stabiliteit_input_csv     = {os.path.relpath(os.path.join(default_files_dir, 'Stabiliteit_default.csv'), project_dir)}            # pad naar de csv met de stabiliteit info.\n\n")
 
-        f.write(f"bag_gebouwen_geopackage   = {os.path.relpath(os.path.join(bag_gebouwen_dir, 'bag_gebouwen.gpkg'), project_dir)}                   # pad naar de geopackage met de BAG gebouwen.\n\n")
+        f.write(f"bag_gebouwen_geopackage   = {os.path.relpath(os.path.join(bag_gebouwen_dir, 'bag-light.gpkg'), project_dir)}                   # pad naar de geopackage met de BAG gebouwen.\n\n")
 
         f.write(f"vakindeling_geojson       = {os.path.relpath(os.path.join(vakindeling_dir, f'vakindeling_{traject_id}.geojson'), project_dir)}     # pad naar de geojson met de vakindeling. Wordt gegenereerd in stap vakindeling en staat in output_map_vakindeling.\n")
-        f.write(f"teenlijn_geojson          = {os.path.relpath(os.path.join(teenlijn_dir, f'teenlijn_{traject_id}.geojson'), project_dir)}           # pad naar de geojson met de teenlijn. Wordt gegenereerd in stap teenlijn en staat in output_map_teenlijn.\n")
+        f.write(f"teenlijn_geojson          = {os.path.relpath(os.path.join(teenlijn_dir, f'teenlijn.geojson'), project_dir)}           # pad naar de geojson met de teenlijn. Wordt gegenereerd in stap teenlijn en staat in output_map_teenlijn.\n")
 
-        f.write(f"profiel_info_csv          = {os.path.relpath(os.path.join(profielen_dir, 'selected_profiles.csv'), project_dir)}         # pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: genereer_dijkprofielen). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker de naam heeft aangepast.\n")
-        f.write(f"karakteristieke_profielen_csv = {os.path.relpath(os.path.join(repr_profielen_dir, 'karakteristieke_profielen.csv'), project_dir)} # pad naar csv met karakteristieke profielen. Wordt afgeleid in stap selecteer_profiel en staat in output_map_representatieve_profielen. Normaliter met de naam selected_profiles.csv, tenzij aangepast door gebruiker.\n")
-        f.write(f"gebouwen_csv              = {os.path.relpath(os.path.join(bebouwing_dir, 'bag_gebouwen.csv'), project_dir)}              # pad naar csv met getelde gebouwen. Wordt afgeleid in stap tel_gebouwen en staat in output_map_bebouwing met naam building_count_traject_traject_ID.csv, tenzij aangepast door gebruiker.\n\n")
+        f.write(f"profiel_info_csv          = {os.path.relpath(os.path.join(profielen_dir, 'traject_profiles.csv'), project_dir)}         # pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: genereer_dijkprofielen). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker de naam heeft aangepast.\n")
+        f.write(f"karakteristieke_profielen_csv = {os.path.relpath(os.path.join(repr_profielen_dir, 'selected_profiles.csv'), project_dir)} # pad naar csv met karakteristieke profielen. Wordt afgeleid in stap selecteer_profiel en staat in output_map_representatieve_profielen. Normaliter met de naam selected_profiles.csv, tenzij aangepast door gebruiker.\n")
+        f.write(f"gebouwen_csv              = {os.path.relpath(os.path.join(bebouwing_dir, f'building_count_traject{traject_id}.csv'), project_dir)}              # pad naar csv met getelde gebouwen. Wordt afgeleid in stap tel_gebouwen en staat in output_map_bebouwing met naam building_count_traject_traject_ID.csv, tenzij aangepast door gebruiker.\n\n")
 
-        f.write(f"vrtool_database_naam      = database_{traject_id}    # hier geef je de naam van de database die wordt aangemaakt als input voor de vrtool.\n\n")
+        f.write(f"vrtool_database_naam      = database_{traject_id}.sqlite      # hier geef je de naam van de database die wordt aangemaakt als input voor de vrtool.\n\n")
 
         f.write(f"dx                        = 25       # stapgrootte bij het afleiden van dijkprofielen uit het AHN. Default is 25.\n")
         f.write(f"traject_shapefile         = False    # als deze op false staat, wordt de trajectshapefile uit het NBPW. Als het bestand afwijkt, moet hier een pad naar de juiste shapefile worden meegegeven.\n")
         f.write(f"flip_traject              = False    # gooit de vakindeling om, indien het de shapefile in de andere richting is gedefinieerd als de vakindeling. Werkt ook voor het genereren van AHN profielen.\n")
         f.write(f"flip_waterkant            = False    # belangrijk bij het genereren van AHN profielen. Er wordt een profiel getrokken met voor- en achterland. By default (False) wordt aangenomen dat het water rechts van de kering ligt, in de richting van oplopende vakindeling. Anders moet deze parameter op True worden gezet. Let op, als flip_traject op True staat, ligt het water rechts t.o.v. het geflipte traject!\n")
 
-    print(f"\nProject structure created for '{os.path.basename(project_folder)}'.")
+    print(f"\nProjectstructuur aangemaakt voor '{os.path.basename(project_folder)}'.")
 
 if __name__ == "__main__":
     project_folder = r"c:\Repositories\VRSuite\Preprocessing\VrToolPreprocess\tests\test_data\31-1_v2"
