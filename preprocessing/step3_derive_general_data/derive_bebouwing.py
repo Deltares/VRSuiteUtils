@@ -96,6 +96,7 @@ def count_buildings_per_vak(traject_name,
             line = linemerge([result.geoms[0], result.geoms[1]])
             remainder = result.geoms[2]
         elif len(result.geoms) == 2:
+            line = result.geoms[0]
             remainder = result.geoms[1]
         elif len(result.geoms) == 1:
 
@@ -158,7 +159,7 @@ if __name__ == '__main__':
 
     count_buildings_per_vak(
         traject_name="31-1",
-        teenlijn_geojson=Path(r"c:\vrm_test\scheldestromen_database_31_1\Profielen3\gegenereerde_teenlijn\teenlijn2.geojson"),
-        vakindeling_geojson=Path(r"c:\vrm_test\scheldestromen_database_31_1\Vakindeling_31-1.geojson"),
+        teenlijn_geojson=Path(r"c:\VRM\preprocess_test\20240510_test_31_1\intermediate_results\teenlijn\teenlijn.geojson"),
+        vakindeling_geojson=Path(r"c:\VRM\preprocess_test\20240510_test_31_1\intermediate_results\vakindeling\Vakindeling_31-1.geojson"),
         output_dir=Path(r"c:\vrm_test\scheldestromen_database_31_1\Bebouwing"),
-        all_buildings_filename=Path(r"c:\vrm_test\gebouwen_geopackage_20231019\bag-light.gpkg"))
+        all_buildings_filename=Path(r"c:\GIS\Achtergrond\bag-light.gpkg"))
