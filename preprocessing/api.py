@@ -1,3 +1,4 @@
+from preprocessing.step0_initialize_project.create_project_structure import create_project_structure
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
@@ -16,6 +17,36 @@ from preprocessing.workflows.write_database_workflow import write_database_main
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
 import os
+
+
+def create_project(project_folder: Path, traject_id: str):
+    """
+    Generates all the necessary files for a project based on a given folder directory and traject_id.
+
+    Parameters
+    ----------
+    project_folder : Path, required
+        The folder where the project will be created. If None, the project will not be created.
+    traject_id : str, required
+
+    Returns
+    -------
+    None
+    """
+
+    project_folder = Path(project_folder)
+
+    # Check if there is not already a project_folder containing files
+    if project_folder.exists():
+        raise ValueError(f"Project folder bestaat al: {project_folder}. Kies een andere project folder.")
+
+    traject_id = traject_id
+
+    print(f"\Aanmaken project in folder: {project_folder}")
+    print(f"Dijktraject: {traject_id}")
+
+    create_project_structure(project_folder, traject_id)
+
 
 def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
     """
@@ -59,7 +90,7 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
     flip = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
 
     # print the parameters
-    print("The following parameters are read from the configuration file:")
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
     print(f"traject_id: {traject_id}")
     print(f"vakindeling_csv: {vakindeling_csv}")
     print(f"output_folder_vakindeling: {output_folder_vakindeling}")
@@ -100,7 +131,7 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
 
 
     # print the parameters
-    print("The following parameters are read from the configuration file:")
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
     print(f"file_path: {file_path}")
     print(f"database_path_current: {database_path_current}")
     print(f"database_path_future: {database_path_future}")
@@ -155,7 +186,7 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
             output_path.rmdir()
         output_path.mkdir(parents=True, exist_ok=True)
     # print the parameters
-    print("The following parameters are read from the configuration file:")
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
     print(f"file_path: {file_path}")
     print(f"database_path_current: {database_path_current}")
     print(f"database_path_future: {database_path_future}")
@@ -206,7 +237,7 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
         output_path.mkdir(parents=True, exist_ok=True)
 
     # print the parameters
-    print("The following parameters are read from the configuration file:")
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
     print(f"traject_id: {traject_id}")
     print(f"bekleding_input_csv: {input_csv}")
     print(f"database_path_current: {database_path_current}")
@@ -254,7 +285,7 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
         output_path_qvar = Path(parameters['output_map_bekleding'])
 
     # print the parameters
-    print("The following parameters are read from the configuration file:")
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
     print(f"traject_id: {traject_id}")
     print(f"bekleding_input_csv: {input_csv}")
     print(f"steentoets_map: {steentoets_path}")
@@ -300,7 +331,7 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
     flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
 
     # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
+    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"traject_id: {traject_id}")
     print(f"output_path: {output_path.__str__}")
     print(f"dx: {dx}")
@@ -351,7 +382,7 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
     invoerbestand = parameters.get('ingevoerde_profielen', fallback=False)
 
     # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
+    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"vakindeling_geojson: {vakindeling_geojson}")
     print(f"ahn_profielen: {ahn_profielen}")
     print(f"karakteristieke_profielen: {karakteristieke_profielen}")
@@ -392,7 +423,7 @@ def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
         output_path.mkdir(parents=True, exist_ok=True)
 
     # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
+    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"karakteristieke_profielen_map: {karakteristieke_profielen_map}")
     print(f"profiel_info_csv: {profiel_info_csv}")
     print(f"teenlijn_uitvoer: {output_path}")
@@ -439,7 +470,7 @@ def count_buildings(config_file: str, results_folder: Path = None):
         richting = 1
 
     # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
+    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"traject_id: {traject_id}")
     print(f"teenlijn_geojson: {teenlijn_geojson}")
     print(f"vakindeling_geojson: {vakindeling_geojson}")
@@ -496,7 +527,7 @@ def create_database(config_file: str, results_folder: Path = None):
         output_path.mkdir(parents=True, exist_ok=True)
 
     # print the parameters
-    print("\nThe following parameters are read from the configuration file:\n")
+    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"traject_id: {traject_id}")
     print(f"vakindeling_geojson: {vakindeling_geojson}")
     print(f"characteristic_profile_csv: {characteristic_profile_csv}")

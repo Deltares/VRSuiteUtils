@@ -1,5 +1,5 @@
 import click
-import preprocessing.api
+import preprocessing.api as api
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
 from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
@@ -13,13 +13,33 @@ import configparser
 from pathlib import Path
 import os
 import re
-import api
+# import api
 
 
 
 @click.group()
 def cli():
     pass
+
+@cli.command(
+    name="maak_project", help="Maakt een project folder structuur aan voor de VRM."
+)
+
+@click.option("--project_folder",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de folder waar het project moet worden aangemaakt.")
+
+@click.option("--traject_id",
+                type=str,
+                nargs=1,
+                required=True,
+                help="Traject ID van het project.")
+
+def create_project(project_folder, traject_id):
+    print(f"Start aanmaken project folder structuur voor traject {traject_id} in folder: {project_folder}")
+    api.create_project(project_folder, traject_id)
 
 
 @cli.command(
