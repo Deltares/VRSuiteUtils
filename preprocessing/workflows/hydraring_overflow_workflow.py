@@ -86,7 +86,7 @@ def overflow_main(file_path: Path,
                 HydraRing_path.joinpath("config.sqlite"),
             )
             # run Hydra-Ring
-            HydraRingComputation().run_hydraring(HydraRing_path, computation.ini_path)
+            HydraRingComputation().run_hydraring(HydraRing_path, Path(os.getcwd()).joinpath(computation.ini_path))
 if __name__ == '__main__':
     # input paths
     Path_prf = Path(
