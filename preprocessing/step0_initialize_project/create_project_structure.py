@@ -45,7 +45,6 @@ def create_project_structure(project_folder, traject_id):
     hr_profielen_dir = os.path.join(input_files_dir, "prfl")
     default_files_dir = os.path.join(input_files_dir, "default_files")
     steentoets_dir = os.path.join(input_files_dir, "steentoets")
-    bag_gebouwen_dir = os.path.join(input_files_dir, "bag_gebouwen")
 
     vakindeling_dir = os.path.join(intermediate_results_dir, "vakindeling")
     hr_results_dir = os.path.join(intermediate_results_dir, "HR_results")
@@ -72,7 +71,6 @@ def create_project_structure(project_folder, traject_id):
     os.makedirs(hr_profielen_dir)
     os.makedirs(default_files_dir)
     os.makedirs(steentoets_dir)
-    os.makedirs(bag_gebouwen_dir)
     os.makedirs(vakindeling_dir)
     os.makedirs(hr_results_dir)
     os.makedirs(waterlevel_dir)
@@ -100,8 +98,7 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"database_path_HR_future   = {os.path.relpath(database_path_HR_future, project_dir)}     # pad met de database voor de HR sommen (toekomst)\n")
         f.write(f"hr_profielen_dir          = {os.path.relpath(hr_profielen_dir, project_dir)}                  # HR profielen directory\n")
         f.write(f"default_files_dir         = {os.path.relpath(default_files_dir, project_dir)}         # Default files directory\n")
-        f.write(f"steentoets_map            = {os.path.relpath(steentoets_dir, project_dir)}            # Steentoets directory\n")
-        f.write(f"bag_gebouwen_dir          = {os.path.relpath(bag_gebouwen_dir, project_dir)}          # BAG gebouwen directory\n\n")
+        f.write(f"steentoets_map            = {os.path.relpath(steentoets_dir, project_dir)}            # Steentoets directory\n\n")
 
         f.write(f"output_map_vakindeling    = {os.path.relpath(vakindeling_dir, project_dir)}                             # aan te maken uitvoermap voor de vakindeling\n")
         f.write(f"hr_results_dir            = {os.path.relpath(hr_results_dir, project_dir)}                              # HR results directory\n")
