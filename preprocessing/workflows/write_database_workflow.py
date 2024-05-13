@@ -4,7 +4,7 @@ import geopandas as gpd
 from vrtool.orm.orm_controllers import *
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
-import random
+import shutil
 def read_csv_linesep(file_path, **kwargs):
     try:
         df = pd.read_csv(file_path, sep = ',', lineterminator = '\n', **kwargs)
@@ -131,6 +131,9 @@ def write_database_main(traject_name : str,
     else:
         write_config_file(output_dir, traject_name, output_db_name,
                           exclude_mechanisms=['REVETMENT', 'HYDRAULIC_STRUCTURES'])
+
+    #copy the vakindeling to the output directory
+    shutil.copy(vakindeling_geojson, output_dir.joinpath(traject_name + '.geojson'))
 
 if __name__ == '__main__':
 
