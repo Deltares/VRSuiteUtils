@@ -133,9 +133,9 @@ class QVariantCalculations(object):
         
 
         fileNameConfig = binHydraRing.joinpath('config.sqlite')
-        fileNameSQL = working_dir.joinpath('1.sql')
-        fileNameIni = working_dir.joinpath('1.ini')
-        outputfile = working_dir.joinpath('1-output.sqlite')
+        fileNameSQL = Path(os.getcwd()).joinpath(working_dir,'1.sql')
+        fileNameIni = Path(os.getcwd()).joinpath(working_dir,'1.ini')
+        outputfile = Path(os.getcwd()).joinpath(working_dir,'1-output.sqlite')
         # fileNameConfig = binHydraRing + 'config.sqlite'
         # fileNameSQL = '1.sql'
         # fileNameIni = '1.ini'

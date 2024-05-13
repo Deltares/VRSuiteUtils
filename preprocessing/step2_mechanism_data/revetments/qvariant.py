@@ -10,7 +10,7 @@ from pathlib import Path
 from scipy.special import ndtri
 from preprocessing.step2_mechanism_data.revetments.project_utils.reliability import QVariantCalculations
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_prfl, read_prfl_foreland
-from vrtool.probabilistic_tools.hydra_ring_scripts import read_design_table
+from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
 from scipy.interpolate import interp1d
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 import os
@@ -40,7 +40,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
 
             OverflowInput.get_HRLocation(
                 hrd_db_location=Path(str(list(database_path.glob('WBI2017_*.sqlite'))[0]).split('.')[0] + '.sqlite'),
-                hlcd_db_location=list(database_path.glob('*hlcd.sqlite'))[0], hring_data=row.to_frame().transpose())
+                hlcd_db_location=hlcd, hring_data=row.to_frame().transpose())
             locationId = row['hrlocation']
             orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 

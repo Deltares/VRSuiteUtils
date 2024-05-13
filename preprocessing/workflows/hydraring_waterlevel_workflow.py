@@ -75,8 +75,9 @@ def waterlevel_main(file_path: Path,
                 database_path,
                 hydraring_path.joinpath("config.sqlite"),
             )
+            
             # run Hydra-Ring
-            HydraRingComputation().run_hydraring(hydraring_path, computation.ini_path)
+            HydraRingComputation().run_hydraring(hydraring_path, Path(os.getcwd()).joinpath(computation.ini_path))
 
 # # file_name: str,
 # #     database_paths: list[Path],
