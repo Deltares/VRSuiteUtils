@@ -45,6 +45,7 @@ def create_project_structure(project_folder, traject_id):
     hr_profielen_dir = os.path.join(input_files_dir, "prfl")
     default_files_dir = os.path.join(input_files_dir, "default_files")
     steentoets_dir = os.path.join(input_files_dir, "steentoets")
+    bag_gebouwen_dir = os.path.join(input_files_dir, "bag_gebouwen")
 
     vakindeling_dir = os.path.join(intermediate_results_dir, "vakindeling")
     hr_results_dir = os.path.join(intermediate_results_dir, "HR_results")
@@ -82,6 +83,7 @@ def create_project_structure(project_folder, traject_id):
     os.makedirs(repr_profielen_dir)
     os.makedirs(teenlijn_dir)
     os.makedirs(bebouwing_dir)
+    os.makedirs(bag_gebouwen_dir)
 
 
     # Write paths to input.txt file
