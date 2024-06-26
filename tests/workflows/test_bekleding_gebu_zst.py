@@ -12,8 +12,7 @@ from tests import test_data, test_results
 from preprocessing.common_functions import read_config_file
 
 @pytest.mark.parametrize("project_folder",
-                         [pytest.param("31-1_v2", id = '31-1')],
-                         [pytest.param("35-1", id = '35-1')])
+                         [pytest.param("31-1_v2", id = '31-1'), pytest.param("35-1", id = '35-1')])
 def test_bekleding_gebu_zst(project_folder:str,  request: pytest.FixtureRequest):
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
