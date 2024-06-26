@@ -56,10 +56,16 @@ class OverflowInput:
         track_id = pd.read_sql_query("SELECT TrackID FROM General", hrd_cnx).values[0][0]
         hlcd_locs = pd.read_sql_query("SELECT * FROM Locations", hlcd_cnx)
         for count, line in hring_data.iterrows():
-            hrd_location = hrd_locs.loc[
+            try:
+                hrd_location = hrd_locs.loc[
                     hrd_locs["Name"] == line["hr_koppel"]
-                    ]["HRDLocationId"].values[0]
-            # hr_locatie is where hlcd_locs["HRDLocationId"] == hrd_location and hlcd_locs["TrackID"] == track_id:
+                ]["HRDLocationId"].values[0]
+            except IndexError:
+                raise Exception(
+                    "HRDLocationId niet gevonden voor {}. Check in de bekledingen CSV of de namen voor 'hr_koppel' wel "
+                    "voorkomen in de database.".format(line["hr_koppel"])
+                )
+
             hlcd_location = hlcd_locs.loc[
                 (hlcd_locs["HRDLocationId"] == hrd_location) & (hlcd_locs["TrackId"] == track_id)]["LocationId"].values[0]
             if (not np.isnan(hring_data.loc[count, "hrlocation"])) & (hring_data.loc[count, "hrlocation"] != hlcd_location):
