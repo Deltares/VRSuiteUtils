@@ -18,7 +18,8 @@ def issteen(toplaagtype):
     
     res = False
     
-    if toplaagtype>=26.0 and toplaagtype<=27.9:
+    # if toplaagtype>=26.0 and toplaagtype<=27.9:
+    if toplaagtype >= 26.0 and toplaagtype <= 28.6: # noorse steen is 28.6
         res = True
     
     return res

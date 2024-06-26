@@ -36,6 +36,14 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
         # delete columns Yl_oi and Yr_oi
         df_profile = df_profile.drop(['Yl_oi', 'Yr_oi'], axis=1)
 
+    elif "20.1.1" in str(steentoetsFile):
+        print("Steentoets versie is 20.1.1")
+        df = pd.read_excel(steentoetsFile, skiprows=[1, 2, 3, 4, 5, 6], header=0, dtype={'dwp_oi': str})
+        df_profile = df.loc[df['dwp_oi'] == dwarsprofiel]
+        df_profile = df_profile[
+            ['Zo_oi', 'Zb_oi', 'tana_oi', 'Bsegment_oi', 'toplaagtype_oi', 'D_oi', 'rho_oi', 'Unnamed: 77',
+             'Unnamed: 93']]
+
     else:
         raise Exception("Steentoets versie is onbekend. Zorg dat het versienummer in de naam van het steentoetsbestand staat.")
 
