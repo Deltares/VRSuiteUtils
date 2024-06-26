@@ -32,6 +32,14 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
         dwarsprofiel = row.dwarsprofiel
         GWS = row['gws'] # gemiddelde buitenwaterstand
         Amp = row['getij_amplitude'] # getij amplitude
+        
+        if np.isnan(GWS):
+            GWS = 0.0
+            print(f'WARNING: GWS voor {dwarsprofiel} is niet ingevuld. GWS=0.0 aangenomen.')
+        if np.isnan(Amp):
+            Amp = 0.0
+            print(f'WARNING: Amp voor {dwarsprofiel} is niet ingevuld. Amp=0.0 aangenomen.')
+
         region = row['region']
         begin_grasbekleding = row['begin_grasbekleding']
         grasbekleding_end = kruinhoogte - 0.01
