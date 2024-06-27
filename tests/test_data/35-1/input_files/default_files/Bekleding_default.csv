@@ -1,2 +1,2 @@
-doorsnede;naam_hrlocatie;hrlocation;hr_koppel;region;gws;getij_amplitude;steentoetsfile;dwarsprofiel;prfl;begin_grasbekleding;waterstand_stap
-ZST_02;GEKB_010;;035-01_0127_9_MA_km0246;rivieren;;;Steentoets v19.1.1_A_35-1.xlsm;138;35-1_138.prfl;1.671;0.5
+doorsnede,naam_hrlocatie,hrlocation,locationid,hr_koppel,region,gws,getij_amplitude,steentoetsfile,dwarsprofiel,prfl,begin_grasbekleding,waterstand_stap
+ZST_02,GEKB_010,-999,-999,035-01_0127_9_MA_km0246,rivieren,-999,-999,Steentoets v19.1.1_A_35-1.xlsm,138,35-1_138.prfl,1.671,0.5
