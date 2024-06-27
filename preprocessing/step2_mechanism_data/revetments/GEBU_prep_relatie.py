@@ -90,7 +90,7 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
                     Qvar_Tp = np.append(Qvar_Tp, Qvar_Tp[-1])
                     Qvar_dir = np.append(Qvar_dir, Qvar_dir[-1])
 
-                    tijd, h_hulp = waterstandsverloop(region, GWS, valMHW, Amp)
+                    tijd, h_hulp = waterstandsverloop(region, GWS, valMHW, Amp, Qvar_h, Qvar_Hs)
                     Hs_hulp = Hs_verloop(h_hulp, Qvar_h, Qvar_Hs)
                     Tp_hulp = Tp_verloop(h_hulp, Qvar_h, Qvar_Tp)
                     betahoek_hulp = betahoek_verloop(h_hulp, Qvar_h, Qvar_dir, orientation)
