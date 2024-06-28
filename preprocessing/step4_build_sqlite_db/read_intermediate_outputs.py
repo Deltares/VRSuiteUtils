@@ -149,33 +149,39 @@ def read_revetment_data(files_dir):
     revetment_jsons = glob.glob(os.path.join(files_dir, "*.json"))
     for loc_file in revetment_jsons:
         loc_file = Path(loc_file)
-        location = str(Path(loc_file).name.split("_")[1])
         with open(loc_file, "r") as openfile:
             json_object = json.load(openfile)
 
-        if "GEBU" in loc_file.name: # read data for grass revetment
+        #split the name: format is MECH_LOC_YEAR.json but LOC can have _ in it
+        mechanism = Path(loc_file).stem.split("_")[0]
+        year = Path(loc_file).stem.split("_")[-1].strip('.json')	
+        location = "_".join(Path(loc_file).stem.split("_")[1:-1])
+
+        if mechanism == "GEBU": # read data for grass revetment
             lenn = len(json_object["grasbekleding_begin"])
             rel_GEBU_table["location"] += [location] * lenn
-            rel_GEBU_table["year"] += [int(Path(loc_file).stem.split("_")[-1])] * lenn
+            rel_GEBU_table["year"] += [int(year)] * lenn
             rel_GEBU_table["transition_level"] += json_object["grasbekleding_begin"]
             rel_GEBU_table["beta"] += json_object["betaFalen"]
 
-        if "ZST" in loc_file.name: # read data for block revetment
-            if "2025" in loc_file.name: # slope data only one time
-                slope_part_table["location"] += [location] * json_object["aantal deelvakken"]
-                slope_part_table["slope_part"] += list(np.arange(0, json_object["aantal deelvakken"], 1))
-                slope_part_table["begin_part"] += json_object["Zo"]
-                slope_part_table["end_part"] += json_object["Zb"]
-                slope_part_table["top_layer_thickness"] += json_object["D huidig"]
-                slope_part_table["top_layer_type"] += json_object["toplaagtype"]
-                slope_part_table["tan_alpha"] += json_object["tana"]
+        if mechanism == "ZST": # read data for block revetment
+            if year == "2100": # slope data only one time
+                for i in range(0, json_object["aantal deelvakken"]):
+                    if not np.isnan(json_object["toplaagtype"][i]):
+                        slope_part_table["location"] += [location]
+                        slope_part_table["slope_part"] += [i]
+                        slope_part_table["begin_part"] += [json_object["Zo"][i]]
+                        slope_part_table["end_part"] += [json_object["Zb"][i]]
+                        slope_part_table["top_layer_thickness"] += [json_object["D huidig"][i]]
+                        slope_part_table["top_layer_type"] += [json_object["toplaagtype"][i]]
+                        slope_part_table["tan_alpha"] += [json_object["tana"][i]]
 
             for i in range(0, json_object["aantal deelvakken"]):
-                if json_object["toplaagtype"][i]>=26.0 and json_object["toplaagtype"][i]<=27.9: # slope data with blok revetment
+                if json_object["toplaagtype"][i]>=26.0 and json_object["toplaagtype"][i]<=28.6:#27.9: # slope data with blok revetment
                     lenn = len(json_object[f"deelvak {i}"]["D_opt"])
                     rel_ZST_table["location"] += [location] * lenn
                     rel_ZST_table["slope_part"] += [i] * lenn
-                    rel_ZST_table["year"] += [int(Path(loc_file).stem.split("_")[-1])] * lenn
+                    rel_ZST_table["year"] += [int(year)] * lenn
                     rel_ZST_table["top_layer_thickness"] += json_object[f"deelvak {i}"]["D_opt"]
                     rel_ZST_table["beta"] += json_object[f"deelvak {i}"]["betaFalen"]
 
