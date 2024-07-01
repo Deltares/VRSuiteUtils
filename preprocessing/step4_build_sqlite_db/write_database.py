@@ -549,6 +549,10 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
 
         index = np.argwhere(np.array(slope_part_table["location"])==scenario_name)
         for ind in index:
+            #Temporary fix for Noorse steen:
+            if slope_part_table["top_layer_type"][ind[0]]==28.6:
+                slope_part_table["top_layer_type"][ind[0]] = 27.9
+                
             current_slope_part = SlopePart.create(
                 computation_scenario_id = computation_id,
                 begin_part = slope_part_table["begin_part"][ind[0]],
