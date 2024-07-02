@@ -90,7 +90,7 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
                     Qvar_Tp = np.append(Qvar_Tp, Qvar_Tp[-1])
                     Qvar_dir = np.append(Qvar_dir, Qvar_dir[-1])
 
-                    tijd, h_hulp = waterstandsverloop(region, GWS, valMHW, Amp, Qvar_h, Qvar_Hs)
+                    tijd, h_hulp = waterstandsverloop(region, GWS, valMHW, Amp, Qvar_h)
                     Hs_hulp = Hs_verloop(h_hulp, Qvar_h, Qvar_Hs)
                     Tp_hulp = Tp_verloop(h_hulp, Qvar_h, Qvar_Tp)
                     betahoek_hulp = betahoek_verloop(h_hulp, Qvar_h, Qvar_dir, orientation)
@@ -154,8 +154,7 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
                                                                dijkprofiel_y, 
                                                                p)
                                     bek.gras_golfklap_input_JSON(typeZode, local_path)
-                                    maxSchadegetal_golfklap = np.max([maxSchadegetal_golfklap, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
-
+                                    maxSchadegetal_golfklap = np.max([maxSchadegetal_golfklap, bek.run_DIKErnel(binDIKErnel, output_path, local_path, region)])
 
                     maxSchadegetal_golfoploop = 0.0
                     if len(results_dict[year][probability]['gras_golfoploop']['h_series'])>0:
@@ -172,7 +171,7 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
                                                             dijkprofiel_y, 
                                                             p)
                                 bek.gras_golfoploop_input_JSON(typeZode, local_path)
-                                maxSchadegetal_golfoploop = np.max([maxSchadegetal_golfoploop, bek.run_DIKErnel(binDIKErnel, output_path, local_path)])
+                                maxSchadegetal_golfoploop = np.max([maxSchadegetal_golfoploop, bek.run_DIKErnel(binDIKErnel, output_path, local_path, region)])
                     maxSchadegetal = np.max([maxSchadegetal_golfklap, maxSchadegetal_golfoploop, 10**(-4)])
                     SF = np.append(SF, 1/maxSchadegetal)
 
@@ -298,15 +297,15 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
                             tijd = tijd/3600.0
 
                             fig, axs = plt.subplots(2, 2)
-                            axs[0, 0].plot(tijd, results_dict[year][probability][model]['h_series'])
+                            axs[0, 0].plot(tijd, results_dict[year][probability][model]['h_series'], '--o')
                             axs[0, 0].set_title('Waterstand (boven), Tp (onder)', fontdict={'fontsize':8})
                             axs[0, 0].grid()
-                            axs[0, 1].plot(tijd, results_dict[year][probability][model]['Hs_series'])
+                            axs[0, 1].plot(tijd, results_dict[year][probability][model]['Hs_series'], '--o')
                             axs[0, 1].set_title('Hs (boven), hoek (onder)', fontdict={'fontsize':8})
                             axs[0, 1].grid()
-                            axs[1, 0].plot(tijd, results_dict[year][probability][model]['Tp_series'])
+                            axs[1, 0].plot(tijd, results_dict[year][probability][model]['Tp_series'], '--o')
                             axs[1, 0].grid()
-                            axs[1, 1].plot(tijd, results_dict[year][probability][model]['betahoek_series'])
+                            axs[1, 1].plot(tijd, results_dict[year][probability][model]['betahoek_series'], '--o')
                             axs[1, 1].grid()
                             plt.savefig(figures_GEBU.joinpath('belasting_loc={}_{}_T={}_{}.png'.format(row.doorsnede, year, int(1/probability), model)))
                             plt.close()

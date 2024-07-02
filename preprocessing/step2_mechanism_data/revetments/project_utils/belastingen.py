@@ -8,7 +8,7 @@ Created on Tue Mar 21 15:05:24 2023
 import numpy as np
 from scipy import interpolate
 
-def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h, Qvar_Hs):
+def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h):
     
     if region == 'meer':
         
@@ -36,10 +36,9 @@ def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h, Qvar_Hs):
 
     elif region == 'rivieren':
 
-        # the considered water level is equal to the water level where max Hs is found
-        # the duration of the water level is 12 hours
-        waterstand = np.array([Qvar_h[np.argmax(Qvar_Hs)]])
-        tijd = np.array([0.0, 12.0]) 
+        # consider all water levels from the Qvariant calculations
+        waterstand = Qvar_h
+        tijd = np.arange(0.0, len(waterstand)*12.0+12.0, 12.0)
     
     return tijd, waterstand
 
