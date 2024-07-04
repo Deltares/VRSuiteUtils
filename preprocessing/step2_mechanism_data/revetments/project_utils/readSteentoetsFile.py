@@ -36,6 +36,14 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
         # delete columns Yl_oi and Yr_oi
         df_profile = df_profile.drop(['Yl_oi', 'Yr_oi'], axis=1)
 
+    elif "20.1.1" in str(steentoetsFile):
+        print("Steentoets versie is 20.1.1")
+        df = pd.read_excel(steentoetsFile, skiprows=[1, 2, 3, 4, 5, 6], header=0, dtype={'dwp_oi': str})
+        df_profile = df.loc[df['dwp_oi'] == dwarsprofiel]
+        df_profile = df_profile[
+            ['Zo_oi', 'Zb_oi', 'tana_oi', 'Bsegment_oi', 'toplaagtype_oi', 'D_oi', 'rho_oi', 'Unnamed: 77',
+             'Unnamed: 93']]
+
     else:
         raise Exception("Steentoets versie is onbekend. Zorg dat het versienummer in de naam van het steentoetsbestand staat.")
 
@@ -50,6 +58,18 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
     # it is also possible that the revetment material changes on the outer slope. This results in 2 consecutive parts
     # with tan a = 0.0. In this case as well, the outer berm is adjusted to a very mild slope
 
+    # check if toplaagtype is between 26.0 and 28.6, and overschot is larger than 10 (which happens in some input files,
+    # where a large value is chosen to represent a nan value). If so, set overschot to 0.9 * D.
+    if df_profile['overschot'][(df_profile['toplaagtype'] >= 26.0) &
+                            (df_profile['toplaagtype'] <= 28.6) &
+                            (df_profile['overschot'] > 10)].any():
+        print("Het overschot in het steentoetsbestand is groter dan 10 in de toplaagtype 26.0-28.6 voor dwarsprofiel {}."
+              "Het overschot wordt voor het betreffende vak aangepast naar 0.9*D".format(dwarsprofiel))
+        df_profile['overschot'][(df_profile['toplaagtype'] >= 26.0) &
+                                (df_profile['toplaagtype'] <= 28.6) &
+                                (df_profile['overschot'] > 10)] = 0.9 * df_profile['D'][(df_profile['toplaagtype'] >= 26.0)
+                                                                                        & (df_profile['toplaagtype'] <= 28.6)
+                                                                                        & (df_profile['overschot'] > 10)]
 
     tan_a_corr = 0.001
     for i in range(1, len(df_profile)-1):
