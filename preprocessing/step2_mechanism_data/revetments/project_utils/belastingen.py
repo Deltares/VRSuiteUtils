@@ -8,7 +8,7 @@ Created on Tue Mar 21 15:05:24 2023
 import numpy as np
 from scipy import interpolate
 
-def waterstandsverloop(region, GWS, MHW, Amp):
+def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h):
     
     if region == 'meer':
         
@@ -33,6 +33,12 @@ def waterstandsverloop(region, GWS, MHW, Amp):
         waterstand = Amp*np.cos(2*np.pi*tijd/omega) + (MHW-Amp)-np.maximum(abs(tijd)-0.5*t_peak,t_max)*delta_h
         
         tijd = tijd + t_basis/2.0 # shift to positive
+
+    elif region == 'rivieren':
+
+        # consider all water levels from the Qvariant calculations
+        waterstand = Qvar_h
+        tijd = np.arange(0.0, len(waterstand)*12.0+12.0, 12.0)
     
     return tijd, waterstand
 

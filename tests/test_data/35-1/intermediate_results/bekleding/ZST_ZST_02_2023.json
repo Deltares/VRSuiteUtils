@@ -1,0 +1,131 @@
+{
+    "zichtjaar": 2023,
+    "dwarsprofiel": "136",
+    "aantal deelvakken": 5,
+    "Zo": [
+        0.5,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "Zb": [
+        1.85,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "overgang huidig": [
+        1,
+        1,
+        1,
+        1,
+        1
+    ],
+    "D huidig": [
+        0.2,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+    ],
+    "tana": [
+        0.3333333333333333,
+        0.001,
+        0.001,
+        0.001,
+        0.001
+    ],
+    "toplaagtype": [
+        26.0,
+        20.0,
+        20.0,
+        20.0,
+        20.0
+    ],
+    "delta": [
+        1.829268292682927,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+    ],
+    "ratio_voldoet": [
+        3.939564883385814,
+        NaN,
+        NaN,
+        NaN,
+        NaN
+    ],
+    "deelvak 0": {
+        "D_opt": [
+            0.0632685302509308,
+            0.09251662322838959,
+            0.10141758929223478,
+            0.16510046648628882
+        ],
+        "betaFalen": [
+            3.341478956038596,
+            4.456650917813664,
+            4.7081297157535635,
+            5.961456155913366
+        ]
+    },
+    "deelvak 1": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 2": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 3": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    },
+    "deelvak 4": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    }
+}
