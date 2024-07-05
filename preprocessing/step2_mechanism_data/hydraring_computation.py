@@ -38,6 +38,11 @@ class HydraRingComputation:
             ),
             cnx,
         )
+        for count, row in self.NumericsTable.iterrows():
+            #if FORM is used, replace with FORM with Directional Sampling as backup.
+            if row.CalculationMethod == 1.0:
+                self.NumericsTable.at[count, "CalculationMethod"] = 11
+
         cnx.close()
 
     def make_ini_file(self, path, reference_file, db_path, config_db_path):
