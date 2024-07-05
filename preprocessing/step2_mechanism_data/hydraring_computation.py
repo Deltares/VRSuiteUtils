@@ -42,6 +42,11 @@ class HydraRingComputation:
             #if FORM is used, replace with FORM with Directional Sampling as backup.
             if row.CalculationMethod == 1.0:
                 self.NumericsTable.at[count, "CalculationMethod"] = 11
+                if self.MechanismID == 101:
+                    print(f'CalculationMethod FORM voor Hydra-Ring is vervangen door FORM met Directional Sampling voor overslag op locatie {self.HRLocation}.')
+                else:
+                    print(f'CalculationMethod FORM voor Hydra-Ring is vervangen door FORM met Directional Sampling voor waterstand op locatie {self.HRLocation}.')
+
 
         cnx.close()
 
