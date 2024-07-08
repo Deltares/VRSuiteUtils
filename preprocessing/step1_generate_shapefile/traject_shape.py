@@ -110,37 +110,41 @@ class TrajectShape:
                 ]
 
     def generate_vakindeling_shape(self, vakken_path):
-        df_vakken = pd.read_csv(
-            vakken_path,
-            usecols=[
-                "objectid",
-                "vaknaam",
-                "m_start",
-                "m_eind",
-                "in_analyse",
-                "van_dp",
-                "tot_dp",
-                "stabiliteit",
-                "piping",
-                "overslag",
-                "bekledingen",
-                "kunstwerken",
-            ],
-            dtype={
-                "objectid": int,
-                "vaknaam": object,
-                "m_start": float,
-                "m_eind": float,
-                "in_analyse": int,
-                "van_dp": object,
-                "tot_dp": object,
-                "stabiliteit": object,
-                "piping": object,
-                "overslag": object,
-                "bekledingen": object,
-                "kunstwerken": object,
-            },
-        )
+        try:
+            df_vakken = pd.read_csv(
+                vakken_path,
+                usecols=[
+                    "objectid",
+                    "vaknaam",
+                    "m_start",
+                    "m_eind",
+                    "in_analyse",
+                    "van_dp",
+                    "tot_dp",
+                    "stabiliteit",
+                    "piping",
+                    "overslag",
+                    "bekledingen",
+                    "kunstwerken",
+                ],
+                dtype={
+                    "objectid": int,
+                    "vaknaam": object,
+                    "m_start": float,
+                    "m_eind": float,
+                    "in_analyse": int,
+                    "van_dp": object,
+                    "tot_dp": object,
+                    "stabiliteit": object,
+                    "piping": object,
+                    "overslag": object,
+                    "bekledingen": object,
+                    "kunstwerken": object,
+                },
+            )
+        except:
+            raise ValueError(f"Vakindeling bestand {vakken_path} kon niet worden gelezen. Controleer het bestand op de juiste indeling, bijvoorbeeld op lege rijen.")
+        
         self.check_vakindeling(df_vakken, self.NBPW_shape.geometry.length.values[0])
         traject_geom = self.NBPW_shape.geometry[0][0]
 

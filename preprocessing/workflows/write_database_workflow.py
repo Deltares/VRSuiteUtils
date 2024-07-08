@@ -10,6 +10,7 @@ def read_csv_linesep(file_path, **kwargs):
         df = pd.read_csv(file_path, sep = ',', lineterminator = '\n', **kwargs)
     except:
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
+    df = df.dropna(subset=['doorsnede'])
     return df
 
 def write_config_file(output_dir : Path, traject_name : str, database_name : str, exclude_mechanisms = None):
