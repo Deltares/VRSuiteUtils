@@ -25,6 +25,7 @@ def overflow_main(file_path: Path,
 
     # read HRING reference csv, and add to OverflowInput object
     hring_data = pd.read_csv(file_path, index_col=0)
+    hring_data = hring_data.dropna(subset=['doorsnede'])
     overflow_input_object = OverflowInput()
     overflow_input_object.add_hring_data(hring_data)
 

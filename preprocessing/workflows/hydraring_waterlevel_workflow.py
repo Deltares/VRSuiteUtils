@@ -23,7 +23,7 @@ def waterlevel_main(file_path: Path,
     _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
     # read HRING reference csv
     hring_data = pd.read_csv(file_path, index_col=0)
-
+    hring_data = hring_data.dropna(subset=['doorsnede'])
     # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
     # then hrlocation is derived from the database, using hr_koppel
     if ("hrlocation" not in hring_data.columns or hring_data["hrlocation"].isna().any()):
