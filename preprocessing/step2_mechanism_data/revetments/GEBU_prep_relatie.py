@@ -6,6 +6,8 @@ Created on Tue Jan 17 14:40:54 2023
 """
 import numpy as np
 import pandas as pd
+import os
+import shutil
 from scipy.special import ndtri
 from scipy.stats import norm
 import matplotlib.pyplot as plt
@@ -42,31 +44,34 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
 
         region = row['region']
         begin_grasbekleding = row['begin_grasbekleding']
-        grasbekleding_end = kruinhoogte - 0.01
 
+        # try if begin_grasbekleding is larger than kruinhoogte, if so: error
+        if begin_grasbekleding > kruinhoogte:
+            print(f'ERROR: Begin grasbekleding ({begin_grasbekleding}) is groter dan de kruinhoogte (={kruinhoogte}) '
+                  f'voor dwarsprofiel {dwarsprofiel}. Pas het begin_grasbekleding in de Bekledingen.csv aan of'
+                  f'controleer het profielbestand')
+            break
+
+        grasbekleding_end = kruinhoogte - 0.01 # necessary, because transition level equal to crest level gives issues
         transition_levels = np.arange(begin_grasbekleding, grasbekleding_end, 0.25)
 
-        # check if begin grasbekleding is equal to or higher than end grasbekleding
-        # if so. we assume 2 transitions. At 1 cm below crest and 25 cm lower than that. Beta of 8 is assumed and 7.9
-        # are assumed. This is to prevent extrapolation problems in the vrtool
-        if begin_grasbekleding >= grasbekleding_end:
-
+        # check if begin grasbekleding is too close to the end grasbekleding/kruinhoogte. If so, we assume 2 transition
+        # levels. At 1 cm below crest and 25 cm lower than that. Beta of 8 and 7.9 are assumed. This prevents
+        # extrapolation problems in the vrtool
+        if begin_grasbekleding >= grasbekleding_end-.25:
             for i, year in enumerate(evaluateYears):
                 data = {"zichtjaar": year,
                         "dwarsprofiel": dwarsprofiel,
                         "dijkprofiel_x": list(dijkprofiel_x),
                         "dijkprofiel_y": list(dijkprofiel_y),
-                        "grasbekleding_begin": [grasbekleding_end, grasbekleding_end + 0.25],
+                        "grasbekleding_begin": [grasbekleding_end-0.25, grasbekleding_end],
                         "betaFalen": [7.9, 8.]}
-                write_JSON_to_file(data, output_path.joinpath("GEBU_{}_{}.json".format(row.doorsnede, year)))
-            print('begin grasbekleding is equal to or higher than end grasbekleding. Beta van 8 aangenomen.')
+                write_JSON_to_file(data, output_path.joinpath(f"GEBU_{row.doorsnede}_{year}.json"))
+            print(f'Let op: begin grasbekleding (={begin_grasbekleding}) ligt dicht bij of is gelijk aan de kruinhoogte'
+                  f' (={kruinhoogte}) voor {dwarsprofiel}. Beta van 8 aangenomen.')
             continue
 
-        if len(transition_levels) == 1:
-            # add kruinhoogte as last transition level
-            transition_levels = np.append(transition_levels, np.round(kruinhoogte - 0.01, 2))
-
-        elif len(transition_levels) == 0:
+        if len(transition_levels) == 0:
             print("no transition levels found")
             break
 
@@ -320,27 +325,43 @@ def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figu
 
 if __name__ == '__main__':
     # inputs
-    bekleding_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\Bekleding_20230830.csv')
-    profielen_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\profielen')
-    output_path = Path(r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\ZZL\7-2\invoer\bekleding_bovengrens')
+    traject_id = "13-6"
+    bekleding_path = Path(r'c:\VRM\HHNK_20240528\input_files\default_files\Bekleding_20240626_test20240705.csv')
+    profielen_path = Path(r'c:\VRM\HHNK_20240528\input_files\prfl_test20240705')
+    output_path = Path(r'c:\VRM\HHNK_20240528\intermediate_results\bekleding_test20240705')
+    qvar_path = Path(r'c:\VRM\HHNK_20240528\intermediate_results\bekleding_test20240705')
     binDIKErnel = Path(__file__).parent.absolute().parent.joinpath('externals', 'DiKErnel')
     figures_GEBU = output_path.joinpath('figures_GEBU')
+    local_path = output_path.joinpath('temp')
 
-    # read csv file as dataframe
+    # read bekleding csv
     df = pd.read_csv(bekleding_path,
-                     usecols=['vaknaam', 'dwarsprofiel', 'signaleringswaarde', 'ondergrens', 'faalkansbijdrage',
-                              'lengte_effectfactor', 'locationid', 'hrdatabase_folder', 'hrdatabase', 'region', 'gws',
-                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'qvar_p1', 'qvar_p2',
-                              'qvar_p3', 'qvar_p4', 'qvar_stap'])
-    df = df.dropna(subset=['vaknaam'])  # drop rows where vaknaam is Not a Number
+                     usecols=['doorsnede', 'dwarsprofiel', 'naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
+                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],
+                     dtype={'doorsnede': str, 'dwarsprofiel': str})
+    df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
 
-    # if figures_GEBU doesnot exist, create it
-    if not figures_GEBU.exists():
-        figures_GEBU.mkdir()
-    # elif figures_GEBU exists, but not empty, stop the script
-    elif figures_GEBU.exists() and len(list(figures_GEBU.iterdir())) != 0:
-        print('The figure folder is not empty. Please empty the figures_GEBU folder and run the script again.')
-        exit()
+    for output_folder in [figures_GEBU, local_path]:
+        if not output_folder.exists():
+            output_folder.mkdir(parents=True, exist_ok=False)
+        else:
+            #remove and recreate the folder.
+            shutil.rmtree(output_folder)
+            output_folder.mkdir(parents=True, exist_ok=False)
 
-    revetment_gebu(df, profielen_path, output_path, binDIKErnel, figures_GEBU)
+
+    # set default Q-variant probability grid:
+    this_file_path = Path(os.path.dirname(os.path.realpath(__file__)))
+    _generic_data_dir = this_file_path.absolute().parent.parent.joinpath('generic_data')
+    dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
+    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
+    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
+
+    p_grid = [1. / 30,
+              p_ondergrens,
+              p_signaleringswaarde,
+              p_signaleringswaarde * (1. / 1000.)]
+
+    revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid)
+
