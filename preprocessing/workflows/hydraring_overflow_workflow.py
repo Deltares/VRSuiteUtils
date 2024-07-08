@@ -87,14 +87,3 @@ def overflow_main(file_path: Path,
             )
             # run Hydra-Ring
             HydraRingComputation().run_hydraring(HydraRing_path, Path(os.getcwd()).joinpath(computation.ini_path))
-if __name__ == '__main__':
-    # input paths
-    Path_prf = Path(
-        r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\PRFL')
-    Path_results = Path(
-        r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\output_overflow2')
-    Path_HR = [Path(
-        r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\Databases\2023")]
-    Path_file = r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\HR_20231018.csv"
-
-    overflow_main(Path_file,Path_HR, Path_prf,Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'), Path_results)

@@ -20,11 +20,3 @@ def main_teenlijn(
                     profile_path,
                     output_dir)
 
-if __name__ == '__main__':
-    characteristic_profile_dir = Path(r'c:\VRM\Gegevens 38-1\dijkinfo\characteristic_profiles')
-    profile_path = Path(r'c:\VRM\Gegevens 38-1\dijkinfo2\traject_profiles.csv')
-    output_dir = Path(r"c:\VRM\Gegevens 38-1\dijkinfo2\teenlijn")
-
-    main_teenlijn(characteristic_profile_dir,
-                        profile_path,
-                        output_dir)
