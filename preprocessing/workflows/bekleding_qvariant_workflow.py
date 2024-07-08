@@ -21,9 +21,17 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
         exit()
 
     # read bekleding csv
-    df = pd.read_csv(bekleding_path,
+    try:
+        df = pd.read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
-                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
+                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_bekleding','begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
+    except: #older format
+        df = pd.read_csv(bekleding_path,
+                     usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
+                              'getij_amplitude', 'steentoetsfile', 'prfl','begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
+        df['begin_bekleding'] = df['gws']
+        #add catch for if gws has no value.
+
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
 

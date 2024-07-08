@@ -44,11 +44,11 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
         locationId = row['hrlocation']
         orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
-        # ondergrens waterstand is maximum van hoogste punt op voorland en laagste punt op profiel.
-        # Als voorland niet bestaat, laagste punt op profiel.
-        # daar wordt een veiligheidsmarge van 1m bij op geteld, om droogstand te voorkomen getrokken
-        #TODO: zorg dat minimum niet lager is dan bijv 1/30 waterstand of laagsteuit waterstandsstatistiek
+        # ondergrens waterstand is opgegeven in database en gelijk aan onderkant bekleding of gws. Als deze niet is ingevuld wordt een crash gegeven.
+
         ondergrens_wl = row.begin_bekleding
+        if np.isnan(ondergrens_wl):
+            raise ValueError('Ondergrens voor Q-variant kan niet worden bepaald. Geef begin_bekleding of gws op in de bekleding csv.')
         begin_grasbekleding = row['begin_grasbekleding']
 
         # get design water levels
