@@ -119,7 +119,7 @@ class TrajectShape:
                 df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen", "pleistoceendiepte", "deklaagdikte"]]
                 df_vakken = df_vakken.astype({"objectid": int, "vaknaam": object, "m_start": float, "m_eind": float, "in_analyse": int, "van_dp": object, "tot_dp": object, "stabiliteit": object, "piping": object, "overslag": object, "bekledingen": object, "pleistoceendiepte": float, "deklaagdikte": float})
             else:
-                df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen"]]
+                df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen",]]
                 df_vakken = df_vakken.astype({"objectid": int, "vaknaam": object, "m_start": float, "m_eind": float, "in_analyse": int, "van_dp": object, "tot_dp": object, "stabiliteit": object, "piping": object, "overslag": object, "bekledingen": object})
         except:
             raise ValueError(f"Vakindeling bestand {vakken_path} kon niet worden gelezen. Controleer het bestand op de juiste indeling, bijvoorbeeld op lege rijen.")
