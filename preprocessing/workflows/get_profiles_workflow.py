@@ -60,20 +60,3 @@ def main_traject_profiles(traject_id: str,
     obtain_characteristic_profiles(input_dir=ahn_profiles_folder,
                                  output_dir=characteristic_profiles_folder)
 
-
-if __name__ == '__main__':
-    traject_id = '38-1'
-    output_path = Path(r'c:\VRM\Gegevens 38-1\dijkinfo2')
-    # flip_traject = False
-    # flip_waterside = False
-    dx = 2500
-
-
-    main_traject_profiles(traject_id=traject_id,
-                          output_path=output_path,
-                          dx=dx,
-                          # fsd=fsd,
-                          # hld=hld,
-                          # flip_traject=flip_traject,
-                          # flip_waterside=flip_waterside,
-                          )

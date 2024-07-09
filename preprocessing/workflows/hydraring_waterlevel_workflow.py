@@ -79,19 +79,3 @@ def waterlevel_main(file_path: Path,
             # run Hydra-Ring
             HydraRingComputation().run_hydraring(hydraring_path, Path(os.getcwd()).joinpath(computation.ini_path))
 
-# # file_name: str,
-# #     database_paths: list[Path],
-# #     output_path: Path
-#
-
-if __name__ == '__main__':
-    # input paths
-    # Path_prf = Path(
-    #     r'C:\Users\wopereis\OneDrive - Stichting Deltares\Documents\A - Projects\2023 Veiligheidsrendement\A - Sensitivity analysis\Sensitivity analyse GEKB\Overslag\prfl')
-    Path_results = Path(
-        r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\output_waterstand2')
-    Path_HR = [Path(
-        r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\Databases\2023")]
-    Path_file = r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\HR_20231018.csv"
-
-    waterlevel_main(Path_file,Path_HR, Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'), Path_results)

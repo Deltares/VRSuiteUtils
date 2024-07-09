@@ -136,33 +136,3 @@ def write_database_main(traject_name : str,
     #copy the vakindeling to the output directory
     shutil.copy(vakindeling_geojson, output_dir.joinpath(traject_name + '.geojson'))
 
-if __name__ == '__main__':
-
-    traject_name = "7-2"
-    vakindeling_geojson =       Path(r'c:\vrm_test\traject7_2_jan2024\vakindeling\Vakindeling_7-2.geojson')
-    characteristic_profile_csv= Path(r'c:\vrm_test\traject7_2_jan2024\afgeleide_profielen\representatieve_profielen\selected_profiles_extra_vak.csv')
-    building_csv_path =         Path(r'c:\vrm_test\traject7_2_jan2024\bebouwing\building_count_traject7-2_aangepast.csv')
-    output_dir =                Path(r'c:\vrm_test\traject7_2_jan2024\database_bekleding_bovengrens')
-    output_db_name =            f'traject_7_2.db'
-    hr_input_csv =              Path(r'c:\vrm_test\traject7_2_jan2024\HR\HR_20230713.csv')
-    waterlevel_results_path =   Path(r'c:\vrm_test\traject7_2_jan2024\HR\Hydra-Ring waterstanden')
-    overflow_results_path =     Path(r'c:\vrm_test\traject7_2_jan2024\HR\Hydra-Ring overslag')
-    piping_path =               Path(r'c:\vrm_test\traject7_2_jan2024\Piping_20240122.csv')
-    stability_path =            Path(r'c:\vrm_test\traject7_2_jan2024\Stabiliteit_20240122_SF_workaround.csv')
-    revetment_path =            Path(r'c:\vrm_test\traject7_2_jan2024\bekleding_bovengrens')
-
-
-
-    write_database_main(traject_name                =   traject_name,
-                        vakindeling_geojson         =   vakindeling_geojson,
-                        characteristic_profile_csv  =   characteristic_profile_csv,
-                        building_csv_path           =   building_csv_path,
-                        output_dir                  =   output_dir,
-                        output_db_name              =   output_db_name,
-                        hr_input_csv                =   hr_input_csv,
-                        waterlevel_results_path     =   waterlevel_results_path,
-                        overflow_results_path       =   overflow_results_path,
-                        piping_path                 =   piping_path,
-                        stability_path              =   stability_path,
-                        revetment_path              =   revetment_path,
-                        )

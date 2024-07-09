@@ -556,3 +556,10 @@ def create_database(config_file: str, results_folder: Path = None):
         stability_path,
         revetment_path
     )
+
+if __name__ == '__main__':
+    #Use this structure to test api calls locally
+
+    #For Q-variant
+    config_file = Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\00_testwerk\HHNK_Database\preprocessor_test_qvar.config")
+    run_bekleding_qvariant(str(config_file))

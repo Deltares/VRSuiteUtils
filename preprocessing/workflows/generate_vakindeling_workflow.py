@@ -39,12 +39,3 @@ def vakindeling_main(traject_id: str,
         traject.vakindeling_shape,
         Path(output_folder).joinpath("Vakindeling_{}.png".format(traject_id)),
     )
-
-#
-if __name__ == "__main__":
-    traject = "16-1"
-    file_location = r"c:\vrm_test\run_16_1\vakindeling\Vakindeling_16_1.csv"
-    output_folder = r"c:\vrm_test\run_16_1\vakindeling"
-    traject_shape_path = r"c:\vrm_test\run_16_1\vakindeling\nieuwe_traject_shape_merged.geojson"
-    vakindeling_main(traject, file_location, Path(output_folder), traject_shape_path)
-    # vakindeling_main(traject, file_location, Path(output_folder))
