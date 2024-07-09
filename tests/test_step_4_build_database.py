@@ -116,8 +116,6 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    fill_sectiondata_table(
       traject=traject,
       shape_file=vakindeling_shape,
-      HR_input=HR_input,
-      geo_input=mechanism_data['stabiliteit'][["deklaagdikte", "pleistoceendiepte"]],
    )
    # waterleveldata
    fill_buildings(buildings=bebouwing_table)
