@@ -41,7 +41,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    #reset in_analyse in vakindeling_shape based on vakindeling_config. This is only for testdata.
    vakindeling_shape = pd.merge(vakindeling_shape.drop(columns=['in_analyse']),vakindeling_config[['objectid','in_analyse']],on='objectid')
-   vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
+   if 'kunstwerken' in vakindeling_shape.columns:  vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
    # read the HR_input
    HR_input = pd.read_csv(
       _test_data_dir.joinpath("HRING_data_reference.csv"),

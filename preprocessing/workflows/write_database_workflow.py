@@ -60,7 +60,7 @@ def write_database_main(traject_name : str,
     # load the vakindeling geojson with in_analyse column as integer
     vakindeling_shape = gpd.read_file(vakindeling_geojson)
     vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'overslag': str, 'stabiliteit': str})
-    vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
+    if 'kunstwerken' in vakindeling_shape.columns: vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
     
     # load HR input csv
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
