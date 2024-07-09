@@ -72,6 +72,9 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
                 section_length=np.abs(row.m_eind - row.m_start),
                 crest_height=row.dijkhoogte,
                 annual_crest_decline=row.kruindaling,
+                pleistocene_level=row.pleistoceendiepte,
+                cover_layer_thickness=row.deklaagdikte,
+
             )
 
 
