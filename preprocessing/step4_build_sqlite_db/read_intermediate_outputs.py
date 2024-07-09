@@ -118,7 +118,8 @@ def read_piping_data(file_path):
 
 
 def read_stability_data(file_path):
-    return pd.read_csv(
+    try:
+        dataset = pd.read_csv(
         file_path,
         index_col=0,
         usecols=[
@@ -133,8 +134,23 @@ def read_stability_data(file_path):
             "pleistoceendiepte",
         ],
         dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float, 'deklaagdikte': float, 'pleistoceendiepte': float},
+    )        
+    except:
+        dataset = pd.read_csv(
+        file_path,
+        index_col=0,
+        usecols=[
+            "doorsnede",
+            "scenario",
+            "scenarionaam",
+            "scenariokans",
+            "SF",
+            "beta",
+            "stixnaam",
+        ],
+        dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float},
     )
-
+    return dataset
 def read_revetment_data(files_dir):
 
     slope_part_table = {"location": list(), "slope_part": list(), "begin_part": list(), "end_part": list(), "top_layer_thickness": list(), "top_layer_type": list(), "tan_alpha": list()}

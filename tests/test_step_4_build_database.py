@@ -7,6 +7,7 @@ from vrtool.orm.orm_controllers import *
 from tests import test_data, test_results
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
+from preprocessing.workflows.write_database_workflow import *
 import pandas as pd
 
 @pytest.mark.parametrize("traject,test_name,revetment", [
@@ -41,7 +42,8 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    #reset in_analyse in vakindeling_shape based on vakindeling_config. This is only for testdata.
    vakindeling_shape = pd.merge(vakindeling_shape.drop(columns=['in_analyse']),vakindeling_config[['objectid','in_analyse']],on='objectid')
-   vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
+
+   if 'kunstwerken' in vakindeling_shape.columns:  vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
    # read the HR_input
    HR_input = pd.read_csv(
       _test_data_dir.joinpath("HRING_data_reference.csv"),
@@ -76,7 +78,14 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
       except:
          vakindeling_shape.drop(columns=['bekledingen'], inplace=True)
 
+   #merge the HR_input and stabiliteit input
+       # merge parameters from HR_input with vakindeling_shape:
+   vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = HR_input[["doorsnede", "dijkhoogte", "kruindaling"]], left_key = ['overslag'], right_key = ['doorsnede'])
 
+    # merge subsoil parameters with vakindeling if not present in vakindeling_shape
+   if 'pleistoceendiepte' not in vakindeling_shape.columns:
+      vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = mechanism_data['stabiliteit'][["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = ['doorsnede'])
+   
    # read the data for measures
    #get measure df:
    measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
