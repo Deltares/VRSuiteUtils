@@ -32,6 +32,10 @@ def write_config_file(output_dir : Path, traject_name : str, database_name : str
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
+
+def merge_to_vakindeling(vakindeling_shape: gpd.GeoDataFrame, to_merge: pd.DataFrame, left_key: str, right_key: str):
+    return vakindeling_shape.merge(to_merge, left_on=left_key, right_on=right_key, how='left')
+
 def write_database_main(traject_name : str,
                         vakindeling_geojson : Path,
                         characteristic_profile_csv : Path,
@@ -82,6 +86,12 @@ def write_database_main(traject_name : str,
         mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table']  = read_revetment_data(revetment_path)
     else:
         vakindeling_shape.drop(columns=['bekledingen'], inplace=True)
+    # merge parameters from HR_input with vakindeling_shape:
+    vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = HR_input[["doorsnede", "dijkhoogte", "kruindaling"]], left_key = ['overslag'], right_key = ['doorsnede'])
+
+    # merge subsoil parameters with vakindeling if not present in vakindeling_shape
+    if 'pleistoceendiepte' not in vakindeling_shape.columns:
+        vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = mechanism_data['stabiliteit'][["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = ['doorsnede'])
 
     # read the data for bebouwing
     bebouwing_table = read_bebouwing_data(building_csv_path)
@@ -109,8 +119,6 @@ def write_database_main(traject_name : str,
     fill_sectiondata_table(
         traject=traject_name,
         shape_file=vakindeling_shape,
-        HR_input=HR_input,
-        geo_input=mechanism_data['stabiliteit'][["deklaagdikte", "pleistoceendiepte"]],
     )
     # waterleveldata
     fill_buildings(buildings=bebouwing_table)

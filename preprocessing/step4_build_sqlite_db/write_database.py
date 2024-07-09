@@ -38,22 +38,8 @@ def fill_diketrajectinfo_table(traject,length):
     )
 
 
-def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
-    # merge HR_input['dijkhoogte'] with shape_file based on doorsnede and overslag
+def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
 
-    shape_file = shape_file.merge(
-        HR_input[["doorsnede", "dijkhoogte", "kruindaling"]],
-        left_on=["overslag"],
-        right_on=["doorsnede"],
-        how="left",
-    ).drop(columns=["doorsnede"])
-    # merge pleistoceendiepte and deklaagdiepte from geo_input with shape_file based on doorsnede
-    shape_file = shape_file.merge(
-        geo_input[["pleistoceendiepte", "deklaagdikte"]],
-        left_on=["stabiliteit"],
-        right_index=True,
-        how="left",
-    )
     # replace nans in pleistoceendiepte and deklaagdikte with default
     shape_file["pleistoceendiepte"] = shape_file["pleistoceendiepte"].fillna(
         SectionData.pleistocene_level.default
