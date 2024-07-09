@@ -45,7 +45,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
         orientation = read_prfl(profielen_path.joinpath(row['prfl']))[0]
 
         # ondergrens waterstand is opgegeven in database en gelijk aan onderkant bekleding of gws. Als deze niet is ingevuld wordt een crash gegeven. 
-        # Als de ondergrens lager is dan het laagste punt op het profiel wordt het laagste punt op het profiel +25 cm gebruikt om te voorkomen dat Hydra-Ring crasht op droogval
+        # Als de ondergrens lager is dan het laagste punt op het profiel wordt het laagste punt op het profiel +50 cm gebruikt om te voorkomen dat Hydra-Ring crasht op droogval
         ondergrens_wl = row.begin_bekleding
         if np.isnan(ondergrens_wl):
             raise ValueError('Ondergrens voor Q-variant kan niet worden bepaald. Geef begin_bekleding of gws op in de bekleding csv.')
