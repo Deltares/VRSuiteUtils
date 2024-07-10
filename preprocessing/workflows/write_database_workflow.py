@@ -91,7 +91,13 @@ def write_database_main(traject_name : str,
 
     # merge subsoil parameters with vakindeling if not present in vakindeling_shape
     if 'pleistoceendiepte' not in vakindeling_shape.columns:
-        vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = mechanism_data['stabiliteit'][["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = ['doorsnede'])
+        try:
+            # takes only the pleistoceendiepte and deklaagdikte from the first scenario of each doorsnede
+            stabiliteit_df_for_merge = mechanism_data['stabiliteit'][~mechanism_data['stabiliteit'].index.duplicated(keep='first')]
+            vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = stabiliteit_df_for_merge[["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = stabiliteit_df_for_merge.index)
+        except:
+            print('deklaagdikte en pleistoceendiepte zijn niet aanwezig in de vakindeling, en ook niet in de stabiliteit.CSV')
+
 
     # read the data for bebouwing
     bebouwing_table = read_bebouwing_data(building_csv_path)
