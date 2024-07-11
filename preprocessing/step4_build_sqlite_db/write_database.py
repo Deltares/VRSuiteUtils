@@ -212,14 +212,14 @@ def fill_mechanisms(mechanism_data,
             .get()
             .id
         )
-        for count, header in enumerate(header_names):
+        for counter, header in enumerate(header_names):
             #check if header exists in row index
             if header in row.index:
                 if row[header] is not None:
                     MechanismPerSection.create(
                         section=section_data_id,
                         mechanism=Mechanism.select(Mechanism.id)
-                        .where(Mechanism.name == default_mechanisms[count])
+                        .where(Mechanism.name == default_mechanisms[counter])
                         .get()
                         .id,
                     )
