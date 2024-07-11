@@ -96,7 +96,7 @@ def write_database_main(traject_name : str,
             stabiliteit_df_for_merge = mechanism_data['stabiliteit'][~mechanism_data['stabiliteit'].index.duplicated(keep='first')]
             vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = stabiliteit_df_for_merge[["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = stabiliteit_df_for_merge.index)
         except:
-            print('deklaagdikte en pleistoceendiepte zijn niet aanwezig in de vakindeling, en ook niet in de stabiliteit.CSV')
+            raise Exception('deklaagdikte en pleistoceendiepte zijn niet aanwezig in de vakindeling, en ook niet in de stabiliteit.CSV')
 
 
     # read the data for bebouwing
