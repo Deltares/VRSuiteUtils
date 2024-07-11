@@ -517,6 +517,9 @@ def create_database(config_file: str, results_folder: Path = None):
     piping_path = parameters.get('piping_input_csv', fallback=False)
     stability_path = parameters.get('stabiliteit_input_csv', fallback=False)
     revetment_path = parameters.get('output_map_bekleding', fallback=False)
+    if len(os.listdir(revetment_path))==0: #no results present, so ignore revetment
+        revetment_path = None
+
     if results_folder is None:
         output_path = Path(parameters['output_map_database'])
     else: # used for testing
