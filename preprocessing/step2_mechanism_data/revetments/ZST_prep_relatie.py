@@ -170,11 +170,32 @@ def revetment_zst(df, profielen_path, steentoets_path, qvar_path,  output_path, 
                 if issteen(row.toplaagtype):
                     # include faalkansbijdrage and length-effect factor
                     betaFalen = -ndtri(np.array(p_grid) * fb_ZST / N)
+
+                    if row["D huidig"] < min(D_opt[i, :, j]):
+                        print("D_huidig is smaller than the range for D_opt:", row["D huidig"])
+                        print("The range for D_opt =", D_opt[i, :, j])
+                        # insert a value of min(betaFalen)-0.1 to betaFalen in the front of the list
+                        # betaFalen_adjusted = np.insert(betaFalen, 0, np.min(betaFalen)-0.1)
+                        # insert D_huidig in the front of the list of D_opt
+                        # D_opt_adjusted = np.insert(D_opt[i,:,j], 0, row["D huidig"])
+                        data[f"deelvak {j}"] = {"D_opt": list(np.insert(D_opt[i, :, j], 0, row["D huidig"])),
+                                                "betaFalen": list(np.insert(betaFalen, 0, np.min(betaFalen) - 0.1))}
+                    elif row["D huidig"] > max(D_opt[i, :, j]):
+                        print("D_huidig is larger than the range for D_opt:", row["D huidig"])
+                        print("The range for D_opt =", D_opt[i, :, j])
+                        # append a value of max(betaFalen)+0.1 to betaFalen
+                        # betaFalen_adjusted = np.append(betaFalen, np.max(betaFalen)+0.1)
+                        # append D_huidig to D_opt
+                        # D_opt_adjusted = np.append(D_opt[i,:,j], row["D huidig"])
+                        data[f"deelvak {j}"] = {"D_opt": list(np.append(D_opt[i, :, j], row["D huidig"])),
+                                                "betaFalen": list(np.append(betaFalen, np.max(betaFalen) + 0.1))}
+                    else:
+                        data[f"deelvak {j}"] = {"D_opt": list(D_opt[i, :, j]),
+                                                "betaFalen": list(betaFalen)}
+
                 else:
                     betaFalen = np.full_like(p_grid, np.nan)
-
-                data[f"deelvak {j}"] = {"D_opt": list(D_opt[i,:,j]),
-                        "betaFalen": list(betaFalen)}
+                    data[f"deelvak {j}"] = {"D_opt": list(D_opt[i, :, j]), "betaFalen": list(betaFalen)}
 
             write_JSON_to_file(data, output_path.joinpath("ZST_{}_{}.json".format(section.doorsnede, evaluateYears[i])))
 
