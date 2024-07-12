@@ -478,7 +478,7 @@ def count_buildings(config_file: str, results_folder: Path = None):
     print(f"gebouwen_geopackage: {gebouwen_geopackage}")
     print(f"flip_waterkant: {flip_waterkant}")
 
-    # run the derive_buildings_workflow
+    # Run the derive_buildings_workflow
     main_bebouwing(
         traject_id,
         Path(teenlijn_geojson),
