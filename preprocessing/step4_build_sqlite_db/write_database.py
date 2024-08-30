@@ -395,7 +395,7 @@ def add_stability_scenario(
     beta_value = data["beta"]
     # if nan then get SF from data
     if np.isnan(beta_value):
-        beta_value = calculate_reliability(data[["SF"]])
+        beta_value = calculate_reliability(data[["SF"]].values).item()
 
     ComputationScenario.create(
         mechanism_per_section=mechanism_per_section_id,
