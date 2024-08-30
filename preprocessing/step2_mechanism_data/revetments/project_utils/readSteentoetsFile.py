@@ -11,7 +11,7 @@ def read_steentoets_file(steentoetsFile, dwarsprofiel):
     # if steentoetsfile contains "17.1.2.1", do:
 
     if ("17.1.2.1" in str(steentoetsFile)) or ("19.1.1" in str(steentoetsFile)):
-        print("Steentoets versie is 17.1.2.1")
+        print("Steentoets versie is 17.1.2.1 or 19.1.1")
         # df = pd.read_excel(steentoetsFile, skiprows=[1, 2, 3, 4, 5, 6], header=0, index_col=0, dtype={'dwp_oi': str})
         df = pd.read_excel(steentoetsFile, skiprows=[1, 2, 3, 4, 5, 6], header=0, dtype={'dwp_oi': str})
         df_profile = df.loc[df['dwp_oi'] == dwarsprofiel]
