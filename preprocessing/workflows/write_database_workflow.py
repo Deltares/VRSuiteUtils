@@ -34,7 +34,7 @@ def write_config_file(output_dir : Path, traject_name : str, database_name : str
         json.dump(config, f, indent=1)
 
 def merge_to_vakindeling(vakindeling_shape: gpd.GeoDataFrame, to_merge: pd.DataFrame, left_key: str, right_key: str):
-    return vakindeling_shape.merge(to_merge, left_on=left_key, right_on=right_key, how='left')
+    return vakindeling_shape.merge(to_merge.drop_duplicates(), left_on=left_key, right_on=right_key, how='left')
 
 def write_database_main(traject_name : str,
                         vakindeling_geojson : Path,
