@@ -617,13 +617,10 @@ def fill_measures(measure_table, list_of_sections = []):
             direction=row["direction"],
             crest_step=row["crest_step"],
             max_crest_increase=row["max_crest_increase"],
-            stability_screen=row["stability_screen"],
-            prob_of_solution_failure=row["prob_of_solution_failure"],
-            failure_probability_with_solution=row["failure_probability_with_solution"],
-            stability_screen_s_f_increase=row["stability_screen_s_f_increase"],
             transition_level_increase_step=row["transition_level_increase_step"],
             max_pf_factor_block=row["max_pf_factor_block"],
             n_steps_block=row["n_steps_block"],
+            piping_reduction_factor = row["piping_reduction_factor"],
         )
 
 
