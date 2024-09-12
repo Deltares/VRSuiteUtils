@@ -10,7 +10,7 @@ WsNoo_Stab_014100_014700,base_measures_revetment_small.csv,,base_measures.csv,ba
 WsNoo_Stab_014700_015400,base_measures_revetment_small.csv,base_measures_revetment_small.csv,base_measures_revetment.csv,base_measures_revetment.csv
 WsNoo_Stab_015400_016200,base_measures_revetment_small.csv,base_measures_revetment_small.csv,base_measures_revetment.csv,base_measures_revetment.csv
 WsNoo_Stab_016200_017400,base_measures_revetment_small.csv,,,base_measures_revetment.csv
-WsNoo_Stab_017400_018000,,,,base_measures_revetment.csv
+WsNoo_Stab_017400_018000,base_measures_revetment_small.csv,,,base_measures_revetment.csv
 WsNoo_Stab_018000_019000,,,,base_measures_revetment.csv
 WsNoo_Stab_019000_019800,,,,base_measures_revetment.csv
 WsNoo_Stab_019800_020400,,,,base_measures_revetment.csv
