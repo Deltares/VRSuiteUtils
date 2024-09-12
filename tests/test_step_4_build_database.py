@@ -90,10 +90,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    #get measure df:
    measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
    measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
-   # if revetment:
-   #    measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment_selectie.csv"))
-   # else:
-   #    measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures.csv"))
+
 
 
    # read the data for bebouwing
