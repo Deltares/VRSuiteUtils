@@ -395,7 +395,7 @@ def add_stability_scenario(
     beta_value = data["beta"]
     # if nan then get SF from data
     if np.isnan(beta_value):
-        beta_value = calculate_reliability(data[["SF"]])
+        beta_value = calculate_reliability(data[["SF"]].values).item()
 
     ComputationScenario.create(
         mechanism_per_section=mechanism_per_section_id,
@@ -669,7 +669,6 @@ def get_kerende_hoogte(section_id):
         (ProfilePoint.section_data == section_id) & (ProfilePoint.profile_point_type_id == BIK_id)).get().y_coordinate
     return BIK_y - BIT_y
 def compare_databases(path_to_generated_db, path_to_reference_db):
-    import sqlite3
 
     # Step 1: Connect to databases
     generated_db_conn = sqlite3.connect(path_to_generated_db)
@@ -700,8 +699,10 @@ def compare_databases(path_to_generated_db, path_to_reference_db):
         generated_rows = generated_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
 
         # Fetch all rows from the reference database
-        reference_rows = reference_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
-
+        try:
+            reference_rows = reference_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
+        except:
+            reference_rows = []
         # Compare the rows and columns
         if not generated_rows == reference_rows:
             comparison_message += "The generated database and the reference database do not have the same table contents for table {} \n".format(table_name[0])

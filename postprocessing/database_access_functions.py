@@ -54,14 +54,24 @@ def import_original_assessment(database_path,mechanism: MechanismEnum):
     Returns:
     dict: dictionary with section_ids as key and a list of time and beta as values"""
     
-    with open_database(database_path) as db:
-        assessment = (AssessmentMechanismResult.select(
-            AssessmentMechanismResult,MechanismPerSection,Mechanism.name).join(
-                MechanismPerSection, on=(AssessmentMechanismResult.mechanism_per_section_id == MechanismPerSection.id)).join(
-                    Mechanism, on=(MechanismPerSection.mechanism_id == Mechanism.id)).where(
-                        Mechanism.name == mechanism.get_old_name()).order_by(
-                        MechanismPerSection.id).dicts()
-                )
+    with open_database(database_path):
+        assessment = (
+            AssessmentMechanismResult.select(
+                AssessmentMechanismResult, MechanismPerSection, Mechanism.name
+            )
+            .join(
+                MechanismPerSection,
+                on=(
+                    AssessmentMechanismResult.mechanism_per_section_id
+                    == MechanismPerSection.id
+                ),
+            )
+            .join(Mechanism, on=(MechanismPerSection.mechanism_id == Mechanism.id))
+            .where(Mechanism.name == mechanism.legacy_name)
+            .order_by(MechanismPerSection.id)
+            .dicts()
+        )
+                
     #reorder such that each entry has 1 section, and a list of time and beta
     result = {}
     for entry in assessment:
