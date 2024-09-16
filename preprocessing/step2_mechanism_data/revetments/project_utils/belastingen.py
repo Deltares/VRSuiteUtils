@@ -43,11 +43,20 @@ def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h):
     return tijd * 3600.0, waterstand
 
 def Hs_verloop(waterstand, h_Qvar, Hs_Qvar):
+    def get_Hs(h_Qv, Hs_Qv):
+        f = interpolate.interp1d(h_Qv, Hs_Qv, fill_value='extrapolate')
+        return f(waterstand)
+
+    Hs = get_Hs(h_Qvar, Hs_Qvar)
+    if any(np.isnan(Hs)):
+        #take unique values of h_Qvar
+        h_Qvar2, unique_indices = np.unique(h_Qvar, return_index=True)
+        #take the corresponding Hs_Qvar values
+        Hs_Qvar2 = np.array(Hs_Qvar)[unique_indices]
+        #interpolate the Hs values
+        Hs = get_Hs(h_Qvar2, Hs_Qvar2)
     
-    f = interpolate.interp1d(h_Qvar, Hs_Qvar, fill_value='extrapolate')
-    Hs = f(waterstand)
-    Hs[Hs<=0.0] = 0.0001
-    
+    Hs[Hs<0.01] = 0.01
     return Hs
 
 def Tp_verloop(waterstand, h_Qvar, Tp_Qvar):
