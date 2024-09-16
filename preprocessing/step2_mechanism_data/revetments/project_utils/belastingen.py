@@ -37,7 +37,7 @@ def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h):
     elif region == 'rivieren':
 
         # constant at MHW
-        waterstand = np.array([MHW, MHW]
+        waterstand = np.array([MHW, MHW])
         tijd = np.array([0.0, 12.0])
     
     return tijd * 3600.0, waterstand
