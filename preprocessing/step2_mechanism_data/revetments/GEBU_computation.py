@@ -9,7 +9,7 @@ from scipy.interpolate import interp1d
 
 import numpy as np
 import matplotlib.pyplot as plt
-from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta
+from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta, beta_to_pf
 
 
 
@@ -59,7 +59,7 @@ class GEBUComputation:
             #for transition level in transition levels
             for i, transition_level in enumerate(self.transition_levels):
                 #evaluate each combination of year and p-value
-                SF_list = [self.GEBU_normal_case(year_idx, p_idx, transition_level) for year_idx, p_idx in combination_idx]
+                SF_list = [self.GEBU_normal_case(year_idx, p_idx, transition_level, combinations[count]) for count, (year_idx, p_idx) in enumerate(combination_idx)]
                 self.SF_results[transition_level] =  [(year, p, value) for (year, p), value in zip(combinations, SF_list)]
 
             #get relation between beta and SF
@@ -82,7 +82,8 @@ class GEBUComputation:
         print(f'GEBU Case 1 voor {self.cross_section.dwarsprofiel}. Begin grasbekleding (={self.cross_section.begin_grasbekleding}) (bijna) gelijk aan de kruinhoogte'
                 f' (={self.cross_section.kruinhoogte}). Faalkans verwaarloosbaar.')
     
-    def GEBU_normal_case(self, year_idx, p_idx, transition_level):
+    def GEBU_normal_case(self, year_idx, p_idx, transition_level, year_probability):
+        year, probability = year_probability
         #get water level from Qvariant
         water_level = self.qvariant_results[f'MHW {year_idx}_{p_idx}']
         #if water_level >= transition_level we evaluate gras_golfklap, else gras_golfoploop
@@ -92,7 +93,7 @@ class GEBUComputation:
             positions = self.get_positions_golfklap(transition_level, water_level)
 
             #make positions plot
-            # self.plot_positions(positions, transition_level, water_level, year_idx, p_idx, 'gras_golfklap')
+            # self.plot_positions(positions, transition_level, water_level, year, probability, 'gras_golfklap')
             #run the computation
             SF = self.run_computation(load_time_series, positions, transition_level, 'gras_golfklap')
 
@@ -103,7 +104,7 @@ class GEBUComputation:
             positions = self.get_positions_golfoploop(transition_level, water_level)
 
             #make positions plot
-            # self.plot_positions(positions, transition_level, water_level, year_idx, p_idx, 'gras_golfklap')
+            # self.plot_positions(positions, transition_level, water_level, year, probability, 'gras_golfklap')
 
             #run the computation
             SF = self.run_computation(load_time_series, positions, transition_level, 'gras_golfoploop')
@@ -179,7 +180,7 @@ class GEBUComputation:
             #get SF_values and p_values for each year in years
             for year in self.years_to_evaluate:
                 SF_values_year = [SF_values[i] for i in range(len(years)) if years[i] == year]
-                beta_values_year = [beta_values[i] for i in range(len(years)) if years[i] == year]
+                beta_values_year = [beta_values[i]for i in range(len(years)) if years[i] == year]
                 #get the relation between beta and SF and find point where SF = 1
                 f = interp1d(beta_values_year, np.subtract(SF_values_year,1.0), fill_value=('extrapolate'))
                 if f(0.0) < 0.0 and f(10.0) < 0.0:
@@ -189,10 +190,48 @@ class GEBUComputation:
                 else:   #find intersection
                     beta = bisection(f, 0.0, 10.0, 1e-2)
                 results[year].append((transition_level, beta))
+                self.plot_SF_probability(beta_values_year, SF_values_year, transition_level, year, beta)
 
         self.beta_SF = results
 
         self.postprocess_beta_SF()
+
+        self.plot_beta_SF()
+
+    def plot_beta_SF(self):
+        pass
+        fig, ax = plt.subplots()
+        linestyles = ['--', ':']
+        for count, year in enumerate(self.years_to_evaluate):
+            transitions, betas = zip(*self.beta_SF[year])
+            ax.plot(transitions, betas, linestyle = linestyles[count], marker = 'o', label = f'year= {year}')
+        ax.grid()
+        ax.legend()
+        ax.set_xlabel('h_overgang [m+NAP]')
+        ax.set_ylabel('Beta [-]')
+        ax.set_title(f'Relatie tussen beta en overgangshoogte voor dwarsprofiel {self.cross_section.dwarsprofiel}')
+        plt.savefig(self.output_path.joinpath('figures_GEBU','betaFalen_loc={}.png'.format(self.cross_section.doorsnede)))
+        plt.close()
+
+    def plot_SF_probability(self, beta_values_year, SF_values_year, transition_level, year, beta):
+        fig, ax = plt.subplots()
+        min_beta = min([np.min(beta_values_year), beta])
+        max_beta = max([np.max(beta_values_year), beta])
+        ax.plot(beta_to_pf(beta_values_year), SF_values_year, 'bo--')
+        ax.plot(beta_to_pf(beta), 1.0, 'ro')
+        #horizontal line at 1.0
+        ax.plot(np.array([beta_to_pf(min_beta), beta_to_pf(max_beta)]), [1.0, 1.0], 'k:')
+        ax.grid()
+        ax.set_xscale('log')
+        if max(SF_values_year) > 10.0:
+            ax.set_yscale('log')
+        ax.set_xlabel('P_f [-]')
+        ax.set_ylabel('SF [-]')
+        ax.set_ylim(bottom=0.1)
+        ax.set_xlim(left = beta_to_pf(max_beta), right = beta_to_pf(min_beta))
+        ax.set_title(f'Begin gras = {transition_level:.2f} m+NAP, eind gras = {self.cross_section.end_grasbekleding:.2f} m+NAP')
+        plt.savefig(self.output_path.joinpath('figures_GEBU','safetyFactor_loc={}_{}_overgang_{:.2f}.png'.format(self.cross_section.doorsnede, year, transition_level)))
+        plt.close()
 
     def postprocess_beta_SF(self):
 
@@ -246,10 +285,8 @@ class GEBUComputation:
                     "grasbekleding_begin": transitions,
                     "betaFalen": betas}
             write_JSON_to_file(data, self.output_path.joinpath("GEBU_{}_{}.json".format(self.cross_section.doorsnede, year)))
-
-
         
-    def plot_positions(self, positions, transition_level, water_level, year_idx, p_idx, model:str):
+    def plot_positions(self, positions, transition_level, water_level, year, probability, model:str):
         fig, ax = plt.subplots()
         ax.plot(self.cross_section.dijkprofiel_x, self.cross_section.dijkprofiel_y,'g')
         if model == 'gras_golfklap':
