@@ -40,7 +40,7 @@ def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h):
         waterstand = Qvar_h
         tijd = np.arange(0.0, len(waterstand)*12.0+12.0, 12.0)
     
-    return tijd, waterstand
+    return tijd * 3600.0, waterstand
 
 def Hs_verloop(waterstand, h_Qvar, Hs_Qvar):
     
