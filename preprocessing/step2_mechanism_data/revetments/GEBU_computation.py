@@ -139,6 +139,7 @@ class GEBUComputation:
         for ax in axs.flatten():
             ax.set_xlim(left= min(tijd), right = max(tijd))
         plt.savefig(self.output_path.joinpath('figures_GEBU',f'belasting_loc={self.cross_section.doorsnede}_{year}_{int(1/probability)}_{model}.png'))
+        plt.close()
 
     def get_hydraulic_load_time_series(self, water_level: float, year_idx: int, p_idx: int, model: str):
         '''Get the hydraulic load time series for a given water level, year, p-value and model'''
