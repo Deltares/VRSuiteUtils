@@ -89,10 +89,15 @@ class GEBUComputation:
         #if water_level >= transition_level we evaluate gras_golfklap, else gras_golfoploop
         if water_level >= transition_level:
             load_time_series = self.get_hydraulic_load_time_series(water_level,year_idx, p_idx, 'gras_golfklap')
+            
+            #plot the hydraulic load time series
+            self.plot_hydraulic_load_time_series(load_time_series, water_level, year, probability, 'gras_golfklap')
+
             #derive the positions on the slope
             positions = self.get_positions_golfklap(transition_level, water_level)
 
-            #make positions plot
+            #make positions plot 
+            #NOTE: Turned off as it produces a lot of useless figures.
             # self.plot_positions(positions, transition_level, water_level, year, probability, 'gras_golfklap')
             #run the computation
             SF = self.run_computation(load_time_series, positions, transition_level, 'gras_golfklap')
@@ -100,10 +105,15 @@ class GEBUComputation:
 
         else:
             load_time_series = self.get_hydraulic_load_time_series(water_level, year_idx, p_idx, 'gras_golfoploop')
+
+            #plot the hydraulic load time series
+            self.plot_hydraulic_load_time_series(load_time_series, water_level, year, probability, 'gras_golfoploop')
+
             #derive the positions on the slope
             positions = self.get_positions_golfoploop(transition_level, water_level)
 
             #make positions plot
+            #NOTE: Turned off as it produces a lot of useless figures.
             # self.plot_positions(positions, transition_level, water_level, year, probability, 'gras_golfklap')
 
             #run the computation
@@ -111,6 +121,24 @@ class GEBUComputation:
         
         return SF
         
+    def plot_hydraulic_load_time_series(self, loads:dict[np.array], water_level: float, year: int, probability: float, model: str):
+        fig, axs = plt.subplots(2, 2)
+        
+        tijd = loads['tijd']/3600.0
+
+        axs[0, 0].plot(tijd, loads['waterstand'], '--o')
+        axs[0, 0].set_title('Waterstand (boven), Tp (onder)', fontdict={'fontsize':8})
+        axs[0, 0].grid()
+        axs[0, 1].plot(tijd, loads['Hs'], '--o')
+        axs[0, 1].set_title('Hs (boven), hoek (onder)', fontdict={'fontsize':8})
+        axs[0, 1].grid()
+        axs[1, 0].plot(tijd, loads['Tp'], '--o')
+        axs[1, 0].grid()
+        axs[1, 1].plot(tijd, loads['betahoek'], '--o')
+        axs[1, 1].grid()
+        for ax in axs.flatten():
+            ax.set_xlim(left= min(tijd), right = max(tijd))
+        plt.savefig(self.output_path.joinpath('figures_GEBU',f'belasting_loc={self.cross_section.doorsnede}_{year}_{int(1/probability)}_{model}.png'))
 
     def get_hydraulic_load_time_series(self, water_level: float, year_idx: int, p_idx: int, model: str):
         '''Get the hydraulic load time series for a given water level, year, p-value and model'''
@@ -188,7 +216,7 @@ class GEBUComputation:
                 elif f(0.0) > 0.0 and f(10.0) > 0.0:
                     beta = np.max(beta_values_year) #all values safe, take highest
                 else:   #find intersection
-                    beta = bisection(f, 0.0, 10.0, 1e-2)
+                    beta = bisection(f, 0.0, 10.0, 1e-2)    #NOTE: this can lead to lower betas for more safe situations due to the extrapolation. Inconsequential for results as it will only happen for P < min(p_grid)
                 results[year].append((transition_level, beta))
                 self.plot_SF_probability(beta_values_year, SF_values_year, transition_level, year, beta)
 
@@ -199,7 +227,6 @@ class GEBUComputation:
         self.plot_beta_SF()
 
     def plot_beta_SF(self):
-        pass
         fig, ax = plt.subplots()
         linestyles = ['--', ':']
         for count, year in enumerate(self.years_to_evaluate):
@@ -257,7 +284,7 @@ class GEBUComputation:
                 beta_current[-1] = 8.0
                 beta_future[-1] = 8.0
             else: #add new point close to crest
-                transitions = np.append(transitions, self.cross_section.kruinhoogte - 0.01)
+                transitions = np.append(transitions, np.round(self.cross_section.kruinhoogte - 0.01,3))
                 beta_current = np.append(beta_current, 8.0)
                 beta_future = np.append(beta_future, 8.0)
         elif self.gebu_variation == "lower_limit":
