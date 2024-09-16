@@ -36,9 +36,9 @@ def waterstandsverloop(region, GWS, MHW, Amp, Qvar_h):
 
     elif region == 'rivieren':
 
-        # consider all water levels from the Qvariant calculations
-        waterstand = Qvar_h
-        tijd = np.arange(0.0, len(waterstand)*12.0+12.0, 12.0)
+        # constant at MHW
+        waterstand = np.array([MHW, MHW]
+        tijd = np.array([0.0, 12.0])
     
     return tijd * 3600.0, waterstand
 
