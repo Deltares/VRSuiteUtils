@@ -8,8 +8,9 @@ from itertools import product
 from scipy.interpolate import interp1d
 
 import numpy as np
-
+import matplotlib.pyplot as plt
 from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta
+
 
 
 class GEBUComputation:
@@ -90,6 +91,8 @@ class GEBUComputation:
             #derive the positions on the slope
             positions = self.get_positions_golfklap(transition_level, water_level)
 
+            #make positions plot
+            # self.plot_positions(positions, transition_level, water_level, year_idx, p_idx, 'gras_golfklap')
             #run the computation
             SF = self.run_computation(load_time_series, positions, transition_level, 'gras_golfklap')
 
@@ -98,6 +101,9 @@ class GEBUComputation:
             load_time_series = self.get_hydraulic_load_time_series(water_level, year_idx, p_idx, 'gras_golfoploop')
             #derive the positions on the slope
             positions = self.get_positions_golfoploop(transition_level, water_level)
+
+            #make positions plot
+            # self.plot_positions(positions, transition_level, water_level, year_idx, p_idx, 'gras_golfklap')
 
             #run the computation
             SF = self.run_computation(load_time_series, positions, transition_level, 'gras_golfoploop')
@@ -159,7 +165,7 @@ class GEBUComputation:
         if max_schade > 0:
             return 1./max_schade
         else:
-            return 1e6
+            return 1e4
 
     def get_beta_SF_relation(self):
         #make a dictionary to store the results with self.years_to_evaluate as keys and lists as values
@@ -176,7 +182,7 @@ class GEBUComputation:
                 beta_values_year = [beta_values[i] for i in range(len(years)) if years[i] == year]
                 #get the relation between beta and SF and find point where SF = 1
                 f = interp1d(beta_values_year, np.subtract(SF_values_year,1.0), fill_value=('extrapolate'))
-                if f(0.0) < 0.0 and f(10.0) > 0.0:
+                if f(0.0) < 0.0 and f(10.0) < 0.0:
                     beta = 0.0 #all values unsafe
                 elif f(0.0) > 0.0 and f(10.0) > 0.0:
                     beta = np.max(beta_values_year) #all values safe, take highest
@@ -243,6 +249,19 @@ class GEBUComputation:
 
 
         
+    def plot_positions(self, positions, transition_level, water_level, year_idx, p_idx, model:str):
+        fig, ax = plt.subplots()
+        ax.plot(self.cross_section.dijkprofiel_x, self.cross_section.dijkprofiel_y,'g')
+        if model == 'gras_golfklap':
+            ax.plot(positions, np.interp(positions, self.cross_section.dijkprofiel_x, self.cross_section.dijkprofiel_y),'ro')
+        elif model == 'gras_golfoploop':
+            ax.plot(positions, np.interp(positions, self.cross_section.dijkprofiel_x, self.cross_section.dijkprofiel_y),'bo')
+        ax.plot(self.cross_section.dijkprofiel_x, np.full_like(self.cross_section.dijkprofiel_x, water_level),'b--')
+        ax.grid()
+        ax.set_xlabel('Horizontale richting dijk x [m]')
+        ax.set_ylabel('Verticale richting dijk z [m+NAP]')
+        plt.savefig(self.output_path.joinpath('figures_GEBU',
+                                              f'posities_dijkvak_{self.cross_section.doorsnede}_{year}_T_{int(1/probability)}_transitionlevel_{transition_level}.png'))
+        plt.close()
 
 
-        
