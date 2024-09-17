@@ -217,6 +217,7 @@ class GEBUComputation:
                 elif f(0.0) > 0.0 and f(10.0) > 0.0:
                     beta = np.max(beta_values_year) #all values safe, take highest
                 else:   #find intersection
+                    #TODO check wat hier mis gaat met 31-1
                     beta = bisection(f, 0.0, 10.0, 1e-2)    #NOTE: this can lead to lower betas for more safe situations due to the extrapolation. Inconsequential for results as it will only happen for P < min(p_grid)
                 results[year].append((transition_level, beta))
                 self.plot_SF_probability(beta_values_year, SF_values_year, transition_level, year, beta)
@@ -262,15 +263,22 @@ class GEBUComputation:
         plt.close()
 
     def postprocess_beta_SF(self):
-
-        #STEP 1: future situation may not be better than current situation. We assume that years_to_evaluate has length 2.
         transitions, beta_current  = zip(*self.beta_SF[min(self.years_to_evaluate)])
         transitions, beta_future = zip(*self.beta_SF[max(self.years_to_evaluate)])
+        #STEP 1: values for increasing transition levels may not be lower than for lower transition levels
+        for i in range(1, len(beta_current)):
+            if beta_current[i] < beta_current[i-1]:
+                beta_current[i] = beta_current[i-1]
+        for i in range(1, len(beta_future)):
+            if beta_future[i] < beta_future[i-1]:
+                beta_future[i] = beta_future[i-1]
+
+        #STEP 2: future situation may not be better than current situation. We assume that years_to_evaluate has length 2.
 
         #check if beta_current is larger than beta_future. If so, set beta_future equal to beta_current
         beta_future = [beta_current[i] if beta_current[i] > beta_future[i] else beta_future[i] for i in range(len(beta_current))]
 
-        #implement the gebu_alternative
+        #STEP 3: Deal with the upper limit 
         # It can happen that within the "regular" measure space for GEBU no sufficient beta can be achieved. This is
         # strange, because when the transition level is increased until the crest, GEBU cannot occur. Therefore, we
         # include alternative calculation methods, which can only be set from the sandbox, not CLI. These methods are:
