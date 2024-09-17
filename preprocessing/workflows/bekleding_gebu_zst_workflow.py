@@ -58,7 +58,7 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
     # run functions
     # step 2: GEBU
     revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, output_path.joinpath('figures_GEBU'), output_path.joinpath('temp'), p_grid)
-    exit()
+
     # step 3: ZST
     revetment_zst(df, profielen_path, steentoets_path, qvar_path, output_path, output_path.joinpath('figures_ZST'), p_grid)
 
