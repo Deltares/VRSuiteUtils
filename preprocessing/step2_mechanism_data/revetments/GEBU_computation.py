@@ -249,7 +249,7 @@ class GEBUComputation:
         ax.plot(beta_to_pf(beta_values_year), SF_values_year, 'bo--')
         ax.plot(beta_to_pf(beta), 1.0, 'ro')
         #horizontal line at 1.0
-        ax.plot(np.array([beta_to_pf(min_beta), beta_to_pf(max_beta)]), [1.0, 1.0], 'k:')
+        ax.plot(np.array([beta_to_pf(min_beta), beta_to_pf(max_beta)/10]), [1.0, 1.0], 'k:')
         ax.grid()
         ax.set_xscale('log')
         if max(SF_values_year) > 10.0:
@@ -257,7 +257,7 @@ class GEBUComputation:
         ax.set_xlabel('P_f [-]')
         ax.set_ylabel('SF [-]')
         ax.set_ylim(bottom=0.1)
-        ax.set_xlim(left = beta_to_pf(max_beta), right = beta_to_pf(min_beta))
+        ax.set_xlim(left = beta_to_pf(max_beta)/10, right = beta_to_pf(min_beta))
         ax.set_title(f'Begin gras = {transition_level:.2f} m+NAP, eind gras = {self.cross_section.end_grasbekleding:.2f} m+NAP')
         plt.savefig(self.output_path.joinpath('figures_GEBU','safetyFactor_loc={}_{}_overgang_{:.2f}.png'.format(self.cross_section.doorsnede, year, transition_level)))
         plt.close()
