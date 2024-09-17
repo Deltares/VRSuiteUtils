@@ -39,7 +39,7 @@ class GEBUComputation:
 
         #Case 1: begin grasbekleding is very close to the crest. We then assume 2 transition levels. At 1 cm below crest and 25 cm lower. Beta of 8 and 7.9 are assumed. This prevents extrapolation problems in the vrtool.
         if self.cross_section.begin_grasbekleding >= self.cross_section.end_grasbekleding - 0.25:
-            self.GEBU_close_to_crest(self.output_path)
+            self.GEBU_close_to_crest()
 
         #Case 2: no grass revetment present. Not sure if this is possible, but if so, we break
         elif len(self.transition_levels) == 0:
@@ -263,8 +263,8 @@ class GEBUComputation:
         plt.close()
 
     def postprocess_beta_SF(self):
-        transitions, beta_current  = zip(*self.beta_SF[min(self.years_to_evaluate)])
-        transitions, beta_future = zip(*self.beta_SF[max(self.years_to_evaluate)])
+        transitions, beta_current  = map(list, zip(*self.beta_SF[min(self.years_to_evaluate)]))
+        transitions, beta_future = map(list, zip(*self.beta_SF[max(self.years_to_evaluate)]))
         #STEP 1: values for increasing transition levels may not be lower than for lower transition levels
         for i in range(1, len(beta_current)):
             if beta_current[i] < beta_current[i-1]:
