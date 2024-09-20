@@ -1,0 +1,20 @@
+VERSIE       4.0
+ID           P0003
+RICHTING     358.4
+DAM          0
+DAMHOOGTE    0.000
+
+VOORLAND     0
+DAMWAND      0
+KRUINHOOGTE  5.000
+DIJK         7
+261.785      -3.000    1.000
+276.822      -0.500    1.000
+278.025      -0.300    1.000
+280.024      0.100     1.000
+285.027      1.900     1.000
+294.529      3.600     1.000
+300.260      4.873     1.000
+
+MEMO
+Profiel automatisch aangepast: Te flauw bermdeel steiler gemaakt.
