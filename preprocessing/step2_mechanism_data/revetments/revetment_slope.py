@@ -48,6 +48,6 @@ class RevetmentSlope:
         #add stone slope parts to the slope
         self.slope_parts = []
         for index, row in steentoets_df.iterrows():
-            self.slope_parts.append(SlopePart(row))
+            self.slope_parts.append(SlopePart(row, self.doorsnede))
 
         #TODO: should it crash if the stone slope part is below the end of the grass slope? This would mean that the input is inconsistent
