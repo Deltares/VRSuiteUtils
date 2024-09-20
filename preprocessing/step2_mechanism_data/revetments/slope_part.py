@@ -32,7 +32,7 @@ class SlopePart:
         for year, relation in self.block_revetment_relation.items():
             if all(D_sufficient < self.D for  D_sufficient, _ in relation): # thickness is higher than relation. So we add a point with a beta that is 0.1 higher than the highest
                 _, betas =  zip(*relation)
-                relation.append((self.D, max(max(betas)+0.1, 8)))
+                relation.append((self.D, max(max(betas)+0.1, 8.0)))
                 self.block_revetment_relation[year] = sorted(relation, key=lambda x: x[0])
             elif all(D_sufficient > self.D for  D_sufficient, _ in relation): # thickness is lower than relation. This should yield a crash as then the input can not be trusted.
                 raise ValueError(f"Bestaande steendikte ({self.D}) op doorsnede {self.doorsnede} is lager dan de minimale steendikte in de afgeleide relatie. Dit impliceert een extreem grote faalkans waardoor de invoer niet betrouwbaar is.")    
