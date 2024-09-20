@@ -15,10 +15,10 @@
         5.128685
     ],
     "overgang huidig": [
-        1,
-        1,
-        1,
-        1
+        1.0,
+        1.0,
+        1.0,
+        1.0
     ],
     "D huidig": [
         0.2,
@@ -63,49 +63,7 @@
             4.456650917813664,
             4.7081297157535635,
             5.961456155913366,
-            6.0614561559133655
-        ]
-    },
-    "deelvak 1": {
-        "D_opt": [
-            NaN,
-            NaN,
-            NaN,
-            NaN
-        ],
-        "betaFalen": [
-            NaN,
-            NaN,
-            NaN,
-            NaN
-        ]
-    },
-    "deelvak 2": {
-        "D_opt": [
-            NaN,
-            NaN,
-            NaN,
-            NaN
-        ],
-        "betaFalen": [
-            NaN,
-            NaN,
-            NaN,
-            NaN
-        ]
-    },
-    "deelvak 3": {
-        "D_opt": [
-            NaN,
-            NaN,
-            NaN,
-            NaN
-        ],
-        "betaFalen": [
-            NaN,
-            NaN,
-            NaN,
-            NaN
+            8.0
         ]
     }
 }
