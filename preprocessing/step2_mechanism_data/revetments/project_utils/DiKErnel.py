@@ -13,13 +13,13 @@ import subprocess
 
 class DIKErnelCalculations(object):
     
-    def __init__(self, tijdstippen, waterstand, Hs, Tp, betahoek, x, y, positie):
+    def __init__(self, loads: dict, x, y, positie):
 
-        self.tijdstippen = list(tijdstippen)
-        self.waterstand = list(waterstand)
-        self.Hs = list(Hs)
-        self.Tp = list(Tp)
-        self.betahoek = list(betahoek)
+        self.tijdstippen = list(loads['tijd'])
+        self.waterstand = list(loads['waterstand'])
+        self.Hs = list(loads['Hs'])
+        self.Tp = list(loads['Tp'])
+        self.betahoek = list(loads['betahoek'])
         self.x = list(x)
         self.y = list(y)
         self.positie = positie
