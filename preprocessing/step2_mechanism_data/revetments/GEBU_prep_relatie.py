@@ -20,9 +20,6 @@ from preprocessing.step2_mechanism_data.revetments.revetment_slope import Revetm
 from preprocessing.step2_mechanism_data.revetments.GEBU_computation import GEBUComputation
 
 def revetment_gebu(cross_sections, qvar_path, output_path, binDIKErnel, local_path, p_grid, evaluate_years):
-
-    
-
     for cross_section in cross_sections:
         GEBUComputation(cross_section, qvar_path, output_path, local_path, binDIKErnel, years_to_evaluate=evaluate_years).compute_gebu(p_grid)
 
