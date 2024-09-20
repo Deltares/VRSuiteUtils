@@ -1,10 +1,10 @@
-,measure_type,id,available,combinable_type,direction,year,max_inward_reinforcement,max_outward_reinforcement,crest_step,max_crest_increase,stability_screen,prob_of_solution_failure,failure_probability_with_solution,stability_screen_s_f_increase,transition_level_increase_step,max_pf_factor_block,n_steps_block
-Grondversterking binnenwaarts,Soil reinforcement,1,1,combinable,inward,0,30,0,0.25,2,0,,,,,,
-Kruinverhoging,Soil reinforcement,1,1,combinable,inward,0,0,0,0.25,2,0,,,,,,
-Grondversterking met stabiliteitsscherm,Soil reinforcement with stability screen,2,1,full,inward,0,30,0,0.25,2,1,,,,,,
-Kruinverhoging met stabiliteitsscherm,Soil reinforcement with stability screen,2,1,full,inward,0,0,0,0.25,2,1,,,,,,
-Verticale pipingoplossing,Vertical Piping Solution,3,1,partial,,0,,,,,,0.001,1.00E-12,,,,
-Zelfkerende diepwand,Diaphragm Wall,4,1,full,,0,,,,,,1.00E-08,1.00E-12,,,,
-Damwandconstructie,Anchored Sheetpile,4,1,full,,0,,,,,,1.00E-08,1.00E-12,,,,
-Stabiliteitsscherm,Stability Screen,5,1,full,,0,,,,,,,,0.2,,,
-Aanpassing bekleding,Revetment,6,1,revetment,,0,,,,,,,,,1,1000,4
+,measure_type,id,available,combinable_type,direction,year,max_inward_reinforcement,max_outward_reinforcement,crest_step,max_crest_increase,stability_screen,transition_level_increase_step,max_pf_factor_block,n_steps_block,piping_reduction_factor
+Grondversterking binnenwaarts,Soil reinforcement,1,1,combinable,inward,0,30,0,0.25,2,0,,,,
+Kruinverhoging,Soil reinforcement,1,1,combinable,inward,0,0,0,0.25,2,0,,,,
+Grondversterking met stabiliteitsscherm,Soil reinforcement with stability screen,2,1,full,inward,0,30,0,0.25,2,1,,,,
+Kruinverhoging met stabiliteitsscherm,Soil reinforcement with stability screen,2,1,full,inward,0,0,0,0.25,2,1,,,,
+Verticale pipingoplossing,Vertical Piping Solution,3,1,partial,,0,,,,,0,,,,1000
+Zelfkerende diepwand,Diaphragm Wall,4,1,full,,0,,,,,0,,,,100000000
+Damwandconstructie,Anchored Sheetpile,4,1,full,,0,,,,,0,,,,100000000
+Stabiliteitsscherm,Stability Screen,5,1,full,,0,,,,,1,,,,
+Aanpassing bekleding,Revetment,6,1,revetment,,0,,,,,0,1,1000,4,
