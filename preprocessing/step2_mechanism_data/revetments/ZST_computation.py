@@ -93,7 +93,9 @@ class ZSTComputation:
             Qvar_h = [Qvar_h[0]-0.25, Qvar_h[0], Qvar_h[0]+0.25]
             Qvar_Hs = [Qvar_Hs[0], Qvar_Hs[0], Qvar_Hs[0]]
             #interpolate to get relation between Hs and h
-
+        elif len(Qvar_Hs) == 0:
+            return 0.01
+        
         Qvar_relation = interp1d(Qvar_h, Qvar_Hs, kind='linear', fill_value=(0.0,0.0))
 
         #get h for relevant slope part range where there is load. We take 25 points in the range of the slope part and derive the relation between Hs and h
@@ -103,7 +105,7 @@ class ZSTComputation:
             D_sufficient = max(Hs_relation/(self.cross_section.slope_parts[slope_part_idx].delta * self.cross_section.slope_parts[slope_part_idx].ratio_voldoet))
             return D_sufficient
         else:
-            #no load on the slope part so the D_sufficient can be anything
+            #loads available, but not on the slope part so the D_sufficient can be anything
             return 0.01 # or current?
 
        
