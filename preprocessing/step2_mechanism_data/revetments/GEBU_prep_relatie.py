@@ -19,17 +19,12 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.bisection impor
 from preprocessing.step2_mechanism_data.revetments.revetment_slope import RevetmentSlope
 from preprocessing.step2_mechanism_data.revetments.GEBU_computation import GEBUComputation
 
-def revetment_gebu(df, profielen_path, qvar_path, output_path, binDIKErnel, figures_GEBU, local_path, p_grid,
-                   gebu_alternative="upper_limit"):
+def revetment_gebu(cross_sections, qvar_path, output_path, binDIKErnel, local_path, p_grid, evaluate_years):
 
-    # define variables
-    typeZode = 'grasGeslotenZode'
-    models = ['gras_golfklap', 'gras_golfoploop']
-    evaluateYears = [2025, 2100] # ideally not hardcoded, but for now it is
-    for index, row in df.iterrows():
-        cross_section = RevetmentSlope(profielen_path, data = row)
+    
 
-        GEBUComputation(cross_section, qvar_path, output_path, local_path, binDIKErnel).compute_gebu(p_grid)
+    for cross_section in cross_sections:
+        GEBUComputation(cross_section, qvar_path, output_path, local_path, binDIKErnel, years_to_evaluate=evaluate_years).compute_gebu(p_grid)
 
 if __name__ == '__main__':
     # inputs
