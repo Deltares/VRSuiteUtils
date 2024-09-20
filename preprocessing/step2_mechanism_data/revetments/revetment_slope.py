@@ -1,9 +1,12 @@
 from pathlib import Path
 import numpy as np
 
+from preprocessing.step2_mechanism_data.revetments.project_utils.readSteentoetsFile import read_steentoets_file
 from preprocessing.step2_mechanism_data.revetments.project_utils.belastingen import waterstandsverloop, Hs_verloop, Tp_verloop, betahoek_verloop
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import DIKErnelCalculations, write_JSON_to_file, read_JSON, read_prfl
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
+from preprocessing.step2_mechanism_data.revetments.slope_part import SlopePart
+from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 
 class RevetmentSlope:
     def __init__(self, prfl_path: Path, data):
@@ -12,6 +15,8 @@ class RevetmentSlope:
         self.Amp = data['getij_amplitude']
         self.region = data['region']
         self.begin_grasbekleding = data['begin_grasbekleding']
+        if isinstance(data['steentoetsfile'], str):
+            self.steentoetsfile = Path(data['steentoetsfile'])
         self.dwarsprofiel = data['dwarsprofiel']
         self.doorsnede = data['doorsnede']
         self.end_grasbekleding = self.kruinhoogte - 0.01
@@ -29,10 +34,6 @@ class RevetmentSlope:
                   f'voor dwarsprofiel {self.dwarsprofiel}. Pas het begin_grasbekleding in de Bekledingen.csv aan of'
                   f'controleer het profielbestand')
             exit()
-            
-        
-
-
 
     def check_GWS_Amp(self):
         if np.isnan(self.GWS):
@@ -41,3 +42,12 @@ class RevetmentSlope:
         if np.isnan(self.Amp):
             self.Amp = 0.0
             print(f'WARNING: Amp voor {self.dwarsprofiel} is niet ingevuld. Amp=0.0 aangenomen.')
+
+    def add_steentoets(self, steentoets_path):
+        steentoets_df = read_steentoets_file(steentoets_path.joinpath(self.steentoetsfile), self.dwarsprofiel)
+        #add stone slope parts to the slope
+        self.slope_parts = []
+        for index, row in steentoets_df.iterrows():
+            self.slope_parts.append(SlopePart(row, self.doorsnede))
+
+        #TODO: should it crash if the stone slope part is below the end of the grass slope? This would mean that the input is inconsistent
