@@ -6,6 +6,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from pathlib import Path
 from itertools import product
 from scipy.interpolate import interp1d
+import seaborn as sns
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,6 +40,8 @@ class ZSTComputation:
         self.postprocess_slope_parts()
 
         self.write_json_output()
+
+        self.plot_slope_part_relations()
 
     def case_no_steentoets(self):
         #write default values
@@ -84,8 +87,14 @@ class ZSTComputation:
         #loads:
         Qvar_Hs = np.array(self.qvariant_results[f'Qvar {year_idx}_{p_idx}_zuilen']['Hs'])
         Qvar_h = np.array(self.qvariant_results[f'Qvar {year_idx}_{p_idx}_zuilen']['waterstand'])
-        Qvar_relation = interp1d(Qvar_h, Qvar_Hs, kind='linear', fill_value=(0.0,0.0))
 
+        if (len(Qvar_Hs) == 1) and (Qvar_h > self.cross_section.slope_parts[slope_part_idx].Zo) and (Qvar_h < self.cross_section.slope_parts[slope_part_idx].Zb): #ensure there are 2 points such that it can be interpolated. Only if the load is on the slope part
+
+            Qvar_h = [Qvar_h[0]-0.25, Qvar_h[0], Qvar_h[0]+0.25]
+            Qvar_Hs = [Qvar_Hs[0], Qvar_Hs[0], Qvar_Hs[0]]
+            #interpolate to get relation between Hs and h
+
+        Qvar_relation = interp1d(Qvar_h, Qvar_Hs, kind='linear', fill_value=(0.0,0.0))
 
         #get h for relevant slope part range where there is load. We take 25 points in the range of the slope part and derive the relation between Hs and h
         if max(min(Qvar_h), self.cross_section.slope_parts[slope_part_idx].Zo) < min(max(Qvar_h), self.cross_section.slope_parts[slope_part_idx].Zb): # only if there is a range of h where there is load on the slope part
@@ -133,3 +142,24 @@ class ZSTComputation:
                     data[f"deelvak {slope_part_idx}"] = {"D_opt": [D_sufficient for D_sufficient, _ in slope_part.block_revetment_relation[year]],
                                                         "betaFalen": [beta for _, beta in slope_part.block_revetment_relation[year]]}
             write_JSON_to_file(data, self.output_path.joinpath("ZST_{}_{}.json".format(self.cross_section.doorsnede, year)))
+    
+    def plot_slope_part_relations(self):
+        # plot relation between beta and thickness
+        colors = sns.color_palette("husl", len(self.cross_section.slope_parts))
+        fig, ax = plt.subplots()
+        linestyles = ['-', ':', '--', '-.']
+        for j, slope_part in enumerate(self.cross_section.slope_parts):
+            if slope_part.stone:
+                for i, year in enumerate(self.years_to_evaluate):
+                    D, beta = list(zip(*slope_part.block_revetment_relation[year]))
+                    ax.plot(D, beta_to_pf(list(beta)), linestyle = linestyles[i], color = colors[j],marker= 'o',label = f'jaar {year} vlak {j}')
+                    
+
+        ax.grid()
+        ax.legend(loc="center left")
+        ax.set_xlabel('Toplaagdikte [m]')
+        ax.set_ylabel('Faalkans [1/jaar]')
+        ax.set_xlim(left=0.0)
+        ax.set_yscale('log')
+        plt.savefig(self.output_path.joinpath('figures_ZST','Dikte_vs_Faalkans_doorsnede={}.png'.format(self.cross_section.doorsnede)))
+        plt.close()

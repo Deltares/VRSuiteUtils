@@ -26,23 +26,6 @@ def revetment_zst(cross_sections, qvar_path,  output_path, figures_ZST,p_grid, e
         computation = ZSTComputation(cross_section, qvar_path, output_path, years_to_evaluate=evaluate_years)
         computation.compute_zst(p_grid)
 
-        # # plots
-        # colors = sns.color_palette("husl", steentoets_df.shape[0])
-        # plt.figure()
-        # linestyles = ['-', ':', '--', '-.']
-        # for i, year in enumerate(evaluateYears):
-        #     for j in range(0, steentoets_df.shape[0]):
-        #         if issteen(steentoets_df.iloc[j].toplaagtype):
-        #             probFalen = np.array(p_grid) * fb_ZST / N
-        #             plt.semilogy(D_opt[i,:,j], probFalen, linestyle = linestyles[i], color = colors[j],marker= 'o',label = f'jaar {year} vlak {j}')
-        # plt.grid()
-        # plt.legend(loc="center left")
-        # plt.xlabel('Toplaagdikte [m]')
-        # plt.ylabel('Faalkans [1/jaar]')
-        # plt.xlim(left=0.0)
-        # plt.savefig(figures_ZST.joinpath('Dikte_vs_Faalkans_doorsnede={}.png'.format(section.doorsnede)))
-        # plt.close()
-
 if __name__ == '__main__':
     # paths
     # bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
