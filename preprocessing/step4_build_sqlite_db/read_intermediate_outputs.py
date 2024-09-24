@@ -9,7 +9,7 @@ from pathlib import Path
 from itertools import pairwise
 
 from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
-
+from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 
 def read_design_table(filename: Path):
     import re
@@ -157,11 +157,6 @@ def read_revetment_data(files_dir):
     rel_GEBU_table = {"location": list(), "year": list(), "transition_level": list(), "beta": list()}
     rel_ZST_table = {"location": list(), "slope_part": list(), "year": list(), "top_layer_thickness": list(), "beta": list()}
 
-    # for year_dir in files_dir.iterdir():
-    #     if year_dir.is_dir():
-    # list all .json files in files_dir
-
-
     revetment_jsons = glob.glob(os.path.join(files_dir, "*.json"))
     for loc_file in revetment_jsons:
         loc_file = Path(loc_file)
@@ -188,12 +183,12 @@ def read_revetment_data(files_dir):
                         slope_part_table["slope_part"] += [i]
                         slope_part_table["begin_part"] += [json_object["Zo"][i]]
                         slope_part_table["end_part"] += [json_object["Zb"][i]]
-                        slope_part_table["top_layer_thickness"] += [json_object["D huidig"][i]]
+                        slope_part_table["top_layer_thickness"] += [json_object["D effectief"][i]]
                         slope_part_table["top_layer_type"] += [json_object["toplaagtype"][i]]
                         slope_part_table["tan_alpha"] += [json_object["tana"][i]]
 
             for i in range(0, json_object["aantal deelvakken"]):
-                if json_object["toplaagtype"][i]>=26.0 and json_object["toplaagtype"][i]<=28.6:#27.9: # slope data with blok revetment
+                if issteen(json_object["toplaagtype"][i]): # slope data with blok revetment
                     lenn = len(json_object[f"deelvak {i}"]["D_opt"])
                     rel_ZST_table["location"] += [location] * lenn
                     rel_ZST_table["slope_part"] += [i] * lenn
@@ -216,6 +211,7 @@ def adjust_inner_toe(BIK, BIT, min_kerende_hoogte):
     new_BIT.Z = BIK.Z - min_kerende_hoogte
     new_BIT.X = BIT.X + min_kerende_hoogte/current_slope
     return new_BIT
+
 def read_profile_data(file_path, min_kerende_hoogte = 2.01):
     """reads a single csv file with profiles for each section into a dataframe"""
     profile_df = pd.read_csv(file_path,index_col=0, header = [0,1])
