@@ -272,6 +272,11 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
     steentoets_path = parameters['steentoets_map']
     profielen_path = parameters['hr_profielen_dir']
     output_path = parameters['output_map_bekleding']
+    if 'versterking_bekleding' in parameters:
+        versterking_bekleding = parameters['versterking_bekleding']
+    else:
+        versterking_bekleding = 'uitbreiden'
+
     if results_folder is None:
         output_path_qvar = Path(parameters['output_map_bekleding'])
         output_path_results = Path(parameters['output_map_bekleding'])
@@ -291,6 +296,8 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
     print(f"steentoets_map: {steentoets_path}")
     print(f"hr_profielen_dir: {profielen_path}")
     print(f"output_map_bekleding: {output_path}")
+    print(f"versterking_bekleding: {versterking_bekleding}")
+
 
     # run the bekleding_gebu_zst workflow
     gebu_zst_main(
@@ -301,6 +308,7 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'DiKErnel'),
         Path(output_path_qvar),
         Path(output_path_results),
+        versterking_bekleding,
     )
     
 def get_characteristic_profiles_for_traject(config_file: str, results_folder: Path = None):   
