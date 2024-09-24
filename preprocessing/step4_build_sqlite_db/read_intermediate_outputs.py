@@ -183,7 +183,10 @@ def read_revetment_data(files_dir):
                         slope_part_table["slope_part"] += [i]
                         slope_part_table["begin_part"] += [json_object["Zo"][i]]
                         slope_part_table["end_part"] += [json_object["Zb"][i]]
-                        slope_part_table["top_layer_thickness"] += [json_object["D effectief"][i]]
+                        if "D effectief" in json_object:
+                            slope_part_table["top_layer_thickness"] += [json_object["D effectief"][i]]
+                        else:
+                            slope_part_table["top_layer_thickness"] += [json_object["D huidig"][i]]
                         slope_part_table["top_layer_type"] += [json_object["toplaagtype"][i]]
                         slope_part_table["tan_alpha"] += [json_object["tana"][i]]
 
