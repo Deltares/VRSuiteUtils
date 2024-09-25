@@ -1,5 +1,6 @@
 from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta, beta_to_pf
+import numpy as np
 
 class SlopePart:
     def __init__(self, steentoets_series, doorsnede):
@@ -7,6 +8,7 @@ class SlopePart:
         self.__dict__ = steentoets_series.to_dict()
         #check if it is a stone slope part
         self.stone = self.check_steen()
+        self.D_eff = np.nan
 
         self.doorsnede = doorsnede
     
@@ -26,15 +28,23 @@ class SlopePart:
         for idx, (year, p) in enumerate(year_probability):
             self.block_revetment_relation[year].append((D_sufficient[idx], pf_to_beta(p * fb_zst / N)))
 
+    def compute_effective_thickness(self, new_ratio):
+        '''Computes the effective thickness of the block revetment based on the new ratio.'''
+
+        #compute the new thickness
+        return self.D * self.ratio_voldoet/new_ratio
+
+
+
     def ensure_existing_thickness_in_relation(self):
         '''Ensures that the existing block thickness is covered by the relationship that was derived by adding a point if necessary.'''
-
+        
         for year, relation in self.block_revetment_relation.items():
-            if all(D_sufficient < self.D for  D_sufficient, _ in relation): # thickness is higher than relation. So we add a point with a beta that is 0.1 higher than the highest
+            if all(D_sufficient < self.D_eff for  D_sufficient, _ in relation): # thickness is higher than relation. So we add a point with a beta that is 0.1 higher than the highest
                 _, betas =  zip(*relation)
-                relation.append((self.D, max(max(betas)+0.1, 8.0)))
+                relation.append((self.D_eff, max(max(betas)+0.1, 8.0)))
                 self.block_revetment_relation[year] = sorted(relation, key=lambda x: x[0])
-            elif all(D_sufficient > self.D for  D_sufficient, _ in relation): # thickness is lower than relation. This should yield a crash as then the input can not be trusted.
+            elif all(D_sufficient > self.D_eff for  D_sufficient, _ in relation): # thickness is lower than relation. This should yield a crash as then the input can not be trusted.
                 raise ValueError(f"Bestaande steendikte ({self.D}) op doorsnede {self.doorsnede} is lager dan de minimale steendikte in de afgeleide relatie. Dit impliceert een extreem grote faalkans waardoor de invoer niet betrouwbaar is.")    
 
     def ensure_future_D_sufficient_lower(self):
