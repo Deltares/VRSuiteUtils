@@ -129,6 +129,53 @@ def assessment_for_each_step(assessment_input, reliability_per_step):
     assessment_per_step.pop(0)
     return assessment_per_step
 
+def calculate_traject_probability(assessment):
+    """Computes the system failure probability based on the reliability of sections and mechanisms for a given step/assessment.
+    Does so for each mechanism separately, and then combines.
+    
+    Args:
+        assessment (list): list of dictionaries containing the reliability of each section and mechanism at a given step.
+
+    Returns:
+        dict: dictionary containing the system failure probability for each mechanism at a given step.
+    """
+    def convert_beta_to_pf_per_section(traject_reliability):
+        time = [t for section in traject_reliability.values() for t in section['time']]
+        beta = [b for section in traject_reliability.values() for b in section['beta']]
+        beta_per_time = {t: [b for b, t_ in zip(beta, time) if t_ == t] for t in set(time)}
+        pf_per_time = {t: list(beta_to_pf(np.array(beta))) for t, beta in beta_per_time.items()}
+        return pf_per_time
+    
+    def compute_overflow(traject_reliability):
+        pf_per_time = convert_beta_to_pf_per_section(traject_reliability)
+        traject_pf_per_time = {t: max(pf) for t, pf in pf_per_time.items()}
+        return traject_pf_per_time
+
+    def compute_piping_stability(traject_reliability):
+        pf_per_time = convert_beta_to_pf_per_section(traject_reliability)
+        traject_pf_per_time = {t: 1-np.prod(np.subtract(1,pf)) for t, pf in pf_per_time.items()}
+        return traject_pf_per_time
+
+    def compute_revetment(traject_reliability):
+        pf_per_time = convert_beta_to_pf_per_section(traject_reliability)
+        traject_pf_per_time = {t: max(pf) for t, pf in pf_per_time.items()}
+        return traject_pf_per_time
+    
+    def compute_system_failure_probability(traject_reliability):
+        result = {}
+        for mechanism, data in traject_reliability.items():
+            if mechanism is MechanismEnum.OVERFLOW:
+                result[mechanism] = compute_overflow(data)
+            elif mechanism is MechanismEnum.PIPING or mechanism is MechanismEnum.STABILITY_INNER:
+                result[mechanism] = compute_piping_stability(data)
+            elif mechanism is MechanismEnum.REVETMENT:
+                result[mechanism] = compute_revetment(data)
+            else:
+                raise ValueError(f"Mechanism {mechanism} not recognized.")
+        return result   
+    traject_probability = compute_system_failure_probability(assessment)
+    return traject_probability
+
 def calculate_traject_probability_for_steps(stepwise_assessment):
     """Computes the system failure probability based on the reliability of sections and mechanisms for each step. Does so for each mechanism separately, and then combines.
     

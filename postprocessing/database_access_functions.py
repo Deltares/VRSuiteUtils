@@ -19,6 +19,22 @@ def get_overview_of_runs(db_path):
 
         return list(optimization_types.dicts()) #desired output like this? TODO
 
+def get_section_assessment_results(db_path):
+    """Get the section assessment results.
+
+    Args:
+    db_path: str, path to the database
+
+    Returns:
+    list of dicts, each dict contains the section_data_id, beta, and time
+    """
+
+    with open_database(db_path).connection_context():
+        section_assessment_results = AssessmentSectionResult.select().dicts()
+
+    return list(section_assessment_results.dicts())
+
+
 def get_optimization_steps_for_run_id(db_path, run_id):
     """Get the optimization steps for a specific run id.
     
@@ -41,6 +57,8 @@ def get_optimization_steps_for_run_id(db_path, run_id):
                     OptimizationStep.step_number).select(
                         OptimizationStep.step_number, OptimizationStep.total_lcc, OptimizationStep.total_risk)
     return add_total_cost_to_steps(list(optimization_steps.dicts())) #desired output like this? TODO
+
+
 
 #import AssessmentMechanismResult for a given mechanism and order this by section
 def import_original_assessment(database_path,mechanism: MechanismEnum):
