@@ -1,7 +1,7 @@
 from preprocessing.step2_mechanism_data.revetments.slope_part import SlopePart
 from preprocessing.step2_mechanism_data.revetments.revetment_slope import RevetmentSlope
 
-
+from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import write_JSON_to_file, read_JSON
 from pathlib import Path
 from itertools import product
@@ -31,7 +31,7 @@ class ZSTComputation:
 
     def compute_zst(self, p_grid: list[float]):
         #CASE 1: no steentoets input. Assume full grass slope and write default values
-        if not self.cross_section.steentoetsfile:
+        if not hasattr(self.cross_section, 'steentoetsfile'):
             self.case_no_steentoets()
             return
 
@@ -154,6 +154,13 @@ class ZSTComputation:
                     "toplaagtype": [slope_part.toplaagtype for slope_part in self.cross_section.slope_parts],
                     "delta": [slope_part.delta for slope_part in self.cross_section.slope_parts],
                     "ratio_voldoet": [slope_part.ratio_voldoet for slope_part in self.cross_section.slope_parts]}
+            #WRITE 27.1 for toplaagtype if issteen is true and self.mode = vervangen
+            if self.mode == 'vervangen':
+                data["toplaagtype"] = [27.1 if issteen(slope_part.toplaagtype) else slope_part.toplaagtype for slope_part in self.cross_section.slope_parts]
+            else:
+                steentypes = [slope_part.toplaagtype for slope_part in self.cross_section.slope_parts if issteen(slope_part.toplaagtype)]
+                if not all(26.0 <= st <= 27.9 for st in steentypes):
+                    raise ValueError(f"Toplaagtype steen is niet in de range van 26.0-27.9 voor dwarsprofiel {self.cross_section.dwarsprofiel}. Kies versterking_bekleding = 'vervangen'.")	
             for slope_part_idx, slope_part in enumerate(self.cross_section.slope_parts):
                 if slope_part.stone:
                     data[f"deelvak {slope_part_idx}"] = {"D_opt": [D_sufficient for D_sufficient, _ in slope_part.block_revetment_relation[year]],
