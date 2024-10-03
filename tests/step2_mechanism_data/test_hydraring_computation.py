@@ -55,7 +55,10 @@ class TestHydraRingComputation:
 
         # check if the function works correctly
         design_table = HydraRingComputation.check_and_justify_HydraRing_data(design_table, "Waterstand", "13-6_0003", design_table_path)
-
+        
+        # re-read the design table, because new values are stored there
+        design_table = read_design_table(design_table_path)
+        
         assert design_table.equals(expected_design_table)
 
     def test_hydraring_design_table_beta_below_threshold(self):
@@ -76,6 +79,9 @@ class TestHydraRingComputation:
         # check if the function works correctly
         design_table = HydraRingComputation.check_and_justify_HydraRing_data(design_table, "Waterstand", "13-6_0003", design_table_path)
 
+        # re-read the design table, because new values are stored there
+        design_table = read_design_table(design_table_path)
+        
         assert design_table.equals(expected_design_table)
 
 
