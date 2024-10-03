@@ -12,6 +12,8 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
     WaterlevelComputationInput,
 )
 
+from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
+
 
 def waterlevel_main(file_path: Path,
     database_paths: list[Path],
@@ -79,3 +81,10 @@ def waterlevel_main(file_path: Path,
             # run Hydra-Ring
             HydraRingComputation().run_hydraring(hydraring_path, Path(os.getcwd()).joinpath(computation.ini_path))
 
+            # read and check the resulting design table
+            # design_table = HydraRingComputation().read_design_table(loc_output_dir)
+            for loc_file in loc_output_dir.iterdir():
+                if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
+                    design_table = read_design_table(loc_file)
+                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
+                                                                           section_name=loc_output_dir.name, design_table_file=loc_file)
