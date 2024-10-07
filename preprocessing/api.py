@@ -569,7 +569,5 @@ def create_database(config_file: str, results_folder: Path = None):
     )
 
 if __name__ == '__main__':
-    #Use this structure to test api calls locally
-
-    config_file = Path(r"c:\VRM\20240618_bekleding_renske\preprocessor.config")
-    generate_and_evaluate_waterlevel_computations(str(config_file))
+    #Use this structure to test api calls locally but do not commit any changes
+    pass
