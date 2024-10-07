@@ -569,5 +569,5 @@ def create_database(config_file: str, results_folder: Path = None):
     )
 
 if __name__ == '__main__':
-    #Use this structure to test api calls locally but do not commit any changes
+    #Use this structure to test api calls locally but do not commit any changes.
     pass

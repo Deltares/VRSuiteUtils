@@ -133,7 +133,7 @@ class HydraRingComputation:
         # check if design_table_temp equals design_table. If not, make a copy of the original file and write the new design_table to the file
         if not design_table_temp.equals(design_table):
             # make a copy of the original file
-            before_correction="BeforeCorrection_" + design_table_file.stem + design_table_file.suffix
+            before_correction= design_table_file.stem + design_table_file.suffix + ".bak"
             # if not design_table_file.parent.joinpath(before_correction).exists():
             #     before_correction = "BeforeCorrection_"+design_table_file.name
             shutil.copy(design_table_file, design_table_file.parent.joinpath(before_correction))
