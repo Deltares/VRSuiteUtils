@@ -44,8 +44,10 @@ def read_waterlevel_data(files_dir):
                     for loc_file in loc_dir.iterdir():
                         if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
-                            design_table['Value'], design_table['Beta'] = HydraRingComputation().check_and_justify_HydraRing_data(design_table['Value'], design_table['Beta'], 
-                                                                                                           calculation_type='Waterstand', section_name=loc_dir.name)
+                            # for now we still have to check it, in case users have made their Hydraring calculations with the older version
+                            # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
+                            design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
+                                                                                                   section_name=loc_dir.name, design_table_file=loc_file)
                             table_data = pd.DataFrame(
                                 {
                                     "WaterLevelLocationId": [loc_dir.name]
@@ -72,8 +74,10 @@ def read_overflow_data(files_dir):
                     for loc_file in loc_dir.iterdir():
                         if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
-                            design_table['Value'], design_table['Beta'] = HydraRingComputation().check_and_justify_HydraRing_data(design_table['Value'], design_table['Beta'], 
-                                                                                                           calculation_type='Waterstand', section_name=loc_dir.name)
+                            # for now we still have to check it, in case users have made their Hydraring calculations with the older version
+                            # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
+                            design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
+                                                                                                   section_name=loc_dir.name, design_table_file=loc_file)
 
                             table_data = pd.DataFrame(
                                 {
