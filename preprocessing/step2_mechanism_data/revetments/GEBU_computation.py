@@ -76,10 +76,10 @@ class GEBUComputation:
                     "dwarsprofiel": self.cross_section.dwarsprofiel,
                     "dijkprofiel_x": list(self.cross_section.dijkprofiel_x),
                     "dijkprofiel_y": list(self.cross_section.dijkprofiel_y),
-                    "grasbekleding_begin": [self.cross_section.end_grasbekleding-0.25, self.cross_section.end_grasbekleding],
+                    "grasbekleding_begin": [self.cross_section.end_grasbekleding-0.25, self.cross_section.kruinhoogte+.1],
                     "betaFalen": [7.9, 8.]}
             write_JSON_to_file(data, self.output_path.joinpath(f"GEBU_{self.cross_section.doorsnede}_{year}.json"))
-        print(f'GEBU Case 1 voor {self.cross_section.dwarsprofiel}. Begin grasbekleding (={self.cross_section.begin_grasbekleding}) (bijna) gelijk aan de kruinhoogte'
+        print(f'GEBU Case 1 voor dwarsprofiel {self.cross_section.dwarsprofiel}. Begin grasbekleding (={self.cross_section.begin_grasbekleding}) (bijna) gelijk aan de kruinhoogte'
                 f' (={self.cross_section.kruinhoogte}). Faalkans verwaarloosbaar.')
     
     def GEBU_normal_case(self, year_idx, p_idx, transition_level, year_probability):

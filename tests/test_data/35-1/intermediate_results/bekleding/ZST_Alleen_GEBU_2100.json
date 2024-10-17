@@ -1,0 +1,65 @@
+{
+    "zichtjaar": 2100,
+    "dwarsprofiel": "Geen steenzetting",
+    "aantal deelvakken": 2,
+    "Zo": [
+        4.94,
+        5.04
+    ],
+    "Zb": [
+        5.04,
+        5.05709981918335
+    ],
+    "overgang huidig": [
+        5.04,
+        5.04
+    ],
+    "D huidig": [
+        0.2,
+        NaN
+    ],
+    "tana": [
+        0.3333333333333333,
+        0.3333333333333333
+    ],
+    "toplaagtype": [
+        27.1,
+        20.0
+    ],
+    "delta": [
+        3.0,
+        NaN
+    ],
+    "ratio_voldoet": [
+        8.0,
+        NaN
+    ],
+    "deelvak 0": {
+        "D_opt": [
+            0.1,
+            0.2,
+            0.3,
+            0.4
+        ],
+        "betaFalen": [
+            8.0,
+            8.1,
+            8.2,
+            8.3
+        ]
+    },
+    "deelvak 1": {
+        "D_opt": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ],
+        "betaFalen": [
+            NaN,
+            NaN,
+            NaN,
+            NaN
+        ]
+    }
+}

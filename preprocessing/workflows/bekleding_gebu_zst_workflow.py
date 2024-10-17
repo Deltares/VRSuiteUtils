@@ -53,7 +53,7 @@ def initialize_gebu_zst(output_path: Path, bekleding_path: Path, traject_id: str
 
     return df, p_grid
 
-def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profielen_path: Path, binDIKErnel: Path, qvar_path: Path, output_path: Path):
+def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profielen_path: Path, binDIKErnel: Path, qvar_path: Path, output_path: Path, versterking_bekleding: str):
     
     evaluate_years = [2023, 2100]
     
@@ -62,17 +62,17 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
 
     # make cross sections
     cross_sections = [RevetmentSlope(profielen_path, data = row) for index, row in df.iterrows()]
+    [cross_section.add_steentoets(steentoets_path) for cross_section in cross_sections]
 
+    #add Steentoets data to cross_sections where available
     # run functions
     # step 2: GEBU
     revetment_gebu(cross_sections, qvar_path, output_path, binDIKErnel, output_path.joinpath('temp'), p_grid, evaluate_years)
 
-    # step 3: ZST
-    #add Steentoets data to cross_sections where available
-    [cross_section.add_steentoets(steentoets_path) for cross_section in cross_sections if hasattr(cross_section, 'steentoetsfile')]
     
+    # step 3: ZST
     #run the ZST computation
-    revetment_zst(cross_sections, qvar_path, output_path, output_path.joinpath('figures_ZST'), p_grid, evaluate_years)
+    revetment_zst(cross_sections, qvar_path, output_path, output_path.joinpath('figures_ZST'), p_grid, evaluate_years, versterking_bekleding)
 
     # remove all files in local_path using shutil
     shutil.rmtree(output_path.joinpath('temp'))

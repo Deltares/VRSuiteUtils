@@ -20,10 +20,10 @@ from preprocessing.step2_mechanism_data.revetments.ZST_computation import ZSTCom
 
 
 
-def revetment_zst(cross_sections, qvar_path,  output_path, figures_ZST,p_grid, evaluate_years, fb_ZST = 0.05, N = 4):
+def revetment_zst(cross_sections, qvar_path,  output_path, figures_ZST,p_grid, evaluate_years, versterking_bekleding, fb_ZST = 0.05, N = 4):
 
     for cross_section in cross_sections:
-        computation = ZSTComputation(cross_section, qvar_path, output_path, years_to_evaluate=evaluate_years)
+        computation = ZSTComputation(cross_section, qvar_path, output_path, years_to_evaluate=evaluate_years, mode = versterking_bekleding)
         computation.compute_zst(p_grid)
 
 if __name__ == '__main__':
