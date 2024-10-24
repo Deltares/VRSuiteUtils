@@ -37,6 +37,10 @@ lengtes['In project'] = NBPW2.loc[NBPW2.waterschap.isin(waterschappen)].lengte.s
 
 #TODO make a bar chart with totaal dijken and in project as overlapping bars. Then overlay it with a narrow bar where 'In versterking', 'SAFE', 'Fase 1' and 'Gepland' are shown
 #put it in the left top corner of the plot
+lengtes = pd.DataFrame(lengtes,index=[0])
+print(lengtes)
+# ax.bar(x=0, height=lengtes.loc['Totaal dijken','lengte'], width=0.5, color='darkgray', label='Totaal dijken')
+# ax.bar(x=0.5, height=lengtes.loc['In project','lengte'], width=0.5, color='lightgray', label='In project')
 
 ctx.add_basemap(ax=ax, source=ctx.providers.nlmaps.grijs
                 , crs='EPSG:28992')
@@ -45,4 +49,4 @@ ax.set_xticklabels([])
 ax.set_yticklabels([])
 ax.set_xticks([])
 ax.set_yticks([])
-plt.savefig(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\03_overzicht trajecten\TrajectenVeiligheidsrendement_april2024.png',bbox_inches='tight',dpi=300)
+plt.savefig(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\03_overzicht trajecten\TrajectenVeiligheidsrendement_oktober2024.png',bbox_inches='tight',dpi=300)
