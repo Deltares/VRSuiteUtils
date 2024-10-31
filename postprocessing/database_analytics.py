@@ -4,6 +4,7 @@ from vrtool.common.enums import MechanismEnum
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 import numpy as np
 import copy
+import pandas as pd
 
 from matplotlib.pyplot import axis
 
@@ -276,3 +277,12 @@ def get_unique_years(measures_per_section):
     for measure in measures_per_section.values():
         years.append(measure[1])
     return set([item for sublist in years for item in sublist])
+
+
+def get_traject_pf_required(database_path):
+    # open the database:
+    with open_database(database_path) as db:
+        # read from DikeTrajectInfo the p_max (this is 1 value):
+        p_max = DikeTrajectInfo.get(DikeTrajectInfo.id == 1).p_max
+        return p_max
+        
