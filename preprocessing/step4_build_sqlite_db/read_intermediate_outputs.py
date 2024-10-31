@@ -30,7 +30,14 @@ def read_design_table(filename: Path):
     f.close()
     return data
 
-def read_waterlevel_data(files_dir):
+def read_json(filename: Path):
+    
+    with open(filename, 'r') as openfile:
+        json_object = json.load(openfile)
+
+    return json_object
+
+def read_waterlevel_data(files_dir, hydra_model):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
     # files should be in the following structure: year_directory\location_directory\location_file.txt
@@ -42,28 +49,43 @@ def read_waterlevel_data(files_dir):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
-                            design_table = read_design_table(loc_file)
-                            # for now we still have to check it, in case users have made their Hydraring calculations with the older version
-                            # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
-                            design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
-                                                                                                   section_name=loc_dir.name, design_table_file=loc_file)
-                            table_data = pd.DataFrame(
-                                {
-                                    "WaterLevelLocationId": [loc_dir.name]
-                                    * design_table.shape[0],
-                                    "Year": [year_dir.name] * design_table.shape[0],
-                                    "WaterLevel": list(design_table["Value"]),
-                                    "Beta": list(design_table["Beta"]),
-                                }
-                            )
-                            waterlevel_data = pd.concat(
-                                (waterlevel_data, table_data), ignore_index=True
-                            )
+                        if hydra_model=="hydra_ring":
+                            if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
+                                design_table = read_design_table(loc_file)
+                                # for now we still have to check it, in case users have made their Hydraring calculations with the older version
+                                # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
+                                design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
+                                                                                                    section_name=loc_dir.name, design_table_file=loc_file)
+                                table_data = pd.DataFrame(
+                                    {
+                                        "WaterLevelLocationId": [loc_dir.name]
+                                        * design_table.shape[0],
+                                        "Year": [year_dir.name] * design_table.shape[0],
+                                        "WaterLevel": list(design_table["Value"]),
+                                        "Beta": list(design_table["Beta"]),
+                                    }
+                                )
+                        elif hydra_model=="hydra_nl":
+                            if (loc_file.is_file()) and (loc_file.suffix.lower() == ".json"):
+                                design_table = read_json(loc_file)
+
+                                table_data = pd.DataFrame(
+                                    {
+                                        "WaterLevelLocationId": [loc_dir.name] * len(design_table["waterlevel"]["value"]),
+                                        "Year": [year_dir.name] * len(design_table["waterlevel"]["value"]),
+                                        "WaterLevel": list(design_table["waterlevel"]["value"]),
+                                        "Beta": list(design_table["waterlevel"]["beta"]),      
+                                    }
+                                )
+
+
+                        waterlevel_data = pd.concat(
+                            (waterlevel_data, table_data), ignore_index=True
+                        )
     return waterlevel_data
 
 
-def read_overflow_data(files_dir):
+def read_overflow_data(files_dir, hydra_model):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
     overflow_data = pd.DataFrame(columns=["LocationId", "Year", "CrestHeight", "Beta"])
@@ -72,21 +94,34 @@ def read_overflow_data(files_dir):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
-                            design_table = read_design_table(loc_file)
-                            # for now we still have to check it, in case users have made their Hydraring calculations with the older version
-                            # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
-                            design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
-                                                                                                   section_name=loc_dir.name, design_table_file=loc_file)
+                        if hydra_model=="hydra_ring":
+                            if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
+                                design_table = read_design_table(loc_file)
+                                # for now we still have to check it, in case users have made their Hydraring calculations with the older version
+                                # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
+                                design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
+                                                                                                    section_name=loc_dir.name, design_table_file=loc_file)
 
-                            table_data = pd.DataFrame(
-                                {
-                                    "LocationId": [loc_dir.name] * design_table.shape[0],
-                                    "Year": [year_dir.name] * design_table.shape[0],
-                                    "CrestHeight": list(design_table["Value"]),
-                                    "Beta": list(design_table["Beta"]),
-                                }
-                            )
+                                table_data = pd.DataFrame(
+                                    {
+                                        "LocationId": [loc_dir.name] * design_table.shape[0],
+                                        "Year": [year_dir.name] * design_table.shape[0],
+                                        "CrestHeight": list(design_table["Value"]),
+                                        "Beta": list(design_table["Beta"]),
+                                    }
+                                )
+                        elif hydra_model=="hydra_nl":
+                            if (loc_file.is_file()) and (loc_file.suffix.lower() == ".json"):
+                                design_table = read_json(loc_file)
+                                
+                                table_data = pd.DataFrame(
+                                    {
+                                        "LocationId": [loc_dir.name] * len(design_table["overflow"]["value"]),
+                                        "Year": [year_dir.name] * len(design_table["overflow"]["value"]),
+                                        "CrestHeight": list(design_table["overflow"]["value"]),
+                                        "Beta": list(design_table["overflow"]["beta"]),
+                                    }
+                                )
                             overflow_data = pd.concat(
                                 (overflow_data, table_data), ignore_index=True
                             )
