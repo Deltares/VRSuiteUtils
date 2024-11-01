@@ -52,12 +52,12 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # read the data for waterlevels
    _intermediate_dir = _test_data_dir.joinpath("intermediate")
-   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"), "hydra_ring")
+   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"), True)
 
 
    #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
    vakindeling_shape.astype({'overslag': str, 'stabiliteit':str})
-   mechanism_data = {'overslag': read_overflow_data(_intermediate_dir.joinpath("Overslag"), "hydra_ring")}
+   mechanism_data = {'overslag': read_overflow_data(_intermediate_dir.joinpath("Overslag"), True)}
    if 'D-Stability' in request.node.callspec.id: 
       mechanism_data['stabiliteit'] = read_stability_data(_intermediate_dir.joinpath("STBI_data_DStability.csv"))
    else:
