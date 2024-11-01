@@ -78,7 +78,6 @@ def read_waterlevel_data(files_dir, use_hydraring):
                                     }
                                 )
 
-
                         waterlevel_data = pd.concat(
                             (waterlevel_data, table_data), ignore_index=True
                         )
@@ -122,9 +121,10 @@ def read_overflow_data(files_dir, use_hydraring):
                                         "Beta": list(design_table["overflow"]["beta"]),
                                     }
                                 )
-                            overflow_data = pd.concat(
-                                (overflow_data, table_data), ignore_index=True
-                            )
+
+                        overflow_data = pd.concat(
+                            (overflow_data, table_data), ignore_index=True
+                        )
     overflow_data = overflow_data.set_index("LocationId")
     return overflow_data
 
