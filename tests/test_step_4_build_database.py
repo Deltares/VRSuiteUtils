@@ -141,7 +141,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 def test_read_waterlevel_hydranl(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
 
    # remove output_path
-   #get id of request
+   # get id of request
    _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
    if _output_path.parent.exists():
       shutil.rmtree(_output_path.parent)
@@ -154,7 +154,7 @@ def test_read_waterlevel_hydranl(traject: str, test_name: str, revetment: bool, 
 
    # read the data for waterlevels
    _intermediate_dir = _test_data_dir.joinpath("intermediate_results", "HR_results")
-   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("waterlevel"), "hydra_nl")
+   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("waterlevel"), False)
 
    assert waterlevel_table["Beta"][0]==0.3590955640241909
 
@@ -163,7 +163,7 @@ def test_read_waterlevel_hydranl(traject: str, test_name: str, revetment: bool, 
 def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
 
    # remove output_path
-   #get id of request
+   # get id of request
    _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
    if _output_path.parent.exists():
       shutil.rmtree(_output_path.parent)
@@ -176,6 +176,6 @@ def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  r
 
    # read the data for overflow
    _intermediate_dir = _test_data_dir.joinpath("intermediate_results", "HR_results")
-   mechanism_data = {"overflow": read_overflow_data(_intermediate_dir.joinpath("overflow"), "hydra_nl")}
+   mechanism_data = {"overflow": read_overflow_data(_intermediate_dir.joinpath("overflow"), False)}
 
    assert mechanism_data["overflow"]["Beta"][0]==1.4302319012950049

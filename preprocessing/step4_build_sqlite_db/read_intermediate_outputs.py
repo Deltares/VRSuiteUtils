@@ -37,7 +37,7 @@ def read_json(filename: Path):
 
     return json_object
 
-def read_waterlevel_data(files_dir, hydra_model):
+def read_waterlevel_data(files_dir, use_hydraring):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
     # files should be in the following structure: year_directory\location_directory\location_file.txt
@@ -49,7 +49,7 @@ def read_waterlevel_data(files_dir, hydra_model):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if hydra_model=="hydra_ring":
+                        if use_hydraring:
                             if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                                 design_table = read_design_table(loc_file)
                                 # for now we still have to check it, in case users have made their Hydraring calculations with the older version
@@ -65,8 +65,8 @@ def read_waterlevel_data(files_dir, hydra_model):
                                         "Beta": list(design_table["Beta"]),
                                     }
                                 )
-                        elif hydra_model=="hydra_nl":
-                            if (loc_file.is_file()) and (loc_file.suffix.lower() == ".json"):
+                        else:
+                            if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".json"):
                                 design_table = read_json(loc_file)
 
                                 table_data = pd.DataFrame(
@@ -85,7 +85,7 @@ def read_waterlevel_data(files_dir, hydra_model):
     return waterlevel_data
 
 
-def read_overflow_data(files_dir, hydra_model):
+def read_overflow_data(files_dir, use_hydraring):
     # create dict with dirs as keys for subdirs in files_path
     # and files as values for files in subdirs
     overflow_data = pd.DataFrame(columns=["LocationId", "Year", "CrestHeight", "Beta"])
@@ -94,7 +94,7 @@ def read_overflow_data(files_dir, hydra_model):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if hydra_model=="hydra_ring":
+                        if use_hydraring:
                             if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                                 design_table = read_design_table(loc_file)
                                 # for now we still have to check it, in case users have made their Hydraring calculations with the older version
@@ -110,8 +110,8 @@ def read_overflow_data(files_dir, hydra_model):
                                         "Beta": list(design_table["Beta"]),
                                     }
                                 )
-                        elif hydra_model=="hydra_nl":
-                            if (loc_file.is_file()) and (loc_file.suffix.lower() == ".json"):
+                        else:
+                            if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".json"):
                                 design_table = read_json(loc_file)
                                 
                                 table_data = pd.DataFrame(

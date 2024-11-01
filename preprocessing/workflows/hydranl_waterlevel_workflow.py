@@ -22,6 +22,6 @@ def waterlevel_hydranl_main(file_path: Path,
             if not os.path.exists(output_dir):
                 os.makedirs(output_dir)
 
-            json_file_name = os.path.join(output_dir, f'{dsn}.json')
+            json_file_name = os.path.join(output_dir, f'designtable_{dsn}.json')
         
             HydraNLReadWaterLevel(hnl_work_dir_path, hr_koppel[ii], correct_uncer).export_json(json_file_name)
