@@ -64,14 +64,14 @@ class HydraNLReadOverflow:
         
     def __read_txt(self):
 
-        freq = f'hbn_{self.prfl}_{self.q_crit}/ffq.txt'
-        file_name = os.path.join(self.work_dir,self.loc,'Berekeningen',freq)
+        freq_file = f'hbn_{self.prfl}_{self.q_crit}/ffq.txt'
+        file_name = os.path.join(self.work_dir,self.loc,'Berekeningen',freq_file)
         
         f = open(file_name,'r')
-        value = []; prob = []
+        value = []; freq = []
         for line in f.readlines()[1:]:
             value.append(float(line.split()[0]))
-            prob.append(float(line.split()[1]))
+            freq.append(float(line.split()[1]))
         
         prob = [1-np.exp(-val) for val in freq] # translate frequency to probability
         beta = [-ndtri(val) for val in prob] # translate probability to beta

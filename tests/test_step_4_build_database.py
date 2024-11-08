@@ -178,4 +178,4 @@ def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  r
    _intermediate_dir = _test_data_dir.joinpath("intermediate_results", "HR_results")
    mechanism_data = {"overflow": read_overflow_data(_intermediate_dir.joinpath("overflow"), False)}
 
-   assert mechanism_data["overflow"]["Beta"][0]==1.4302319012950049
+   assert mechanism_data["overflow"]["Beta"][0]==0.9771468439412871
