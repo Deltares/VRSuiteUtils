@@ -113,7 +113,7 @@ class HydraNLReadOverflow:
 def get_decim(prob, value):
     
     T1 = 1000.0
-    T2 = 3000.0
+    T2 = 10000.0
 
     f = interpolate.interp1d(np.log(prob), value, fill_value=('extrapolate'))
     value_T1 = f(np.log(1/T1))
