@@ -73,8 +73,9 @@ class HydraNLReadOverflow:
             value.append(float(line.split()[0]))
             prob.append(float(line.split()[1]))
         
-        beta = [-ndtri(val) for val in prob]
-        return_period = [1/val for val in prob]
+        prob = [1-np.exp(-val) for val in freq] # translate frequency to probability
+        beta = [-ndtri(val) for val in prob] # translate probability to beta
+        return_period = [1/val for val in prob] # translate probability to return period
 
         f.close()
 
