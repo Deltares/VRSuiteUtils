@@ -67,8 +67,6 @@ class GEBUComputation:
 
             self.write_regular_results()
 
-        
-        pass
     
     def GEBU_close_to_crest(self):
         for i, year in enumerate(self.years_to_evaluate):
