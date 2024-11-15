@@ -244,7 +244,11 @@ class GEBUComputation:
         fig, ax = plt.subplots()
         min_beta = min([np.min(beta_values_year), beta])
         max_beta = max([np.max(beta_values_year), beta])
-        ax.plot(beta_to_pf(beta_values_year), SF_values_year, 'bo--')
+        #add beta, 1 to beta_values_year, SF_values_year and ensure they are sorted on beta_values_year to avoid confusing plots
+        beta_values_year = np.append(beta_values_year, beta)
+        SF_values_year = np.append(SF_values_year, 1.0)
+        beta_values_year, SF_values_year = zip(*sorted(zip(beta_values_year, SF_values_year)))
+        ax.plot(beta_to_pf(list(beta_values_year)), list(SF_values_year), 'bo--')
         ax.plot(beta_to_pf(beta), 1.0, 'ro')
         #horizontal line at 1.0
         ax.plot(np.array([beta_to_pf(min_beta), beta_to_pf(max_beta)/10]), [1.0, 1.0], 'k:')
