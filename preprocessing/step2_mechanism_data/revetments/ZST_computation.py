@@ -96,6 +96,9 @@ class ZSTComputation:
             Qvar_h = [Qvar_h[0]-0.25, Qvar_h[0], Qvar_h[0]+0.25]
             Qvar_Hs = [Qvar_Hs[0], Qvar_Hs[0], Qvar_Hs[0]]
             #interpolate to get relation between Hs and h
+        elif len(Qvar_Hs) == 1:
+            #no load on the slope part
+            return 0.01
         elif len(Qvar_Hs) == 0:
             return 0.01
         
