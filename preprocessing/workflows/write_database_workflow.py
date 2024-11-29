@@ -7,9 +7,10 @@ from preprocessing.step4_build_sqlite_db.write_database import *
 import random
 def read_csv_linesep(file_path, **kwargs):
     try:
-        df = pd.read_csv(file_path, sep = ',', lineterminator = '\n', **kwargs)
+        df = pd.read_csv(file_path, sep = ',', **kwargs)
     except:
-        df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
+        df = pd.read_csv(file_path, sep = ';', **kwargs)
+    df = df.dropna(subset=['doorsnede'])
     return df
 
 def write_config_file(output_dir : Path, traject_name : str, database_name : str, exclude_mechanisms = None):
