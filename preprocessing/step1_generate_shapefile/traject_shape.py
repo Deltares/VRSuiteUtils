@@ -155,7 +155,7 @@ class TrajectShape:
             section_geom.append(section)
             # sanity check. VAKLENGTE column and section length should be almost equal
             np.testing.assert_approx_equal(
-                section.length, row["m_eind"] - row["m_start"], significant=5
+                row["m_eind"] - row["m_start"], section.length, significant=5
             )
         self.vakindeling_shape = gpd.GeoDataFrame(
             df_vakken, geometry=section_geom, crs=self.NBPW_shape.crs

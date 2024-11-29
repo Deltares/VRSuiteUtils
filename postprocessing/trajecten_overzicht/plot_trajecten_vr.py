@@ -4,16 +4,14 @@ import matplotlib.pyplot as plt
 import contextily as ctx
 import pandas as pd
 import seaborn as sns
+import datetime
 
-# wfs_nbpw = WebFeatureService(
-#     url="https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs",
-#     version="1.1.0",
-# )
-# NBPW = gpd.read_file(
-#     wfs_nbpw.getfeature("nbpw:dijktrajecten", outputFormat="json")
-# )
+wfs_nbpw = WebFeatureService(
+    url="https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs",
+    version="1.1.0",
+)
 NBPW2 = gpd.read_file(
-    r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\03_overzicht trajecten\NBPW.geojson'
+    wfs_nbpw.getfeature("nbpw:dijktrajecten", outputFormat="json")
 )
 vr_data = pd.read_csv(r'postprocessing/trajecten_overzicht/trajecten.csv')
 
@@ -49,4 +47,8 @@ ax.set_xticklabels([])
 ax.set_yticklabels([])
 ax.set_xticks([])
 ax.set_yticks([])
-plt.savefig(r'c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\03_overzicht trajecten\TrajectenVeiligheidsrendement_oktober2024.png',bbox_inches='tight',dpi=300)
+#get date
+now = datetime.datetime.now()
+plt.title(f"Trajecten veiligheidsrendement \n{now.strftime('%d-%m-%Y')}")
+
+plt.savefig(r'postprocessing\trajecten_overzicht\TrajectenVeiligheidsrendement_' + now.strftime("%Y_%m_%d")  + '.png',bbox_inches='tight',dpi=300)
