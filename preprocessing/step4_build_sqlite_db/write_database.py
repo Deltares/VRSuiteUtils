@@ -32,28 +32,14 @@ def fill_diketrajectinfo_table(traject,length):
         p_max=traject_data["p_max"],
         p_sig=traject_data["p_sig"],
         flood_damage=traject_data["flood_damage"],  #Economische schade jaar 2050 uit factsheets
-        N_overflow=traject_data["N_overflow"],
-        N_blockrevetment=4.,
+        n_overflow=traject_data["N_overflow"],
+        n_revetment=3.,
         traject_length = length
     )
 
 
-def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
-    # merge HR_input['dijkhoogte'] with shape_file based on doorsnede and overslag
+def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
 
-    shape_file = shape_file.merge(
-        HR_input[["doorsnede", "dijkhoogte", "kruindaling"]],
-        left_on=["overslag"],
-        right_on=["doorsnede"],
-        how="left",
-    ).drop(columns=["doorsnede"])
-    # merge pleistoceendiepte and deklaagdiepte from geo_input with shape_file based on doorsnede
-    shape_file = shape_file.merge(
-        geo_input[["pleistoceendiepte", "deklaagdikte"]],
-        left_on=["stabiliteit"],
-        right_index=True,
-        how="left",
-    )
     # replace nans in pleistoceendiepte and deklaagdikte with default
     shape_file["pleistoceendiepte"] = shape_file["pleistoceendiepte"].fillna(
         SectionData.pleistocene_level.default
@@ -86,6 +72,9 @@ def fill_sectiondata_table(traject, shape_file, HR_input, geo_input):
                 section_length=np.abs(row.m_eind - row.m_start),
                 crest_height=row.dijkhoogte,
                 annual_crest_decline=row.kruindaling,
+                pleistocene_level=row.pleistoceendiepte,
+                cover_layer_thickness=row.deklaagdikte,
+
             )
 
 
@@ -147,6 +136,12 @@ def fill_waterleveldata(waterlevel_table, shape_file):
 def fill_profiles(profile_df):
     unique_points = profile_df.columns.get_level_values(0).unique().tolist()
     id_dict = {k: v for k, v in zip(unique_points, range(1, len(unique_points) + 1))}
+
+    #Generate the CharacteristicPointType table
+    for id in id_dict.keys():
+        CharacteristicPointType.create(id=id_dict[id], name=id)
+
+    #Add points for each section
     for section_name, row in profile_df.iterrows():
         try:
             section_data_id = (
@@ -169,8 +164,7 @@ def fill_profiles(profile_df):
         except:
             pass
             # warnings.warn("Dijkvak {} niet in vakindeling. Profiel wordt niet weggeschreven.".format(section_name))
-    for id in id_dict.keys():
-        CharacteristicPointType.create(id=id_dict[id], name=id)
+
 
 def fill_profilepoints(profile_points, shape_file):
     # find unique values in CharacteristicPoint of profile_points
@@ -218,14 +212,14 @@ def fill_mechanisms(mechanism_data,
             .get()
             .id
         )
-        for count, header in enumerate(header_names):
+        for counter, header in enumerate(header_names):
             #check if header exists in row index
             if header in row.index:
                 if row[header] is not None:
                     MechanismPerSection.create(
                         section=section_data_id,
                         mechanism=Mechanism.select(Mechanism.id)
-                        .where(Mechanism.name == default_mechanisms[count])
+                        .where(Mechanism.name == default_mechanisms[counter])
                         .get()
                         .id,
                     )
@@ -401,7 +395,7 @@ def add_stability_scenario(
     beta_value = data["beta"]
     # if nan then get SF from data
     if np.isnan(beta_value):
-        beta_value = calculate_reliability(data[["SF"]])
+        beta_value = calculate_reliability(data[["SF"]].values).item()
 
     ComputationScenario.create(
         mechanism_per_section=mechanism_per_section_id,
@@ -549,6 +543,10 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
 
         index = np.argwhere(np.array(slope_part_table["location"])==scenario_name)
         for ind in index:
+            #Temporary fix for Noorse steen:
+            if slope_part_table["top_layer_type"][ind[0]]==28.6:
+                slope_part_table["top_layer_type"][ind[0]] = 27.9
+                
             current_slope_part = SlopePart.create(
                 computation_scenario_id = computation_id,
                 begin_part = slope_part_table["begin_part"][ind[0]],
@@ -612,6 +610,9 @@ def fill_measures(measure_table, list_of_sections = []):
         measure_ids.append(Measure.select().dicts()[-1]["id"])
         
         row = row.fillna(-999)
+        #set row'pipe_reduction_factor' to None if it is -999
+        row['piping_reduction_factor'] = None if row['piping_reduction_factor'] == -999 else row['piping_reduction_factor']
+        
         StandardMeasure.create(
             measure=measure_ids[-1],
             max_inward_reinforcement=row["max_inward_reinforcement"],
@@ -620,12 +621,10 @@ def fill_measures(measure_table, list_of_sections = []):
             crest_step=row["crest_step"],
             max_crest_increase=row["max_crest_increase"],
             stability_screen=row["stability_screen"],
-            prob_of_solution_failure=row["prob_of_solution_failure"],
-            failure_probability_with_solution=row["failure_probability_with_solution"],
-            stability_screen_s_f_increase=row["stability_screen_s_f_increase"],
             transition_level_increase_step=row["transition_level_increase_step"],
             max_pf_factor_block=row["max_pf_factor_block"],
             n_steps_block=row["n_steps_block"],
+            piping_reduction_factor = row["piping_reduction_factor"],
         )
 
 
@@ -671,7 +670,6 @@ def get_kerende_hoogte(section_id):
         (ProfilePoint.section_data == section_id) & (ProfilePoint.profile_point_type_id == BIK_id)).get().y_coordinate
     return BIK_y - BIT_y
 def compare_databases(path_to_generated_db, path_to_reference_db):
-    import sqlite3
 
     # Step 1: Connect to databases
     generated_db_conn = sqlite3.connect(path_to_generated_db)
@@ -702,8 +700,10 @@ def compare_databases(path_to_generated_db, path_to_reference_db):
         generated_rows = generated_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
 
         # Fetch all rows from the reference database
-        reference_rows = reference_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
-
+        try:
+            reference_rows = reference_db_conn.execute(f"SELECT * FROM {table_name[0]};").fetchall()
+        except:
+            reference_rows = []
         # Compare the rows and columns
         if not generated_rows == reference_rows:
             comparison_message += "The generated database and the reference database do not have the same table contents for table {} \n".format(table_name[0])

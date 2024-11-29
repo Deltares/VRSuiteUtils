@@ -21,6 +21,7 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
 )
 from tests import test_data, test_results
 
+@pytest.mark.skip(reason="This is deprecated functionality")
 @pytest.mark.parametrize(
     "hring_input,gekb_shape,traject_shape,db_location",
     [
@@ -38,6 +39,8 @@ def test_select_HRING_locs(hring_input, traject_shape, db_location, gekb_shape):
     # test to see if the correct locations are selected from the HRING input csv. This is done based on a shapefile with all the locations.
     # HRING_input input should have: M-value of location, and what is in HR-data.
     # read GEKB_input:
+
+    #DEPRECATED FUNCTIONALITY
     hring_df = pd.read_csv(hring_input, index_col=0)
     gekb_shape = (
         gpd.read_file(gekb_shape)
@@ -273,108 +276,3 @@ def test_make_HRING_overflow_input(
     assert (
         not comparison_errors_ini + comparison_errors_sql
     ), f"Errors: {comparison_errors_ini + comparison_errors_sql}"
-
-
-@pytest.mark.parametrize(
-    "ini_file",
-    [
-        (
-            test_data.joinpath(
-                "38-1",
-                "HRING_input_reference",
-                "overflow",
-                "2023",
-                "RW000",
-                "RW000.ini",
-            )
-        ),
-        (
-            test_data.joinpath(
-                "38-1",
-                "HRING_input_reference",
-                "waterlevel",
-                "2023",
-                "RW000",
-                "RW000.ini",
-            )
-        ),
-        (
-            test_data.joinpath(
-                "38-1",
-                "HRING_input_reference",
-                "waterlevel",
-                "2100",
-                "RW096",
-                "RW096.ini",
-            )
-        ),
-    ],
-)
-def test_run_HydraRing(ini_file):
-    # path of work_dir is the same as the ini_file
-    work_dir = ini_file.parent
-    output_file_name = "DESIGNTABLE_{}.txt".format(ini_file.stem)
-    # clear test_results dir
-    if (
-        test_results
-        .joinpath( work_dir.parts[1], "HRING_computations", *work_dir.parts[3:]
-        )
-        .exists()
-    ):
-        shutil.rmtree(
-           test_results.joinpath(
-                work_dir.parts[1],
-                "HRING_computations",
-                *work_dir.parts[3:],
-            )
-        )
-    # and remake it
-    test_results.joinpath( work_dir.parts[1], "HRING_computations", *work_dir.parts[3:]
-    ).mkdir(parents=True, exist_ok=False)
-
-    # run HydraRing
-    HydraRingComputation().run_hydraring(ini_file)
-
-    # move designTable.txt from work_dir to test_results\38-1\HRING_input\2023\RW000\
-    shutil.move(
-        work_dir.joinpath(output_file_name),
-        test_results.joinpath(
-            work_dir.parts[1],
-            "HRING_computations",
-            *work_dir.parts[3:],
-            output_file_name,
-        ),
-    )
-
-    # remove the other files for which the name is not the same as the ini_file
-    for file in work_dir.glob("*"):
-        if file.stem != ini_file.stem:
-            file.unlink()
-
-    # compare the designTable.txt with the reference file
-    assert filecmp.cmp(
-       test_results.joinpath(
-            work_dir.parts[1],
-            "HRING_computations",
-            *work_dir.parts[3:],
-            output_file_name,
-        ),
-        test_data.joinpath(
-            work_dir.parts[1],
-            "HRING_computations_reference",
-            *work_dir.parts[3:],
-            output_file_name,
-        ),
-    )
-
-
-def test_add_piping_tool_input():
-    pass
-
-
-def test_add_stability_data():
-    pass
-
-
-def test_add_piping_data():
-    pass

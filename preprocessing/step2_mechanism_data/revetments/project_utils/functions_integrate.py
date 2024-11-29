@@ -15,13 +15,43 @@ import warnings
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
 def issteen(toplaagtype):
+    '''Determines whether the toplaagtype is considered to be a stone layer. '''
+
+    if toplaagtype >= 10.0 and toplaagtype < 12.0:
+        #Betonblokken
+        print('Waarschuwing: betonblokken worden meegenomen maar behandeld als zuilen.')
+        return True
+
+    elif toplaagtype >= 26.0 and toplaagtype < 27:
+        #Basalt
+        return True
     
-    res = False
+    elif toplaagtype >= 27 and toplaagtype < 28:
+        #Betonzuilen
+        return True
     
-    if toplaagtype>=26.0 and toplaagtype<=27.9:
-        res = True
+    elif toplaagtype >= 28 and toplaagtype < 30:
+        #Natuursteen en koperslakblokken
+        return True
     
-    return res
+    elif toplaagtype >= 37 and toplaagtype < 38:
+        #Nieuwe typen & ingegoten betonzuilen
+        return True
+    
+    elif toplaagtype <= 9.0:
+        #Asfaltachtige toplagen
+        return False
+    
+    elif toplaagtype >= 12.0 and toplaagtype <= 19.0:
+        #Blokkenmatten, betonplaten, doorgroeistenen en gepenetreerde breuksteen (met beton)
+        return False
+    
+    elif toplaagtype >= 20.0 and toplaagtype <= 25.0:
+        #Gras en diverse soorten grind e.d.
+        return False
+    
+    else:
+        return False
 
 def isgras(toplaagtype):
     

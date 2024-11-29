@@ -12,6 +12,8 @@ from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import (
 )
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 
+from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
+
 
 def overflow_main(file_path: Path,
     database_paths: list[Path],
@@ -25,6 +27,7 @@ def overflow_main(file_path: Path,
 
     # read HRING reference csv, and add to OverflowInput object
     hring_data = pd.read_csv(file_path, index_col=0)
+    hring_data = hring_data.dropna(subset=['doorsnede'])
     overflow_input_object = OverflowInput()
     overflow_input_object.add_hring_data(hring_data)
 
@@ -86,15 +89,13 @@ def overflow_main(file_path: Path,
                 HydraRing_path.joinpath("config.sqlite"),
             )
             # run Hydra-Ring
-            HydraRingComputation().run_hydraring(HydraRing_path, computation.ini_path)
-if __name__ == '__main__':
-    # input paths
-    Path_prf = Path(
-        r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\PRFL')
-    Path_results = Path(
-        r'n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\output_overflow2')
-    Path_HR = [Path(
-        r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\Databases\2023")]
-    Path_file = r"n:\Projects\11209000\11209353\B. Measurements and calculations\008 - Resultaten Proefvlucht\WRIJ\47-1\Hydraulische berekeningen\HR_20231018.csv"
+            HydraRingComputation().run_hydraring(HydraRing_path, Path(os.getcwd()).joinpath(computation.ini_path))
 
-    overflow_main(Path_file,Path_HR, Path_prf,Path(os.path.dirname(os.path.realpath(__file__))).parent.joinpath('externals','HydraRing-23.1.1'), Path_results)
+            # read and check the resulting design table
+            # design_table = HydraRingComputation().read_design_table(loc_output_dir)
+            for loc_file in loc_output_dir.iterdir():
+                if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
+                    design_table = read_design_table(loc_file)
+                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
+                                                                           section_name=loc_output_dir.name, design_table_file=loc_file)
+

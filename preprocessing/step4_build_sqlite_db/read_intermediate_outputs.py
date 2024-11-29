@@ -9,7 +9,7 @@ from pathlib import Path
 from itertools import pairwise
 
 from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
-
+from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 
 def read_design_table(filename: Path):
     import re
@@ -44,8 +44,10 @@ def read_waterlevel_data(files_dir):
                     for loc_file in loc_dir.iterdir():
                         if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
-                            design_table['Value'], design_table['Beta'] = HydraRingComputation().check_and_justify_HydraRing_data(design_table['Value'], design_table['Beta'], 
-                                                                                                           calculation_type='Waterstand', section_name=loc_dir.name)
+                            # for now we still have to check it, in case users have made their Hydraring calculations with the older version
+                            # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
+                            design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
+                                                                                                   section_name=loc_dir.name, design_table_file=loc_file)
                             table_data = pd.DataFrame(
                                 {
                                     "WaterLevelLocationId": [loc_dir.name]
@@ -72,8 +74,10 @@ def read_overflow_data(files_dir):
                     for loc_file in loc_dir.iterdir():
                         if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                             design_table = read_design_table(loc_file)
-                            design_table['Value'], design_table['Beta'] = HydraRingComputation().check_and_justify_HydraRing_data(design_table['Value'], design_table['Beta'], 
-                                                                                                           calculation_type='Waterstand', section_name=loc_dir.name)
+                            # for now we still have to check it, in case users have made their Hydraring calculations with the older version
+                            # in new version this will automatically be checked after Hydraring calculations, and this check here becomes redundant
+                            design_table = HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
+                                                                                                   section_name=loc_dir.name, design_table_file=loc_file)
 
                             table_data = pd.DataFrame(
                                 {
@@ -118,7 +122,8 @@ def read_piping_data(file_path):
 
 
 def read_stability_data(file_path):
-    return pd.read_csv(
+    try:
+        dataset = pd.read_csv(
         file_path,
         index_col=0,
         usecols=[
@@ -133,49 +138,68 @@ def read_stability_data(file_path):
             "pleistoceendiepte",
         ],
         dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float, 'deklaagdikte': float, 'pleistoceendiepte': float},
+    )        
+    except:
+        dataset = pd.read_csv(
+        file_path,
+        index_col=0,
+        usecols=[
+            "doorsnede",
+            "scenario",
+            "scenarionaam",
+            "scenariokans",
+            "SF",
+            "beta",
+            "stixnaam",
+        ],
+        dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float},
     )
-
+    return dataset
 def read_revetment_data(files_dir):
 
     slope_part_table = {"location": list(), "slope_part": list(), "begin_part": list(), "end_part": list(), "top_layer_thickness": list(), "top_layer_type": list(), "tan_alpha": list()}
     rel_GEBU_table = {"location": list(), "year": list(), "transition_level": list(), "beta": list()}
     rel_ZST_table = {"location": list(), "slope_part": list(), "year": list(), "top_layer_thickness": list(), "beta": list()}
 
-    # for year_dir in files_dir.iterdir():
-    #     if year_dir.is_dir():
-    # list all .json files in files_dir
-
-
     revetment_jsons = glob.glob(os.path.join(files_dir, "*.json"))
     for loc_file in revetment_jsons:
         loc_file = Path(loc_file)
-        location = str(Path(loc_file).name.split("_")[1])
         with open(loc_file, "r") as openfile:
             json_object = json.load(openfile)
 
-        if "GEBU" in loc_file.name: # read data for grass revetment
+        #split the name: format is MECH_LOC_YEAR.json but LOC can have _ in it
+        mechanism = Path(loc_file).stem.split("_")[0]
+        year = Path(loc_file).stem.split("_")[-1].strip('.json')	
+        location = "_".join(Path(loc_file).stem.split("_")[1:-1])
+
+        if mechanism == "GEBU": # read data for grass revetment
             lenn = len(json_object["grasbekleding_begin"])
             rel_GEBU_table["location"] += [location] * lenn
-            rel_GEBU_table["year"] += [int(Path(loc_file).stem.split("_")[-1])] * lenn
+            rel_GEBU_table["year"] += [int(year)] * lenn
             rel_GEBU_table["transition_level"] += json_object["grasbekleding_begin"]
             rel_GEBU_table["beta"] += json_object["betaFalen"]
 
-        if "ZST" in loc_file.name: # read data for block revetment
-            if "2025" in loc_file.name: # slope data only one time
-                slope_part_table["location"] += [location] * json_object["aantal deelvakken"]
-                slope_part_table["slope_part"] += list(np.arange(0, json_object["aantal deelvakken"], 1))
-                slope_part_table["begin_part"] += json_object["Zo"]
-                slope_part_table["end_part"] += json_object["Zb"]
-                slope_part_table["top_layer_thickness"] += json_object["D huidig"]
-                slope_part_table["top_layer_type"] += json_object["toplaagtype"]
-                slope_part_table["tan_alpha"] += json_object["tana"]
+        if mechanism == "ZST": # read data for block revetment
+            if year == "2100": # slope data only one time
+                for i in range(0, json_object["aantal deelvakken"]):
+                    if not np.isnan(json_object["toplaagtype"][i]):
+                        slope_part_table["location"] += [location]
+                        slope_part_table["slope_part"] += [i]
+                        slope_part_table["begin_part"] += [json_object["Zo"][i]]
+                        slope_part_table["end_part"] += [json_object["Zb"][i]]
+                        if "D effectief" in json_object:
+                            slope_part_table["top_layer_thickness"] += [json_object["D effectief"][i]]
+                        else:
+                            slope_part_table["top_layer_thickness"] += [json_object["D huidig"][i]]
+                        slope_part_table["top_layer_type"] += [json_object["toplaagtype"][i]]
+                        slope_part_table["tan_alpha"] += [json_object["tana"][i]]
 
             for i in range(0, json_object["aantal deelvakken"]):
-                if json_object["toplaagtype"][i]>=26.0 and json_object["toplaagtype"][i]<=27.9: # slope data with blok revetment
+                if issteen(json_object["toplaagtype"][i]): # slope data with blok revetment
                     lenn = len(json_object[f"deelvak {i}"]["D_opt"])
                     rel_ZST_table["location"] += [location] * lenn
                     rel_ZST_table["slope_part"] += [i] * lenn
-                    rel_ZST_table["year"] += [int(Path(loc_file).stem.split("_")[-1])] * lenn
+                    rel_ZST_table["year"] += [int(year)] * lenn
                     rel_ZST_table["top_layer_thickness"] += json_object[f"deelvak {i}"]["D_opt"]
                     rel_ZST_table["beta"] += json_object[f"deelvak {i}"]["betaFalen"]
 
@@ -194,6 +218,7 @@ def adjust_inner_toe(BIK, BIT, min_kerende_hoogte):
     new_BIT.Z = BIK.Z - min_kerende_hoogte
     new_BIT.X = BIT.X + min_kerende_hoogte/current_slope
     return new_BIT
+
 def read_profile_data(file_path, min_kerende_hoogte = 2.01):
     """reads a single csv file with profiles for each section into a dataframe"""
     profile_df = pd.read_csv(file_path,index_col=0, header = [0,1])

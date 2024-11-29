@@ -4,12 +4,12 @@ import geopandas as gpd
 from vrtool.orm.orm_controllers import *
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
-import random
+import shutil
 def read_csv_linesep(file_path, **kwargs):
     try:
         df = pd.read_csv(file_path, sep = ',', **kwargs)
     except:
-        df = pd.read_csv(file_path, sep = ';', **kwargs)
+        df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     df = df.dropna(subset=['doorsnede'])
     return df
 
@@ -32,6 +32,10 @@ def write_config_file(output_dir : Path, traject_name : str, database_name : str
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
+
+def merge_to_vakindeling(vakindeling_shape: gpd.GeoDataFrame, to_merge: pd.DataFrame, left_key: str, right_key: str):
+    return vakindeling_shape.merge(to_merge.drop_duplicates(), left_on=left_key, right_on=right_key, how='left')
+
 def write_database_main(traject_name : str,
                         vakindeling_geojson : Path,
                         characteristic_profile_csv : Path,
@@ -60,7 +64,7 @@ def write_database_main(traject_name : str,
     # load the vakindeling geojson with in_analyse column as integer
     vakindeling_shape = gpd.read_file(vakindeling_geojson)
     vakindeling_shape = vakindeling_shape.astype({'in_analyse':int, 'overslag': str, 'stabiliteit': str})
-    vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
+    if 'kunstwerken' in vakindeling_shape.columns: vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
     
     # load HR input csv
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
@@ -82,6 +86,18 @@ def write_database_main(traject_name : str,
         mechanism_data['slope_part_table'], mechanism_data['rel_GEBU_table'], mechanism_data['rel_ZST_table']  = read_revetment_data(revetment_path)
     else:
         vakindeling_shape.drop(columns=['bekledingen'], inplace=True)
+    # merge parameters from HR_input with vakindeling_shape:
+    vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = HR_input[["doorsnede", "dijkhoogte", "kruindaling"]], left_key = ['overslag'], right_key = ['doorsnede'])
+
+    # merge subsoil parameters with vakindeling if not present in vakindeling_shape
+    if 'pleistoceendiepte' not in vakindeling_shape.columns:
+        try:
+            # takes only the pleistoceendiepte and deklaagdikte from the first scenario of each doorsnede
+            stabiliteit_df_for_merge = mechanism_data['stabiliteit'][~mechanism_data['stabiliteit'].index.duplicated(keep='first')]
+            vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = stabiliteit_df_for_merge[["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = stabiliteit_df_for_merge.index)
+        except:
+            raise Exception('deklaagdikte en pleistoceendiepte zijn niet aanwezig in de vakindeling, en ook niet in de stabiliteit.CSV')
+
 
     # read the data for bebouwing
     bebouwing_table = read_bebouwing_data(building_csv_path)
@@ -109,8 +125,6 @@ def write_database_main(traject_name : str,
     fill_sectiondata_table(
         traject=traject_name,
         shape_file=vakindeling_shape,
-        HR_input=HR_input,
-        geo_input=mechanism_data['stabiliteit'][["deklaagdikte", "pleistoceendiepte"]],
     )
     # waterleveldata
     fill_buildings(buildings=bebouwing_table)
@@ -133,33 +147,6 @@ def write_database_main(traject_name : str,
         write_config_file(output_dir, traject_name, output_db_name,
                           exclude_mechanisms=['REVETMENT', 'HYDRAULIC_STRUCTURES'])
 
-if __name__ == '__main__':
+    #copy the vakindeling to the output directory
+    shutil.copy(vakindeling_geojson, output_dir.joinpath(traject_name + '.geojson'))
 
-    traject_name = "7-2"
-    vakindeling_geojson =       Path(r'c:\vrm_test\traject7_2_jan2024\vakindeling\Vakindeling_7-2.geojson')
-    characteristic_profile_csv= Path(r'c:\vrm_test\traject7_2_jan2024\afgeleide_profielen\representatieve_profielen\selected_profiles_extra_vak.csv')
-    building_csv_path =         Path(r'c:\vrm_test\traject7_2_jan2024\bebouwing\building_count_traject7-2_aangepast.csv')
-    output_dir =                Path(r'c:\vrm_test\traject7_2_jan2024\database_bekleding_bovengrens')
-    output_db_name =            f'traject_7_2.db'
-    hr_input_csv =              Path(r'c:\vrm_test\traject7_2_jan2024\HR\HR_20230713.csv')
-    waterlevel_results_path =   Path(r'c:\vrm_test\traject7_2_jan2024\HR\Hydra-Ring waterstanden')
-    overflow_results_path =     Path(r'c:\vrm_test\traject7_2_jan2024\HR\Hydra-Ring overslag')
-    piping_path =               Path(r'c:\vrm_test\traject7_2_jan2024\Piping_20240122.csv')
-    stability_path =            Path(r'c:\vrm_test\traject7_2_jan2024\Stabiliteit_20240122_SF_workaround.csv')
-    revetment_path =            Path(r'c:\vrm_test\traject7_2_jan2024\bekleding_bovengrens')
-
-
-
-    write_database_main(traject_name                =   traject_name,
-                        vakindeling_geojson         =   vakindeling_geojson,
-                        characteristic_profile_csv  =   characteristic_profile_csv,
-                        building_csv_path           =   building_csv_path,
-                        output_dir                  =   output_dir,
-                        output_db_name              =   output_db_name,
-                        hr_input_csv                =   hr_input_csv,
-                        waterlevel_results_path     =   waterlevel_results_path,
-                        overflow_results_path       =   overflow_results_path,
-                        piping_path                 =   piping_path,
-                        stability_path              =   stability_path,
-                        revetment_path              =   revetment_path,
-                        )

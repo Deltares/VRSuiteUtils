@@ -4,13 +4,13 @@ This repository contains tools to process input from a WBI assessment to input f
 
 ## What is this repository for?
 
-* The current version that this repository pertains to is VRTOOL v0.1
+* The current version that this repository pertains to is VRTOOL v0.1.3
 
 ## How do I get set up? ##
 
 * Download the repository and run it from the environment as specified in the .yml and .toml files.
 
-* Using Anaconda (or miniconda):
+* Using miniforge [miniforge](https://conda-forge.org/miniforge/):
 ```
 conda env create -f .config\environment.yml -p .env/
 conda activate .env/

@@ -345,19 +345,3 @@ def select_profile(available_profiles, karakteristieke_profielen, section, selec
         characteristic_profile = characteristic_profiles[0]
 
     return characteristic_profile
-
-if __name__ == '__main__':
-    vakindeling_geojson =       Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\vakindeling_optie1\Vakindeling_53-1.geojson")
-    ahn_profielen =             Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\AHN_profiles")
-    karakteristieke_profielen = Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\characteristic_profiles")
-    profiel_info_csv =          Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\traject_profiles.csv")
-    uitvoer_map =               Path(r"c:\Veiligheidsrendement\WDOD\teenlijnprofielen\profielen\selectie_profielen_1")
-    # invoerbestand =             Path(r"c:\Users\klerk_wj\OneDrive - Stichting Deltares\00_Projecten\11_VR_HWBP\test_profielen\test20230814_6\invoerbestand.csv")
-    main_profiel_selectie(
-            vakindeling_geojson,
-            ahn_profielen,
-            karakteristieke_profielen,
-            profiel_info_csv,
-            uitvoer_map,
-            False,
-            "minimum",)

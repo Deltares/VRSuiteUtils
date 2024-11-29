@@ -1,19 +1,30 @@
-from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
+import preprocessing.api as api
+import filecmp
+
 from pathlib import Path
+import preprocessing.api as api
+import geopandas as gpd
+import pytest
+import shutil
 
 
-def test_default_case():
-    # working directory:
-    work_dir = Path(r"c:\VRM\test_hydraring_workflow_wdod\overslag")
+from tests import test_data, test_results
+from preprocessing.common_functions import read_config_file
 
-    # path to Hydra-Ring:
-    HydraRing_path = Path(
-        r"c:\Program Files (x86)\BOI\Riskeer 21.1.1.2\Application\Standalone\Deltares\HydraRing-20.1.3.10236"
-    )
-    # list of paths to databases to be considered
-    database_paths = [
-        Path(r"c:\VRM\test_hydraring_workflow_wdod\HR\2023"),
-        Path(r"c:\VRM\test_hydraring_workflow_wdod\HR\2100"),
-    ]
-    file_name = r"c:\VRM\test_hydraring_workflow_wdod\HR_default.csv"
-    overflow_main(work_dir, database_paths, HydraRing_path, file_name)
+@pytest.mark.parametrize("project_folder",
+                         [pytest.param("31-1_v2", id = '31-1')])
+def test_hydraring_overflow_workflow(project_folder:str,  request: pytest.FixtureRequest):
+    #specify the output path for results:
+    _output_path = test_results.joinpath(request.node.name)
+    if _output_path.exists():
+        shutil.rmtree(_output_path)
+
+    #run the hydraring overflow workflow to generate the relevant results
+    api.generate_and_evaluate_overflow_computations(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
+
+
+    #compare the results with the reference results for all designtable.txt files in the subdirectories of the subdirectories in _output_dir
+    for file in _output_path.rglob("DESIGNTABLE_*.txt"):
+        _reference_file = test_data.joinpath(project_folder, file.relative_to(_output_path))
+        assert filecmp.cmp(file, _reference_file, shallow=False) == True
+

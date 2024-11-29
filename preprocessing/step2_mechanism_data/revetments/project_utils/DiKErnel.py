@@ -13,13 +13,13 @@ import subprocess
 
 class DIKErnelCalculations(object):
     
-    def __init__(self, tijdstippen, waterstand, Hs, Tp, betahoek, x, y, positie):
+    def __init__(self, loads: dict, x, y, positie):
 
-        self.tijdstippen = list(tijdstippen)
-        self.waterstand = list(waterstand)
-        self.Hs = list(Hs)
-        self.Tp = list(Tp)
-        self.betahoek = list(betahoek)
+        self.tijdstippen = list(loads['tijd'])
+        self.waterstand = list(loads['waterstand'])
+        self.Hs = list(loads['Hs'])
+        self.Tp = list(loads['Tp'])
+        self.betahoek = list(loads['betahoek'])
         self.x = list(x)
         self.y = list(y)
         self.positie = positie
@@ -47,13 +47,13 @@ class DIKErnelCalculations(object):
         
         write_JSON_to_file(data, local_path.joinpath("input.json"))
 
-    def run_DIKErnel(self, binDIKErnel, output_path, local_path):
+    def run_DIKErnel(self, binDIKErnel, output_path, local_path, region):
 
         dike_kernel_exe = binDIKErnel.joinpath('DiKErnel-cli.exe')
         input_json_path = local_path.joinpath("input.json")
         output_json_path = output_path.joinpath('output.json')
         # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
-        cmdstring = '"{}" --invoerbestand "{}" --uitvoerbestand "{}" --uitvoerniveau schade'.format(dike_kernel_exe, input_json_path, output_json_path)
+        cmdstring = '"{}" --invoerbestand "{}" --uitvoerbestand "{}" --uitvoerniveau fysica'.format(dike_kernel_exe, input_json_path, output_json_path)
         #run cmdsring using subprocess
         subprocess.run(cmdstring, shell=True)
 
@@ -61,14 +61,17 @@ class DIKErnelCalculations(object):
         with open(output_json_path, 'r') as openfile:
             json_object = json.load(openfile)
             
-            
         schadegetalPerTijdstap = json_object['uitvoerdata']['locaties'][0]['schade']['schadegetalPerTijdstap']
-        
-        maxSchadegetal = max(schadegetalPerTijdstap)
+        toenameSchade = json_object['uitvoerdata']['locaties'][0]['fysica']['toenameSchade']
         
         os.remove(output_json_path)
         
-        return maxSchadegetal
+        if region=='rivieren':
+            schade = max(toenameSchade) # maximum damage
+        else:
+            schade = max(schadegetalPerTijdstap) # cumulative damage
+
+        return schade
     
 def write_JSON_to_file(data, file_name):
         

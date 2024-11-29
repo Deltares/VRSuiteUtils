@@ -4,6 +4,9 @@ from pathlib import Path
 import numpy as np
 import csv
 import time
+import os
+
+
 def profile_generator(traject_id: str,
                       output_path: Path,
                       foldername_output_csv: Path,
@@ -36,10 +39,10 @@ def profile_generator(traject_id: str,
     # loop through profiles and write each profile to a separate csv file and add a counter
     for index, profile in enumerate(traject.profiles,start=1):
         # Define the filename for the CSV
-        filename = f"profile_{index:04}.csv" # Assuming filenames like 'profile_0001.csv', 'profile_0002.csv', etc. pad to 4 digits to ensure correct sorting
+        filename = f"ahn_profielen/profile_{index:04}.csv" # Assuming filenames like 'profile_0001.csv', 'profile_0002.csv', etc. pad to 4 digits to ensure correct sorting
 
         # Write the profile data to the CSV file
-        with open(output_path.joinpath(foldername_output_csv,filename), 'w', newline='') as csvfile:
+        with open(Path(os.getcwd()).joinpath(output_path,filename), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             # write x coordinates (profile[0]) on first row
             writer.writerow(list(profile[0]))
@@ -49,7 +52,7 @@ def profile_generator(traject_id: str,
         # print(f"Saved profile {index + 1} to {filename}")
 
     # write 1 file with all profile characteristics
-    with open(output_path.joinpath('traject_profiles.csv'), 'w', newline='') as csvfile:
+    with open(Path(os.getcwd()).joinpath(output_path, 'traject_profiles.csv'), 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
         count = 0
         header = ['ProfileID',

@@ -1,0 +1,20 @@
+VERSIE   4.0
+ID  P016400
+RICHTING  220
+DAM   0
+DAMHOOGTE  0.0
+VOORLAND  3
+-129.000  -2.25  1.000
+-51.000  -1.21  1.000
+-42.19  -1.21  1.000
+DAMWAND   0
+KRUINHOOGTE  8.5
+DIJK  6
+-43.24  -2.000  1.000
+-42.19  -1.7  1.000
+-13.42  6.09  1.000
+-6.63  6.37  1.000
+-0.5  8.43  1.000
+-0.26  8.5  1.000
+MEMO
+invoergenerator waterschap Scheldestromen met profielen uit 2019;  versie 2019.01

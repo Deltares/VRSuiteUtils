@@ -9,9 +9,10 @@ import contextily as ctx
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import xyzservices.providers as xyz
 
-
-
+DEFAULT_BASEMAP = xyz.nlmaps.water
+# CartoDB.PositronNoLabels nlmaps.water nlmaps.luchtfoto
 def plot_vakindeling(shapefile, output_loc, close_output = True):
 
     fig, ax = plt.subplots(figsize=(12, 5))
@@ -47,7 +48,7 @@ def plot_vakindeling(shapefile, output_loc, close_output = True):
     ax.set_yticklabels([])
     ax.set_ylim(bottom=ax.get_ylim()[0] - 1000)
     try:
-        ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite, crs=shapefile.crs)
+        ctx.add_basemap(ax, source=DEFAULT_BASEMAP, crs=shapefile.crs)
     except:
         warnings.warn(
             "Basemap kon niet worden geladen, plot wordt gemaakt zonder achtergrondkaart."
@@ -95,7 +96,7 @@ def plot_assessment_betas(
         ctx.add_basemap(
             axes,
             crs=shapes[list(mechanism_dict.keys())[count]].crs,
-            source=ctx.providers.Stamen.TonerLite,
+            source=DEFAULT_BASEMAP,
         )
     plt.savefig(
         output_dir.joinpath("beoordeling_{}_beta.png".format(year)),
@@ -143,7 +144,7 @@ def plot_assessment_probabilities(
         ctx.add_basemap(
             axes,
             crs=shapes[list(mechanism_dict.keys())[count]].crs,
-            source=ctx.providers.Stamen.TonerLite,
+            source=DEFAULT_BASEMAP,
         )
     plt.savefig(
         output_dir.joinpath("beoordeling_{}_pf.png".format(year)),
@@ -307,7 +308,7 @@ def map_of_measures(data, output_dir, include_crest=True, data_type='Optimaal', 
     data.loc[data.Stabiliteitsscherm].plot(ax=ax, color='b', linestyle='-', linewidth=2, label='Stabiliteitsscherm')
     data.loc[data.Diepwand].plot(ax=ax, color='k', linestyle='-', linewidth=4, label='Diepwand')
 
-    ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite)
+    ctx.add_basemap(ax, source=DEFAULT_BASEMAP)
     ax.legend(bbox_to_anchor=(1.1, .9), fontsize='small')
     ax.set_ylim(bottom=ax.get_ylim()[0] - 1000)
     ax.set_title('Versterkingsmaatregelen - {}'.format(data_type))
@@ -376,7 +377,7 @@ def plot_soil_dim_map(data, output_dir,method= 'Veiligheidsrendement',close_outp
     for axes in ax:
         axes.set_xticklabels([])
         axes.set_yticklabels([])
-        ctx.add_basemap(axes,source=ctx.providers.Stamen.TonerLite)
+        ctx.add_basemap(axes,source=DEFAULT_BASEMAP)
 
     ax[0].set_title('Kruinverhoging')
     ax[1].set_title('Bermverbreding')
@@ -392,7 +393,7 @@ def map_of_measure_cost(data, output_dir, data_type='Optimaal', close_output=Tru
     data['cost per km'] = np.divide(data['LCC'] / 1e6, (data['VAKLENGTE'] / 1e3))
     data.plot(column='cost per km', ax=ax, cmap='RdYlGn_r', legend=True, vmin=0.1, vmax=20, linewidth=2.5,
               legend_kwds={'label': 'M€/km', "shrink": .4})
-    ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite)
+    ctx.add_basemap(ax, source=DEFAULT_BASEMAP)
     ax.set_title('Kosten per kilometer - {}'.format(data_type))
     plt.savefig(output_dir.joinpath('kosten_{}.png'.format(data_type)), dpi=300,
                 bbox_inches='tight')
@@ -412,7 +413,7 @@ def map_of_measure_cost_diff(data, output_dir, dif_col, close_output=True):
               legend_kwds={'label': 'M€/km', "shrink": .2, 'anchor': (0.1, 0.5)})
 
 
-    ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite)
+    ctx.add_basemap(ax, source=DEFAULT_BASEMAP)
     ax.set_title('Verschil in kosten per kilometer')
     ax.set_yticklabels([])
     ax.set_xticklabels([])

@@ -110,37 +110,20 @@ class TrajectShape:
                 ]
 
     def generate_vakindeling_shape(self, vakken_path):
-        df_vakken = pd.read_csv(
-            vakken_path,
-            usecols=[
-                "objectid",
-                "vaknaam",
-                "m_start",
-                "m_eind",
-                "in_analyse",
-                "van_dp",
-                "tot_dp",
-                "stabiliteit",
-                "piping",
-                "overslag",
-                "bekledingen",
-                "kunstwerken",
-            ],
-            dtype={
-                "objectid": int,
-                "vaknaam": object,
-                "m_start": float,
-                "m_eind": float,
-                "in_analyse": int,
-                "van_dp": object,
-                "tot_dp": object,
-                "stabiliteit": object,
-                "piping": object,
-                "overslag": object,
-                "bekledingen": object,
-                "kunstwerken": object,
-            },
-        )
+        #get the vakindeling shape from the vakken_path
+        df_vakken = pd.read_csv(vakken_path)
+        try:
+            #check if vakken_path contains "pleistoceendiepte" and "deklaagdikte" columns
+            if "pleistoceendiepte" in df_vakken.columns and "deklaagdikte" in df_vakken.columns:
+                #new format: select the columns and set dtypes
+                df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen", "pleistoceendiepte", "deklaagdikte"]]
+                df_vakken = df_vakken.astype({"objectid": int, "vaknaam": object, "m_start": float, "m_eind": float, "in_analyse": int, "van_dp": object, "tot_dp": object, "stabiliteit": object, "piping": object, "overslag": object, "bekledingen": object, "pleistoceendiepte": float, "deklaagdikte": float})
+            else:
+                df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen",]]
+                df_vakken = df_vakken.astype({"objectid": int, "vaknaam": object, "m_start": float, "m_eind": float, "in_analyse": int, "van_dp": object, "tot_dp": object, "stabiliteit": object, "piping": object, "overslag": object, "bekledingen": object})
+        except:
+            raise ValueError(f"Vakindeling bestand {vakken_path} kon niet worden gelezen. Controleer het bestand op de juiste indeling, bijvoorbeeld op lege rijen.")
+        
         self.check_vakindeling(df_vakken, self.NBPW_shape.geometry.length.values[0])
         traject_geom = self.NBPW_shape.geometry[0][0]
 
