@@ -68,5 +68,5 @@ class SlopePart:
             #run over values and check if value is higher than previous. If not, use previous+ 0.01
             for idx in range(1, len(relation)):
                 if relation[idx][0] <= relation[idx-1][0]:
-                    relation[idx] = (relation[idx-1][0], relation[idx][1] + 0.01)
+                    relation[idx] = (relation[idx-1][0] + 0.01, relation[idx][1])
             self.block_revetment_relation[year] = relation
