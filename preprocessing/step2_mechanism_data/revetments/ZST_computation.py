@@ -131,8 +131,6 @@ class ZSTComputation:
                 if not hasattr(slope_part, 'block_revetment_relation'):
                     raise ValueError("Block revetment relation not added for slope part. Use add_block_revetment_relation first.")
                 
-                #For stone slope parts 2100 can not have a lower D_sufficient than 2023
-                slope_part.ensure_future_D_sufficient_lower()
 
                 #If the slope part is a stone slope part the current D should be in range of D_sufficient. If not, add it to the D_sufficient list
                 #depending on the mode we pass D or D_effective
@@ -142,8 +140,12 @@ class ZSTComputation:
                     slope_part.D_eff = slope_part.D
                 slope_part.ensure_existing_thickness_in_relation()
 
+                #For stone slope parts 2100 can not have a lower D_sufficient than 2023
+                slope_part.ensure_future_D_sufficient_lower()
+
                 #If we have equal D_sufficient in the same relation, we add a 0.01 increment such that values are increasing
                 slope_part.ensure_D_sufficient_increases()
+
             else:
                 print(slope_part.toplaagtype)
 

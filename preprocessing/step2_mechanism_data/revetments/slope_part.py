@@ -1,6 +1,7 @@
 from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta, beta_to_pf
 import numpy as np
+from scipy.interpolate import interp1d
 
 class SlopePart:
     def __init__(self, steentoets_series, doorsnede):
@@ -47,7 +48,9 @@ class SlopePart:
                 self.block_revetment_relation[year] = sorted(relation, key=lambda x: x[0])
             elif all(D_sufficient > self.D_eff for  D_sufficient, _ in relation): 
                 # thickness is lower than relation. This means that the current revetment is unsafe. We add a point with a beta that corresponds to a failure probability of 1e-2
-                relation.append((self.D_eff, beta_to_pf(1e-2)))
+                D_suff, betas = zip(*relation)
+                _relation = interp1d(D_suff,betas,fill_value='extrapolate')
+                relation.append((self.D_eff, float(max(_relation(self.D_eff),pf_to_beta(1e-2)))))
                 self.block_revetment_relation[year] = sorted(relation, key=lambda x: x[0])
                 print(f"Waarschuwing: bestaande steendikte ({self.D}) op doorsnede {self.doorsnede} is lager dan de minimale steendikte in de afgeleide relatie. Aangenomen wordt dat de faalkans van de huidige bekleding gelijk is aan 1/100.")    
 
@@ -55,11 +58,16 @@ class SlopePart:
         '''Ensures that the D_sufficient values are decreasing for future.'''
         
         #we assume there are 2 years
-        thickness, beta_current = list(zip(*self.block_revetment_relation[min(self.block_revetment_relation.keys())]))
-        thickness, beta_future  = list(zip(*self.block_revetment_relation[max(self.block_revetment_relation.keys())]))
+        thickness_curr, beta_current = list(zip(*self.block_revetment_relation[min(self.block_revetment_relation.keys())]))
+        thickness_fut, beta_future  = list(zip(*self.block_revetment_relation[max(self.block_revetment_relation.keys())]))
 
-        beta_future = [beta_current[i] if beta_current[i] > beta_future[i] else beta_future[i] for i in range(len(beta_current))]
-        self.block_revetment_relation[max(self.block_revetment_relation.keys())] = list(zip(thickness, beta_future))
+        #get thicknesses for future from current relationship:
+        _interpolated_thickness_fut = interp1d(beta_current,thickness_curr,fill_value = 'extrapolate')(beta_future)
+        #if the same beta would result in a higher thickness for the current situation, replace the value to ensure that betas are equal or decreasing towards the future
+        
+        _new_thickness_future = [_interpolated_thickness_fut[i] if _interpolated_thickness_fut[i] > thickness_fut[i] else thickness_fut[i] for i in range(len(thickness_fut))]
+
+        self.block_revetment_relation[max(self.block_revetment_relation.keys())] = list(zip(_new_thickness_future, beta_future))
 
     def ensure_D_sufficient_increases(self):
         '''Ensures that the D_sufficient values are increasing and not equal to each other.'''
