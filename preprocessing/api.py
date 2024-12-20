@@ -342,15 +342,11 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
     achterland_lengte = parameters.getint('achterland_lengte', fallback=75)  # set default value to 75 if not present
     # get traject_shape from parameters. This is either a FALSE or none (or nothing filled in), or a pathname
     try: 
-        traject_shape = parameters['traject_shapefile']
-        if traject_shape == 'False':
-            traject_shape = False
-    except KeyError:
-        traject_shape = False
+        traject_shape = parameters.getboolean('traject_shapefile', fallback=False)
+    except:
+        traject_shape = str(parameters['traject_shapefile'])
     flip_traject = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
     flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
-    # get traject_shape from parameters. This is either a FALSE or none (or nothing filled in), or a pathname
-
 
     # print the parameters
     print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
