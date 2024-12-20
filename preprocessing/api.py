@@ -85,8 +85,12 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
         if output_folder_vakindeling.exists():
             output_folder_vakindeling.rmdir()
         output_folder_vakindeling.mkdir(parents=True, exist_ok=True)
-    
-    traject_shape = parameters.getboolean('traject_shapefile', fallback=False)  # set default value to False if not present
+
+    # get traject_shape from parameters. This is either a FALSE or none (or nothing filled in), or a pathname
+    try: 
+        traject_shape = parameters.getboolean('traject_shapefile', fallback=False)
+    except:
+        traject_shape = str(parameters['traject_shapefile'])
     flip = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
 
     # print the parameters
@@ -320,6 +324,8 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
         print(f"Error reading configuration: {e}")
         return
 
+
+
     # Accessing parameters
     traject_id = parameters['traject_id']
     if results_folder is None:
@@ -334,7 +340,11 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
     dx = parameters.getint('dx', fallback=25)  # set default value to 25 if not present
     voorland_lengte = parameters.getint('voorland_lengte', fallback=50)  # set default value to 50 if not present
     achterland_lengte = parameters.getint('achterland_lengte', fallback=75)  # set default value to 75 if not present
-    traject_shape = parameters.getboolean('traject_shape', fallback=False)  # set default value to False if not present
+    # get traject_shape from parameters. This is either a FALSE or none (or nothing filled in), or a pathname
+    try: 
+        traject_shape = parameters.getboolean('traject_shapefile', fallback=False)
+    except:
+        traject_shape = str(parameters['traject_shapefile'])
     flip_traject = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
     flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
 
