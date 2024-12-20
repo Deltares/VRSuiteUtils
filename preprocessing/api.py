@@ -88,11 +88,9 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
 
     # get traject_shape from parameters. This is either a FALSE or none (or nothing filled in), or a pathname
     try: 
-        traject_shape = parameters['traject_shapefile']
-        if traject_shape == 'False':
-            traject_shape = False
-    except KeyError:
-        traject_shape = False
+        traject_shape = parameters.getboolean('traject_shapefile', fallback=False)
+    except:
+        traject_shape = str(parameters['traject_shapefile'])
     flip = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
 
     # print the parameters
