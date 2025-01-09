@@ -17,11 +17,12 @@ class TrajectShape:
         if not NBWP_shape_path:
             # get from WFS
             wfs_nbpw = WebFeatureService(
-                url="https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs",
+                url="https://geo.rijkswaterstaat.nl/services/ogc/wvp/ows/wfs",
+                # url="https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs",
                 version="1.1.0",
             )
             NBPW = gpd.read_file(
-                wfs_nbpw.getfeature("nbpw:dijktrajecten", outputFormat="json")
+                wfs_nbpw.getfeature("dijktrajecten", outputFormat="json")
             )
         else:
             NBPW = gpd.read_file(NBWP_shape_path)
@@ -138,7 +139,7 @@ class TrajectShape:
             section_geom.append(section)
             # sanity check. VAKLENGTE column and section length should be almost equal
             np.testing.assert_approx_equal(
-                section.length, row["m_eind"] - row["m_start"], significant=5
+                row["m_eind"] - row["m_start"], section.length, significant=5
             )
         self.vakindeling_shape = gpd.GeoDataFrame(
             df_vakken, geometry=section_geom, crs=self.NBPW_shape.crs

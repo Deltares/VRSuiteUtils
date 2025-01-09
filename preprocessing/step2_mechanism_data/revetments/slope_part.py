@@ -40,12 +40,16 @@ class SlopePart:
         '''Ensures that the existing block thickness is covered by the relationship that was derived by adding a point if necessary.'''
         
         for year, relation in self.block_revetment_relation.items():
-            if all(D_sufficient < self.D_eff for  D_sufficient, _ in relation): # thickness is higher than relation. So we add a point with a beta that is 0.1 higher than the highest
+            if all(D_sufficient < self.D_eff for  D_sufficient, _ in relation): 
+                # thickness is higher than relation. So we add a point with a beta that is 0.1 higher than the highest
                 _, betas =  zip(*relation)
                 relation.append((self.D_eff, max(max(betas)+0.1, 8.0)))
                 self.block_revetment_relation[year] = sorted(relation, key=lambda x: x[0])
-            elif all(D_sufficient > self.D_eff for  D_sufficient, _ in relation): # thickness is lower than relation. This should yield a crash as then the input can not be trusted.
-                raise ValueError(f"Bestaande steendikte ({self.D}) op doorsnede {self.doorsnede} is lager dan de minimale steendikte in de afgeleide relatie. Dit impliceert een extreem grote faalkans waardoor de invoer niet betrouwbaar is.")    
+            elif all(D_sufficient > self.D_eff for  D_sufficient, _ in relation): 
+                # thickness is lower than relation. This means that the current revetment is unsafe. We add a point with a beta that corresponds to a failure probability of 1e-2
+                relation.append((self.D_eff, beta_to_pf(1e-2)))
+                self.block_revetment_relation[year] = sorted(relation, key=lambda x: x[0])
+                print(f"Waarschuwing: bestaande steendikte ({self.D}) op doorsnede {self.doorsnede} is lager dan de minimale steendikte in de afgeleide relatie. Aangenomen wordt dat de faalkans van de huidige bekleding gelijk is aan 1/100.")    
 
     def ensure_future_D_sufficient_lower(self):
         '''Ensures that the D_sufficient values are decreasing for future.'''

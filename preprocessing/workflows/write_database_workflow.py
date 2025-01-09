@@ -7,7 +7,7 @@ from preprocessing.step4_build_sqlite_db.write_database import *
 import shutil
 def read_csv_linesep(file_path, **kwargs):
     try:
-        df = pd.read_csv(file_path, sep = ',', lineterminator = '\n', **kwargs)
+        df = pd.read_csv(file_path, sep = ',', **kwargs)
     except:
         df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
     df = df.dropna(subset=['doorsnede'])
