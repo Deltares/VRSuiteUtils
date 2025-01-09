@@ -208,7 +208,7 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
         Path(output_path),
     )
 
-def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True):
+def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple'):
     mandatory_parameters = ['hr_input_csv', 'hnl_results_dir', 'output_map_waterstand']
 
     try:
@@ -241,10 +241,11 @@ def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: P
         Path(file_path),
         Path(work_dir_path),
         Path(output_path),
-        correct_uncer
+        correct_uncer,
+        decim_type
     )
 
-def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, q_crit: int = 1):
+def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple', q_crit: int = 1):
     mandatory_parameters = ['hr_input_csv', 'hnl_results_dir', 'output_map_overslag']
 
     try:
@@ -278,6 +279,7 @@ def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Pat
         Path(work_dir_path),
         Path(output_path),
         correct_uncer,
+        decim_type,
         q_crit
     )
 

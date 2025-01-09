@@ -153,10 +153,10 @@ def test_read_waterlevel_hydranl(traject: str, test_name: str, revetment: bool, 
    )
 
    # read the data for waterlevels
-   _intermediate_dir = _test_data_dir.joinpath("intermediate_results", "HR_results")
+   _intermediate_dir = _test_data_dir.joinpath("decim_simple", "intermediate_results", "HR_results")
    waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("waterlevel"), False)
 
-   assert waterlevel_table["Beta"][0]==0.3590955640241909
+   assert waterlevel_table["Beta"][0]==0.5182054462787409
 
 @pytest.mark.parametrize("traject,test_name,revetment", [
                                                pytest.param("14-1", "overflow", False, id="14-1 overflow hydranl")                                                   ])
@@ -175,7 +175,7 @@ def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  r
    )
 
    # read the data for overflow
-   _intermediate_dir = _test_data_dir.joinpath("intermediate_results", "HR_results")
+   _intermediate_dir = _test_data_dir.joinpath("decim_simple", "intermediate_results", "HR_results")
    mechanism_data = {"overflow": read_overflow_data(_intermediate_dir.joinpath("overflow"), False)}
 
    assert mechanism_data["overflow"]["Beta"][0]==0.9771468439412871

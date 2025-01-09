@@ -6,7 +6,8 @@ from preprocessing.step2_mechanism_data.hydranl_read import HydraNLReadWaterLeve
 def waterlevel_hydranl_main(file_path: Path,
                             work_dir_path: Path,
                             output_path: Path,
-                            correct_uncer: bool):
+                            correct_uncer: bool,
+                            decim_type: str):
     
     hr_data = pd.read_csv(file_path, sep=';', header=0)
     hr_koppel = hr_data['hr_koppel'].values
@@ -24,4 +25,4 @@ def waterlevel_hydranl_main(file_path: Path,
 
             json_file_name = os.path.join(output_dir, f'designtable_{dsn}.json')
         
-            HydraNLReadWaterLevel(hnl_work_dir_path, hr_koppel[ii], correct_uncer).export_json(json_file_name)
+            HydraNLReadWaterLevel(hnl_work_dir_path, hr_koppel[ii], correct_uncer, decim_type).export_json(json_file_name)

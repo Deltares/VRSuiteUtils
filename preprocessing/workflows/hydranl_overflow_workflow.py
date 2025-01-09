@@ -7,6 +7,7 @@ def overflow_hydranl_main(file_path: Path,
                           work_dir_path: Path,
                           output_path: Path,
                           correct_uncer: bool,
+                          decim_type: str,
                           q_crit: int):
     
     hr_data = pd.read_csv(file_path, sep=';', header=0)
@@ -29,7 +30,8 @@ def overflow_hydranl_main(file_path: Path,
         
             HydraNLReadOverflow(hnl_work_dir_path, 
                                 hr_koppel[ii], 
-                                correct_uncer, 
+                                correct_uncer,
+                                decim_type,
                                 prfl_bestand[ii], 
                                 dijkhoogte[ii],
                                 q_crit).export_json(json_file_name)
