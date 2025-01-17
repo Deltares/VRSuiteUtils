@@ -2,14 +2,17 @@ import postprocessing.database_access_functions as db_access
 import postprocessing.database_analytics as db_analytics
 import copy
 from vrtool.common.enums import MechanismEnum
+from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+
 import numpy as np
 
 class VRTOOLOptimizationObject:
     '''Object to get and store all relevant information from an optimization run in the VRTOOL database'''
     def __init__(self, db_path, run_id, step = False):
         self.run_id = run_id
-        self.db_path = db_path
-        self.optimization_type = db_access.get_overview_of_runs(self.db_path)[self.run_id]['optimization_type']
+        # self.db_path = db_path
+        self.db_path = str(db_path)
+        self.optimization_type = [run['optimization_type'] for run in db_access.get_overview_of_runs(self.db_path) if run['id'] == self.run_id][0]
         self.step = step
     
     def get_all_optimization_results(self):
@@ -67,3 +70,7 @@ class VRTOOLOptimizationObject:
             return time, list(1-p_nonf)
 
         traject_probs = [calculate_traject_probability(traject_probability_step ) for traject_probability_step in self.traject_probability_per_mechanism]
+    def get_forward_vr_order(self):
+        forward_vr_order = [step['section_id'][0] for id, step in self.measures_per_step.items()]
+        #take first of unique values, keep order
+        forward_vr_order = [x for i, x in enumerate(forward_vr_order) if forward_vr_order.index(x) == i]
