@@ -10,8 +10,8 @@ class VRTOOLOptimizationObject:
     '''Object to get and store all relevant information from an optimization run in the VRTOOL database'''
     def __init__(self, db_path, run_id, step = False):
         self.run_id = run_id
-        # self.db_path = db_path
-        self.db_path = str(db_path)
+        self.db_path = db_path
+        # self.db_path = str(db_path)
         self.optimization_type = [run['optimization_type'] for run in db_access.get_overview_of_runs(self.db_path) if run['id'] == self.run_id][0]
         self.step = step
     

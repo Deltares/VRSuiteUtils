@@ -10,7 +10,7 @@ from vrtool.orm.models import *
 
 
 class VRTOOLMeasuresObject:
-    '''Object to get and store all relevant information on measures from a VRTOOL database'''
+    '''Object to get and store all relevant information on measures from a VRTOOL database. Not suitable for revetment yet TODO'''
     def __init__(self, db_path, LE_scenario, design_year = 50):
         self.db_path = db_path
         self.design_year = design_year
@@ -24,12 +24,12 @@ class VRTOOLMeasuresObject:
                                         .select(MeasureResultMechanism, MechanismPerSection, Mechanism.name)
                                         .join(MechanismPerSection, on=(MechanismPerSection.id == MeasureResultMechanism.mechanism_per_section_id))
                                         .join(Mechanism, on=(Mechanism.id == MechanismPerSection.mechanism_id))
-                                        .where(MeasureResultMechanism.time == self.t_design))
+                                        .where(MeasureResultMechanism.time == self.design_year))
 
         # Fetch all MeasureResultSection records for the specified year
         measures_for_all_sections_cost = (MeasureResultSection
                                         .select()
-                                        .where(MeasureResultSection.time == self.t_design))
+                                        .where(MeasureResultSection.time == self.design_year))
         
         measure_types_for_all_sections = (MeasureResult
                                         .select(MeasureResult, MeasurePerSection, Measure, MeasureType)
@@ -111,12 +111,12 @@ class VRTOOLMeasuresObject:
     def N_LE_scenario(self, N):
         N_piping = self.measures_for_all_sections['section_length'] / 300
         N_piping = N_piping.apply(lambda x: max(x, 1)) #minimum 1
-        N_piping = N_piping.apply(lambda x: min(x, LE)) #maximum LE
+        N_piping = N_piping.apply(lambda x: min(x, self.LE)) #maximum LE
         self.measures_for_all_sections['Piping_dsn'] = pf_to_beta(beta_to_pf(self.measures_for_all_sections['Piping']) / N_piping)
         
         N_stability = self.measures_for_all_sections['section_length'] / 50
         N_stability = N_stability.apply(lambda x: max(x, 1))
-        N_stability = N_stability.apply(lambda x: min(x, LE)) #maximum LE
+        N_stability = N_stability.apply(lambda x: min(x, self.LE)) #maximum LE
         self.measures_for_all_sections['StabilityInner_dsn'] = pf_to_beta(beta_to_pf(self.measures_for_all_sections['StabilityInner']) / N_stability)
 
     def full_LE_scenario(self):
