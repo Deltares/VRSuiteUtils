@@ -49,7 +49,7 @@ def create_project_structure(project_folder, traject_id):
 
     vakindeling_dir = os.path.join(intermediate_results_dir, "vakindeling")
     hr_results_dir = os.path.join(intermediate_results_dir, "HR_results")
-    hnl_results_dir = os.path.join(hr_results_dir, "HNL")
+    hnl_results_dir = os.path.join(input_files_dir, "HNL_results")
     waterlevel_dir = os.path.join(hr_results_dir, "waterlevel")
     overflow_dir = os.path.join(hr_results_dir, "overflow")
     bekleding_dir = os.path.join(intermediate_results_dir, "bekleding")
