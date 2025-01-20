@@ -92,7 +92,7 @@ class ZSTComputation:
         Qvar_h = np.array(self.qvariant_results[f'Qvar {year_idx}_{p_idx}_zuilen']['waterstand'])
 
         if (len(Qvar_Hs) == 1) and (Qvar_h > self.cross_section.slope_parts[slope_part_idx].Zo) and (Qvar_h < self.cross_section.slope_parts[slope_part_idx].Zb): #ensure there are 2 points such that it can be interpolated. Only if the load is on the slope part
-
+            #load on the slope, but more points needed for interpolation
             Qvar_h = [Qvar_h[0]-0.25, Qvar_h[0], Qvar_h[0]+0.25]
             Qvar_Hs = [Qvar_Hs[0], Qvar_Hs[0], Qvar_Hs[0]]
             #interpolate to get relation between Hs and h
@@ -100,8 +100,11 @@ class ZSTComputation:
             #no load on the slope part
             return 0.01
         elif len(Qvar_Hs) == 0:
+            #no load for this probability
             return 0.01
-        
+        elif all(Qvar_h < self.cross_section.slope_parts[slope_part_idx].Zo):
+            #load is below slope part
+            return 0.01
         Qvar_relation = interp1d(Qvar_h, Qvar_Hs, kind='linear', fill_value=(0.0,0.0))
 
         #get h for relevant slope part range where there is load. We take 25 points in the range of the slope part and derive the relation between Hs and h
@@ -128,8 +131,6 @@ class ZSTComputation:
                 if not hasattr(slope_part, 'block_revetment_relation'):
                     raise ValueError("Block revetment relation not added for slope part. Use add_block_revetment_relation first.")
                 
-                #For stone slope parts 2100 can not have a lower D_sufficient than 2023
-                slope_part.ensure_future_D_sufficient_lower()
 
                 #If the slope part is a stone slope part the current D should be in range of D_sufficient. If not, add it to the D_sufficient list
                 #depending on the mode we pass D or D_effective
@@ -139,8 +140,14 @@ class ZSTComputation:
                     slope_part.D_eff = slope_part.D
                 slope_part.ensure_existing_thickness_in_relation()
 
+                #For stone slope parts 2100 can not have a lower D_sufficient than 2023
+                slope_part.ensure_future_D_sufficient_lower()
+
                 #If we have equal D_sufficient in the same relation, we add a 0.01 increment such that values are increasing
                 slope_part.ensure_D_sufficient_increases()
+
+            else:
+                print(slope_part.toplaagtype)
 
 
     def write_json_output(self):
