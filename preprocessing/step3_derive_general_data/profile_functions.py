@@ -9,6 +9,7 @@ from io import BytesIO
 from shapely.geometry import LineString, Point
 from scipy.interpolate import griddata
 from shapely import geometry
+import warnings
 
 class Traject:
 
@@ -20,9 +21,9 @@ class Traject:
     def get_traject_data(self, NBWP_shape_path=False):
         if not NBWP_shape_path:
             # get from WFS
-            wfs_nbpw = WebFeatureService(url='https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs',
+            wfs_nbpw = WebFeatureService(url='https://geo.rijkswaterstaat.nl/services/ogc/wvp/ows/wfs?version=1.1.0&request=GetCapabilities&Service=WFS',
                                          version='1.1.0')
-            NBPW = gpd.read_file(wfs_nbpw.getfeature('nbpw:dijktrajecten', outputFormat='json'))
+            NBPW = gpd.read_file(wfs_nbpw.getfeature('dijktrajecten', outputFormat='json'))
         else:
             NBPW = gpd.read_file(NBWP_shape_path)
 
