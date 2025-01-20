@@ -49,7 +49,7 @@ def read_waterlevel_data(files_dir, use_hydraring):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if use_hydraring:
+                        if use_hydraring: # if Hydra-Ring calculations are used
                             if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                                 design_table = read_design_table(loc_file)
                                 # for now we still have to check it, in case users have made their Hydraring calculations with the older version
@@ -65,7 +65,12 @@ def read_waterlevel_data(files_dir, use_hydraring):
                                         "Beta": list(design_table["Beta"]),
                                     }
                                 )
-                        else:
+                                
+                                waterlevel_data = pd.concat(
+                                    (waterlevel_data, table_data), ignore_index=True
+                                )
+
+                        else: # if Hydra-NL calculations are used
                             if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".json"):
                                 design_table = read_json(loc_file)
 
@@ -78,9 +83,10 @@ def read_waterlevel_data(files_dir, use_hydraring):
                                     }
                                 )
 
-                        waterlevel_data = pd.concat(
-                            (waterlevel_data, table_data), ignore_index=True
-                        )
+                                waterlevel_data = pd.concat(
+                                    (waterlevel_data, table_data), ignore_index=True
+                                )
+
     return waterlevel_data
 
 
@@ -93,7 +99,7 @@ def read_overflow_data(files_dir, use_hydraring):
             for loc_dir in year_dir.iterdir():
                 if loc_dir.is_dir():
                     for loc_file in loc_dir.iterdir():
-                        if use_hydraring:
+                        if use_hydraring: # if Hydra-Ring calculations are used
                             if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                                 design_table = read_design_table(loc_file)
                                 # for now we still have to check it, in case users have made their Hydraring calculations with the older version
@@ -109,7 +115,12 @@ def read_overflow_data(files_dir, use_hydraring):
                                         "Beta": list(design_table["Beta"]),
                                     }
                                 )
-                        else:
+
+                                overflow_data = pd.concat(
+                                    (overflow_data, table_data), ignore_index=True
+                                )
+
+                        else: # if Hydra-NL calculations are used
                             if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".json"):
                                 design_table = read_json(loc_file)
                                 
@@ -122,10 +133,12 @@ def read_overflow_data(files_dir, use_hydraring):
                                     }
                                 )
 
-                        overflow_data = pd.concat(
-                            (overflow_data, table_data), ignore_index=True
-                        )
+                                overflow_data = pd.concat(
+                                    (overflow_data, table_data), ignore_index=True
+                                )
+
     overflow_data = overflow_data.set_index("LocationId")
+
     return overflow_data
 
 
