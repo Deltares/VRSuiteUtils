@@ -52,12 +52,12 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # read the data for waterlevels
    _intermediate_dir = _test_data_dir.joinpath("intermediate")
-   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"))
+   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"), True)
 
 
    #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
    vakindeling_shape.astype({'overslag': str, 'stabiliteit':str})
-   mechanism_data = {'overslag': read_overflow_data(_intermediate_dir.joinpath("Overslag"))}
+   mechanism_data = {'overslag': read_overflow_data(_intermediate_dir.joinpath("Overslag"), True)}
    if 'D-Stability' in request.node.callspec.id: 
       mechanism_data['stabiliteit'] = read_stability_data(_intermediate_dir.joinpath("STBI_data_DStability.csv"))
    else:
@@ -136,5 +136,46 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    compare_databases(_output_path, _reference_database)
 
+@pytest.mark.parametrize("traject,test_name,revetment", [
+                                               pytest.param("14-1", "waterlevel", False, id="14-1 waterlevel hydranl")                                                   ])
+def test_read_waterlevel_hydranl(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
 
+   # remove output_path
+   # get id of request
+   _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
+   if _output_path.parent.exists():
+      shutil.rmtree(_output_path.parent)
 
+   # get all the input data
+   _test_data_dir = test_data.joinpath(traject)
+   assert _test_data_dir.exists(), "No test data available at {}".format(
+      _test_data_dir
+   )
+
+   # read the data for waterlevels
+   _intermediate_dir = _test_data_dir.joinpath("decim_simple", "intermediate_results", "HR_results")
+   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("waterlevel"), False)
+
+   assert waterlevel_table["Beta"][0]==0.5182054462787409
+
+@pytest.mark.parametrize("traject,test_name,revetment", [
+                                               pytest.param("14-1", "overflow", False, id="14-1 overflow hydranl")                                                   ])
+def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  request: pytest.FixtureRequest):
+
+   # remove output_path
+   # get id of request
+   _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
+   if _output_path.parent.exists():
+      shutil.rmtree(_output_path.parent)
+
+   # get all the input data
+   _test_data_dir = test_data.joinpath(traject)
+   assert _test_data_dir.exists(), "No test data available at {}".format(
+      _test_data_dir
+   )
+
+   # read the data for overflow
+   _intermediate_dir = _test_data_dir.joinpath("decim_simple", "intermediate_results", "HR_results")
+   mechanism_data = {"overflow": read_overflow_data(_intermediate_dir.joinpath("overflow"), False)}
+
+   assert mechanism_data["overflow"]["Beta"][0]==0.9771468439412871

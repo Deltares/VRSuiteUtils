@@ -3,6 +3,8 @@ from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_ma
 
 from preprocessing.workflows.hydraring_overflow_workflow import overflow_main
 from preprocessing.workflows.hydraring_waterlevel_workflow import waterlevel_main
+from preprocessing.workflows.hydranl_overflow_workflow import overflow_hydranl_main
+from preprocessing.workflows.hydranl_waterlevel_workflow import waterlevel_hydranl_main
 
 from preprocessing.workflows.bekleding_qvariant_workflow import qvariant_main
 from preprocessing.workflows.bekleding_gebu_zst_workflow import gebu_zst_main
@@ -204,6 +206,81 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
         Path(profielen_dir),
         Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
         Path(output_path),
+    )
+
+def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple'):
+    mandatory_parameters = ['hr_input_csv', 'hnl_results_dir', 'output_map_waterstand']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    file_path = parameters['hr_input_csv']
+    work_dir_path = parameters['hnl_results_dir']
+    
+    if results_folder is None:
+        output_path = Path(parameters['output_map_waterstand'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_waterstand'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+
+    # print the parameters
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    print(f"file_path: {file_path}")
+    print(f"work_dir_path: {work_dir_path}")
+    print(f"output_path: {output_path}")
+
+    # run the water level computations
+    waterlevel_hydranl_main(
+        Path(file_path),
+        Path(work_dir_path),
+        Path(output_path),
+        correct_uncer,
+        decim_type
+    )
+
+def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple', q_crit: int = 1):
+    mandatory_parameters = ['hr_input_csv', 'hnl_results_dir', 'output_map_overslag']
+
+    try:
+        parameters = read_config_file(config_file, mandatory_parameters)
+    except ValueError as e:
+        print(f"Error reading configuration: {e}")
+        return
+
+    # Accessing parameters
+    file_path = parameters['hr_input_csv']
+    work_dir_path = parameters['hnl_results_dir']
+    
+    if results_folder is None:
+        output_path = Path(parameters['output_map_overslag'])
+    else: # used for testing
+        output_path = results_folder.joinpath(parameters['output_map_overslag'])
+        # Recreate the output folder
+        if output_path.exists():
+            output_path.rmdir()
+        output_path.mkdir(parents=True, exist_ok=True)
+
+    # print the parameters
+    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    print(f"file_path: {file_path}")
+    print(f"work_dir_path: {work_dir_path}")
+    print(f"output_path: {output_path}")
+
+    # run the water level computations
+    overflow_hydranl_main(
+        Path(file_path),
+        Path(work_dir_path),
+        Path(output_path),
+        correct_uncer,
+        decim_type,
+        q_crit
     )
 
 def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
