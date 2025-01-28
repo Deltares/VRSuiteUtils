@@ -131,8 +131,4 @@ class VRTOOLMeasuresObject:
         self.get_measures_for_all_sections()
         self.add_combined_vzg_soil()
         self.add_section_lengths()
-
         self.compute_cs_betas()
-
-        
-        pass
