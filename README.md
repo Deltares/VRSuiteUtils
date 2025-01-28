@@ -4,7 +4,7 @@ This repository contains tools to process input from a WBI assessment to input f
 
 ## What is this repository for?
 
-* The current version that this repository pertains to is VRTOOL v0.1.3
+* The current version that this repository pertains to is VRTOOL v1.0.1
 
 ## How do I get set up? ##
 
