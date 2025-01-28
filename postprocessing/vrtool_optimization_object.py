@@ -97,7 +97,21 @@ class VRTOOLOptimizationObject:
         self.traject_probs_filtered = {key: np.delete(value, low_bc_idx) for key, value in self.traject_probs.items()}
         self.costs_filtered = np.delete(cost_vrm, low_bc_idx)
 
-    def requirements_from_vrm(self, step = 'Economic optimum', year = 2075,  pf_req = None):
+    def set_step_data(self, step = 'Economic optimum', year = 2075,  pf_req = None):
+        '''Set what type of step to use for exporting data on requirements and measures.
+        Two types of settings are possible: taking the 'Economic optimum' or the 'Standard in year'. For the latter a pf_req needs to be provided.'''
+        if step == 'Standard in year' and pf_req == None:
+            raise ValueError('pf_req should be provided when step is Standard in year')
+        
+        if step == 'Economic optimum':
+            self.requirement_step = self.step
+            self.requirement_year = year
+        elif step == 'Standard in year':
+            self.requirement_step = min(np.where(np.array(self.traject_probs[year-2025])<pf_req)[0])
+            self.requirement_year = year
+
+
+    def requirements_from_vrm(self):
         '''Get the requirements for the VRM based on the optimization results. Returns a requirement for each mechanism per section based on the optimization results.
         Two types of settings are possible: taking the 'Economic optimum' or the 'Standard in year'. For the latter a pf_req needs to be provided.'''
         def get_probability_for_mechanism_in_year_per_section(assessment_step: dict[int:dict[str:list]], year:int, mechanism: MechanismEnum):
@@ -107,27 +121,29 @@ class VRTOOLOptimizationObject:
                 probability_per_section[section] = assessment_step[mechanism][section]['beta'][time_index]
             return probability_per_section
 
-        if step == 'Standard in year' and pf_req == None:
-            raise ValueError('pf_req should be provided when step is Standard in year')
-        
-        year_int = year-2025
-
-        if step == 'Economic optimum':
-            requirement_step = self.step
-        elif step == 'Standard in year':
-            requirement_step = min(np.where(np.array(self.traject_probs[year_int])<pf_req)[0])
-
         all_mechanism_keys = [list(step.keys()) for step in self.stepwise_assessment]
         #flatten and make a set
         all_mechanism_keys = set([item for sublist in all_mechanism_keys for item in sublist])
-        requirements_per_section = {mechanism: get_probability_for_mechanism_in_year_per_section(assessment_step=self.stepwise_assessment[requirement_step],
-                                                                                          year=year_int, 
+        requirements_per_section = {mechanism: get_probability_for_mechanism_in_year_per_section(assessment_step=self.stepwise_assessment[self.requirement_step],
+                                                                                          year=self.requirement_year - 2025, 
                                                                                           mechanism=mechanism) 
                                                                                           for mechanism in all_mechanism_keys}
         
         self.requirements = pd.DataFrame.from_dict(requirements_per_section)
-        #get the requirements for the VRM
-        self.requirements = db_access.get_requirements(self.db_path, year)
-        self.requirements = {key: value for key, value in self.requirements.items() if key in self.traject_probs.keys()}
+
+    def measures_from_vrm(self):
+        '''Get the measures from the VRM for the requirement_step and requirement_year as stored in the object'''
+        measures_per_section  = get_measures_per_section_for_step(self.measures_per_step, self.requirement_step+1)
+        section_parameters = {}
+
+        for section in measures_per_section.keys():
+            section_parameters[section] = []
+            for measure in measures_per_section[section][0]:
+                parameters = get_measure_parameters(measure, db_path)
+                parameters.update(get_measure_costs(measure, db_path))
+                parameters.update(get_measure_type(measure, db_path))
+                section_parameters[section].append(parameters)
+        
+        self.measures_df = measure_per_section_to_df(measures_per_section, section_parameters)
 
     
