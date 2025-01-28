@@ -1,8 +1,10 @@
 import postprocessing.database_access_functions as db_access
 import postprocessing.database_analytics as db_analytics
+import postprocessing.generate_output as output_functions
 import copy
 from vrtool.common.enums import MechanismEnum
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+
 from collections import defaultdict
 import pandas as pd
 import numpy as np
@@ -133,17 +135,17 @@ class VRTOOLOptimizationObject:
 
     def measures_from_vrm(self):
         '''Get the measures from the VRM for the requirement_step and requirement_year as stored in the object'''
-        measures_per_section  = get_measures_per_section_for_step(self.measures_per_step, self.requirement_step+1)
+        measures_per_section  = db_analytics.get_measures_per_section_for_step(self.measures_per_step, self.requirement_step+1)
         section_parameters = {}
 
         for section in measures_per_section.keys():
             section_parameters[section] = []
             for measure in measures_per_section[section][0]:
-                parameters = get_measure_parameters(measure, db_path)
-                parameters.update(get_measure_costs(measure, db_path))
-                parameters.update(get_measure_type(measure, db_path))
+                parameters = db_access.get_measure_parameters(measure, self.db_path)
+                parameters.update(db_access.get_measure_costs(measure, self.db_path))
+                parameters.update(db_access.get_measure_type(measure, self.db_path))
                 section_parameters[section].append(parameters)
         
-        self.measures_df = measure_per_section_to_df(measures_per_section, section_parameters)
+        self.measures_df = output_functions.measure_per_section_to_df(measures_per_section, section_parameters)
 
     
