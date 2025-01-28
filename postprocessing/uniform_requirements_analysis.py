@@ -2,6 +2,8 @@ import pandas as pd
 from vrtool.orm.models import *
 import itertools
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+from vrtool.common.enums import MechanismEnum
+
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -29,8 +31,9 @@ class UniformRequirementsAnalysis:
         self.traject_length = DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_length
         
         self.measures = measures.measures_for_all_sections
+        self.year = measures.design_year
 
-    def plot_results(self, vrm_run, save_dir, dsn_run=False, year = 50, LE = False):
+    def plot_results(self, vrm_run, save_dir, dsn_run=False, LE = False):
         pass
         fig,ax = plt.subplots()
 
@@ -43,28 +46,28 @@ class UniformRequirementsAnalysis:
         # plot dsn results if they exist
         if dsn_run:
             #plot the DSN run
-            ax.scatter(dsn_run.costs[dsn_run.step], dsn_run.traject_probs[year][dsn_run.step], color = colors[6], marker = 'o', linestyle = '', label = 'Default doorsnede-eisen')
+            ax.scatter(dsn_run.costs[dsn_run.step], dsn_run.traject_probs[self.year][dsn_run.step], color = colors[6], marker = 'o', linestyle = '', label = 'Default doorsnede-eisen')
         
         #plot the VRM run path
         if hasattr(vrm_run, 'costs_filtered'):
             #plot the VRM run if filtered results exist
-            ax.plot(vrm_run.costs_filtered, vrm_run.traject_probs_filtered[year], color = colors[0], marker = 'o', label = 'Veiligheidsrendement')
+            ax.plot(vrm_run.costs_filtered, vrm_run.traject_probs_filtered[self.year], color = colors[0], marker = 'o', label = 'Veiligheidsrendement')
         else:
-            ax.plot(vrm_run.costs, vrm_run.traject_probs[year], color = colors[0], marker = 'o', label = 'Veiligheidsrendement')
+            ax.plot(vrm_run.costs, vrm_run.traject_probs[self.year], color = colors[0], marker = 'o', label = 'Veiligheidsrendement')
 
         #highlight the economic optimum
-        ax.scatter(vrm_run.optimization_steps[vrm_run.step]['total_lcc'], vrm_run.traject_probs[year][vrm_run.step], 
+        ax.scatter(vrm_run.optimization_steps[vrm_run.step]['total_lcc'], vrm_run.traject_probs[self.year][vrm_run.step], 
                    color = colors[0], marker = 'o', label = 'Optimum Veiligheidsrendement')
         
         #highlight where the requirement is met
-        ind_req_met = min(np.where(np.array(vrm_run.traject_probs[year])<self.p_max_space)[0])
-        ax.scatter(vrm_run.optimization_steps[ind_req_met]['total_lcc'], vrm_run.traject_probs[year][ind_req_met], marker = 's',color = colors[0], label=f'VRM < eis {2025+year}')
+        ind_req_met = min(np.where(np.array(vrm_run.traject_probs[self.year])<self.p_max_space)[0])
+        ax.scatter(vrm_run.optimization_steps[ind_req_met]['total_lcc'], vrm_run.traject_probs[self.year][ind_req_met], marker = 's',color = colors[0], label=f'VRM < eis {2025+self.year}')
 
         ax.set_xlim(left = 0, right = max(self.cost_grid_Nbased))
         ax.hlines(self.p_max_space, 0, 5e8, colors='k', linestyles='dashed', label='Faalkanseis')
         ax.set_ylim(top=self.p_max *10,  bottom = self.p_max/10)
         ax.set_xlabel('Kosten (M€)')
-        ax.set_ylabel(f'Trajectfaalkans in {2025+year}')
+        ax.set_ylabel(f'Trajectfaalkans in {2025+self.year}')
         ax.set_yscale('log')
         ax.legend(bbox_to_anchor=(1.05, 1))
         #get xtick labels and divide by 1e6 and replace
@@ -74,13 +77,13 @@ class UniformRequirementsAnalysis:
 
 
         if LE== 'full':
-            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={year+2025}_LE.png'), dpi=300, bbox_inches='tight')
+            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={self.year+2025}_LE.png'), dpi=300, bbox_inches='tight')
         elif LE == 'no':
-            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={year+2025}.png'), dpi=300, bbox_inches='tight')
+            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={self.year+2025}.png'), dpi=300, bbox_inches='tight')
         elif LE == 4:
-            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={year+2025}_N=4.png'), dpi=300, bbox_inches='tight')
+            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={self.year+2025}_N=4.png'), dpi=300, bbox_inches='tight')
         else:
-            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={year+2025}_{vrm_run.db_path.stem}.png'), dpi=300, bbox_inches='tight')
+            plt.savefig(save_dir.joinpath(f'{DikeTrajectInfo.get(DikeTrajectInfo.id == 1).traject_name}_jaar={self.year+2025}_{vrm_run.db_path.stem}.png'), dpi=300, bbox_inches='tight')
      
 
 
@@ -243,3 +246,26 @@ class UniformRequirementsAnalysis:
                                                                        self.specific_target_beta_grid[MechanismEnum.STABILITY_INNER][i])
         self.cost_grid_specific = cost_specific
         self.pf_traject_specific = pf_traject_specific
+
+    def generate_factsheet(self, vrm_run):
+        '''Generates a factsheet for uniform optimal requirements in comparison to a VRM computation'''
+        if len(self.target_beta_grid_all[0]) == 3: #no revetment
+            table_df = pd.DataFrame(self.target_beta_grid_all, columns = ['Overflow', 'Piping', 'StabilityInner'])
+        elif len(self.target_beta_grid_all[0]) == 4: #with revetment
+            table_df = pd.DataFrame(self.target_beta_grid_all, columns = ['Overflow', 'Piping', 'StabilityInner', 'Revetment'])
+        
+        #convert betas to N-values
+        table_df = table_df.apply(lambda x: np.divide(self.p_max, beta_to_pf(x)))
+        table_df['cost'] = self.cost_grid_Nbased
+        table_df['pf_traject'] = self.pf_traject_Nbased
+
+        minimal_cost_for_uniform = min(np.array(self.cost_grid_Nbased)[np.where(np.array(self.pf_traject_Nbased) < self.p_max_space)[0]])
+        vrm_cost_for_standard = vrm_run.costs
+        vrm_pf = vrm_run.traject_probs[self.year]
+        vrm_cost_for_standard = vrm_cost_for_standard[np.where(np.array(vrm_pf) < self.p_max_space)[0][0]]
+
+        table_df['Unsafe design'] = table_df['pf_traject'] > self.p_max_space
+        table_df['% cost difference vs VRM'] = table_df['cost'].apply(lambda x: (x-vrm_cost_for_standard)/vrm_cost_for_standard)*100
+        table_df['% cost difference vs Uniform'] = table_df['cost'].apply(lambda x: (x-minimal_cost_for_uniform)/minimal_cost_for_uniform)*100
+        self.factsheet = table_df
+

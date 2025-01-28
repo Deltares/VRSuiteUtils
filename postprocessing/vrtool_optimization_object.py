@@ -4,7 +4,7 @@ import copy
 from vrtool.common.enums import MechanismEnum
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from collections import defaultdict
-
+import pandas as pd
 import numpy as np
 
 class VRTOOLOptimizationObject:
@@ -97,5 +97,37 @@ class VRTOOLOptimizationObject:
         self.traject_probs_filtered = {key: np.delete(value, low_bc_idx) for key, value in self.traject_probs.items()}
         self.costs_filtered = np.delete(cost_vrm, low_bc_idx)
 
+    def requirements_from_vrm(self, step = 'Economic optimum', year = 2075,  pf_req = None):
+        '''Get the requirements for the VRM based on the optimization results. Returns a requirement for each mechanism per section based on the optimization results.
+        Two types of settings are possible: taking the 'Economic optimum' or the 'Standard in year'. For the latter a pf_req needs to be provided.'''
+        def get_probability_for_mechanism_in_year_per_section(assessment_step: dict[int:dict[str:list]], year:int, mechanism: MechanismEnum):
+            probability_per_section = {}
+            time_index = np.argwhere(np.array(assessment_step[mechanism][1]['time'])==year).flatten()[0]
+            for section in assessment_step[mechanism]:
+                probability_per_section[section] = assessment_step[mechanism][section]['beta'][time_index]
+            return probability_per_section
 
+        if step == 'Standard in year' and pf_req == None:
+            raise ValueError('pf_req should be provided when step is Standard in year')
+        
+        year_int = year-2025
 
+        if step == 'Economic optimum':
+            requirement_step = self.step
+        elif step == 'Standard in year':
+            requirement_step = min(np.where(np.array(self.traject_probs[year_int])<pf_req)[0])
+
+        all_mechanism_keys = [list(step.keys()) for step in self.stepwise_assessment]
+        #flatten and make a set
+        all_mechanism_keys = set([item for sublist in all_mechanism_keys for item in sublist])
+        requirements_per_section = {mechanism: get_probability_for_mechanism_in_year_per_section(assessment_step=self.stepwise_assessment[requirement_step],
+                                                                                          year=year_int, 
+                                                                                          mechanism=mechanism) 
+                                                                                          for mechanism in all_mechanism_keys}
+        
+        self.requirements = pd.DataFrame.from_dict(requirements_per_section)
+        #get the requirements for the VRM
+        self.requirements = db_access.get_requirements(self.db_path, year)
+        self.requirements = {key: value for key, value in self.requirements.items() if key in self.traject_probs.keys()}
+
+    
