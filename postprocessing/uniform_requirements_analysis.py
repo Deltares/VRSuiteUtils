@@ -15,7 +15,30 @@ colors =  Deltares_colors().sns_palette("DeltaresFull")
 
 
 class UniformRequirementsAnalysis:
-    def __init__(self, measures, total_space= 1.0):
+    p_max: float
+    p_max_space: float
+    omega_piping: float
+    omega_stability_inner: float
+    omega_overflow: float
+    omega_revetment: float
+    a_piping: float
+    a_stability_inner: float
+    b_stability_inner: float
+    b_piping: float
+    traject_length: float
+    measures: pd.DataFrame
+    year: int
+    target_beta_grid_all: list[tuple[float]]
+    specific_target_beta_grid: dict[MechanismEnum, list[float]]
+    cost_grid_Nbased: list[float]
+    pf_traject_Nbased: list[float]
+    cost_grid_specific: list[float]
+    pf_traject_specific: list[float]   
+    factsheet: pd.DataFrame
+    measures_Nbased_optimal: pd.DataFrame
+
+
+    def __init__(self, measures: pd.DataFrame, total_space: float = 1.0):
         '''Total space sets the omega for all considered mechanisms'''
         
         self.p_max = DikeTrajectInfo.get(DikeTrajectInfo.id == 1).p_max
