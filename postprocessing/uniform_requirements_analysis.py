@@ -3,6 +3,7 @@ from vrtool.orm.models import *
 import itertools
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from vrtool.common.enums import MechanismEnum
+from postprocessing.database_access_functions import * 
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -214,6 +215,18 @@ class UniformRequirementsAnalysis:
 
         self.cost_grid_Nbased = cost_grid
         self.pf_traject_Nbased = pf_traject 
+        #get the index of the optimum
+        self.get_optimal_from_Nbased_grid()
+
+    def get_optimal_from_Nbased_grid(self):
+        #get the optimal cost from the Nbased grid where p_max_space is met
+        self.N_grid_min_idx = np.where(np.array(self.pf_traject_Nbased)<self.p_max_space)[0][np.argmin(np.array(self.cost_grid_Nbased)[np.where(np.array(self.pf_traject_Nbased)<self.p_max_space)])]
+        #get the measures for this combination
+        if len(self.target_beta_grid_all[0]) == 3:  #no revetment
+            self.measures_Nbased_optimal = self.calculate_cost(self.target_beta_grid_all[self.N_grid_min_idx][0], self.target_beta_grid_all[self.N_grid_min_idx][1], self.target_beta_grid_all[self.N_grid_min_idx][2], self.measures)[2]
+        elif len(self.target_beta_grid_all[0]) == 4: # with revetment
+            self.measures_Nbased_optimal = self.calculate_cost(self.target_beta_grid_all[self.N_grid_min_idx][0], self.target_beta_grid_all[self.N_grid_min_idx][1], self.target_beta_grid_all[self.N_grid_min_idx][2], self.measures, self.target_beta_grid_all[self.N_grid_min_idx][3])[2]
+
 
     def analyze_specific_grid(self):
         cost_specific = []
@@ -269,3 +282,24 @@ class UniformRequirementsAnalysis:
         table_df['% cost difference vs Uniform'] = table_df['cost'].apply(lambda x: (x-minimal_cost_for_uniform)/minimal_cost_for_uniform)*100
         self.factsheet = table_df
 
+    @staticmethod
+    def get_measure_parameters(measures_df, db_path):
+        parameters = []
+        #nsure measure_result column is of dtype int
+        measures_df['measure_result'] = measures_df['measure_result'].astype(int)
+        for row in measures_df.itertuples():
+            row_params = get_measure_parameters(row.measure_result, db_path)
+            measure_df_subset = measures_df.loc[measures_df.measure_result == row.measure_result]
+            if type(measure_df_subset) == pd.Series:
+                row_params['cost'] = measure_df_subset.cost
+            else:
+                row_params['cost'] = measure_df_subset.loc[np.round(measure_df_subset.Piping,2) == np.round(row.Piping,2)].cost.values[0]
+            # row_params.update(get_measure_costs(row.measure_result, db_path))
+            row_params.update(get_measure_type(row.measure_result, db_path))
+            if row.measure_type_id == 99:
+                row_params['name'] = 'Verticaal Zanddicht Geotextiel + Grondversterking binnenwaarts'
+            row_params['section_id'] = row.section_id
+            parameters.append(row_params)
+        parameters_df = pd.DataFrame(parameters)
+        parameters_df = parameters_df[['section_id', 'name', 'cost', 'dcrest', 'dberm', 'l_stab_screen']]
+        return parameters_df
