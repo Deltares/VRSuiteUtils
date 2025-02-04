@@ -5,20 +5,32 @@ from vrtool.common.enums import MechanismEnum
 import numpy as np
 import pandas as pd
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+from pathlib import Path
 
 from vrtool.orm.models import *
 
 
 class VRTOOLMeasuresObject:
-    '''Object to get and store all relevant information on measures from a VRTOOL database. Not suitable for revetment yet TODO'''
-    def __init__(self, db_path, LE_scenario, design_year = 50):
+    db_path: Path
+    design_year: int
+    LE: int
+    measures_for_all_sections: pd.DataFrame
+
+    
+    '''Object to get and store all relevant information on measures from a VRTOOL database. Not tested for revetment yet TODO'''
+    def __init__(self, db_path, LE_scenario, design_year = 50) -> None:
         self.db_path = db_path
         self.design_year = design_year
-        self.LE = LE_scenario
+        if LE_scenario == 'full':
+            self.LE = 999
+        elif LE_scenario == 'no':
+            self.LE = -999
+        else:
+            self.LE = LE_scenario
         self.get_all_measures()
 
     # Define the function to get measures for all sections
-    def get_measures_for_all_sections(self):
+    def get_measures_for_all_sections(self) -> None:
         # Fetch all MeasureResultMechanism records for the specified year
         measures_for_all_sections_beta = (MeasureResultMechanism
                                         .select(MeasureResultMechanism, MechanismPerSection, Mechanism.name)
@@ -75,7 +87,7 @@ class VRTOOLMeasuresObject:
         df = df.join(cost_df)
         self.measures_for_all_sections = df
     
-    def add_combined_vzg_soil(self):
+    def add_combined_vzg_soil(self) -> None:
         #copy original dataframe
         df = self.measures_for_all_sections.copy()
 
@@ -91,24 +103,24 @@ class VRTOOLMeasuresObject:
             soil.loc[:,'measure_type_id'] = 99
             self.measures_for_all_sections = pd.concat([self.measures_for_all_sections, soil])
 
-    def add_section_lengths(self):
+    def add_section_lengths(self) -> None:
         #get the section lengths from the database
         section_lengths = pd.DataFrame([(section.id, section.section_length) for section in SectionData.select()],columns= ['section_id', 'section_length'])
         section_lengths.set_index('section_id', inplace=True)
         #merge lengths to measures_df
         self.measures_for_all_sections = self.measures_for_all_sections.merge(section_lengths, left_on='section_id', right_index=True)
 
-    def compute_cs_betas(self):
+    def compute_cs_betas(self) -> None:
         self.measures_for_all_sections['Overflow_dsn'] = self.measures_for_all_sections['Overflow']
-        if self.LE == 'full':
+        if self.LE == 999:
             self.full_LE_scenario()
-        elif self.LE == 'no':
+        elif self.LE == -999:
             self.measures_for_all_sections['Piping_dsn'] = self.measures_for_all_sections['Piping']
             self.measures_for_all_sections['StabilityInner_dsn'] = self.measures_for_all_sections['StabilityInner']
         else: #numerical value for LE with which we upscale
             self.N_LE_scenario(self.LE)
 
-    def N_LE_scenario(self, N):
+    def N_LE_scenario(self, N) -> None:
         N_piping = self.measures_for_all_sections['section_length'] / 300
         N_piping = N_piping.apply(lambda x: max(x, 1)) #minimum 1
         N_piping = N_piping.apply(lambda x: min(x, self.LE)) #maximum LE
@@ -119,7 +131,7 @@ class VRTOOLMeasuresObject:
         N_stability = N_stability.apply(lambda x: min(x, self.LE)) #maximum LE
         self.measures_for_all_sections['StabilityInner_dsn'] = pf_to_beta(beta_to_pf(self.measures_for_all_sections['StabilityInner']) / N_stability)
 
-    def full_LE_scenario(self):
+    def full_LE_scenario(self) -> None:
         N_piping = self.measures_for_all_sections['section_length'] / 300
         N_piping = N_piping.apply(lambda x: max(x, 1))
         self.measures_for_all_sections['Piping_dsn'] = pf_to_beta(beta_to_pf(self.measures_for_all_sections['Piping']) / N_piping)

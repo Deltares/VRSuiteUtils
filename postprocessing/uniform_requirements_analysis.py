@@ -4,6 +4,8 @@ import itertools
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from vrtool.common.enums import MechanismEnum
 from postprocessing.database_access_functions import * 
+from postprocessing.vrtool_optimization_object import VRTOOLOptimizationObject
+from pathlib import Path
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -38,7 +40,7 @@ class UniformRequirementsAnalysis:
     measures_Nbased_optimal: pd.DataFrame
 
 
-    def __init__(self, measures: pd.DataFrame, total_space: float = 1.0):
+    def __init__(self, measures: pd.DataFrame, total_space: float = 1.0) -> None:
         '''Total space sets the omega for all considered mechanisms'''
         
         self.p_max = DikeTrajectInfo.get(DikeTrajectInfo.id == 1).p_max
@@ -57,7 +59,7 @@ class UniformRequirementsAnalysis:
         self.measures = measures.measures_for_all_sections
         self.year = measures.design_year
 
-    def plot_results(self, vrm_run, save_dir, dsn_run=False, LE = False):
+    def plot_results(self, vrm_run: VRTOOLOptimizationObject, save_dir: Path, dsn_run: VRTOOLOptimizationObject = False, LE = False) -> None:
         pass
         fig,ax = plt.subplots()
 
@@ -111,12 +113,7 @@ class UniformRequirementsAnalysis:
      
 
 
-    def make_Nbased_grid(self, N_omega, N_LE, revetment = False):
-        #step 2: make a grid
-        #smaller grid
-        N_omega = [2., 3., 4., 6., 8., 16., 32.]
-        N_LE = [5., 10., 20., 40., 50.]
-
+    def make_Nbased_grid(self, N_omega: list[float], N_LE: list[float], revetment: bool = False) -> None:
 
         N_overflow_grid = N_omega.copy()
         N_overflow_grid = N_overflow_grid + [np.divide(1, self.omega_overflow)]
@@ -147,7 +144,7 @@ class UniformRequirementsAnalysis:
         
 
     
-    def make_dict_based_grid(self, omega_grids, LE_grid = False):
+    def make_dict_based_grid(self, omega_grids: dict[MechanismEnum, list[float]], LE_grid: dict[MechanismEnum, list[float]] = False) -> None:
         #step 2: make a grid based on a dict with emchanisms as keys and values in lists
         #omega_grid contains lists of values expressed as N, should be same length
         #check length of .values in N_omega_dict
@@ -173,11 +170,10 @@ class UniformRequirementsAnalysis:
         self.specific_target_beta_grid = {mechanism: pf_to_beta(np.divide(self.p_max, N_specific_grids[mechanism])) for mechanism in omega_grids.keys()}
         
         #N_LE_dict contains a_traject values for piping, stability. Is optional and will be added to the default values.
-        
-        pass
+
     
     @staticmethod
-    def compute_traject_probability(minimal_cost_dataset):
+    def compute_traject_probability(minimal_cost_dataset: pd.DataFrame) -> float:
         #no upscaling in sections. 
         pf_overflow = max(beta_to_pf(minimal_cost_dataset['Overflow']))
         p_nonf_piping = np.product(np.subtract(1,beta_to_pf(minimal_cost_dataset['Piping'])))
@@ -186,7 +182,7 @@ class UniformRequirementsAnalysis:
         return pf_traject
 
     @staticmethod
-    def calculate_cost(overflow_beta, piping_beta, stability_beta, measures_df, revetment_beta = None):
+    def calculate_cost(overflow_beta: float, piping_beta: float, stability_beta: float, measures_df: pd.DataFrame, revetment_beta: float = None) -> tuple[float, float, pd.DataFrame]:
         #calculate the cost for the given beta values
 
         #get all sections
@@ -214,7 +210,7 @@ class UniformRequirementsAnalysis:
         else:
             return minimal_costs.sum(), computed_traject_probability, minimal_costs_data
     
-    def analyze_Nbased_grid(self):
+    def analyze_Nbased_grid(self) -> None:
         cost_grid = []
         pf_traject = []
 
@@ -241,7 +237,7 @@ class UniformRequirementsAnalysis:
         #get the index of the optimum
         self.get_optimal_from_Nbased_grid()
 
-    def get_optimal_from_Nbased_grid(self):
+    def get_optimal_from_Nbased_grid(self) -> None:
         #get the optimal cost from the Nbased grid where p_max_space is met
         self.N_grid_min_idx = np.where(np.array(self.pf_traject_Nbased)<self.p_max_space)[0][np.argmin(np.array(self.cost_grid_Nbased)[np.where(np.array(self.pf_traject_Nbased)<self.p_max_space)])]
         #get the measures for this combination
@@ -251,7 +247,7 @@ class UniformRequirementsAnalysis:
             self.measures_Nbased_optimal = self.calculate_cost(self.target_beta_grid_all[self.N_grid_min_idx][0], self.target_beta_grid_all[self.N_grid_min_idx][1], self.target_beta_grid_all[self.N_grid_min_idx][2], self.measures, self.target_beta_grid_all[self.N_grid_min_idx][3])[2]
 
 
-    def analyze_specific_grid(self):
+    def analyze_specific_grid(self) -> None:
         cost_specific = []
         pf_traject_specific = []
         #get length of grid
@@ -283,7 +279,7 @@ class UniformRequirementsAnalysis:
         self.cost_grid_specific = cost_specific
         self.pf_traject_specific = pf_traject_specific
 
-    def generate_factsheet(self, vrm_run):
+    def generate_factsheet(self, vrm_run: VRTOOLOptimizationObject) -> None:
         '''Generates a factsheet for uniform optimal requirements in comparison to a VRM computation'''
         if len(self.target_beta_grid_all[0]) == 3: #no revetment
             table_df = pd.DataFrame(self.target_beta_grid_all, columns = ['Overflow', 'Piping', 'StabilityInner'])
@@ -306,7 +302,7 @@ class UniformRequirementsAnalysis:
         self.factsheet = table_df
 
     @staticmethod
-    def get_measure_parameters(measures_df, db_path):
+    def get_measure_parameters(measures_df: pd.DataFrame, db_path: Path) -> pd.DataFrame:
         parameters = []
         #nsure measure_result column is of dtype int
         measures_df['measure_result'] = measures_df['measure_result'].astype(int)
