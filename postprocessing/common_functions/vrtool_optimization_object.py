@@ -1,5 +1,5 @@
-import postprocessing.database_access_functions as db_access
-import postprocessing.database_analytics as db_analytics
+import postprocessing.common_functions.database_access_functions as db_access
+import postprocessing.common_functions.database_analytics as db_analytics
 import postprocessing.generate_output as output_functions
 import copy
 from vrtool.common.enums import MechanismEnum

@@ -3,8 +3,8 @@ from vrtool.orm.models import *
 import itertools
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from vrtool.common.enums import MechanismEnum
-from postprocessing.database_access_functions import * 
-from postprocessing.vrtool_optimization_object import VRTOOLOptimizationObject
+from postprocessing.common_functions.database_access_functions import * 
+from postprocessing.common_functions.vrtool_optimization_object import VRTOOLOptimizationObject
 from pathlib import Path
 
 import numpy as np
