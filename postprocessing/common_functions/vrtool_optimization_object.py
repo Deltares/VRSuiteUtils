@@ -1,6 +1,6 @@
 import postprocessing.common_functions.database_access_functions as db_access
 import postprocessing.common_functions.database_analytics as db_analytics
-import postprocessing.generate_output as output_functions
+import postprocessing.common_functions.generate_output as output_functions
 import copy
 from vrtool.common.enums import MechanismEnum
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta

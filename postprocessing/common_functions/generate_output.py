@@ -6,7 +6,7 @@ import seaborn as sns
 from vrtool.common.enums import MechanismEnum
 
 
-def plot_lcc_tc_from_steps(steps_dict: list[dict], axis: axis, lbl: str, clr: str, mrkr: str = 'o'):
+def plot_lcc_tc_from_steps(steps_dict: list[dict], axis: axis, lbl: str, clr: str, mrkr: str = 'o') -> None:
     """Plot the total_lcc and total_risk from the optimization steps. It will give a 
     
     Args:
@@ -26,7 +26,7 @@ def plot_lcc_tc_from_steps(steps_dict: list[dict], axis: axis, lbl: str, clr: st
         else:
             axis.plot(step['total_lcc'], step['total_risk'], color=clr, marker = mrkr, markersize=0.5)
 
-def plot_traject_probability_for_step(traject_prob_step, ax, run_label = '', color = 'k', linestyle = '--'):
+def plot_traject_probability_for_step(traject_prob_step, ax, run_label = '', color = 'k', linestyle = '--') -> None:
     """Plot the probability of failure for each mechanism for each time step.
 
     Args:
@@ -39,7 +39,7 @@ def plot_traject_probability_for_step(traject_prob_step, ax, run_label = '', col
     Returns:    
     None
     """
-    def calculate_traject_probability(traject_prob):
+    def calculate_traject_probability(traject_prob) -> tuple[list[int], list[float]]:
         p_nonf = [1] * len(list(traject_prob.values())[0].values())
         for mechanism, data in traject_prob.items():
             time, pf = zip(*sorted(data.items()))
@@ -56,7 +56,7 @@ def plot_traject_probability_for_step(traject_prob_step, ax, run_label = '', col
     ax.set_ylabel('Faalkans')
     ax.legend()
 
-def measure_per_section_to_df(measures_per_section, section_parameters):
+def measure_per_section_to_df(measures_per_section: dict, section_parameters: dict) -> pd.DataFrame:
     """ Convert the measures per section to a pandas dataframe.
 
     Args:
@@ -67,14 +67,14 @@ def measure_per_section_to_df(measures_per_section, section_parameters):
     pd.DataFrame, dataframe containing the measures per section.
     
     """
-    def get_LCC(parameters, investment_years, r=1.03):
+    def get_LCC(parameters: dict, investment_years: list, r=1.03):
         LCC = 0 
         for count, parameterset in enumerate(parameters):
             LCC += parameterset['cost']/(r**investment_years[count])
         return LCC
-    def concatenate_names(parameters):
+    def concatenate_names(parameters: list[dict]) -> str:
         return ' + '.join([parameter['name'] for parameter in parameters])
-    def concatenate_investment_years(investment_years):
+    def concatenate_investment_years(investment_years: list[int]) -> str:
         return ' + '.join([str(investment_year) for investment_year in investment_years])
     def get_parameters(parameters):
         #for each measure in parameters, if the key is there, add it to the combined dict
