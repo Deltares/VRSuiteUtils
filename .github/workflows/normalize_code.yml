@@ -1,0 +1,66 @@
+name: ci-normalize-code
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AUTOFORMAT_COMMIT_MESSAGE: 'chore: autoformat isort & black'
+      
+jobs:
+  normalize-code:
+    if: "${{ (!startsWith(github.event.head_commit.message, 'chore: autoformat isort & black')) && (!startsWith(github.event.head_commit.message, 'bump:')) }}"
+    name: "Normalize code with internal standards"
+    permissions: write-all
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ['3.12']
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.BYPASS_PROTECTED_BRANCHES_PAT }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.3.0
+        with:
+          poetry-version: 1.6.1
+
+      - name: Cache Poetry virtualenv
+        uses: actions/cache@v4
+        id: cache
+        with:
+          path: ~/.virtualenvs
+          key: venv-${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            venv-${{ matrix.os }}-${{ matrix.python-version }}-
+
+      - name: Set Poetry config
+        run: |
+          poetry config virtualenvs.in-project false
+          poetry config virtualenvs.path ~/.virtualenvs
+
+      - name: Install Dependencies
+        run: poetry install --only dev
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      - name: Autoformat code if the check fails
+        run: |
+          poetry run isort .
+          poetry run black .
+
+      - name: Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with: 
+          commit_message: ${{ env.AUTOFORMAT_COMMIT_MESSAGE }}
+          push_options: --force
