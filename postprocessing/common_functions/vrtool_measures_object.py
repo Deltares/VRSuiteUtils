@@ -2,6 +2,8 @@ import postprocessing.common_functions.database_access_functions as db_access
 import postprocessing.common_functions.database_analytics as db_analytics
 import copy
 from vrtool.common.enums import MechanismEnum
+from vrtool.orm.orm_controllers import open_database
+
 import numpy as np
 import pandas as pd
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
@@ -20,6 +22,7 @@ class VRTOOLMeasuresObject:
     '''Object to get and store all relevant information on measures from a VRTOOL database. Not tested for revetment yet TODO'''
     def __init__(self, db_path, LE_scenario, design_year = 50) -> None:
         self.db_path = db_path
+
         self.design_year = design_year
         if LE_scenario == 'full':
             self.LE = 999
@@ -27,7 +30,8 @@ class VRTOOLMeasuresObject:
             self.LE = -999
         else:
             self.LE = LE_scenario
-        self.get_all_measures()
+        with open_database(db_path).connection_context():
+            self.get_all_measures()
 
     # Define the function to get measures for all sections
     def get_measures_for_all_sections(self) -> None:
@@ -144,3 +148,19 @@ class VRTOOLMeasuresObject:
         self.add_combined_vzg_soil()
         self.add_section_lengths()
         self.compute_cs_betas()
+
+    def add_width_crest(self) -> None:
+        #get berm width and crest heightening if applicable and add to the measures_for_all_sections dataframe
+        #get the measure_type_id.id for which measure_type_id.name in MeasureType contains Soil reinforcement
+
+        _soil_types = [entry.id for entry in MeasureType.select().where(MeasureType.name.contains('Soil reinforcement'))]
+        _soil_measure_result_ids = self.measures_for_all_sections.loc[self.measures_for_all_sections.measure_type_id.isin(_soil_types)].index
+        #for all _soil_measure_result_ids, get the MeasureResultParameter where measure_result_id is in _soil_measure_result_ids.
+        _mrp_selection = MeasureResultParameter.select().where(MeasureResultParameter.measure_result_id.in_(_soil_measure_result_ids.values.tolist()))
+        _soil_dimensions =[(_mrp.measure_result_id, _mrp.name, _mrp.value) for _mrp in _mrp_selection]
+        _soil_dimensions_df = pd.DataFrame(_soil_dimensions, columns=['measure_result_id', 'type', 'value'])
+        _soil_dimensions_df = _soil_dimensions_df.pivot(index='measure_result_id', columns='type', values='value')
+
+        #merge to self.measures_for_all_sections
+        self.measures_for_all_sections = self.measures_for_all_sections.merge(_soil_dimensions_df, left_on='measure_result', right_index=True, how='left')
+
