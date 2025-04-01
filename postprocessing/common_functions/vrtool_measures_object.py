@@ -22,7 +22,7 @@ class VRTOOLMeasuresObject:
     '''Object to get and store all relevant information on measures from a VRTOOL database. Not tested for revetment yet TODO'''
     def __init__(self, db_path, LE_scenario, design_year = 50) -> None:
         self.db_path = db_path
-        
+
         self.design_year = design_year
         if LE_scenario == 'full':
             self.LE = 999
@@ -163,3 +163,4 @@ class VRTOOLMeasuresObject:
 
         #merge to self.measures_for_all_sections
         self.measures_for_all_sections = self.measures_for_all_sections.merge(_soil_dimensions_df, left_on='measure_result', right_index=True, how='left')
+

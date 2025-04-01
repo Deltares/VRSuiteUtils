@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from postprocessing.common_functions.Deltares_colors import Deltares_colors 
+
 sns.set(style="whitegrid")
 colors =  Deltares_colors().sns_palette("DeltaresFull")
 
@@ -60,7 +61,6 @@ class UniformRequirementsAnalysis:
         self.year = measures.design_year
 
     def plot_results(self, vrm_run: VRTOOLOptimizationObject, save_dir: Path, dsn_run: VRTOOLOptimizationObject = False, LE = False) -> None:
-
         fig,ax = plt.subplots()
 
         #plot the main grid if it exists
@@ -73,6 +73,7 @@ class UniformRequirementsAnalysis:
         if dsn_run:
             #plot the DSN run
             ax.scatter(dsn_run.costs[dsn_run.step], dsn_run.traject_probs[self.year][dsn_run.step], color = colors[6], marker = 'o', s=40, linestyle = '', label = 'Default doorsnede-eisen')
+
         
         #plot the VRM run path
         if hasattr(vrm_run, 'costs_filtered'):
@@ -87,6 +88,7 @@ class UniformRequirementsAnalysis:
         #highlight where the requirement is met
         ind_req_met = min(np.where(np.array(vrm_run.traject_probs[self.year])<self.p_max_space)[0])
         # ax.scatter(vrm_run.optimization_steps[ind_req_met]['total_lcc'], vrm_run.traject_probs[self.year][ind_req_met], marker = 's', s= 30, color = colors[2], label=f'VRM < eis {2025+self.year}')
+
 
         ax.set_xlim(left = 0, right = max(self.cost_grid_Nbased))
         ax.hlines(self.p_max_space, 0, 5e8, colors='k', linestyles='dashed', label='Faalkanseis')
@@ -249,7 +251,8 @@ class UniformRequirementsAnalysis:
     def analyze_specific_grid(self) -> None:
         cost_specific = []
         pf_traject_specific = []
-        measures_specifc = []
+        measures_specific = []
+
         #get length of grid
         for i in range(0, len(list(self.specific_target_beta_grid.values())[0])):
             if MechanismEnum.REVETMENT in self.specific_target_beta_grid.keys():
@@ -266,7 +269,8 @@ class UniformRequirementsAnalysis:
             if cost_i < 1.e99:
                 cost_specific.append(cost_i)
                 pf_traject_specific.append(pf_traject_i)
-                measures_specifc.append(measures_i)
+                measures_specific.append(measures_i)
+
             else:
                 if MechanismEnum.REVETMENT in self.specific_target_beta_grid.keys():
                     print('No measures found for combination: ', self.specific_target_beta_grid[MechanismEnum.OVERFLOW][i],
@@ -279,8 +283,8 @@ class UniformRequirementsAnalysis:
                                                                        self.specific_target_beta_grid[MechanismEnum.STABILITY_INNER][i])
         self.cost_grid_specific = cost_specific
         self.pf_traject_specific = pf_traject_specific
-        self.measures_specific = measures_specifc
-        
+        self.measures_specific = measures_specific
+
     def generate_factsheet(self, vrm_run: VRTOOLOptimizationObject) -> None:
         '''Generates a factsheet for uniform optimal requirements in comparison to a VRM computation'''
         if len(self.target_beta_grid_all[0]) == 3: #no revetment
