@@ -1,0 +1,1622 @@
+<html>
+<meta charset="ISO-8859-1">
+<body>
+<pre style="font-family:courier">
+Hydra-NL            Versienummer: 2.7.5 (voor KIJK)   februari 2020           <a href="#RESULTS">Berekeningsresultaten</a>
+Naam gebruiker                                          = wojciech
+Gebruikersmodus                                         = Ontwerpen
+Datum berekening                                        = 22-10-2024 10:04:07
+ 
+Disclaimer:
+Berekening met een Hydra-NL-versie die specifiek voor het project KIJK is ontwikkeld voor dijkontwerp.
+Daarmee is deze Hydra-NL-versie geen product uit het Beoordelings- en ontwerpinstrumentarium (BOI) van Rijkswaterstaat.
+ 
+Randvoorwaardendatabase                                 = HollandscheIJssel_14-1.sqlite
+
+Locatie                                                 = 14-01_00008_1_HY_km0000.72
+  X-coördinaat                                          =  109392 (m)
+  Y-coördinaat                                          =  446698 (m)
+ 
+  Voor deze oeverlocatie is dwarsopwaaiing in de berekeningen meegenomen
+  Voor deze oeverlocatie is geen bochtwerking meegenomen
+  Voor de afvoerstatistiek is gebruik gemaakt van de Rijnstatistiek te Lobith
+
+  Profiel                                               = Hoogte_HR03a.prfl
+  Aanwezige kruinhoogte dijk                            =         3.70 (m+NAP)
+  Uitwendige dijknormaal                                =       164.00 (°N)
+
+    Dijkprofielcoördinaten   Taludruwheids-
+     Afstand     Hoogte      factor
+       (m)       (m+NAP)       (-)
+      -14.50       0.00        1.00
+       -8.00       3.70
+ 
+Faalmechanisme                                          = Golfoverslag en overloop
+  Kritiek overslagdebiet                                =         5.00 (l/s/m)
+  De golfoverslag is berekend met versie '19.1.1.8037' van de 'Wave overtopping at dikes'-module
+
+Riviergeometriegegevens van de locatie:
+  Windrichting    Gemiddelde      Effectieve
+  r              bodemhoogte      strijklengte
+                     (m+NAP)               (m)
+  NNO                   0.53               105
+  NO                    1.81               149
+  ONO                  -0.56               157
+  O                     3.18               129
+  OZO                   2.73                81
+  ZO                    2.25                37
+  ZZO                   1.83                29
+  Z                     1.53                28
+  ZZW                   2.12                35
+  ZW                    2.18                77
+  WZW                   0.83               114
+  W                    -0.04               129
+  WNW                   1.35               118
+  NW                    0.88                84
+  NNW                   0.76                56
+  N                     0.80                67
+
+Golfparameters zijn berekend met Bretschneider op basis van de riviergeometriegegevens
+en gecorrigeerd voor droogval gebruikmakend van de (opgegeven) bodemhoogte uit de database
+Bodemhoogte in de database                              =      -999.00 (m+NAP)
+
+U heeft gerekend met effectieve strijklengtes en gemiddelde bodemhoogtes, die u nog niet
+geaccordeerd heeft. Bij verwonderlijke uitkomsten wordt aangeraden deze waarden te controleren.
+ 
+  De SOBEK-sommen zijn gemaakt met de volgende koppeling tussen zeewaterstand en windsnelheid:
+                   Potentiële windsnelheid (m/s) bij de windrichtingen:
+   Zeewaterstand     225.0         247.5         270.0         292.5         315.0         337.5         360.0
+      (m+NAP)       (graden)      (graden)      (graden)      (graden)      (graden)      (graden)      (graden)
+       1.160          4.59          4.95          4.62          3.55          4.22          4.37          4.77
+       2.158         16.25         14.74         12.94         11.90         11.45         11.33          9.51
+       3.159         29.55         24.99         20.37         19.52         18.48         18.22         16.25
+       4.122         43.30         35.47         29.28         27.00         24.68         24.67         23.63
+       5.116         57.49         46.03         38.15         34.32         30.44         30.83         30.64
+       6.103         71.57         56.50         47.01         41.23         35.84         36.65         37.53
+  Opmerking: voor de gemaakte SOBEK-sommen ZOU de potentiële windsnelheid
+             vertaald kunnen zijn naar de open-water-wind.
+ 
+  Sluitpeil Dordrecht                                   =         2.90 (m+NAP)
+  Sluitpeil Rotterdam                                   =         3.00 (m+NAP)
+ 
+Deze berekening is gemaakt voor het scenario G voor 2023
+  en de afvoergolven worden afgetopt boven de afvoer 18000 m³/s.
+
+Faalkans Hollandsche IJsselkering                       =    0.0005 (per keer sluiten)
+ 
+Berekening zonder statistische onzekerheid.
+Berekening zonder onzekerheid in de waterstand en de golven.
+
+
+<a name="RESULTS">Berekeningsresultaten:</a>
+ 
+    Frequentie   Hydraulisch belastingniveau
+    (1/jaar)            (m+NAP)
+    1/    100            2.591                        <a href="#T001_IP">Illustratiepunten</a>   <a href="#T001_UITSPL">Uitsplitsingen</a>
+    1/    300            2.662                        <a href="#T002_IP">Illustratiepunten</a>   <a href="#T002_UITSPL">Uitsplitsingen</a>
+    1/   1000            2.741                        <a href="#T003_IP">Illustratiepunten</a>   <a href="#T003_UITSPL">Uitsplitsingen</a>
+    1/   3000            2.822                        <a href="#T004_IP">Illustratiepunten</a>   <a href="#T004_UITSPL">Uitsplitsingen</a>
+    1/  10000            2.946                        <a href="#T005_IP">Illustratiepunten</a>   <a href="#T005_UITSPL">Uitsplitsingen</a>
+
+Terugkeertijd     Hydraulisch belastingniveau
+     (jaren)            (m+NAP)
+          10             2.445
+          30             2.514
+         100             2.591
+         300             2.662
+        1000             2.741
+        3000             2.822
+       10000             2.946
+       30000             3.087
+      100000             3.246
+ 
+Illustratiepunten bij opgegeven terugkeertijden:
+
+Waarschuwing: Er zijn illustratiepunten berekend in combinatie met aftoppen.
+              De berekeningsmethode hiervoor is niet geheel correct.
+              De illustratiepunten zijn daardoor niet altijd betrouwbaar.
+
+<a name="T001_IP">Illustratiepunten bij hydraulisch belastingniveau  2.59 (m+NAP) en terugkeertijd   100 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.59 (m+NAP)
+Terugkeertijd                 =      100 (jaar)
+Overschrijdingsfrequentie     = 1.00E-02 (per jaar)
+
+                                                           <a href="#T001_IP_H">Hoofdillustratiepunten</a>
+
+Geopende Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.17 |    2633 |      -- |    16.5 |    2.52 |    0.12 |    1.14 |   225.0 |      2.324 |    23.2
+  WZW    |    2.21 |    2300 |      -- |    15.0 |    2.49 |    0.17 |    1.30 |   247.5 |      6.258 |    62.6
+  W      |    2.39 |    2400 |      -- |    14.5 |    2.60 |    0.18 |    1.33 |   270.0 |      0.015 |     0.1
+  WNW    |    2.46 |    2200 |      -- |    14.0 |    2.61 |    0.16 |    1.25 |   292.5 |      0.012 |     0.1
+  NW     |    2.51 |    2200 |      -- |    14.0 |    2.61 |    0.14 |    1.17 |   315.0 |      0.007 |     0.1
+  NNW    |    2.56 |    2400 |      -- |    14.0 |    2.61 |    0.12 |    1.07 |   337.5 |      0.003 |     0.0
+  N      |    2.59 |    2550 |      -- |    11.3 |    2.61 |    0.10 |    1.01 |   360.0 |      0.001 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      8.619 |    86.2
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WZW    |    2.96 |    1750 |      -- |    32.8 |    2.26 |    0.37 |    1.83 |   247.5 |      0.001 |     0.0
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.001 |     0.0
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.55 |    2200 |      -- |    23.5 |    2.49 |    0.16 |    1.31 |   225.0 |      0.068 |     0.7
+  WZW    |    2.47 |    2550 |      -- |    21.8 |    2.41 |    0.25 |    1.53 |   247.5 |      0.696 |     7.0
+  W      |    3.04 |    7550 |      -- |    18.8 |    2.60 |    0.23 |    1.50 |   270.0 |      0.001 |     0.0
+  WNW    |    3.68 |    2600 |      -- |    23.5 |    2.61 |    0.26 |    1.58 |   292.5 |      0.001 |     0.0
+  NW     |    3.76 |    2200 |      -- |    22.5 |    2.61 |    0.23 |    1.46 |   315.0 |      0.001 |     0.0
+  NNW    |    3.86 |    2200 |      -- |    23.0 |    2.61 |    0.20 |    1.34 |   337.5 |      0.000 |     0.0
+  N      |    3.90 |    2150 |      -- |    21.8 |    2.61 |    0.21 |    1.37 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.767 |     7.7
+
+Gesloten Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.42 |    1750 |      -- |    18.0 |    2.53 |    0.13 |    1.19 |   225.0 |      0.014 |     0.1
+  WZW    |    2.57 |    1580 |      -- |    16.5 |    2.47 |    0.19 |    1.35 |   247.5 |      0.204 |     2.0
+  W      |    3.16 |    2548 |      -- |    20.0 |    2.60 |    0.25 |    1.55 |   270.0 |      0.349 |     3.5
+  WNW    |    3.37 |    4000 |      -- |    21.0 |    2.61 |    0.24 |    1.51 |   292.5 |      0.000 |     0.0
+  NW     |    3.06 |    7267 |      -- |    17.5 |    2.61 |    0.18 |    1.30 |   315.0 |      0.000 |     0.0
+  NNW    |    3.10 |    6333 |      -- |    18.0 |    2.61 |    0.16 |    1.20 |   337.5 |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.568 |     5.7
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.16 |    4060 |      -- |    33.0 |    2.45 |    0.18 |    1.48 |   225.0 |      0.000 |     0.0
+  WZW    |    3.70 |    1662 |      -- |    29.6 |    2.31 |    0.34 |    1.75 |   247.5 |      0.021 |     0.2
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.021 |     0.2
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.97 |    3150 |      -- |    27.0 |    2.47 |    0.17 |    1.38 |   225.0 |      0.002 |     0.0
+  WZW    |    3.36 |    1950 |      -- |    27.7 |    2.33 |    0.32 |    1.70 |   247.5 |      0.011 |     0.1
+  W      |    3.18 |    8163 |      -- |    20.5 |    2.60 |    0.25 |    1.56 |   270.0 |      0.005 |     0.0
+  WNW    |    3.46 |    7350 |      -- |    21.8 |    2.61 |    0.25 |    1.53 |   292.5 |      0.004 |     0.0
+  NW     |    3.75 |    7350 |      -- |    22.5 |    2.61 |    0.23 |    1.46 |   315.0 |      0.002 |     0.0
+  NNW    |    3.73 |    8000 |      -- |    22.0 |    2.61 |    0.19 |    1.32 |   337.5 |      0.000 |     0.0
+  N      |    3.93 |    8000 |      -- |    22.0 |    2.61 |    0.21 |    1.38 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.024 |     0.2
+
+ Betekenis van de gegevens:
+ - r        = De windrichting
+ - zeews.   = De zeewaterstand bij Maasmond in m+NAP
+ - q Rijn   = De afvoer op de Rijn bij Lobith in m³/s
+ - q Maas   = De afvoer op de Maas bij Lith in m³/s
+ - windsn.  = De potentiële windsnelheid van Schiphol in m/s
+ - h,teen   = De waterstand op de doorgerekende locatie in m+NAP na eventuele transformatie over een voorland
+ - Hm0,teen = De significante golfhoogte in m na eventuele transformatie over een dam en/of voorland
+ - Tm-1,0,t = De spectrale golfperiode in s na eventuele transformatie over een voorland
+ - golfr,t  = De golfrichting in graden t.o.v. Noord na eventuele transformatie over een voorland
+ - ov.freq  = De overschrijdingsfrequentie van het hydraulisch belastingniveau voor de bijbehorende windrichting
+              in gemiddeld aantal keer per winterhalfjaar en als percentage
+
+<a name="T001_IP_H">Hoofdillustratiepunten bij hydraulisch belastingniveau  2.59 (m+NAP) en terugkeertijd   100 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.59 (m+NAP)
+Terugkeertijd                 =      100 (jaar)
+Overschrijdingsfrequentie     = 1.00E-02 (per jaar)
+
+                                      | Geopende Europoortkering     | Geopende Europoortkering     | Geopende Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 86.2%) | (bijdrage aan ov.freq  0.0%) | (bijdrage aan ov.freq  7.7%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 62.6%)               | WZW   (  0.0%)               | WZW   (  7.0%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.21                       |   2.96                       |   2.47
+Rijnafvoer q te Lobith [m³/s]         |   2300                       |   1750                       |   2550
+potentiële windsnelheid u [m/s]       |   15.0                       |   32.8                       |   21.8
+lokale waterstand h [m+NAP]           |   2.49                       |   2.26                       |   2.41
+significante golfhoogte Hm0 [m]       |   0.17                       |   0.37                       |   0.25
+spectrale golfperiode Tm-1,0 [s]      |   1.30                       |   1.83                       |   1.53
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+                                      | Gesloten Europoortkering     | Gesloten Europoortkering     | Gesloten Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq  5.7%) | (bijdrage aan ov.freq  0.2%) | (bijdrage aan ov.freq  0.2%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | W     (  3.5%)               | WZW   (  0.2%)               | WZW   (  0.1%)
+zeewaterstand m te Maasmond [m+NAP]   |   3.16                       |   3.70                       |   3.36
+Rijnafvoer q te Lobith [m³/s]         |   2548                       |   1662                       |   1950
+potentiële windsnelheid u [m/s]       |   20.0                       |   29.6                       |   27.7
+lokale waterstand h [m+NAP]           |   2.60                       |   2.31                       |   2.33
+significante golfhoogte Hm0 [m]       |   0.25                       |   0.34                       |   0.32
+spectrale golfperiode Tm-1,0 [s]      |   1.55                       |   1.75                       |   1.70
+golfrichting t.o.v. Noord [graden]    |  270.0                       |  247.5                       |  247.5
+
+<a name="T002_IP">Illustratiepunten bij hydraulisch belastingniveau  2.66 (m+NAP) en terugkeertijd   300 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.66 (m+NAP)
+Terugkeertijd                 =      300 (jaar)
+Overschrijdingsfrequentie     = 3.33E-03 (per jaar)
+
+                                                           <a href="#T002_IP_H">Hoofdillustratiepunten</a>
+
+Geopende Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.23 |    2400 |      -- |    17.0 |    2.59 |    0.14 |    1.17 |   225.0 |      0.633 |    19.0
+  WZW    |    2.26 |    2350 |      -- |    15.7 |    2.56 |    0.18 |    1.33 |   247.5 |      1.732 |    52.0
+  W      |    2.47 |    2350 |      -- |    14.9 |    2.67 |    0.18 |    1.35 |   270.0 |      0.017 |     0.5
+  WNW    |    2.53 |    2400 |      -- |    14.5 |    2.68 |    0.16 |    1.28 |   292.5 |      0.013 |     0.4
+  NW     |    2.61 |    2200 |      -- |    14.5 |    2.68 |    0.15 |    1.19 |   315.0 |      0.008 |     0.2
+  NNW    |    2.66 |    2400 |      -- |    14.5 |    2.68 |    0.12 |    1.09 |   337.5 |      0.003 |     0.1
+  N      |    2.69 |    2750 |      -- |    11.9 |    2.68 |    0.11 |    1.04 |   360.0 |      0.001 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      2.406 |    72.2
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WZW    |    3.35 |    1550 |      -- |    37.1 |    2.27 |    0.41 |    1.93 |   247.5 |      0.000 |     0.0
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.000 |     0.0
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.66 |    2550 |      -- |    25.5 |    2.54 |    0.18 |    1.38 |   225.0 |      0.038 |     1.1
+  WZW    |    2.64 |    2750 |      -- |    23.3 |    2.46 |    0.27 |    1.58 |   247.5 |      0.362 |    10.9
+  W      |    3.16 |    8000 |      -- |    20.5 |    2.67 |    0.25 |    1.56 |   270.0 |      0.001 |     0.0
+  WNW    |    3.86 |    2200 |      -- |    25.0 |    2.68 |    0.28 |    1.63 |   292.5 |      0.001 |     0.0
+  NW     |    3.90 |    2150 |      -- |    23.3 |    2.68 |    0.24 |    1.48 |   315.0 |      0.001 |     0.0
+  NNW    |    4.00 |    2000 |      -- |    24.0 |    2.68 |    0.21 |    1.37 |   337.5 |      0.000 |     0.0
+  N      |    4.04 |    2000 |      -- |    23.0 |    2.68 |    0.22 |    1.41 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.403 |    12.1
+
+Gesloten Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.45 |    2200 |      -- |    18.5 |    2.58 |    0.15 |    1.22 |   225.0 |      0.024 |     0.7
+  WZW    |    2.64 |    1750 |      -- |    18.0 |    2.53 |    0.21 |    1.41 |   247.5 |      0.340 |    10.2
+  W      |    3.24 |    3550 |      -- |    21.0 |    2.67 |    0.26 |    1.58 |   270.0 |      0.126 |     3.8
+  WNW    |    2.96 |    7929 |      -- |    18.0 |    2.68 |    0.20 |    1.41 |   292.5 |      0.000 |     0.0
+  NW     |    3.00 |    8239 |      -- |    17.2 |    2.68 |    0.18 |    1.29 |   315.0 |      0.000 |     0.0
+  NNW    |    3.10 |    6540 |      -- |    18.0 |    2.68 |    0.16 |    1.20 |   337.5 |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.490 |    14.7
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.16 |    4950 |      -- |    38.6 |    2.48 |    0.21 |    1.59 |   225.0 |      0.000 |     0.0
+  WZW    |    3.70 |    1681 |      -- |    34.1 |    2.31 |    0.38 |    1.86 |   247.5 |      0.013 |     0.4
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.013 |     0.4
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.30 |    1655 |      -- |    29.9 |    2.53 |    0.19 |    1.46 |   225.0 |      0.002 |     0.1
+  WZW    |    3.46 |    1860 |      -- |    28.0 |    2.40 |    0.32 |    1.71 |   247.5 |      0.012 |     0.4
+  W      |    3.24 |    9086 |      -- |    21.0 |    2.66 |    0.26 |    1.58 |   270.0 |      0.003 |     0.1
+  WNW    |    3.68 |    8000 |      -- |    23.5 |    2.68 |    0.27 |    1.59 |   292.5 |      0.002 |     0.1
+  NW     |    3.92 |    7950 |      -- |    23.3 |    2.68 |    0.24 |    1.48 |   315.0 |      0.001 |     0.0
+  NNW    |    4.02 |    8000 |      -- |    24.0 |    2.68 |    0.21 |    1.37 |   337.5 |      0.000 |     0.0
+  N      |    4.12 |    9101 |      -- |    23.5 |    2.68 |    0.22 |    1.42 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.021 |     0.6
+
+ Betekenis van de gegevens:
+ - r        = De windrichting
+ - zeews.   = De zeewaterstand bij Maasmond in m+NAP
+ - q Rijn   = De afvoer op de Rijn bij Lobith in m³/s
+ - q Maas   = De afvoer op de Maas bij Lith in m³/s
+ - windsn.  = De potentiële windsnelheid van Schiphol in m/s
+ - h,teen   = De waterstand op de doorgerekende locatie in m+NAP na eventuele transformatie over een voorland
+ - Hm0,teen = De significante golfhoogte in m na eventuele transformatie over een dam en/of voorland
+ - Tm-1,0,t = De spectrale golfperiode in s na eventuele transformatie over een voorland
+ - golfr,t  = De golfrichting in graden t.o.v. Noord na eventuele transformatie over een voorland
+ - ov.freq  = De overschrijdingsfrequentie van het hydraulisch belastingniveau voor de bijbehorende windrichting
+              in gemiddeld aantal keer per winterhalfjaar en als percentage
+
+<a name="T002_IP_H">Hoofdillustratiepunten bij hydraulisch belastingniveau  2.66 (m+NAP) en terugkeertijd   300 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.66 (m+NAP)
+Terugkeertijd                 =      300 (jaar)
+Overschrijdingsfrequentie     = 3.33E-03 (per jaar)
+
+                                      | Geopende Europoortkering     | Geopende Europoortkering     | Geopende Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 72.2%) | (bijdrage aan ov.freq  0.0%) | (bijdrage aan ov.freq 12.1%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 52.0%)               | WZW   (  0.0%)               | WZW   ( 10.9%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.26                       |   3.35                       |   2.64
+Rijnafvoer q te Lobith [m³/s]         |   2350                       |   1550                       |   2750
+potentiële windsnelheid u [m/s]       |   15.7                       |   37.1                       |   23.3
+lokale waterstand h [m+NAP]           |   2.56                       |   2.27                       |   2.46
+significante golfhoogte Hm0 [m]       |   0.18                       |   0.41                       |   0.27
+spectrale golfperiode Tm-1,0 [s]      |   1.33                       |   1.93                       |   1.58
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+                                      | Gesloten Europoortkering     | Gesloten Europoortkering     | Gesloten Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 14.7%) | (bijdrage aan ov.freq  0.4%) | (bijdrage aan ov.freq  0.6%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 10.2%)               | WZW   (  0.4%)               | WZW   (  0.4%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.64                       |   3.70                       |   3.46
+Rijnafvoer q te Lobith [m³/s]         |   1750                       |   1681                       |   1860
+potentiële windsnelheid u [m/s]       |   18.0                       |   34.1                       |   28.0
+lokale waterstand h [m+NAP]           |   2.53                       |   2.31                       |   2.40
+significante golfhoogte Hm0 [m]       |   0.21                       |   0.38                       |   0.32
+spectrale golfperiode Tm-1,0 [s]      |   1.41                       |   1.86                       |   1.71
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+<a name="T003_IP">Illustratiepunten bij hydraulisch belastingniveau  2.74 (m+NAP) en terugkeertijd  1000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.74 (m+NAP)
+Terugkeertijd                 =     1000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-03 (per jaar)
+
+                                                           <a href="#T003_IP_H">Hoofdillustratiepunten</a>
+
+Geopende Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.27 |    2600 |      -- |    17.5 |    2.66 |    0.15 |    1.20 |   225.0 |      0.028 |     2.8
+  WZW    |    2.32 |    2400 |      -- |    16.0 |    2.63 |    0.18 |    1.34 |   247.5 |      0.214 |    21.4
+  W      |    2.55 |    2400 |      -- |    15.5 |    2.75 |    0.19 |    1.38 |   270.0 |      0.017 |     1.7
+  WNW    |    2.64 |    2200 |      -- |    15.5 |    2.76 |    0.18 |    1.32 |   292.5 |      0.014 |     1.4
+  NW     |    2.70 |    2350 |      -- |    14.9 |    2.76 |    0.15 |    1.21 |   315.0 |      0.007 |     0.7
+  NNW    |    2.77 |    2550 |      -- |    14.9 |    2.76 |    0.13 |    1.10 |   337.5 |      0.003 |     0.3
+  N      |    2.83 |    2550 |      -- |    12.7 |    2.76 |    0.12 |    1.07 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.284 |    28.4
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WZW    |    4.25 |    2200 |      -- |    39.5 |    2.32 |    0.44 |    1.99 |   247.5 |      0.000 |     0.0
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.000 |     0.0
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.76 |    2750 |      -- |    28.5 |    2.58 |    0.20 |    1.46 |   225.0 |      0.016 |     1.6
+  WZW    |    2.76 |    3150 |      -- |    25.5 |    2.51 |    0.29 |    1.65 |   247.5 |      0.136 |    13.6
+  W      |    3.91 |    2400 |      -- |    27.0 |    2.74 |    0.34 |    1.77 |   270.0 |      0.000 |     0.0
+  WNW    |    4.03 |    2150 |      -- |    26.2 |    2.76 |    0.30 |    1.67 |   292.5 |      0.000 |     0.0
+  NW     |    4.05 |    2000 |      -- |    24.0 |    2.76 |    0.25 |    1.51 |   315.0 |      0.001 |     0.1
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.154 |    15.4
+
+Gesloten Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.55 |    2200 |      -- |    19.5 |    2.65 |    0.16 |    1.26 |   225.0 |      0.036 |     3.6
+  WZW    |    2.72 |    2150 |      -- |    18.8 |    2.60 |    0.22 |    1.44 |   247.5 |      0.488 |    48.8
+  W      |    3.45 |    4000 |      -- |    23.0 |    2.74 |    0.29 |    1.65 |   270.0 |      0.017 |     1.7
+  WNW    |    2.90 |    8575 |      -- |    17.2 |    2.76 |    0.20 |    1.38 |   292.5 |      0.000 |     0.0
+  NW     |    2.96 |    9128 |      -- |    17.0 |    2.76 |    0.17 |    1.29 |   315.0 |      0.000 |     0.0
+  NNW    |    3.10 |    6771 |      -- |    18.0 |    2.76 |    0.16 |    1.20 |   337.5 |      0.000 |     0.0
+  N      |    2.90 |    9525 |      -- |    13.4 |    2.76 |    0.12 |    1.10 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.541 |    54.1
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.55 |    4527 |      -- |    45.0 |    2.51 |    0.24 |    1.71 |   225.0 |      0.000 |     0.0
+  WZW    |    3.70 |    1700 |      -- |    38.8 |    2.33 |    0.43 |    1.97 |   247.5 |      0.005 |     0.5
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.005 |     0.5
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.35 |    1580 |      -- |    33.0 |    2.57 |    0.22 |    1.54 |   225.0 |      0.002 |     0.2
+  WZW    |    3.56 |    1720 |      -- |    29.5 |    2.46 |    0.34 |    1.76 |   247.5 |      0.012 |     1.2
+  W      |    3.66 |    8200 |      -- |    25.0 |    2.74 |    0.31 |    1.71 |   270.0 |      0.002 |     0.2
+  WNW    |    4.01 |    8000 |      -- |    26.0 |    2.76 |    0.30 |    1.66 |   292.5 |      0.001 |     0.1
+  NW     |    4.73 |    8000 |      -- |    28.0 |    2.76 |    0.29 |    1.61 |   315.0 |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.016 |     1.6
+
+ Betekenis van de gegevens:
+ - r        = De windrichting
+ - zeews.   = De zeewaterstand bij Maasmond in m+NAP
+ - q Rijn   = De afvoer op de Rijn bij Lobith in m³/s
+ - q Maas   = De afvoer op de Maas bij Lith in m³/s
+ - windsn.  = De potentiële windsnelheid van Schiphol in m/s
+ - h,teen   = De waterstand op de doorgerekende locatie in m+NAP na eventuele transformatie over een voorland
+ - Hm0,teen = De significante golfhoogte in m na eventuele transformatie over een dam en/of voorland
+ - Tm-1,0,t = De spectrale golfperiode in s na eventuele transformatie over een voorland
+ - golfr,t  = De golfrichting in graden t.o.v. Noord na eventuele transformatie over een voorland
+ - ov.freq  = De overschrijdingsfrequentie van het hydraulisch belastingniveau voor de bijbehorende windrichting
+              in gemiddeld aantal keer per winterhalfjaar en als percentage
+
+<a name="T003_IP_H">Hoofdillustratiepunten bij hydraulisch belastingniveau  2.74 (m+NAP) en terugkeertijd  1000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.74 (m+NAP)
+Terugkeertijd                 =     1000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-03 (per jaar)
+
+                                      | Geopende Europoortkering     | Geopende Europoortkering     | Geopende Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 28.4%) | (bijdrage aan ov.freq  0.0%) | (bijdrage aan ov.freq 15.4%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 21.4%)               | WZW   (  0.0%)               | WZW   ( 13.6%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.32                       |   4.25                       |   2.76
+Rijnafvoer q te Lobith [m³/s]         |   2400                       |   2200                       |   3150
+potentiële windsnelheid u [m/s]       |   16.0                       |   39.5                       |   25.5
+lokale waterstand h [m+NAP]           |   2.63                       |   2.32                       |   2.51
+significante golfhoogte Hm0 [m]       |   0.18                       |   0.44                       |   0.29
+spectrale golfperiode Tm-1,0 [s]      |   1.34                       |   1.99                       |   1.65
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+                                      | Gesloten Europoortkering     | Gesloten Europoortkering     | Gesloten Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 54.1%) | (bijdrage aan ov.freq  0.5%) | (bijdrage aan ov.freq  1.6%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 48.8%)               | WZW   (  0.5%)               | WZW   (  1.2%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.72                       |   3.70                       |   3.56
+Rijnafvoer q te Lobith [m³/s]         |   2150                       |   1700                       |   1720
+potentiële windsnelheid u [m/s]       |   18.8                       |   38.8                       |   29.5
+lokale waterstand h [m+NAP]           |   2.60                       |   2.33                       |   2.46
+significante golfhoogte Hm0 [m]       |   0.22                       |   0.43                       |   0.34
+spectrale golfperiode Tm-1,0 [s]      |   1.44                       |   1.97                       |   1.76
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+<a name="T004_IP">Illustratiepunten bij hydraulisch belastingniveau  2.82 (m+NAP) en terugkeertijd  3000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.82 (m+NAP)
+Terugkeertijd                 =     3000 (jaar)
+Overschrijdingsfrequentie     = 3.33E-04 (per jaar)
+
+                                                           <a href="#T004_IP_H">Hoofdillustratiepunten</a>
+
+Geopende Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.34 |    2400 |      -- |    18.0 |    2.73 |    0.15 |    1.23 |   225.0 |      0.002 |     0.5
+  WZW    |    2.38 |    2400 |      -- |    17.0 |    2.70 |    0.20 |    1.38 |   247.5 |      0.008 |     2.3
+  W      |    2.64 |    2400 |      -- |    16.0 |    2.83 |    0.20 |    1.40 |   270.0 |      0.007 |     2.1
+  WNW    |    2.72 |    2400 |      -- |    16.0 |    2.84 |    0.18 |    1.34 |   292.5 |      0.005 |     1.6
+  NW     |    2.81 |    2350 |      -- |    15.7 |    2.84 |    0.16 |    1.24 |   315.0 |      0.003 |     0.9
+  NNW    |    2.88 |    2750 |      -- |    15.7 |    2.84 |    0.14 |    1.13 |   337.5 |      0.001 |     0.3
+  N      |    2.94 |    2750 |      -- |    14.2 |    2.84 |    0.13 |    1.13 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.026 |     7.7
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WZW    |    4.36 |    2150 |      -- |    42.3 |    2.36 |    0.47 |    2.05 |   247.5 |      0.000 |     0.0
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.000 |     0.0
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.86 |    3150 |      -- |    30.7 |    2.63 |    0.22 |    1.52 |   225.0 |      0.003 |     0.8
+  WZW    |    2.86 |    4000 |      -- |    27.0 |    2.57 |    0.31 |    1.69 |   247.5 |      0.017 |     5.2
+  W      |    4.10 |    2200 |      -- |    29.0 |    2.82 |    0.37 |    1.83 |   270.0 |      0.000 |     0.0
+  WNW    |    4.57 |    2000 |      -- |    30.0 |    2.84 |    0.34 |    1.78 |   292.5 |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.020 |     6.0
+
+Gesloten Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.63 |    2350 |      -- |    21.0 |    2.71 |    0.18 |    1.31 |   225.0 |      0.021 |     6.4
+  WZW    |    2.83 |    2350 |      -- |    20.3 |    2.66 |    0.23 |    1.49 |   247.5 |      0.258 |    77.5
+  W      |    3.77 |    4000 |      -- |    26.0 |    2.82 |    0.33 |    1.75 |   270.0 |      0.001 |     0.4
+  WNW    |    2.90 |    9190 |      -- |    17.2 |    2.84 |    0.20 |    1.39 |   292.5 |      0.000 |     0.0
+  NW     |    2.90 |   10030 |      -- |    16.5 |    2.84 |    0.17 |    1.27 |   315.0 |      0.000 |     0.0
+  NNW    |    3.10 |    7007 |      -- |    18.0 |    2.84 |    0.16 |    1.20 |   337.5 |      0.000 |     0.0
+  N      |    2.86 |   10669 |      -- |    13.5 |    2.84 |    0.12 |    1.10 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.281 |    84.4
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.46 |    8800 |      -- |    42.0 |    2.57 |    0.26 |    1.70 |   225.0 |      0.000 |     0.0
+  WZW    |    3.35 |    5837 |      -- |    34.5 |    2.46 |    0.39 |    1.88 |   247.5 |      0.001 |     0.2
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.001 |     0.2
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.44 |    1440 |      -- |    34.5 |    2.63 |    0.24 |    1.59 |   225.0 |      0.001 |     0.2
+  WZW    |    3.66 |    1720 |      -- |    30.5 |    2.52 |    0.35 |    1.79 |   247.5 |      0.005 |     1.5
+  W      |    3.95 |    8000 |      -- |    27.5 |    2.82 |    0.35 |    1.79 |   270.0 |      0.000 |     0.1
+  WNW    |    4.12 |    9337 |      -- |    27.0 |    2.84 |    0.31 |    1.70 |   292.5 |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.006 |     1.8
+
+ Betekenis van de gegevens:
+ - r        = De windrichting
+ - zeews.   = De zeewaterstand bij Maasmond in m+NAP
+ - q Rijn   = De afvoer op de Rijn bij Lobith in m³/s
+ - q Maas   = De afvoer op de Maas bij Lith in m³/s
+ - windsn.  = De potentiële windsnelheid van Schiphol in m/s
+ - h,teen   = De waterstand op de doorgerekende locatie in m+NAP na eventuele transformatie over een voorland
+ - Hm0,teen = De significante golfhoogte in m na eventuele transformatie over een dam en/of voorland
+ - Tm-1,0,t = De spectrale golfperiode in s na eventuele transformatie over een voorland
+ - golfr,t  = De golfrichting in graden t.o.v. Noord na eventuele transformatie over een voorland
+ - ov.freq  = De overschrijdingsfrequentie van het hydraulisch belastingniveau voor de bijbehorende windrichting
+              in gemiddeld aantal keer per winterhalfjaar en als percentage
+
+<a name="T004_IP_H">Hoofdillustratiepunten bij hydraulisch belastingniveau  2.82 (m+NAP) en terugkeertijd  3000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.82 (m+NAP)
+Terugkeertijd                 =     3000 (jaar)
+Overschrijdingsfrequentie     = 3.33E-04 (per jaar)
+
+                                      | Geopende Europoortkering     | Geopende Europoortkering     | Geopende Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq  7.7%) | (bijdrage aan ov.freq  0.0%) | (bijdrage aan ov.freq  6.0%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   (  2.3%)               | WZW   (  0.0%)               | WZW   (  5.2%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.38                       |   4.36                       |   2.86
+Rijnafvoer q te Lobith [m³/s]         |   2400                       |   2150                       |   4000
+potentiële windsnelheid u [m/s]       |   17.0                       |   42.3                       |   27.0
+lokale waterstand h [m+NAP]           |   2.70                       |   2.36                       |   2.57
+significante golfhoogte Hm0 [m]       |   0.20                       |   0.47                       |   0.31
+spectrale golfperiode Tm-1,0 [s]      |   1.38                       |   2.05                       |   1.69
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+                                      | Gesloten Europoortkering     | Gesloten Europoortkering     | Gesloten Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 84.4%) | (bijdrage aan ov.freq  0.2%) | (bijdrage aan ov.freq  1.8%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 77.5%)               | WZW   (  0.2%)               | WZW   (  1.5%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.83                       |   3.35                       |   3.66
+Rijnafvoer q te Lobith [m³/s]         |   2350                       |   5837                       |   1720
+potentiële windsnelheid u [m/s]       |   20.3                       |   34.5                       |   30.5
+lokale waterstand h [m+NAP]           |   2.66                       |   2.46                       |   2.52
+significante golfhoogte Hm0 [m]       |   0.23                       |   0.39                       |   0.35
+spectrale golfperiode Tm-1,0 [s]      |   1.49                       |   1.88                       |   1.79
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+<a name="T005_IP">Illustratiepunten bij hydraulisch belastingniveau  2.95 (m+NAP) en terugkeertijd 10000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.95 (m+NAP)
+Terugkeertijd                 =    10000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-04 (per jaar)
+
+                                                           <a href="#T005_IP_H">Hoofdillustratiepunten</a>
+
+Geopende Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.41 |    2400 |      -- |    19.0 |    2.84 |    0.17 |    1.27 |   225.0 |      0.001 |     0.5
+  WZW    |    2.48 |    2400 |      -- |    18.0 |    2.81 |    0.21 |    1.42 |   247.5 |      0.003 |     2.5
+  W      |    2.77 |    2400 |      -- |    17.0 |    2.96 |    0.21 |    1.44 |   270.0 |      0.002 |     2.1
+  WNW    |    2.86 |    2550 |      -- |    17.2 |    2.96 |    0.20 |    1.39 |   292.5 |      0.001 |     1.5
+  NW     |    2.96 |    2550 |      -- |    17.2 |    2.96 |    0.18 |    1.30 |   315.0 |      0.001 |     0.7
+  NNW    |    3.04 |    2950 |      -- |    17.2 |    2.96 |    0.15 |    1.18 |   337.5 |      0.000 |     0.2
+  N      |    3.05 |    3750 |      -- |    14.9 |    2.96 |    0.14 |    1.16 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.008 |     7.5
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.000 |     0.0
+
+Geopende Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.96 |    4750 |      -- |    32.1 |    2.72 |    0.25 |    1.57 |   225.0 |      0.000 |     0.1
+  WZW    |    3.03 |    4350 |      -- |    30.3 |    2.64 |    0.35 |    1.79 |   247.5 |      0.001 |     0.7
+  W      |    4.70 |    2200 |      -- |    34.5 |    2.93 |    0.44 |    1.98 |   270.0 |      0.000 |     0.0
+  WNW    |    5.89 |    2350 |      -- |    39.8 |    2.96 |    0.46 |    2.02 |   292.5 |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.001 |     0.8
+
+Gesloten Europoortkering en geopende Hollandsche IJsselkering
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    2.74 |    2550 |      -- |    23.3 |    2.80 |    0.20 |    1.38 |   225.0 |      0.010 |     9.7
+  WZW    |    2.98 |    2600 |      -- |    23.0 |    2.74 |    0.27 |    1.58 |   247.5 |      0.080 |    80.2
+  W      |    2.80 |    9685 |      -- |    17.2 |    2.96 |    0.21 |    1.45 |   270.0 |      0.000 |     0.0
+  WNW    |    2.90 |   10163 |      -- |    17.2 |    2.96 |    0.20 |    1.39 |   292.5 |      0.000 |     0.0
+  NW     |    2.90 |   11165 |      -- |    16.5 |    2.96 |    0.17 |    1.27 |   315.0 |      0.000 |     0.0
+  NNW    |    3.11 |    7350 |      -- |    18.0 |    2.96 |    0.16 |    1.21 |   337.5 |      0.000 |     0.0
+  N      |    2.76 |   12567 |      -- |    12.5 |    2.96 |    0.11 |    1.06 |   360.0 |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.090 |    90.1
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering zonder waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.66 |    8400 |      -- |    47.0 |    2.63 |    0.30 |    1.80 |   225.0 |      0.000 |     0.0
+  WZW    |    4.27 |    2350 |      -- |    42.9 |    2.46 |    0.48 |    2.07 |   247.5 |      0.000 |     0.0
+  W      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  WNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.000 |     0.0
+
+Gesloten Europoortkering en gesloten Hollandsche IJsselkering met waterbezwaar
+
+  r      | zeews.  | q Rijn  | q Maas  | windsn. | h,teen  | Hm0,teen| Tm-1,0,t| golfr,t | ov. freq   | ov. freq
+         | m+NAP   | m³/s    | m³/s    | m/s     | m+NAP   | m       | s       | graden  | *0.001/whj | %
+---------+---------+---------+---------+---------+---------+---------+---------+---------+------------+---------
+  NNO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ONO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  O      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  OZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZO     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZO    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  Z      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZZW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  ZW     |    3.50 |    1300 |      -- |    41.5 |    2.69 |    0.29 |    1.73 |   225.0 |      0.000 |     0.1
+  WZW    |    3.70 |    1720 |      -- |    36.2 |    2.56 |    0.42 |    1.93 |   247.5 |      0.001 |     1.4
+  W      |    5.02 |    4000 |      -- |    37.0 |    2.93 |    0.47 |    2.05 |   270.0 |      0.000 |     0.0
+  WNW    |    5.79 |    8000 |      -- |    39.0 |    2.96 |    0.45 |    2.00 |   292.5 |      0.000 |     0.0
+  NW     |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  NNW    |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+  N      |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      -- |      0.000 |     0.0
+---------+-------------------------------------------------------------------------------+------------+---------
+  som    |                                                                               |      0.002 |     1.5
+
+ Betekenis van de gegevens:
+ - r        = De windrichting
+ - zeews.   = De zeewaterstand bij Maasmond in m+NAP
+ - q Rijn   = De afvoer op de Rijn bij Lobith in m³/s
+ - q Maas   = De afvoer op de Maas bij Lith in m³/s
+ - windsn.  = De potentiële windsnelheid van Schiphol in m/s
+ - h,teen   = De waterstand op de doorgerekende locatie in m+NAP na eventuele transformatie over een voorland
+ - Hm0,teen = De significante golfhoogte in m na eventuele transformatie over een dam en/of voorland
+ - Tm-1,0,t = De spectrale golfperiode in s na eventuele transformatie over een voorland
+ - golfr,t  = De golfrichting in graden t.o.v. Noord na eventuele transformatie over een voorland
+ - ov.freq  = De overschrijdingsfrequentie van het hydraulisch belastingniveau voor de bijbehorende windrichting
+              in gemiddeld aantal keer per winterhalfjaar en als percentage
+
+<a name="T005_IP_H">Hoofdillustratiepunten bij hydraulisch belastingniveau  2.95 (m+NAP) en terugkeertijd 10000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.95 (m+NAP)
+Terugkeertijd                 =    10000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-04 (per jaar)
+
+                                      | Geopende Europoortkering     | Geopende Europoortkering     | Geopende Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq  7.5%) | (bijdrage aan ov.freq  0.0%) | (bijdrage aan ov.freq  0.8%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   (  2.5%)               | ----                         | WZW   (  0.7%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.48                       | ----                         |   3.03
+Rijnafvoer q te Lobith [m³/s]         |   2400                       | ----                         |   4350
+potentiële windsnelheid u [m/s]       |   18.0                       | ----                         |   30.3
+lokale waterstand h [m+NAP]           |   2.81                       | ----                         |   2.64
+significante golfhoogte Hm0 [m]       |   0.21                       | ----                         |   0.35
+spectrale golfperiode Tm-1,0 [s]      |   1.42                       | ----                         |   1.79
+golfrichting t.o.v. Noord [graden]    |  247.5                       | ----                         |  247.5
+
+                                      | Gesloten Europoortkering     | Gesloten Europoortkering     | Gesloten Europoortkering
+                                      | Geopende                     | Gesloten Hollandsche         | Gesloten Hollandsche
+                                      | Hollandsche IJsselkering     | IJsselk. zonder waterbezwaar | IJsselkering met waterbezwaar
+                                      | (bijdrage aan ov.freq 90.1%) | (bijdrage aan ov.freq  0.0%) | (bijdrage aan ov.freq  1.5%)
+--------------------------------------+------------------------------+------------------------------+------------------------------
+windrichting r (bijdrage aan ov.freq) | WZW   ( 80.2%)               | WZW   (  0.0%)               | WZW   (  1.4%)
+zeewaterstand m te Maasmond [m+NAP]   |   2.98                       |   4.27                       |   3.70
+Rijnafvoer q te Lobith [m³/s]         |   2600                       |   2350                       |   1720
+potentiële windsnelheid u [m/s]       |   23.0                       |   42.9                       |   36.2
+lokale waterstand h [m+NAP]           |   2.74                       |   2.46                       |   2.56
+significante golfhoogte Hm0 [m]       |   0.27                       |   0.48                       |   0.42
+spectrale golfperiode Tm-1,0 [s]      |   1.58                       |   2.07                       |   1.93
+golfrichting t.o.v. Noord [graden]    |  247.5                       |  247.5                       |  247.5
+
+ 
+<a name="T001_UITSPL">Uitsplitsingen en percentielen bij hydraulisch belastingniveau  2.59 (m+NAP) en terugkeertijd   100 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.59 (m+NAP)
+Terugkeertijd                 =      100 (jaar)
+Overschrijdingsfrequentie     = 1.00E-02 (per jaar)
+
+                                                                     <a href="#T001_G00_PQ">Percentielen</a>
+
+Uitsplitsing over de toestanden van de twee stormvloedkeringen
+
+                          | Geopende                 | Gesloten Hol. IJsselk.   | Gesloten Hol. IJsselk.   |
+                          | Hollandsche IJsselkering | zonder waterbezwaar      | met waterbezwaar         | Totaal
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Geopende Europoortkering  |          86.2%           |           0.0%           |           7.7%           |          93.9%
+Gesloten Europoortkering  |           5.7%           |           0.2%           |           0.2%           |           6.1%
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Totaal                    |          91.9%           |           0.2%           |           7.9%           |         100.0%
+
+Uitsplitsing over de windrichtingen
+
+           | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+           | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+           | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ richting  |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  NNO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  NO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ONO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  O        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  OZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  Z        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZW      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZW       |       23.2%     |        0.0%     |        0.7%     |        0.1%     |        0.0%     |        0.0%     |       24.1%
+  WZW      |       62.6%     |        0.0%     |        7.0%     |        2.0%     |        0.2%     |        0.1%     |       71.9%
+  W        |        0.1%     |        0.0%     |        0.0%     |        3.5%     |        0.0%     |        0.0%     |        3.7%
+  WNW      |        0.1%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.2%
+  NW       |        0.1%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.1%
+  NNW      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  N        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  totaal   |       86.2%     |        0.0%     |        7.7%     |        5.7%     |        0.2%     |        0.2%     |      100.0%
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.59 (m+NAP)
+Terugkeertijd                 =      100 (jaar)
+Overschrijdingsfrequentie     = 1.00E-02 (per jaar)
+
+<a name="T001_G00_PQ">Percentielen van de Rijnafvoer</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |             993 |             875 |            1073 |            1114 |            2098 |            2106 |            1001
+        10% |            1147 |             991 |            1283 |            1333 |            2507 |            2511 |            1160
+        25% |            1453 |            1283 |            1764 |            1784 |            3415 |            4283 |            1484
+        50% |            2296 |            1792 |            2533 |            2342 |            4523 |            7472 |            2322
+        75% |            3002 |            2623 |            3711 |            2923 |            5591 |            9458 |            3054
+        90% |            5261 |            3812 |            5050 |            3387 |            7264 |           11342 |            5030
+        95% |            7848 |            4869 |            5923 |            3671 |            8494 |           12448 |            7680
+
+<a name="T001_G00_PM">Percentielen van de zeewaterstand</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            1.88 |            2.88 |            2.34 |            2.70 |            2.82 |            2.70 |            1.91
+        10% |            2.01 |            2.92 |            2.41 |            2.79 |            2.90 |            2.82 |            2.03
+        25% |            2.13 |            2.98 |            2.50 |            2.99 |            3.03 |            3.03 |            2.14
+        50% |            2.21 |            3.06 |            2.62 |            3.20 |            3.19 |            3.32 |            2.23
+        75% |            2.28 |            3.16 |            2.75 |            3.43 |            3.41 |            3.59 |            2.32
+        90% |            2.34 |            3.27 |            2.88 |            3.67 |            3.64 |            3.96 |            2.62
+        95% |            2.37 |            3.35 |            2.96 |            3.82 |            3.79 |            4.27 |            2.98
+
+<a name="T001_G00_PU">Percentielen van de windsnelheid</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            13.5 |            32.6 |            17.6 |            16.9 |            22.9 |            17.0 |            13.6
+        10% |            14.1 |            32.7 |            18.6 |            17.9 |            23.9 |            18.3 |            14.3
+        25% |            15.4 |            33.0 |            20.6 |            19.9 |            25.8 |            21.0 |            15.6
+        50% |            17.3 |            33.4 |            23.0 |            22.7 |            28.3 |            24.9 |            17.9
+        75% |            20.0 |            34.0 |            25.2 |            25.8 |            31.1 |            29.0 |            21.1
+        90% |            22.6 |            34.8 |            27.0 |            28.9 |            33.7 |            32.6 |            23.8
+        95% |            23.8 |            35.4 |            28.3 |            30.7 |            35.4 |            34.7 |            25.3
+
+<a name="T002_UITSPL">Uitsplitsingen en percentielen bij hydraulisch belastingniveau  2.66 (m+NAP) en terugkeertijd   300 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.66 (m+NAP)
+Terugkeertijd                 =      300 (jaar)
+Overschrijdingsfrequentie     = 3.33E-03 (per jaar)
+
+                                                                     <a href="#T002_G00_PQ">Percentielen</a>
+
+Uitsplitsing over de toestanden van de twee stormvloedkeringen
+
+                          | Geopende                 | Gesloten Hol. IJsselk.   | Gesloten Hol. IJsselk.   |
+                          | Hollandsche IJsselkering | zonder waterbezwaar      | met waterbezwaar         | Totaal
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Geopende Europoortkering  |          72.2%           |           0.0%           |          12.1%           |          84.3%
+Gesloten Europoortkering  |          14.7%           |           0.4%           |           0.6%           |          15.7%
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Totaal                    |          86.9%           |           0.4%           |          12.7%           |         100.0%
+
+Uitsplitsing over de windrichtingen
+
+           | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+           | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+           | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ richting  |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  NNO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  NO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ONO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  O        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  OZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  Z        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZW      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZW       |       19.0%     |        0.0%     |        1.1%     |        0.7%     |        0.0%     |        0.1%     |       20.9%
+  WZW      |       52.0%     |        0.0%     |       10.9%     |       10.2%     |        0.4%     |        0.4%     |       73.8%
+  W        |        0.5%     |        0.0%     |        0.0%     |        3.8%     |        0.0%     |        0.1%     |        4.4%
+  WNW      |        0.4%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.1%     |        0.5%
+  NW       |        0.2%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.3%
+  NNW      |        0.1%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.1%
+  N        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  totaal   |       72.2%     |        0.0%     |       12.1%     |       14.7%     |        0.4%     |        0.6%     |      100.0%
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.66 (m+NAP)
+Terugkeertijd                 =      300 (jaar)
+Overschrijdingsfrequentie     = 3.33E-03 (per jaar)
+
+<a name="T002_G00_PQ">Percentielen van de Rijnafvoer</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |             986 |             893 |            1175 |            1009 |            1993 |            1954 |             999
+        10% |            1107 |            1022 |            1410 |            1190 |            2426 |            2271 |            1141
+        25% |            1314 |            1357 |            1943 |            1581 |            3489 |            3484 |            1369
+        50% |            1607 |            1991 |            2816 |            2121 |            4700 |            7159 |            1845
+        75% |            2610 |            3105 |            4121 |            2724 |            5809 |            9289 |            2766
+        90% |            3119 |            4660 |            5387 |            3219 |            7450 |           11258 |            4030
+        95% |            4592 |            5627 |            6495 |            3513 |            8635 |           12433 |            4887
+
+<a name="T002_G00_PM">Percentielen van de zeewaterstand</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            2.08 |            3.31 |            2.49 |            2.64 |            2.93 |            2.72 |            2.11
+        10% |            2.12 |            3.35 |            2.53 |            2.72 |            3.00 |            2.82 |            2.14
+        25% |            2.20 |            3.45 |            2.63 |            2.85 |            3.13 |            3.07 |            2.22
+        50% |            2.25 |            3.63 |            2.75 |            3.04 |            3.31 |            3.40 |            2.30
+        75% |            2.32 |            3.94 |            2.87 |            3.39 |            3.57 |            3.66 |            2.63
+        90% |            2.37 |            4.26 |            2.98 |            3.73 |            3.82 |            4.04 |            3.00
+        95% |            2.39 |            4.39 |            3.06 |            3.93 |            3.98 |            4.37 |            3.30
+
+<a name="T002_G00_PU">Percentielen van de windsnelheid</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            16.8 |            36.3 |            19.1 |            17.5 |            25.7 |            18.4 |            17.0
+        10% |            17.6 |            36.9 |            20.3 |            18.6 |            26.7 |            19.8 |            18.0
+        25% |            19.3 |            37.4 |            22.4 |            20.7 |            28.5 |            22.9 |            19.7
+        50% |            21.3 |            38.0 |            24.8 |            23.6 |            30.9 |            26.9 |            22.0
+        75% |            23.2 |            39.1 |            27.1 |            26.8 |            33.5 |            30.8 |            24.2
+        90% |            24.7 |            40.8 |            28.8 |            29.9 |            36.0 |            34.2 |            26.4
+        95% |            25.5 |            42.1 |            30.0 |            31.7 |            37.5 |            36.3 |            28.2
+
+<a name="T003_UITSPL">Uitsplitsingen en percentielen bij hydraulisch belastingniveau  2.74 (m+NAP) en terugkeertijd  1000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.74 (m+NAP)
+Terugkeertijd                 =     1000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-03 (per jaar)
+
+                                                                     <a href="#T003_G00_PQ">Percentielen</a>
+
+Uitsplitsing over de toestanden van de twee stormvloedkeringen
+
+                          | Geopende                 | Gesloten Hol. IJsselk.   | Gesloten Hol. IJsselk.   |
+                          | Hollandsche IJsselkering | zonder waterbezwaar      | met waterbezwaar         | Totaal
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Geopende Europoortkering  |          28.4%           |           0.0%           |          15.4%           |          43.8%
+Gesloten Europoortkering  |          54.1%           |           0.5%           |           1.6%           |          56.2%
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Totaal                    |          82.5%           |           0.5%           |          17.0%           |         100.0%
+
+Uitsplitsing over de windrichtingen
+
+           | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+           | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+           | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ richting  |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  NNO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  NO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ONO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  O        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  OZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  Z        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZW      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZW       |        2.8%     |        0.0%     |        1.6%     |        3.6%     |        0.0%     |        0.2%     |        8.2%
+  WZW      |       21.4%     |        0.0%     |       13.6%     |       48.8%     |        0.5%     |        1.2%     |       85.4%
+  W        |        1.7%     |        0.0%     |        0.0%     |        1.7%     |        0.0%     |        0.2%     |        3.7%
+  WNW      |        1.4%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.1%     |        1.5%
+  NW       |        0.7%     |        0.0%     |        0.1%     |        0.0%     |        0.0%     |        0.0%     |        0.9%
+  NNW      |        0.3%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.3%
+  N        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  totaal   |       28.4%     |        0.0%     |       15.4%     |       54.1%     |        0.5%     |        1.6%     |      100.0%
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.74 (m+NAP)
+Terugkeertijd                 =     1000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-03 (per jaar)
+
+<a name="T003_G00_PQ">Percentielen van de Rijnafvoer</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            1082 |             953 |            1318 |             976 |            1812 |            1790 |            1036
+        10% |            1182 |            1107 |            1604 |            1138 |            2176 |            2060 |            1188
+        25% |            1343 |            1490 |            2216 |            1485 |            3263 |            2975 |            1442
+        50% |            1502 |            2166 |            3221 |            1987 |            4745 |            5676 |            1906
+        75% |            1723 |            3277 |            4614 |            2607 |            5994 |            8727 |            2834
+        90% |            3095 |            4813 |            5903 |            3244 |            7686 |           10645 |            3908
+        95% |            4604 |            5951 |            7170 |            3608 |            8852 |           11876 |            5075
+
+<a name="T003_G00_PM">Percentielen van de zeewaterstand</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            2.20 |            3.83 |            2.61 |            2.67 |            3.06 |            2.77 |            2.23
+        10% |            2.21 |            3.90 |            2.65 |            2.73 |            3.13 |            2.85 |            2.28
+        25% |            2.25 |            4.10 |            2.75 |            2.84 |            3.27 |            3.08 |            2.53
+        50% |            2.32 |            4.32 |            2.86 |            2.97 |            3.53 |            3.47 |            2.85
+        75% |            2.38 |            4.49 |            2.98 |            3.12 |            3.84 |            3.70 |            3.04
+        90% |            2.67 |            4.66 |            3.09 |            3.30 |            4.10 |            4.00 |            3.23
+        95% |            2.82 |            4.78 |            3.18 |            3.49 |            4.25 |            4.34 |            3.40
+
+<a name="T003_G00_PU">Percentielen van de windsnelheid</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            14.5 |            37.1 |            20.8 |            17.9 |            29.7 |            20.1 |            17.1
+        10% |            16.2 |            38.0 |            22.1 |            18.9 |            30.5 |            21.8 |            18.8
+        25% |            22.6 |            39.7 |            24.3 |            20.9 |            32.2 |            25.1 |            21.8
+        50% |            24.3 |            41.8 |            26.7 |            23.5 |            34.2 |            28.9 |            24.3
+        75% |            25.4 |            43.2 |            29.0 |            26.7 |            36.6 |            32.5 |            26.6
+        90% |            26.3 |            44.9 |            30.8 |            29.8 |            39.0 |            35.8 |            29.6
+        95% |            27.0 |            46.1 |            31.9 |            31.7 |            40.4 |            37.8 |            31.4
+
+<a name="T004_UITSPL">Uitsplitsingen en percentielen bij hydraulisch belastingniveau  2.82 (m+NAP) en terugkeertijd  3000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.82 (m+NAP)
+Terugkeertijd                 =     3000 (jaar)
+Overschrijdingsfrequentie     = 3.33E-04 (per jaar)
+
+                                                                     <a href="#T004_G00_PQ">Percentielen</a>
+
+Uitsplitsing over de toestanden van de twee stormvloedkeringen
+
+                          | Geopende                 | Gesloten Hol. IJsselk.   | Gesloten Hol. IJsselk.   |
+                          | Hollandsche IJsselkering | zonder waterbezwaar      | met waterbezwaar         | Totaal
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Geopende Europoortkering  |           7.7%           |           0.0%           |           6.0%           |          13.7%
+Gesloten Europoortkering  |          84.4%           |           0.2%           |           1.8%           |          86.3%
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Totaal                    |          92.1%           |           0.2%           |           7.7%           |         100.0%
+
+Uitsplitsing over de windrichtingen
+
+           | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+           | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+           | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ richting  |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  NNO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  NO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ONO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  O        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  OZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  Z        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZW      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZW       |        0.5%     |        0.0%     |        0.8%     |        6.4%     |        0.0%     |        0.2%     |        7.9%
+  WZW      |        2.3%     |        0.0%     |        5.2%     |       77.5%     |        0.2%     |        1.5%     |       86.6%
+  W        |        2.1%     |        0.0%     |        0.0%     |        0.4%     |        0.0%     |        0.1%     |        2.6%
+  WNW      |        1.6%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        1.7%
+  NW       |        0.9%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.9%
+  NNW      |        0.3%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.3%
+  N        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  totaal   |        7.7%     |        0.0%     |        6.0%     |       84.4%     |        0.2%     |        1.8%     |      100.0%
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.82 (m+NAP)
+Terugkeertijd                 =     3000 (jaar)
+Overschrijdingsfrequentie     = 3.33E-04 (per jaar)
+
+<a name="T004_G00_PQ">Percentielen van de Rijnafvoer</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            1056 |             961 |            1515 |             978 |            1594 |            1652 |             995
+        10% |            1285 |            1120 |            1851 |            1141 |            1892 |            1913 |            1169
+        25% |            1797 |            1512 |            2610 |            1487 |            2586 |            2697 |            1542
+        50% |            2746 |            2177 |            3779 |            1986 |            4241 |            4905 |            2090
+        75% |            4419 |            3223 |            5108 |            2607 |            5876 |            8364 |            2827
+        90% |            6772 |            4704 |            6744 |            3211 |            7783 |           10201 |            3671
+        95% |            8950 |            5662 |            7829 |            3557 |            8989 |           11327 |            4571
+
+<a name="T004_G00_PM">Percentielen van de zeewaterstand</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            2.23 |            4.23 |            2.71 |            2.73 |            3.25 |            2.85 |            2.65
+        10% |            2.33 |            4.30 |            2.76 |            2.79 |            3.35 |            2.93 |            2.74
+        25% |            2.48 |            4.42 |            2.85 |            2.89 |            3.58 |            3.15 |            2.86
+        50% |            2.70 |            4.56 |            2.96 |            3.01 |            3.91 |            3.55 |            2.99
+        75% |            2.87 |            4.70 |            3.07 |            3.15 |            4.20 |            3.78 |            3.14
+        90% |            3.01 |            4.87 |            3.19 |            3.29 |            4.43 |            4.05 |            3.29
+        95% |            3.09 |            4.98 |            3.28 |            3.40 |            4.57 |            4.33 |            3.42
+
+<a name="T004_G00_PU">Percentielen van de windsnelheid</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            13.0 |            38.7 |            22.5 |            19.0 |            34.0 |            21.8 |            17.5
+        10% |            13.8 |            39.6 |            23.8 |            19.9 |            34.7 |            23.4 |            19.1
+        25% |            15.2 |            41.1 |            26.1 |            21.9 |            36.1 |            26.9 |            21.5
+        50% |            17.2 |            43.1 |            28.6 |            24.3 |            38.0 |            30.5 |            24.2
+        75% |            19.7 |            45.2 |            30.8 |            27.2 |            40.3 |            33.9 |            27.4
+        90% |            22.5 |            46.9 |            32.6 |            30.0 |            42.4 |            37.1 |            30.5
+        95% |            24.2 |            47.9 |            33.8 |            31.8 |            43.9 |            39.0 |            32.3
+
+<a name="T005_UITSPL">Uitsplitsingen en percentielen bij hydraulisch belastingniveau  2.95 (m+NAP) en terugkeertijd 10000 (jaar)</a>
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.95 (m+NAP)
+Terugkeertijd                 =    10000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-04 (per jaar)
+
+                                                                     <a href="#T005_G00_PQ">Percentielen</a>
+
+Uitsplitsing over de toestanden van de twee stormvloedkeringen
+
+                          | Geopende                 | Gesloten Hol. IJsselk.   | Gesloten Hol. IJsselk.   |
+                          | Hollandsche IJsselkering | zonder waterbezwaar      | met waterbezwaar         | Totaal
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Geopende Europoortkering  |           7.5%           |           0.0%           |           0.8%           |           8.4%
+Gesloten Europoortkering  |          90.1%           |           0.0%           |           1.5%           |          91.6%
+--------------------------+--------------------------+--------------------------+--------------------------+----------------
+Totaal                    |          97.6%           |           0.0%           |           2.4%           |         100.0%
+
+Uitsplitsing over de windrichtingen
+
+           | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+           | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+           | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ richting  |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  NNO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  NO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ONO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  O        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  OZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZO       |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZO      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  Z        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZZW      |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+  ZW       |        0.5%     |        0.0%     |        0.1%     |        9.7%     |        0.0%     |        0.1%     |       10.6%
+  WZW      |        2.5%     |        0.0%     |        0.7%     |       80.2%     |        0.0%     |        1.4%     |       84.9%
+  W        |        2.1%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        2.2%
+  WNW      |        1.5%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        1.5%
+  NW       |        0.7%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.7%
+  NNW      |        0.2%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.2%
+  N        |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%     |        0.0%
+-----------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+  totaal   |        7.5%     |        0.0%     |        0.8%     |       90.1%     |        0.0%     |        1.5%     |      100.0%
+
+Locatie                       = 14-01_00008_1_HY_km0000.72 (109392,446698)
+Berekeningstype               = Hydraulisch belastingniveau, golfoverslag met kritiek overslagdebiet van  5.00 (l/s/m)
+Hydraulisch belastingniveau   =     2.95 (m+NAP)
+Terugkeertijd                 =    10000 (jaar)
+Overschrijdingsfrequentie     = 1.00E-04 (per jaar)
+
+<a name="T005_G00_PQ">Percentielen van de Rijnafvoer</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            1054 |             990 |            1542 |             969 |            1324 |            1466 |             977
+        10% |            1260 |            1166 |            1982 |            1120 |            1595 |            1721 |            1135
+        25% |            1819 |            1570 |            3032 |            1445 |            2089 |            2420 |            1470
+        50% |            2719 |            2242 |            4541 |            1896 |            2933 |            4168 |            1946
+        75% |            4472 |            3312 |            5933 |            2444 |            4689 |            7970 |            2546
+        90% |            6965 |            4836 |            7678 |            2968 |            6933 |            9903 |            3212
+        95% |            9149 |            5794 |            8481 |            3290 |            8288 |           11040 |            3770
+
+<a name="T005_G00_PM">Percentielen van de zeewaterstand</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            2.32 |            4.50 |            2.84 |            2.82 |            3.92 |            3.00 |            2.74
+        10% |            2.42 |            4.55 |            2.90 |            2.89 |            4.06 |            3.08 |            2.84
+        25% |            2.56 |            4.67 |            2.99 |            3.00 |            4.26 |            3.33 |            2.97
+        50% |            2.77 |            4.82 |            3.11 |            3.12 |            4.47 |            3.71 |            3.10
+        75% |            2.96 |            4.96 |            3.25 |            3.25 |            4.69 |            3.91 |            3.24
+        90% |            3.09 |            5.10 |            3.41 |            3.39 |            4.88 |            4.12 |            3.39
+        95% |            3.17 |            5.21 |            3.53 |            3.49 |            5.00 |            4.33 |            3.51
+
+<a name="T005_G00_PU">Percentielen van de windsnelheid</a>
+
+            | Geopende        | Geopende        | Geopende        | Gesloten        | Gesloten        | Gesloten        | Alle toestanden
+            | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering | Europoortkering
+            | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | Geopende Hol.   | Gesloten HIJK   | Gesloten HIJK   | en Hollandsche
+ percentiel |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering | zonder waterbezw| en waterbezwaar |    IJsselkering
+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------
+         5% |            13.8 |            41.5 |            24.8 |            21.6 |            39.5 |            24.0 |            19.3
+        10% |            14.6 |            42.2 |            26.2 |            22.5 |            40.3 |            25.7 |            21.5
+        25% |            16.1 |            43.7 |            28.5 |            24.2 |            41.8 |            29.2 |            23.7
+        50% |            18.2 |            45.6 |            31.0 |            26.5 |            43.6 |            32.6 |            26.2
+        75% |            20.8 |            47.5 |            33.2 |            29.1 |            45.3 |            35.9 |            29.0
+        90% |            23.7 |            48.8 |            35.2 |            31.6 |            47.1 |            38.9 |            31.7
+        95% |            25.4 |            49.4 |            36.7 |            33.1 |            48.1 |            40.8 |            33.3
+
+</pre>
+</body>
+</html>

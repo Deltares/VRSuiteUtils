@@ -17,11 +17,12 @@ class TrajectShape:
         if not NBWP_shape_path:
             # get from WFS
             wfs_nbpw = WebFeatureService(
-                url="https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs",
+                url="https://geo.rijkswaterstaat.nl/services/ogc/wvp/ows/wfs",
+                # url="https://waterveiligheidsportaal.nl/geoserver/nbpw/ows/wfs",
                 version="1.1.0",
             )
             NBPW = gpd.read_file(
-                wfs_nbpw.getfeature("nbpw:dijktrajecten", outputFormat="json")
+                wfs_nbpw.getfeature("dijktrajecten", outputFormat="json")
             )
         else:
             NBPW = gpd.read_file(NBWP_shape_path)

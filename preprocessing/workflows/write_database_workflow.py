@@ -70,10 +70,10 @@ def write_database_main(traject_name : str,
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
 
     #read water levels
-    waterlevel_results = read_waterlevel_data(waterlevel_results_path)
+    waterlevel_results = read_waterlevel_data(waterlevel_results_path, use_hydraring=True)
 
     #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
-    mechanism_data = {'overslag': read_overflow_data(overflow_results_path), 
+    mechanism_data = {'overslag': read_overflow_data(overflow_results_path, use_hydraring=True), 
                       'stabiliteit': read_stability_data(stability_path),}
     
     if piping_path != None: 

@@ -15,7 +15,7 @@ The input_files directory contains the following directories:
 
 The intermediate_results directory contains the following directories:
 - vakindeling
-- HR_results (with subdirectory "HR_results/waterlevel" and "HR_results/overflow")
+- HR_results (with subdirectory "HR_results/waterlevel" and "HR_results/overflow", and HR_results/HNL in case of Hydra-NL workflow)
 - bekleding
 - profielen (with subdirectory "profielen/ahn_profielen" and "profielen/kar_profielen" and "profielen/repr_profielen")
 - teenlijn
@@ -49,6 +49,7 @@ def create_project_structure(project_folder, traject_id):
 
     vakindeling_dir = os.path.join(intermediate_results_dir, "vakindeling")
     hr_results_dir = os.path.join(intermediate_results_dir, "HR_results")
+    hnl_results_dir = os.path.join(input_files_dir, "HNL_results")
     waterlevel_dir = os.path.join(hr_results_dir, "waterlevel")
     overflow_dir = os.path.join(hr_results_dir, "overflow")
     bekleding_dir = os.path.join(intermediate_results_dir, "bekleding")
@@ -74,6 +75,7 @@ def create_project_structure(project_folder, traject_id):
     os.makedirs(steentoets_dir)
     os.makedirs(vakindeling_dir)
     os.makedirs(hr_results_dir)
+    os.makedirs(hnl_results_dir)
     os.makedirs(waterlevel_dir)
     os.makedirs(overflow_dir)
     os.makedirs(bekleding_dir)
@@ -96,23 +98,24 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"intermediate_results_dir  = {os.path.relpath(intermediate_results_dir, project_dir)}  # Intermediate results directory\n")
         f.write(f"output_map_database       = {os.path.relpath(vrtool_database_dir, project_dir)}       # VRTool database directory\n\n")
 
-        f.write(f"database_path_HR_current  = {os.path.relpath(database_path_HR_current, project_dir)}     # pad met de database voor de HR sommen (huidig)\n")
-        f.write(f"database_path_HR_future   = {os.path.relpath(database_path_HR_future, project_dir)}     # pad met de database voor de HR sommen (toekomst)\n")
-        f.write(f"hr_profielen_dir          = {os.path.relpath(hr_profielen_dir, project_dir)}                  # HR profielen directory\n")
+        f.write(f"database_path_HR_current  = {os.path.relpath(database_path_HR_current, project_dir)}  # pad met de database voor de HR sommen (huidig)\n")
+        f.write(f"database_path_HR_future   = {os.path.relpath(database_path_HR_future, project_dir)}   # pad met de database voor de HR sommen (toekomst)\n")
+        f.write(f"hr_profielen_dir          = {os.path.relpath(hr_profielen_dir, project_dir)}          # HR profielen directory\n")
         f.write(f"default_files_dir         = {os.path.relpath(default_files_dir, project_dir)}         # Default files directory\n")
         f.write(f"steentoets_map            = {os.path.relpath(steentoets_dir, project_dir)}            # Steentoets directory\n\n")
 
-        f.write(f"output_map_vakindeling    = {os.path.relpath(vakindeling_dir, project_dir)}                             # aan te maken uitvoermap voor de vakindeling\n")
-        f.write(f"hr_results_dir            = {os.path.relpath(hr_results_dir, project_dir)}                              # HR results directory\n")
-        f.write(f"output_map_waterstand     = {os.path.relpath(waterlevel_dir, project_dir)}                   # Waterlevel directory\n")
-        f.write(f"output_map_overslag       = {os.path.relpath(overflow_dir, project_dir)}                     # Overflow directory\n")
-        f.write(f"output_map_bekleding      = {os.path.relpath(bekleding_dir, project_dir)}                               # Bekleding directory\n")
-        f.write(f"output_map_profielen      = {os.path.relpath(profielen_dir, project_dir)}                               # Profielen directory\n")
-        f.write(f"output_map_ahn_profielen  = {os.path.relpath(ahn_profielen_dir, project_dir)}                 # AHN profielen directory\n")
-        f.write(f"karakteristieke_profielen_map = {os.path.relpath(kar_profielen_dir, project_dir)}             # KAR profielen directory\n")
-        f.write(f"output_map_representatieve_profielen = {os.path.relpath(repr_profielen_dir, project_dir)}     # REPR profielen directory\n")
-        f.write(f"output_map_teenlijn       = {os.path.relpath(teenlijn_dir, project_dir)}                                # Teenlijn directory\n")
-        f.write(f"output_map_bebouwing      = {os.path.relpath(bebouwing_dir, project_dir)}                               # Bebouwing directory\n\n")
+        f.write(f"output_map_vakindeling    = {os.path.relpath(vakindeling_dir, project_dir)}               # aan te maken uitvoermap voor de vakindeling\n")
+        f.write(f"hr_results_dir            = {os.path.relpath(hr_results_dir, project_dir)}                # HR results directory\n")
+        f.write(f"hnl_results_dir           = {os.path.relpath(hnl_results_dir, project_dir)}               # Hydra-NL directory\n")
+        f.write(f"output_map_waterstand     = {os.path.relpath(waterlevel_dir, project_dir)}                # Waterlevel directory\n")
+        f.write(f"output_map_overslag       = {os.path.relpath(overflow_dir, project_dir)}                  # Overflow directory\n")
+        f.write(f"output_map_bekleding      = {os.path.relpath(bekleding_dir, project_dir)}                 # Bekleding directory\n")
+        f.write(f"output_map_profielen      = {os.path.relpath(profielen_dir, project_dir)}                 # Profielen directory\n")
+        f.write(f"output_map_ahn_profielen  = {os.path.relpath(ahn_profielen_dir, project_dir)}             # AHN profielen directory\n")
+        f.write(f"karakteristieke_profielen_map = {os.path.relpath(kar_profielen_dir, project_dir)}         # KAR profielen directory\n")
+        f.write(f"output_map_representatieve_profielen = {os.path.relpath(repr_profielen_dir, project_dir)} # REPR profielen directory\n")
+        f.write(f"output_map_teenlijn       = {os.path.relpath(teenlijn_dir, project_dir)}                  # Teenlijn directory\n")
+        f.write(f"output_map_bebouwing      = {os.path.relpath(bebouwing_dir, project_dir)}                 # Bebouwing directory\n\n")
 
         f.write(f"vakindeling_csv           = {os.path.relpath(os.path.join(default_files_dir, 'Vakindeling.csv'), project_dir)}                    # pad naar de geojson (die gegenereerd is in stap vakindeling).\n")
         f.write(f"hr_input_csv              = {os.path.relpath(os.path.join(default_files_dir, 'HR_default.csv'), project_dir)}                     # pad naar de csv met de HR info.\n")
