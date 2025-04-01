@@ -4,10 +4,11 @@ from vrtool.common.enums import MechanismEnum
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 import numpy as np
 import copy
-
+from pathlib import Path
+from scipy.interpolate import interp1d
 from matplotlib.pyplot import axis
 
-def get_minimal_tc_step(steps):
+def get_minimal_tc_step(steps: list[dict]) -> int:
     """Get the step number with the minimal total cost.
 
     Args:
@@ -18,7 +19,7 @@ def get_minimal_tc_step(steps):
     """
     return min(steps, key=lambda x: x['total_cost'])['step_number']  
 
-def get_measures_per_step_number(list_of_measures):
+def get_measures_per_step_number(list_of_measures: list[dict]) -> dict:
     """Groups the different measures by step number.
 
     Args:
@@ -46,10 +47,10 @@ def get_measures_per_step_number(list_of_measures):
     return result
 
 
-def get_reliability_for_each_step(database_path, measures_per_step):
+def get_reliability_for_each_step(database_path: Path, measures_per_step: dict) -> dict:
     #read the OptimizationStepResultMechanism for those optimization_step_ids in measures_per_step
     #find min and max 'optimization_step_id' in measures_per_step dicts. where these values originates from lists inthe dictionary
-    def get_step_range(input):
+    def get_step_range(input: dict) -> tuple[int, int]:
         """Gets range of steps for measures that were given as input.
         
         Args:
@@ -64,7 +65,7 @@ def get_reliability_for_each_step(database_path, measures_per_step):
         max_step = _steps[-1]['optimization_step_id'][0]
         return min_step, max_step
     
-    def restructure_reliability_per_step(reliability_per_step):
+    def restructure_reliability_per_step(reliability_per_step: list[dict]) -> dict:
         """Restructures the reliability_per_step to a dictionary with stepnumber as key, and reliability and section_id as values.
         Reliability itself is a dict with mechanism as key and lists of beta, time as values.
 
@@ -109,7 +110,7 @@ def get_reliability_for_each_step(database_path, measures_per_step):
     
     return restructure_reliability_per_step(list(reliability_values))
 
-def assessment_for_each_step(assessment_input, reliability_per_step):
+def assessment_for_each_step(assessment_input: dict, reliability_per_step: dict) -> list[dict]:
     """ Combines the assessment input with the reliability per step to get the reliability assessment for each step.
 
     Args:
@@ -119,7 +120,32 @@ def assessment_for_each_step(assessment_input, reliability_per_step):
     Returns:
     list: list of dictionaries containing the reliability of each section and mechanism for each step.
         """
-    assessment_per_step = [copy.deepcopy(assessment_input)]
+
+    def get_time_grid(reliability_per_step: dict) -> list[int]:
+
+        time_grid = [step['reliability'][mechanism]['time'] for step in reliability_per_step.values() for mechanism in step['reliability'].keys()]
+
+        #flatten list
+        time_grid = [item for sublist in time_grid for item in sublist]
+        time_grid = sorted(list(set(time_grid)))
+        return time_grid
+    
+    def align_assessment(assessment_input: dict, time_grid: list[int]) -> dict:
+        for mechanism, data in assessment_input.items():
+            for section, section_data in data.items():
+                #make interpolation function
+                f = interp1d(section_data['time'], section_data['beta'], kind='linear', fill_value='extrapolate')
+                #get beta values for time_grid
+                section_data['beta'] = f(time_grid)
+                section_data['time'] = time_grid
+                #store data
+                data[section] = section_data
+
+        return assessment_input    
+    
+    time_grid = get_time_grid(reliability_per_step)
+
+    assessment_per_step = [align_assessment(assessment_input, time_grid)]
     for step, data in reliability_per_step.items():
         traject_reliability = copy.deepcopy(assessment_per_step[-1])
         for mechanism, reliability in data['reliability'].items():
@@ -129,38 +155,38 @@ def assessment_for_each_step(assessment_input, reliability_per_step):
     assessment_per_step.pop(0)
     return assessment_per_step
 
-def calculate_traject_probability_for_steps(stepwise_assessment):
+def calculate_traject_probability_for_steps(stepwise_assessment: list[dict]) -> dict:
     """Computes the system failure probability based on the reliability of sections and mechanisms for each step. Does so for each mechanism separately, and then combines.
-    
+    Note that grids for time should be the same for each mechanism and each section, otherwise the computation is messed up.
     Args:
         stepwise_assessment (list): list of dictionaries containing the reliability of each section and mechanism for each step.
 
     Returns:
         dict: dictionary containing the system failure probability for each mechanism for each step.
     """
-    def convert_beta_to_pf_per_section(traject_reliability):
+    def convert_beta_to_pf_per_section(traject_reliability: dict[MechanismEnum]) -> dict:
         time = [t for section in traject_reliability.values() for t in section['time']]
         beta = [b for section in traject_reliability.values() for b in section['beta']]
         beta_per_time = {t: [b for b, t_ in zip(beta, time) if t_ == t] for t in set(time)}
         pf_per_time = {t: list(beta_to_pf(np.array(beta))) for t, beta in beta_per_time.items()}
         return pf_per_time
     
-    def compute_overflow(traject_reliability):
+    def compute_overflow(traject_reliability: dict) -> dict:
         pf_per_time = convert_beta_to_pf_per_section(traject_reliability)
         traject_pf_per_time = {t: max(pf) for t, pf in pf_per_time.items()}
         return traject_pf_per_time
 
-    def compute_piping_stability(traject_reliability):
+    def compute_piping_stability(traject_reliability: dict) -> dict:
         pf_per_time = convert_beta_to_pf_per_section(traject_reliability)
         traject_pf_per_time = {t: 1-np.prod(np.subtract(1,pf)) for t, pf in pf_per_time.items()}
         return traject_pf_per_time
 
-    def compute_revetment(traject_reliability):
+    def compute_revetment(traject_reliability: dict) -> dict:
         pf_per_time = convert_beta_to_pf_per_section(traject_reliability)
         traject_pf_per_time = {t: max(pf) for t, pf in pf_per_time.items()}
         return traject_pf_per_time
     
-    def compute_system_failure_probability(traject_reliability):
+    def compute_system_failure_probability(traject_reliability: dict[MechanismEnum]) -> dict[MechanismEnum, dict]:
         result = {}
         for mechanism, data in traject_reliability.items():
             if mechanism is MechanismEnum.OVERFLOW:
@@ -177,7 +203,7 @@ def calculate_traject_probability_for_steps(stepwise_assessment):
         traject_probability.append(compute_system_failure_probability(step))
     return traject_probability
 
-def get_measures_per_section_for_step(measures_per_step, final_step_no):
+def get_measures_per_section_for_step(measures_per_step: dict[int, list], final_step_no: int) -> dict:
     """ Get the measures per section for a given step number.
     
     Args:
@@ -196,7 +222,7 @@ def get_measures_per_section_for_step(measures_per_step, final_step_no):
     return dict(sorted(measures_per_section.items()))
 
 
-def get_beta_for_each_section_and_mech_at_t(assessment_of_step, t):
+def get_beta_for_each_section_and_mech_at_t(assessment_of_step: dict, t: int) -> dict:
     """Get the beta for each section and mechanism at a specific time t.
 
     Args:
@@ -215,7 +241,7 @@ def get_beta_for_each_section_and_mech_at_t(assessment_of_step, t):
             beta_per_section[section_id][mechanism] = mechanism_assessment['beta'][t_idx]
     return beta_per_section
 
-def get_unique_years(measures_per_section):
+def get_unique_years(measures_per_section: dict) -> set:
     """Get the unique years from the measures per section.	
 
     Args:

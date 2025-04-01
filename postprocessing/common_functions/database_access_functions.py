@@ -1,13 +1,14 @@
 from vrtool.orm.models import *
 from vrtool.orm.orm_controllers import open_database
 from vrtool.common.enums import MechanismEnum
+from pathlib import Path
 
 
-def get_overview_of_runs(db_path):
+def get_overview_of_runs(db_path: Path) -> list[dict]: 
     """Get an overview of the optimization runs in the database.
 
     Args:
-    db_path: str, path to the database
+    db_path: Path, path to the database
 
     Returns:
     list of dicts, each dict contains the run id, run name, optimization type, and the discount rate
@@ -19,11 +20,11 @@ def get_overview_of_runs(db_path):
 
         return list(optimization_types.dicts()) #desired output like this? TODO
 
-def get_optimization_steps_for_run_id(db_path, run_id):
+def get_optimization_steps_for_run_id(db_path: Path, run_id: int) -> list[dict]:
     """Get the optimization steps for a specific run id.
     
     Args:
-    db_path: str, path to the database
+    db_path: Path, path to the database
     run_id: int, the run id for which the optimization steps are requested
 
     Returns:
@@ -43,18 +44,18 @@ def get_optimization_steps_for_run_id(db_path, run_id):
     return add_total_cost_to_steps(list(optimization_steps.dicts())) #desired output like this? TODO
 
 #import AssessmentMechanismResult for a given mechanism and order this by section
-def import_original_assessment(database_path,mechanism: MechanismEnum):
+def import_original_assessment(db_path: Path, mechanism: MechanismEnum) -> dict:
     """Imports original assessment for given mechanism. 
     
     Args:
-    database_path (Path): path to the database
+    db_path: Path : path to the database
     mechanism (MechanismEnum): mechanism to import
     
     
     Returns:
     dict: dictionary with section_ids as key and a list of time and beta as values"""
     
-    with open_database(database_path):
+    with open_database(db_path):
         assessment = (
             AssessmentMechanismResult.select(
                 AssessmentMechanismResult, MechanismPerSection, Mechanism.name
@@ -81,17 +82,17 @@ def import_original_assessment(database_path,mechanism: MechanismEnum):
         result[entry['section']]['beta'].append(entry['beta'])
     return result
 
-def get_measures_for_run_id(database_path, run_id):
+def get_measures_for_run_id(db_path: Path, run_id: int) -> list[dict]:
     """Get the measures for a specific run id.
 
     Args:
-    database_path: str, path to the database
+    db_path: Path, path to the database
     run_id: int, the run id for which the measures are requested
 
     Returns:
     list of dicts, each dict contains the optimization step number, optimization_selected_measure_id, measure_result_id, investment_year, measure_per_section_id, section_id
     """
-    with open_database(database_path) as db:
+    with open_database(db_path) as db:
         measures = (OptimizationStep.select(OptimizationStep.id, OptimizationStep.step_number, OptimizationStep.optimization_selected_measure_id, OptimizationSelectedMeasure.measure_result_id, 
                                             OptimizationSelectedMeasure.investment_year, MeasureResult.measure_per_section_id, MeasurePerSection.section_id).join(
             OptimizationSelectedMeasure, on=(OptimizationStep.optimization_selected_measure_id == OptimizationSelectedMeasure.id)).join(
@@ -103,33 +104,33 @@ def get_measures_for_run_id(database_path, run_id):
         return list(measures)
     
 
-def get_measure_costs(measure_result_id, database_path):
+def get_measure_costs(measure_result_id: int, db_path: str) -> dict:
     """ Get the costs of a measure.
 
     Args:
     measure_result_id: int, the measure result id for which the costs are requested
-    database_path: str, path to the database
+    db_path: str, path to the database
 
     Returns:
     dict, containing the cost of the measure
     """
-    with open_database(database_path) as db:
+    with open_database(db_path) as db:
         measure = MeasureResult.get(MeasureResult.id == measure_result_id)
         measure_cost = MeasureResultSection.get(MeasureResultSection.measure_result == measure).cost
     return {'cost': measure_cost}
 
-def get_measure_parameters(measure_result_id, database_path):
+def get_measure_parameters(measure_result_id: int, db_path: str) -> dict:
     """ Get the parameters of a measure.
 
     Args:
     measure_result_id: int, the measure result id for which the parameters are requested
-    database_path: str, path to the database
+    db_path: str, path to the database
 
     Returns:
     dict, containing the parameters of the measure
     """
     #get parameters from MeasureResultParameter where measure_result_id = measure_result_id
-    with open_database(database_path) as db:
+    with open_database(db_path) as db:
         measure = MeasureResult.get(MeasureResult.id == measure_result_id)
         #get parameters from MeasureResultParameter where measure_result_id = measure_result_id
         try:
@@ -138,17 +139,17 @@ def get_measure_parameters(measure_result_id, database_path):
         except:
             return {}
 
-def get_measure_type(measure_result_id, database_path):
+def get_measure_type(measure_result_id: int, db_path: Path) -> dict:
     """ Get the type of a measure.
 
     Args:
     measure_result_id: int, the measure result id for which the type is requested
-    database_path: str, path to the database
+    db_path: Path, path to the database
 
     Returns:
     dict, containing the type of the measure
     """
-    with open_database(database_path) as db:
+    with open_database(db_path) as db:
         measure = MeasureResult.get(MeasureResult.id == measure_result_id)
         measure_name = MeasurePerSection.select(MeasurePerSection, Measure.name).join(Measure).where(MeasurePerSection.id == measure.measure_per_section_id).get().measure.name
     return {'name': measure_name}
