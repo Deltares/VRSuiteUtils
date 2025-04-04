@@ -32,9 +32,9 @@ def test_create_database_workflow(project_folder:str,  request: pytest.FixtureRe
         cursor = conn.cursor()
         cursor_ref = conn_ref.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables = cursor.fetchall()
+        tables = sorted(cursor.fetchall())
         cursor_ref.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables_ref = cursor_ref.fetchall()
+        tables_ref = sorted(cursor_ref.fetchall())
         assert tables == tables_ref
         #compare the content of the tables
         for table in tables:
