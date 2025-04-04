@@ -111,20 +111,44 @@ class TrajectShape:
                 ]
 
     def generate_vakindeling_shape(self, vakken_path):
+        def check_column_presence(df):
+            required_columns = [
+                "objectid",
+                "vaknaam",
+                "m_start",
+                "m_eind",
+                "in_analyse",
+                "van_dp",
+                "tot_dp",
+                "stabiliteit",
+                "piping",
+                "overslag",
+                "bekledingen",
+            ]
+            optional_columns = [
+                "pleistoceendiepte",
+                "deklaagdikte",
+                "a_piping",
+                "a_stabiliteit",
+            ]
+            #check if all required columns are present. Otherwise return a ValueError
+            for col in required_columns:
+                if col not in df.columns:
+                    raise ValueError(f"Column {col} is missing from the input file")
+            #check which optional columns are present and put them in a list. Print a warning if they are not present.
+            _present_optional_columns = []
+            for col in optional_columns:
+                if col in df.columns:
+                    _present_optional_columns.append(col)
+                else:
+                    warnings.warn(f"Optional column {col} is missing from the input file")
+            
+            return required_columns + _present_optional_columns
+
         #get the vakindeling shape from the vakken_path
         df_vakken = pd.read_csv(vakken_path)
-        try:
-            #check if vakken_path contains "pleistoceendiepte" and "deklaagdikte" columns
-            if "pleistoceendiepte" in df_vakken.columns and "deklaagdikte" in df_vakken.columns:
-                #new format: select the columns and set dtypes
-                df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen", "pleistoceendiepte", "deklaagdikte"]]
-                df_vakken = df_vakken.astype({"objectid": int, "vaknaam": object, "m_start": float, "m_eind": float, "in_analyse": int, "van_dp": object, "tot_dp": object, "stabiliteit": object, "piping": object, "overslag": object, "bekledingen": object, "pleistoceendiepte": float, "deklaagdikte": float})
-            else:
-                df_vakken = df_vakken[["objectid", "vaknaam", "m_start", "m_eind", "in_analyse", "van_dp", "tot_dp", "stabiliteit", "piping", "overslag", "bekledingen",]]
-                df_vakken = df_vakken.astype({"objectid": int, "vaknaam": object, "m_start": float, "m_eind": float, "in_analyse": int, "van_dp": object, "tot_dp": object, "stabiliteit": object, "piping": object, "overslag": object, "bekledingen": object})
-        except:
-            raise ValueError(f"Vakindeling bestand {vakken_path} kon niet worden gelezen. Controleer het bestand op de juiste indeling, bijvoorbeeld op lege rijen.")
-        
+        df_vakken = df_vakken[check_column_presence(df_vakken)]
+
         self.check_vakindeling(df_vakken, self.NBPW_shape.geometry.length.values[0])
         traject_geom = self.NBPW_shape.geometry[0][0]
 
