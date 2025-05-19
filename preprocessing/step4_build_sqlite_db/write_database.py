@@ -47,6 +47,14 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
     shape_file["deklaagdikte"] = shape_file["deklaagdikte"].fillna(
         SectionData.cover_layer_thickness.default
     )
+    # replace nans in a_piping and a_stabiliteit with 1.0 so that upscaling is done for the entire section. We don't use the default of 0.0 here
+    shape_file["a_piping"] = shape_file["a_piping"].fillna(
+        1.0
+    )
+    shape_file["a_stabiliteit"] = shape_file["a_stabiliteit"].fillna(
+        1.0
+    )
+    
     # remove rows with same index
     shape_file = shape_file.loc[~shape_file.index.duplicated(keep="first")]
     # remove rows with same vaknaam
@@ -74,6 +82,8 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
                 annual_crest_decline=row.kruindaling,
                 pleistocene_level=row.pleistoceendiepte,
                 cover_layer_thickness=row.deklaagdikte,
+                sensitive_fraction_piping=row.a_piping,
+                sensitive_fraction_stability_inner=row.a_stabiliteit,
 
             )
 
