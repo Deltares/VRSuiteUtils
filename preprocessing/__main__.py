@@ -72,7 +72,7 @@ def generate_and_evaluate_overflow_computations(config_file):
     api.generate_and_evaluate_overflow_computations(config_file)
 
 @cli.command(
-    name="overflow Hydra-NL", help="Processes the Hydra-NL overflow computation results."
+    name="overflow_HydraNL", help="Processes the Hydra-NL overflow computation results."
 )
 @click.option("--config_file",
                 type=click.Path(),
@@ -96,7 +96,7 @@ def generate_and_evaluate_water_level_computations(config_file):
     api.generate_and_evaluate_waterlevel_computations(config_file)
 
 @cli.command(
-    name="waterlevel Hydra-NL", help="Processes the Hydra-NL water level computation results."
+    name="waterlevel_HydraNL", help="Processes the Hydra-NL water level computation results."
 )
 @click.option("--config_file",
                 type=click.Path(),
