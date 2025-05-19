@@ -112,42 +112,45 @@ class TrajectShape:
 
     def generate_vakindeling_shape(self, vakken_path):
         def check_column_presence(df):
-            required_columns = [
-                "objectid",
-                "vaknaam",
-                "m_start",
-                "m_eind",
-                "in_analyse",
-                "van_dp",
-                "tot_dp",
-                "stabiliteit",
-                "piping",
-                "overslag",
-                "bekledingen",
-            ]
-            optional_columns = [
-                "pleistoceendiepte",
-                "deklaagdikte",
-                "a_piping",
-                "a_stabiliteit",
-            ]
-            #check if all required columns are present. Otherwise return a ValueError
+            required_columns = {
+                "objectid": int,
+                "vaknaam": str,
+                "m_start": float,
+                "m_eind": float,
+                "in_analyse": bool,
+                "stabiliteit": str,
+                "piping": str,
+                "overslag": str,
+                "bekledingen": str,
+            }
+            optional_columns = {
+                "van_dp": str,
+                "tot_dp": str,
+                "pleistoceendiepte": float,
+                "deklaagdikte": float,
+                "a_piping": float,
+                "a_stabiliteit": float,
+            }            #check if all required columns are present. Otherwise return a ValueError
             for col in required_columns:
                 if col not in df.columns:
                     raise ValueError(f"Column {col} is missing from the input file")
             #check which optional columns are present and put them in a list. Print a warning if they are not present.
-            _present_optional_columns = []
-            for col in optional_columns:
-                if col in df.columns:
-                    _present_optional_columns.append(col)
+            _present_optional_columns = {}
+            for item in optional_columns.items():
+                if item[0] in df.columns:
+                    _present_optional_columns[item[0]] = item[1]
                 else:
-                    warnings.warn(f"Optional column {col} is missing from the input file")
-            
-            return required_columns + _present_optional_columns
-
+                    warnings.warn(f"Optional column {item[0]} is missing from the input file")
+            #combine both dicts
+            present_columns = {**required_columns, **_present_optional_columns}
+            return present_columns
         #get the vakindeling shape from the vakken_path
         df_vakken = pd.read_csv(vakken_path)
-        df_vakken = df_vakken[check_column_presence(df_vakken)]
+        _present_columns_types = check_column_presence(df_vakken)
+        df_vakken = df_vakken[_present_columns_types.keys()]
+        #check if the columns have the right types
+        df_vakken = df_vakken.astype(_present_columns_types)
+
 
         self.check_vakindeling(df_vakken, self.NBPW_shape.geometry.length.values[0])
         traject_geom = self.NBPW_shape.geometry[0][0]
