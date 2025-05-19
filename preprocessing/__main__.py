@@ -71,6 +71,17 @@ def generate_and_evaluate_overflow_computations(config_file):
     
     api.generate_and_evaluate_overflow_computations(config_file)
 
+@cli.command(
+    name="overflow Hydra-NL", help="Processes the Hydra-NL overflow computation results."
+)
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+def evaluate_hydra_nl_overflow (config_file):
+    print(f"Start waterstandberekeningen met Hydra-Ring met configuratie file: {config_file}")
+    api.evaluate_hydranl_overflow_computations(config_file)
 
 @cli.command(
     name="waterlevel", help="Generates and evaluates the Hydra-Ring water level computations."
@@ -84,6 +95,17 @@ def generate_and_evaluate_water_level_computations(config_file):
     print(f"Start waterstandberekeningen met Hydra-Ring met configuratie file: {config_file}")
     api.generate_and_evaluate_waterlevel_computations(config_file)
 
+@cli.command(
+    name="waterlevel Hydra-NL", help="Processes the Hydra-NL water level computation results."
+)
+@click.option("--config_file",
+                type=click.Path(),
+                nargs=1,
+                required=True,
+                help="Link naar de configuratie file. Dit is een .txt bestand met alle benodigde paden en instellingen.")
+def evaluate_hydra_nl_waterlevel (config_file):
+    print(f"Start waterstandberekeningen met Hydra-Ring met configuratie file: {config_file}")
+    api.evaluate_hydranl_waterlevel_computations(config_file)
 
 @cli.command(
     name="bekleding_qvariant", help="Genereert de belastinginvoer voor bekledingen. Dit is de eerste"
