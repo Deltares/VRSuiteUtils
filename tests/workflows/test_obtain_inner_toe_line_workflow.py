@@ -24,8 +24,12 @@ def test_obtain_inner_toe_line_workflow(project_folder:str,  request: pytest.Fix
 
     #compare selected_profiles.csv in both dirs
     for file in _output_path.rglob("teenlijn.geojson"):
+        _file_as_gdf = gpd.read_file(file)
+
         _reference_file = test_data.joinpath(project_folder, file.relative_to(_output_path))
-        assert filecmp.cmp(file, _reference_file, shallow=False) == True
+        _reference_file_as_gdf = gpd.read_file(_reference_file)
+        #compare the content of the tables
+        assert _file_as_gdf.equals(_reference_file_as_gdf), f"Files are not the same"
 
 
         
