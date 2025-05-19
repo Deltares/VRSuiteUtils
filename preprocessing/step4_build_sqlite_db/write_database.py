@@ -47,13 +47,22 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
     shape_file["deklaagdikte"] = shape_file["deklaagdikte"].fillna(
         SectionData.cover_layer_thickness.default
     )
-    # replace nans in a_piping and a_stabiliteit with 1.0 so that upscaling is done for the entire section. We don't use the default of 0.0 here
-    shape_file["a_piping"] = shape_file["a_piping"].fillna(
-        1.0
-    )
-    shape_file["a_stabiliteit"] = shape_file["a_stabiliteit"].fillna(
-        1.0
-    )
+    # replace nans in a_piping and a_stabiliteit with 1.0 so that upscaling is done for the entire section. We don't use the default of 0.0 here. First check if the column exists. If a_piping doesn't exist but a_stabiliteit does we don't detect it, but this should never be the case.
+    #check if a_piping and a_stabiliteit are in the shape_file.columns
+    if "a_piping" not in shape_file.columns and "a_stabiliteit" not in shape_file.columns:
+        shape_file["a_piping"] = 1.0
+        shape_file["a_stabiliteit"] = 1.0
+    elif ("a_piping" in shape_file.columns) != ("a_stabiliteit" in shape_file.columns):
+        # Only one of the columns is present
+        raise ValueError("Both 'a_piping' and 'a_stabiliteit' must be present or absent together.")
+    else:
+        shape_file["a_piping"] = shape_file["a_piping"].fillna(
+            1.0
+        )
+        shape_file["a_stabiliteit"] = shape_file["a_stabiliteit"].fillna(
+            1.0
+        )
+
     
     # remove rows with same index
     shape_file = shape_file.loc[~shape_file.index.duplicated(keep="first")]
