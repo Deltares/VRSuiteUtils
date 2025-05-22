@@ -65,7 +65,7 @@ class TrajectShape:
             df_vakindeling["objectid"] = list(range(1, len(df_vakindeling + 1)))
 
         if any(df_vakindeling["vaknaam"].duplicated()):
-            raise ("values in VAKNUMMER are not unique")
+            raise ("values in VAKNAAM are not unique")
 
         # sort the df by OBJECTID:
         df_vakindeling = df_vakindeling.sort_values("objectid")

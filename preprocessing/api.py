@@ -44,7 +44,7 @@ def create_project(project_folder: Path, traject_id: str):
 
     traject_id = traject_id
 
-    print(f"\Aanmaken project in folder: {project_folder}")
+    print(f"Aanmaken project in folder: {project_folder}")
     print(f"Dijktraject: {traject_id}")
 
     create_project_structure(project_folder, traject_id)
