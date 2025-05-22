@@ -680,7 +680,6 @@ def compare_databases(path_to_generated_db, path_to_reference_db):
     reference_tables = reference_db_conn.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
     #check if the tables are equal and write to log
     comparison_message = ""
-
     if not generated_tables == reference_tables:
         comparison_message += "The generated database and the reference database do not have the same tables \n"
     # Step 3: Compare table structure
