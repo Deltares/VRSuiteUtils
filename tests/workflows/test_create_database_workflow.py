@@ -37,12 +37,15 @@ def test_create_database_workflow(project_folder:str,  request: pytest.FixtureRe
         tables_ref = sorted(cursor_ref.fetchall())
         assert tables == tables_ref
         #compare the content of the tables
+        _inconsistent_tables = []
         for table in tables:
             cursor.execute(f"SELECT * FROM {table[0]}")
             rows = cursor.fetchall()
             cursor_ref.execute(f"SELECT * FROM {table[0]}")
             rows_ref = cursor_ref.fetchall()
-            assert rows == rows_ref
+            if rows != rows_ref:
+                _inconsistent_tables.append(table[0])
+        assert len(_inconsistent_tables) == 0, f"Tables {str(_inconsistent_tables)} are not the same"
         conn.close()
         conn_ref.close()
     
