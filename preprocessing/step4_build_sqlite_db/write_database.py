@@ -398,6 +398,26 @@ def fill_stability(stability_table, shape_file):
             for scen_count, subset in stability_table.loc[cross_section].iterrows():
                 add_computation_scenario(subset, row["id"], cross_section, stability_id)
 
+def add_simple_computation_scenario(
+    computation_type, beta_value, scenario_probability,mechanism_per_section_id, cross_section, mechanism_id, scenario_name):
+    
+    new_scenario = ComputationScenario.create(
+        mechanism_per_section=mechanism_per_section_id,
+        mechanism=mechanism_id,
+        computation_name=cross_section,
+        scenario_name=scenario_name,
+        scenario_probability=scenario_probability,
+        computation_type=computation_type,
+        probability_of_failure=beta_to_pf(beta_value),
+    )
+    
+    ComputationScenarioParameter.create(
+        computation_scenario=new_scenario.id, parameter="beta", value=beta_value
+    )
+
+    return new_scenario.id
+
+
 
 def add_stability_scenario(
     data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name
@@ -416,28 +436,16 @@ def add_stability_scenario(
     if np.isnan(beta_value):
         beta_value = calculate_reliability(data[["SF"]].values).item()
 
-    ComputationScenario.create(
-        mechanism_per_section=mechanism_per_section_id,
-        mechanism=mechanism_id,
-        computation_name=cross_section,
-        scenario_name=scenario_name,
-        scenario_probability=data["scenariokans"],
-        computation_type=computation_type,
-        probability_of_failure=beta_to_pf(beta_value),
+    computation_scenario_id = add_simple_computation_scenario(
+        computation_type,
+        beta_value,
+        data["scenariokans"],
+        mechanism_per_section_id,
+        cross_section,
+        mechanism_id,
+        scenario_name
     )
-    # for each computation_scenario fill Parameter. first get the last computation_scenario_id that matches mechanism_per_section_id
 
-    computation_scenario_id = [
-        val
-        for val in ComputationScenario.select()
-        .where(ComputationScenario.mechanism_per_section == mechanism_per_section_id)
-        .dicts()
-    ][-1]["id"]
-
-
-    ComputationScenarioParameter.create(
-        computation_scenario=computation_scenario_id, parameter="beta", value=beta_value
-    )
     if isinstance(data.stixnaam, str):
         SupportingFile.create(
             computation_scenario=computation_scenario_id, filename=data.stixnaam

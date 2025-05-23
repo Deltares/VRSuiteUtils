@@ -179,3 +179,115 @@ def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  r
    mechanism_data = {"overflow": read_overflow_data(_intermediate_dir.joinpath("overflow"), False)}
 
    assert mechanism_data["overflow"]["Beta"][0]==0.9771468439412871
+
+@pytest.mark.parametrize("traject,test_name", [pytest.param("38-1", "base", id="38-1 base river case with direct piping")])
+def test_direct_piping_input_written_to_database(traject: str, test_name: str, request: pytest.FixtureRequest):
+   # remove output_path
+   #get id of request
+   _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
+   if _output_path.parent.exists():
+      shutil.rmtree(_output_path.parent)
+
+   # get all the input data
+   _generic_data_dir = test_data.parent.parent.joinpath("preprocessing","generic_data")
+   _test_data_dir = test_data.joinpath(traject)
+   assert _test_data_dir.exists(), "No test data available at {}".format(
+      _test_data_dir
+   )
+
+   # read the vakindeling shape. This is universal for each traject we consider. Turning on and off sections is done through the vakindeling_config
+   vakindeling_shape = gpd.read_file(_test_data_dir.joinpath("reference_results","reference_shapes", f"reference_shape.geojson"))
+   vakindeling_config = pd.read_csv(_test_data_dir.joinpath("settings", "vakindeling_configuration.csv"),
+                                    dtype={test_name:int},sep=",").rename(columns={test_name:'in_analyse'})
+
+   #reset in_analyse in vakindeling_shape based on vakindeling_config. This is only for testdata.
+   vakindeling_shape = pd.merge(vakindeling_shape.drop(columns=['in_analyse']),vakindeling_config[['objectid','in_analyse']],on='objectid')
+
+   if 'kunstwerken' in vakindeling_shape.columns:  vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
+   # read the HR_input
+   HR_input = pd.read_csv(
+      _test_data_dir.joinpath("HRING_data_reference.csv"),
+      dtype={'doorsnede':str}).drop_duplicates(subset=["doorsnede"])
+   # read the data for different mechanisms
+
+   # read the data for waterlevels
+   _intermediate_dir = _test_data_dir.joinpath("intermediate")
+   waterlevel_table = read_waterlevel_data(_intermediate_dir.joinpath("Waterstand"), True)
+
+
+   #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
+   vakindeling_shape.astype({'overslag': str, 'stabiliteit':str})
+   mechanism_data = {'overslag': read_overflow_data(_intermediate_dir.joinpath("Overslag"), True)}
+   if 'D-Stability' in request.node.callspec.id: 
+      mechanism_data['stabiliteit'] = read_stability_data(_intermediate_dir.joinpath("STBI_data_DStability.csv"))
+   else:
+      mechanism_data['stabiliteit'] = read_stability_data(_intermediate_dir.joinpath("STBI_data.csv"))
+
+   try:
+      vakindeling_shape.astype({'piping': str})
+      # read the piping csv file
+      piping_csv = _test_data_dir.joinpath("intermediate", "Piping_data.csv")
+      mechanism_data['piping'] = read_and_validate_piping_data(piping_csv)
+      # add the beta values
+      mechanism_data['piping'].beta = 4.1
+   except: #drop column
+      vakindeling_shape.drop(columns=['piping'], inplace=True)            
+   
+
+   #merge the HR_input and stabiliteit input
+       # merge parameters from HR_input with vakindeling_shape:
+   vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = HR_input[["doorsnede", "dijkhoogte", "kruindaling"]], left_key = ['overslag'], right_key = ['doorsnede'])
+
+    # merge subsoil parameters with vakindeling if not present in vakindeling_shape
+   if 'pleistoceendiepte' not in vakindeling_shape.columns:
+      vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = mechanism_data['stabiliteit'][["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = ['doorsnede'])
+   
+   # read the data for measures
+   #get measure df:
+   measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
+   measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
+
+
+
+   # read the data for bebouwing
+   bebouwing_table = read_bebouwing_data(
+      _intermediate_dir.joinpath("Bebouwing_data.csv")
+   )
+
+   # read the data for profilepoints
+   profile_table = read_profile_data(_intermediate_dir.joinpath("Profielen","profielen_{}.csv".format(traject)))
+   # profile_table = read_profiles_old(_intermediate_dir.joinpath("Profielen"))
+
+   initialize_database(_output_path)
+   assert _output_path.exists(), "Database file was not created."
+
+   db_obj = open_database(_output_path)
+
+   # diketractinfo
+   fill_diketrajectinfo_table(traject=traject,length = vakindeling_shape.m_eind.max())
+   # sectiondata
+   fill_sectiondata_table(
+      traject=traject,
+      shape_file=vakindeling_shape,
+   )
+   # waterleveldata
+   fill_buildings(buildings=bebouwing_table)
+
+   fill_waterleveldata(waterlevel_table=waterlevel_table, shape_file=vakindeling_shape)
+
+   fill_profiles(profile_table)
+
+   # fill all the mechanisms
+   fill_mechanisms(mechanism_data=mechanism_data, shape_file=vakindeling_shape)
+
+   # fill measures
+   for measure_set, measures_table in measure_tables.items():
+      #get sections for which measure_set is relevant
+      section_list = vakindeling_shape[(vakindeling_shape.in_analyse == True) & (measures_per_section.values == measure_set)].vaknaam.tolist()
+      fill_measures(measure_table=measures_table, list_of_sections = section_list)
+
+   #assert that the database is equal to the reference database
+   _reference_database = _test_data_dir.joinpath('reference_databases','{}.db'.format(request.node.callspec.id))
+   assert _reference_database.exists(), "No reference database available at {}".format(_reference_database)
+
+   compare_databases(_output_path, _reference_database)

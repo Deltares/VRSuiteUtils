@@ -148,7 +148,6 @@ def read_and_validate_piping_data(file_path):
     piping_data = read_piping_data(file_path)
     # Validate the data
     validate_piping_data(piping_data)
-
     
     return piping_data
 
