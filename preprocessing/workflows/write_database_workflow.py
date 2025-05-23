@@ -78,7 +78,8 @@ def write_database_main(traject_name : str,
     
     if piping_path != None: 
         vakindeling_shape.astype({'piping': str})
-        mechanism_data['piping'] = read_piping_data(piping_path)
+        mechanism_data['piping'] = read_and_validate_piping_data(piping_path)
+
     else: #drop column
         vakindeling_shape.drop(columns=['piping'], inplace=True)            
     

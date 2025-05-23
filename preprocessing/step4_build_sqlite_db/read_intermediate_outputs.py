@@ -141,6 +141,16 @@ def read_overflow_data(files_dir, use_hydraring):
 
     return overflow_data
 
+def read_and_validate_piping_data(file_path):
+
+
+    """Reads the piping data from the given file path and validates it."""
+    piping_data = read_piping_data(file_path)
+    # Validate the data
+    validate_piping_data(piping_data)
+
+    
+    return piping_data
 
 def read_piping_data(file_path):
     return pd.read_csv(
@@ -163,7 +173,7 @@ def read_piping_data(file_path):
             "gamma_sat",
             "kwelscherm",
             "dh_exit",
-            "pf_s",
+            "beta",
         ],
         dtype={"doorsnede": str, "scenario": int},
     )
@@ -300,3 +310,10 @@ def read_profiles_old(files_dir):
         profile_data = pd.concat((profile_data, profile_points), ignore_index=True)
     return profile_data
     # return pd.read_csv(file_path,index_col=0)
+
+def validate_piping_data(piping_data):
+    for i, row in piping_data.iterrows():
+        #if there is a value for beta, there should be no values for d70, d_cover, h_exit, r_exit, l_voor, l_achter, k, gamma_sat, kwelscherm, dh_exit
+        if row['beta'] != 0:
+            if not pd.isna(row['d70']) or not pd.isna(row['d_cover']) or not pd.isna(row['h_exit']) or not pd.isna(row['r_exit']) or not pd.isna(row['l_voor']) or not pd.isna(row['l_achter']) or not pd.isna(row['k']) or not pd.isna(row['gamma_sat']) or not pd.isna(row['kwelscherm']) or not pd.isna(row['dh_exit']):
+                raise ValueError(f"Piping data voor doorsnede {row['doorsnede']} en scenario {row['scenario']} is incorrect: directe beta gegeven, maar ook andere")
