@@ -1,4 +1,4 @@
-,doorsnede,scenario,scenariokans,wbn,polderpeil,d_wvp,d70,d_cover,h_exit,r_exit,l_voor,l_achter,k,gamma_sat,kwelscherm,dh_exit,beta,m_value,x_coord,y_coord
-1,STPH_1,1,1,4.01,-0.48,30.83,3.07E-04,1.19,-1.63,0.8,112.03,0,4.63E-04,15.78,0,0.005,,,,
-2,STPH_2,1,1,4.01,-1.43,30.83,3.07E-04,1.69,0.69,0.8,61.19,0,4.63E-04,15.78,0,0.005,5.40E+05,,,
-4,STPH_4,1,1,,,,,,,,,,,,,,2.79E+05,,,
+,doorsnede,scenario,scenariokans,wbn,polderpeil,d_wvp,d70,d_cover,h_exit,r_exit,l_voor,l_achter,k,gamma_sat,kwelscherm,dh_exit,beta,m_value,x_coord,y_coord,omschrijving
+1,STPH_1,1,1,4.01,-0.48,30.83,3.07E-04,1.19,-1.63,0.8,112.03,0,4.63E-04,15.78,0,0.005,,,,,semi probabilistisch ok.
+2,STPH_2,1,1,4.01,-1.43,30.83,3.07E-04,1.69,0.69,0.8,61.19,0,4.63E-04,15.78,0,0.005,5.40E+00,,,,beide -> niet ok
+4,STPH_4,1,1,,,,,,,,,,,,,,2.79E+00,,,,directe beta = ok.

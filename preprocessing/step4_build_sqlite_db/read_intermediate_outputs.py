@@ -314,6 +314,6 @@ def read_profiles_old(files_dir):
 def validate_piping_data(piping_data):
     for i, row in piping_data.iterrows():
         #if there is a value for beta, there should be no values for d70, d_cover, h_exit, r_exit, l_voor, l_achter, k, gamma_sat, kwelscherm, dh_exit
-        if row['beta'] != 0:
+        if not np.isnan(row['beta']):
             if not pd.isna(row['d70']) or not pd.isna(row['d_cover']) or not pd.isna(row['h_exit']) or not pd.isna(row['r_exit']) or not pd.isna(row['l_voor']) or not pd.isna(row['l_achter']) or not pd.isna(row['k']) or not pd.isna(row['gamma_sat']) or not pd.isna(row['kwelscherm']) or not pd.isna(row['dh_exit']):
-                raise ValueError(f"Piping data voor doorsnede {row['doorsnede']} en scenario {row['scenario']} is incorrect: directe beta gegeven, maar ook andere")
+                raise ValueError(f"Piping data voor doorsnede {row.name} en scenario {row['scenario']} is incorrect: directe beta gegeven, maar ook andere")
