@@ -229,7 +229,7 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
       piping_csv = _test_data_dir.joinpath("intermediate", "Piping_data.csv")
       mechanism_data['piping'] = read_and_validate_piping_data(piping_csv)
       # add the beta values
-      mechanism_data['piping'].beta = 4.1
+      mechanism_data['piping'].beta = 3.3
    except: #drop column
       vakindeling_shape.drop(columns=['piping'], inplace=True)            
    

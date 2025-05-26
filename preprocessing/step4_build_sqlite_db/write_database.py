@@ -451,14 +451,13 @@ def add_stability_scenario(
             computation_scenario=computation_scenario_id, filename=data.stixnaam
         )
 
-
-def add_piping_scenario(
-    data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name
-):
+def add_semiprob_piping_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name):
+    # get the id of SEMIPROB from ComputationType
     computation_type = (
         ComputationType.select().where(ComputationType.name == "SEMIPROB").get().id
     )
-    ComputationScenario.create(
+    #make a new ComputationScenario with SEMIPROB as type
+    computation_scenario = ComputationScenario.create(
         mechanism_per_section=mechanism_per_section_id,
         mechanism=mechanism_id,
         computation_name=cross_section,
@@ -467,17 +466,8 @@ def add_piping_scenario(
         computation_type=computation_type,
         probability_of_failure= 1.0,
     )
-    # it was using probability of failure from default_piping (which is optional). This gives problems when it is not
-    # filled in by the user. Therefore, dummy value used for now.
-    # TODO: probability_of_failure should not be Required, but it is now.
 
-    # for each computation_scenario fill Parameter
-    computation_scenario_id = [
-        val
-        for val in ComputationScenario.select()
-        .where(ComputationScenario.mechanism_per_section == mechanism_per_section_id)
-        .dicts()
-    ][-1]["id"]
+    #add the various parameters to the ComputationScenarioParameter table
     parameters_to_add = [
         "wbn",
         "polderpeil",
@@ -495,11 +485,23 @@ def add_piping_scenario(
     ]
     for parameter_name in parameters_to_add:
         ComputationScenarioParameter.create(
-            computation_scenario=computation_scenario_id,
+            computation_scenario=computation_scenario.id,
             parameter=parameter_name,
             value=data[parameter_name],
         )
 
+def add_piping_scenario(
+    data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name
+):
+    if ('beta' not in data.index) or (np.isnan(data["beta"])):
+        add_semiprob_piping_scenario(data, mechanism_per_section_id, cross_section, mechanism_id, scenario_name)
+    else:
+        #get computation_type from ComputationType table
+        computation_type = (
+            ComputationType.select().where(ComputationType.name == "SIMPLE").get().id
+        )
+        add_simple_computation_scenario(computation_type, data["beta"], data["scenariokans"],
+            mechanism_per_section_id, cross_section, mechanism_id, scenario_name)
 
 def add_computation_scenario(
     data, mechanism_per_section_id, cross_section, mechanism_id

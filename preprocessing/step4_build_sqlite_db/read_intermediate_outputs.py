@@ -142,8 +142,6 @@ def read_overflow_data(files_dir, use_hydraring):
     return overflow_data
 
 def read_and_validate_piping_data(file_path):
-
-
     """Reads the piping data from the given file path and validates it."""
     piping_data = read_piping_data(file_path)
     # Validate the data
@@ -152,30 +150,58 @@ def read_and_validate_piping_data(file_path):
     return piping_data
 
 def read_piping_data(file_path):
-    return pd.read_csv(
-        file_path,
-        index_col=0,
-        usecols=[
-            "doorsnede",
-            "scenario",
-            "scenariokans",
-            "wbn",
-            "polderpeil",
-            "d_wvp",
-            "d70",
-            "d_cover",
-            "h_exit",
-            "r_exit",
-            "l_voor",
-            "l_achter",
-            "k",
-            "gamma_sat",
-            "kwelscherm",
-            "dh_exit",
-            "beta",
-        ],
-        dtype={"doorsnede": str, "scenario": int},
-    )
+    #TODO improve for backwards compatibility
+    if 'beta' in pd.read_csv(file_path, nrows=1).columns:
+        #new format with beta included. Rows can be either semi-probabilistic or direct beta.
+        return pd.read_csv(
+            file_path,
+            index_col=0,
+            usecols=[
+                "doorsnede",
+                "scenario",
+                "scenariokans",
+                "wbn",
+                "polderpeil",
+                "d_wvp",
+                "d70",
+                "d_cover",
+                "h_exit",
+                "r_exit",
+                "l_voor",
+                "l_achter",
+                "k",
+                "gamma_sat",
+                "kwelscherm",
+                "dh_exit",
+                "beta",
+            ],
+            dtype={"doorsnede": str, "scenario": int},
+        )
+    else:
+        #old format without beta this can only be a semi-probabilistic piping input
+        return pd.read_csv(
+            file_path,
+            index_col=0,
+            usecols=[
+                "doorsnede",
+                "scenario",
+                "scenariokans",
+                "wbn",
+                "polderpeil",
+                "d_wvp",
+                "d70",
+                "d_cover",
+                "h_exit",
+                "r_exit",
+                "l_voor",
+                "l_achter",
+                "k",
+                "gamma_sat",
+                "kwelscherm",
+                "dh_exit",
+            ],
+            dtype={"doorsnede": str, "scenario": int},
+        )
 
 
 def read_stability_data(file_path):
@@ -311,6 +337,9 @@ def read_profiles_old(files_dir):
     # return pd.read_csv(file_path,index_col=0)
 
 def validate_piping_data(piping_data):
+    if 'beta' not in piping_data.columns:
+        return
+    
     for i, row in piping_data.iterrows():
         #if there is a value for beta, there should be no values for d70, d_cover, h_exit, r_exit, l_voor, l_achter, k, gamma_sat, kwelscherm, dh_exit
         if not np.isnan(row['beta']):
