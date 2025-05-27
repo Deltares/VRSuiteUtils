@@ -634,6 +634,9 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
     # fill StandardMeasure
     measure_ids = {}
     for idx, row in measure_table.iterrows():
+        if not any(measure_configuration[idx]):
+            continue
+
         measure_type_id = (
             MeasureType.select().where(MeasureType.name == row["measure_type"]).get().id
         )
