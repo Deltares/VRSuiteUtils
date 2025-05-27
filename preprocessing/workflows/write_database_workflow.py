@@ -48,6 +48,7 @@ def write_database_main(traject_name : str,
                         piping_path = None,
                         stability_path = None,
                         revetment_path = None,
+                        measure_configuration = None,
                         ):
 
     # check if output_path exists, if not create it
