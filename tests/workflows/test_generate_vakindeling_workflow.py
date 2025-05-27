@@ -24,9 +24,9 @@ def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.Fixt
     #run the vakindeling workflow to generate the geojson
     api.generate_vakindeling_shape(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
     
-    #get the relative path from the config
+    #get the relative paths from the config
     _output_geojson = read_config_file(test_data.joinpath(project_folder, "preprocessor.config"), ['vakindeling_geojson'])['vakindeling_geojson']
-
+    _maatregel_config_path = read_config_file(test_data.joinpath(project_folder, "preprocessor.config"), ['maatregelen_configuratie'])['maatregelen_configuratie']
     #read the generated vakindeling shapefile
     new_shape = gpd.read_file(
        _output_path.joinpath(_output_geojson),
@@ -79,8 +79,8 @@ def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.Fixt
 
     # compare dataframe for configuratie_maatregelen.csv
     assert_frame_equal(
-        pd.read_csv(test_data.joinpath(project_folder, Path(_output_geojson).parent, "configuratie_maatregelen.csv"), index_col=0),
-        pd.read_csv(Path(_output_geojson).parent.joinpath('configuratie_maatregelen.csv'), index_col=0),
+        pd.read_csv(test_data.joinpath(project_folder, _maatregel_config_path), index_col=0),
+        pd.read_csv(_maatregel_config_path, index_col=0),
         check_dtype=False,
     )
     
