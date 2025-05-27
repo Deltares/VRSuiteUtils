@@ -11,19 +11,21 @@ import sqlite3
 from tests import test_data, test_results
 from preprocessing.common_functions import read_config_file
 
-@pytest.mark.parametrize("project_folder",
-                         [pytest.param("31-1_v2", id = '31-1')])
-def test_create_database_workflow(project_folder:str,  request: pytest.FixtureRequest):
+@pytest.mark.parametrize("project_folder,config_name,reference_config_json",
+                         [pytest.param("31-1_v2", "preprocessor.config", "config.json", id = '31-1'),
+                          pytest.param("31-1_v2", "preprocessor_modified_measures.config", "config_modified.json", id = '31-1 aangepaste maatregelen'),])
+def test_create_database_workflow(project_folder:str,  config_name: str, reference_config_json: str, request: pytest.FixtureRequest):
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
         shutil.rmtree(_output_path)
 
     # #run the hydraring overflow workflow to generate the relevant results
-    api.create_database(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
+    api.create_database(test_data.joinpath(project_folder, config_name), _output_path)
 
     #compare sqlite database in both dirs
-    for file in _output_path.rglob("database_31-1.sqlite"):
+    database_name = read_config_file(test_data.joinpath(project_folder, config_name), ['vrtool_database_naam'])['vrtool_database_naam']
+    for file in _output_path.rglob(database_name):
         #Shallow comparison is not enough, because the database contains binary data
         _reference_file = test_data.joinpath(project_folder, file.relative_to(_output_path))
         #compare the tables in the database using sqlite3
@@ -51,7 +53,7 @@ def test_create_database_workflow(project_folder:str,  request: pytest.FixtureRe
     
     #compare config file in both dirs
     for file in _output_path.rglob("config.json"):
-        _reference_file = test_data.joinpath(project_folder, file.relative_to(_output_path))
+        _reference_file = test_data.joinpath(project_folder, file.relative_to(_output_path).parent, reference_config_json)
         assert filecmp.cmp(file, _reference_file, shallow=False) == True
 
 
