@@ -126,6 +126,7 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"bag_gebouwen_geopackage   = {os.path.relpath(os.path.join(bag_gebouwen_dir, 'bag-light.gpkg'), project_dir)}                   # pad naar de geopackage met de BAG gebouwen.\n\n")
 
         f.write(f"vakindeling_geojson       = {os.path.relpath(os.path.join(vakindeling_dir, f'vakindeling_{traject_id}.geojson'), project_dir)}     # pad naar de geojson met de vakindeling. Wordt gegenereerd in stap vakindeling en staat in output_map_vakindeling.\n")
+        f.write(f"maatregelen_configuratie  = {os.path.relpath(os.path.join(vakindeling_dir, 'configuratie_maatregelen.csv'), project_dir)} # pad naar de csv met de configuratie van de maatregelen. Wordt gegenereerd in stap vakindeling en staat in output_map_vakindeling.\n")
         f.write(f"teenlijn_geojson          = {os.path.relpath(os.path.join(teenlijn_dir, f'teenlijn.geojson'), project_dir)}           # pad naar de geojson met de teenlijn. Wordt gegenereerd in stap teenlijn en staat in output_map_teenlijn.\n")
 
         f.write(f"profiel_info_csv          = {os.path.relpath(os.path.join(profielen_dir, 'traject_profiles.csv'), project_dir)}         # pad naar de csv met de informatie over de verzamelde profielen (uit een eerdere stap: genereer_dijkprofielen). Deze csv zou traject_profiles.csv moeten heten, tenzij de gebruiker de naam heeft aangepast.\n")
