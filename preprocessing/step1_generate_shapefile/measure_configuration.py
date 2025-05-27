@@ -47,5 +47,5 @@ class MeasureConfiguration:
     def write_to_csv(self, output_path: Path):
         """Write the measure configuration to a CSV file."""
         measures_df = self.generate_measure_configuration()
-        measures_df.to_csv(output_path, index=True)
+        measures_df.to_csv(output_path, index=False)
         print(f"Measure configuration written to {output_path}")
