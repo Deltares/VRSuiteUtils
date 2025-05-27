@@ -598,7 +598,28 @@ def fill_structures():
     pass
 
 
-def fill_measures(measure_table, list_of_sections = []):
+def fill_measures(measure_table, measure_configuration = None, revetment = None):
+    def include_kruinverhoging_or_not(section_ids):
+        for section_id in sorted(section_ids):
+            if get_kerende_hoogte(section_id) < 2:
+                return True
+        return False
+
+
+    #check consistency of section_ids and measure_configuration.index
+    section_ids = sorted([val["id"] for val in SectionData.select().dicts()])
+    if isinstance(measure_configuration, pd.DataFrame) and not section_ids == measure_configuration.index.to_list():
+        raise Exception(
+            "The section_ids in the measure_configuration do not match the section_ids in the SectionData table. Please check the measure_configuration file and ensure its indexing is consistent with the geojson of the vakindeling."
+        )
+    
+    # remove Revetment measures if revetment is None
+    if revetment == None:
+        measure_table.drop(measure_table[measure_table['measure_type'] == 'Revetment'].index, inplace=True) 
+    
+    if not include_kruinverhoging_or_not(section_ids):
+        #remove kruinverhoging from measure_table. All measures where kruinverhoging is part of the name of the measure (i.e. the index in this case)
+        measure_table = measure_table[~measure_table.index.str.lower().str.contains('kruinverhoging')]
 
     # fill MeasureType if they are not already in the database
     for type in measure_table["measure_type"].unique():
@@ -611,7 +632,7 @@ def fill_measures(measure_table, list_of_sections = []):
             CombinableType.create(name=combinable_types)
 
     # fill StandardMeasure
-    measure_ids = []
+    measure_ids = {}
     for idx, row in measure_table.iterrows():
         measure_type_id = (
             MeasureType.select().where(MeasureType.name == row["measure_type"]).get().id
@@ -626,14 +647,14 @@ def fill_measures(measure_table, list_of_sections = []):
             year=row["year"],
         )
         #only the just added measure_id is added to the list
-        measure_ids.append(Measure.select().dicts()[-1]["id"])
+        measure_ids[idx] = Measure.select().dicts()[-1]["id"]
         
         row = row.fillna(-999)
         #set row'pipe_reduction_factor' to None if it is -999
         row['piping_reduction_factor'] = None if row['piping_reduction_factor'] == -999 else row['piping_reduction_factor']
         
         StandardMeasure.create(
-            measure=measure_ids[-1],
+            measure=Measure.select().dicts()[-1]["id"],
             max_inward_reinforcement=row["max_inward_reinforcement"],
             max_outward_reinforcement=row["max_outward_reinforcement"],
             direction=row["direction"],
@@ -645,32 +666,8 @@ def fill_measures(measure_table, list_of_sections = []):
             n_steps_block=row["n_steps_block"],
             piping_reduction_factor = row["piping_reduction_factor"],
         )
+    [write_measures_for_section(measure_configuration.loc[section_id], section_id, measure_ids) for section_id in section_ids]
 
-
-    if len(list_of_sections) == 0:
-        section_ids = [val["id"] for val in SectionData.select().dicts()]
-    else:
-        section_ids = [val["id"] for val in SectionData.select().where(SectionData.section_name << list_of_sections).dicts()]
-    for section_id in sorted(section_ids):
-        kerende_hoogte = get_kerende_hoogte(section_id)
-        revetment = check_if_revetment(section_id)
-
-        #get from MechanismPerSection whether section_id has revetment
-        for measure_id in measure_ids:
-            #get name from Measure
-            measure_name = Measure.select().where(Measure.id == measure_id).get().name
-            if kerende_hoogte >2:
-                if "Kruinverhoging" in measure_name:
-                    continue
-            elif kerende_hoogte <=2:
-                if "Grondversterking" in measure_name:
-                    continue
-            if not revetment:
-                if "Aanpassing bekleding" in measure_name:
-                    continue
-
-            #Include measure:
-            MeasurePerSection.create(section=section_id, measure=measure_id)
 def check_if_revetment(section_id):
     try:
         MechanismPerSection.select().where(
@@ -733,3 +730,22 @@ def compare_databases(path_to_generated_db, path_to_reference_db):
     # Close the database connections
     generated_db_conn.close()
     reference_db_conn.close()
+
+def write_measures_for_section(configuration, section_id, measure_ids):
+    def kerende_hoogte_check(section_id, measure_name):
+        #checks measure_name and whether the measure is a kruinverhoging or grondversterking
+        kerende_hoogte = get_kerende_hoogte(section_id)
+        if "Kruinverhoging" in measure_name and kerende_hoogte > 2:
+            return False #do not add
+        elif "Grondversterking" in measure_name and kerende_hoogte <= 2:
+            return False #do not add
+        else:
+            return True
+
+    #loop over the measure ids
+    for measure_name, measure_id in measure_ids.items():
+        if configuration[measure_name]:
+            if kerende_hoogte_check(section_id, measure_name):
+                MeasurePerSection.create(section=section_id, measure=measure_id)
+        else: #skip
+            pass

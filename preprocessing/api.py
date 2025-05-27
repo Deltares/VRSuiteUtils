@@ -629,6 +629,7 @@ def create_database(config_file: str, results_folder: Path = None):
     print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"traject_id: {traject_id}")
     print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"measure_configuration: {measure_configuration}")
     print(f"characteristic_profile_csv: {characteristic_profile_csv}")
     print(f"building_csv_path: {building_csv_path}")
     print(f"output_dir: {output_path}")
