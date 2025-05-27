@@ -46,12 +46,4 @@ def vakindeling_main(traject_id: str,
     measure_config.write_to_csv(
         output_folder.joinpath(f"configuratie_maatregelen.csv")
     )
-    _measure_names = pd.read_csv(_generic_data_dir.joinpath('base_measures_totaal.csv'),index_col=0).index.tolist()
-    _columns = ['objectid', 'vaknaam'] + _measure_names
-
-
-    #make a dataframe with the columns
-    measures_df = pd.DataFrame(columns=_columns)
-    measures_df['objectid'] = traject.vakindeling_shape['objectid']
-    measures_df['vaknaam'] = traject.vakindeling_shape['vaknaam']
 
