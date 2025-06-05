@@ -80,7 +80,7 @@ def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.Fixt
     # compare dataframe for configuratie_maatregelen.csv
     assert_frame_equal(
         pd.read_csv(test_data.joinpath(project_folder, _maatregel_config_path), index_col=0),
-        pd.read_csv(_maatregel_config_path, index_col=0),
+        pd.read_csv(_output_path.joinpath(_maatregel_config_path), index_col=0),
         check_dtype=False,
     )
     
