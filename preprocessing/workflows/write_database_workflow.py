@@ -106,9 +106,7 @@ def write_database_main(traject_name : str,
     # read the data for measures
     measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
 
-    measure_configuration_table = pd.read_csv(measure_configuration, index_col=0) if measure_configuration is not None else None
-
-
+    measure_configuration_table, measures_table = read_measures_config(measure_configuration, measures_table) if measure_configuration is not None else None
 
 
     # read the data for profilepoints
