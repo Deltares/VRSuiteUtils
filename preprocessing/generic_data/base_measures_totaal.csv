@@ -1,8 +1,6 @@
 ,measure_type,id,available,combinable_type,direction,year,max_inward_reinforcement,max_outward_reinforcement,crest_step,max_crest_increase,stability_screen,transition_level_increase_step,max_pf_factor_block,n_steps_block,piping_reduction_factor
 Grondversterking binnenwaarts,Soil reinforcement,1,1,combinable,inward,0,30,0,0.25,2,0,,,,
-Kruinverhoging,Soil reinforcement,1,1,combinable,inward,0,0,0,0.25,2,0,,,,
 Grondversterking binnenwaarts met stabiliteitsscherm,Soil reinforcement with stability screen,2,1,full,inward,0,30,0,0.25,2,1,,,,
-Kruinverhoging met stabiliteitsscherm,Soil reinforcement with stability screen,2,1,full,inward,0,0,0,0.25,2,1,,,,
 Verticale pipingoplossing,Vertical Piping Solution,3,1,partial,,0,,,,,0,,,,1000
 Zelfkerende diepwand,Diaphragm Wall,4,1,full,,0,,,,,0,,,,100000000
 Damwandconstructie,Anchored Sheetpile,4,1,full,,0,,,,,0,,,,100000000

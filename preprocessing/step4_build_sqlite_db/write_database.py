@@ -617,9 +617,22 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
     if revetment == None:
         measure_table.drop(measure_table[measure_table['measure_type'] == 'Revetment'].index, inplace=True) 
     
-    if not include_kruinverhoging_or_not(section_ids):
-        #remove kruinverhoging from measure_table. All measures where kruinverhoging is part of the name of the measure (i.e. the index in this case)
-        measure_table = measure_table[~measure_table.index.str.lower().str.contains('kruinverhoging')]
+    if include_kruinverhoging_or_not(section_ids):
+        #add kruinverhoging to measure_table. 
+        #duplicate all rows with "Grondversterking" in the string and replace "Grondversterking" with "Kruinverhoging"
+        kruinverhoging_table = measure_table[measure_table.index.str.lower().str.contains('grondversterking')].copy()
+        #modify max_inward_reinforcement to 0.0
+        kruinverhoging_table['max_inward_reinforcement'] = 0.0
+        #replace Grondversterking with Kruinverhoging in the index
+        kruinverhoging_table.index = kruinverhoging_table.index.str.replace(
+            r"grondversterking", 
+            lambda m: "Kruinverhoging", 
+            case=False, 
+            regex=True
+        )
+        #append kruinverhoging to measure_table
+        measure_table = pd.concat([measure_table, kruinverhoging_table], axis=0)
+
 
     # fill MeasureType if they are not already in the database
     for type in measure_table["measure_type"].unique():
