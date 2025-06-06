@@ -1,7 +1,7 @@
 
 from pathlib import Path
 import pandas as pd
-
+import logging
 
 class MeasureConfiguration:
     """
@@ -48,4 +48,4 @@ class MeasureConfiguration:
         """Write the measure configuration to a CSV file."""
         measures_df = self.generate_measure_configuration()
         measures_df.to_csv(output_path, index=False)
-        print(f"Measure configuration written to {output_path}")
+        logging.info(f"Configuratie van maatregelen weggeschreven naar: {output_path}")

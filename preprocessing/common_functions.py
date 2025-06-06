@@ -2,6 +2,17 @@ import configparser
 import re
 import os
 
+import logging
+
+def log_and_raise_error(message, error_type=Exception):
+    """
+    Logs an error message and raises an exception of the specified type.
+    
+    :param message: The error message to log and raise.
+    :param error_type: The type of exception to raise (default is Exception).
+    """
+    logging.error(f"{error_type}: {message}")  
+    raise error_type(message)
 
 def check_string_in_list(str, list_vals):
     for item in list_vals:

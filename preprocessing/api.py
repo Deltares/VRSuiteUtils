@@ -19,7 +19,21 @@ from preprocessing.workflows.write_database_workflow import write_database_main
 from preprocessing.common_functions import read_config_file
 from pathlib import Path
 import os
+from vrtool.vrtool_logger import VrToolLogger
+import logging
 
+from datetime import datetime
+
+def _initialize_log_file(log_dir: Path | None, workflow_name: str):
+    # Logging dir.
+    if log_dir is None:
+        log_dir = Path.cwd()
+
+    # Define logging filename and initialize handler
+    _current_date = datetime.today().strftime("%Y%m%d_%H%M")
+    _log_file = Path(log_dir).joinpath(f"{workflow_name}.log")
+    VrToolLogger.init_file_handler(_log_file, logging_level=logging.INFO)
+    logging.info(f"Start logging {workflow_name} vanuit %s", str(_log_file))
 
 def create_project(project_folder: Path, traject_id: str):
     """
@@ -35,6 +49,7 @@ def create_project(project_folder: Path, traject_id: str):
     -------
     None
     """
+
 
     project_folder = Path(project_folder)
 
@@ -95,13 +110,16 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
         traject_shape = str(parameters['traject_shapefile'])
     flip = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
 
+    #initialize log file
+    _initialize_log_file(output_folder_vakindeling, "vakindeling")
+    logging.info("Start logging vakindeling \n ")
     # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"traject_id: {traject_id}")
-    print(f"vakindeling_csv: {vakindeling_csv}")
-    print(f"output_folder_vakindeling: {output_folder_vakindeling}")
-    print(f"traject_shape: {traject_shape}")
-    print(f"flip_traject: {flip}")
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f"     traject_id:                     {traject_id}")
+    logging.info(f"     vakindeling_csv:                {vakindeling_csv}")
+    logging.info(f"     output_folder_vakindeling:      {output_folder_vakindeling}")
+    logging.info(f"     traject_shape:                  {traject_shape}")
+    logging.info(f"     flip_traject:                   {flip} \n")
 
     # run the vakindeling workflow
     vakindeling_main(
@@ -660,4 +678,4 @@ def create_database(config_file: str, results_folder: Path = None):
 
 if __name__ == '__main__':
     #Use this structure to test api calls locally but do not commit any changes.
-    pass
+    generate_vakindeling_shape(config_file=r"c:\Repositories\VRSuiteUtils\tests\test_data\35-1\preprocessor.config")
