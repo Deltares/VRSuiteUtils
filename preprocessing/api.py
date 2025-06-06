@@ -678,4 +678,4 @@ def create_database(config_file: str, results_folder: Path = None):
 
 if __name__ == '__main__':
     #Use this structure to test api calls locally but do not commit any changes.
-    generate_vakindeling_shape(config_file=r"c:\Repositories\VRSuiteUtils\tests\test_data\35-1\preprocessor.config")
+    pass
