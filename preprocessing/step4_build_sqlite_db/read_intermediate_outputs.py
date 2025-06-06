@@ -137,8 +137,15 @@ def read_overflow_data(files_dir, use_hydraring):
                                     (overflow_data, table_data), ignore_index=True
                                 )
 
-    overflow_data = overflow_data.set_index("LocationId")
+    for count, row in overflow_data.iterrows():
+        if np.isnan(row['Beta']):
+            #drop this row, and the row where LocationId and CrestHeight are the same
+            overflow_data = overflow_data.loc[~(
+                    (overflow_data['LocationId'] == row['LocationId'])
+                    & (overflow_data['CrestHeight'] == row['CrestHeight']))
+            ]
 
+    overflow_data.set_index('LocationId', inplace=True)
     return overflow_data
 
 
