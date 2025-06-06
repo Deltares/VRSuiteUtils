@@ -250,10 +250,11 @@ def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: P
         output_path.mkdir(parents=True, exist_ok=True)
 
     # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"file_path: {file_path}")
-    print(f"work_dir_path: {work_dir_path}")
-    print(f"output_path: {output_path}")
+    _initialize_log_file(output_path, "waterstandberekeningen_hydranl")
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f" file_path:          {file_path}")
+    logging.info(f" work_dir_path:      {work_dir_path}")
+    logging.info(f" output_path:        {output_path}")
 
     # run the water level computations
     waterlevel_hydranl_main(
@@ -287,10 +288,11 @@ def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Pat
         output_path.mkdir(parents=True, exist_ok=True)
 
     # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"file_path: {file_path}")
-    print(f"work_dir_path: {work_dir_path}")
-    print(f"output_path: {output_path}")
+    _initialize_log_file(output_path, "overslagberekeningen_hydranl")
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f" file_path:          {file_path}")
+    logging.info(f" work_dir_path:      {work_dir_path}")
+    logging.info(f" output_path:        {output_path}")
 
     # run the water level computations
     overflow_hydranl_main(
@@ -337,14 +339,15 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
         output_path.mkdir(parents=True, exist_ok=True)
 
     # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"traject_id: {traject_id}")
-    print(f"bekleding_input_csv: {input_csv}")
-    print(f"database_path_current: {database_path_current}")
-    print(f"database_path_future: {database_path_future}")
-    print(f"output_map_waterstand: {waterlevel_path}")
-    print(f"hr_profielen_dir: {profielen_path}")
-    print(f"output_map_bekleding: {output_path}")
+    _initialize_log_file(output_path, "Bekleding Q-variant")
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f"traject_id:              {traject_id}")
+    logging.info(f"bekleding_input_csv:     {input_csv}")
+    logging.info(f"database_path_current:   {database_path_current}")
+    logging.info(f"database_path_future:    {database_path_future}")
+    logging.info(f"output_map_waterstand:   {waterlevel_path}")
+    logging.info(f"hr_profielen_dir:        {profielen_path}")
+    logging.info(f"output_map_bekleding: {output_path}")
 
     # run the bekleding_qvariant workflow
     qvariant_main(
@@ -679,5 +682,5 @@ def create_database(config_file: str, results_folder: Path = None):
 
 if __name__ == '__main__':
     #Use this structure to test api calls locally but do not commit any changes.
-    generate_and_evaluate_waterlevel_computations(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\preprocessor.config', Path(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\intermediate_results\HR_results\test'))
+    run_bekleding_qvariant(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\preprocessor.config', Path(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\intermediate_results\HR_results\test2'))
     pass

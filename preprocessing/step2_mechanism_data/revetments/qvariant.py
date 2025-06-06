@@ -16,6 +16,10 @@ from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowI
 import os
 import warnings
 
+import logging
+import tqdm
+from preprocessing.common_functions import log_and_raise_error
+
 def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
 # define variables
     models = ['gras_golfklap', 'gras_golfoploop', 'zuilen']
@@ -26,16 +30,20 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
 
     # check if database paths contain the right information (hlcd and hlcd_W_2100, no multiple hlcd.sqlite files, config.sqlite file present)
     for database_path in database_paths:
-        if len(list(database_path.glob('*hlcd*.sqlite')))!=1: raise ValueError('zero or multiple hlcd.sqlite file found in database_path: {}.'.format(database_path))
+        if len(list(database_path.glob('*hlcd*.sqlite')))!=1: 
+            log_and_raise_error('zero or multiple hlcd.sqlite file found in database_path: {}.'.format(database_path), FileNotFoundError)
         hlcd = Path(os.getcwd()).joinpath(list(database_path.glob('*hlcd*.sqlite'))[0])
         #path to config database:
-        if len(list(database_path.glob('*.config.sqlite'))) == 0: raise Exception(
-            'No config.sqlite found in database_path')
+        if len(list(database_path.glob('*.config.sqlite'))) == 0: 
+            log_and_raise_error('No config.sqlite found in database_path', FileNotFoundError)
         configDatabase = list(database_path.glob('*.config.sqlite'))[0]
-        if len(list(database_path.glob('*.config.sqlite'))) > 1: warnings.warn(
+        if len(list(database_path.glob('*.config.sqlite'))) > 1: 
+            logging.warning(
             'Warning: multiple config.sqlite files found in database_path. Using first file found.')
+    logging.info(f"Check op hydraulische databases in {database_paths} is voltooid.\n")
 
-    for index,row in df.iterrows():
+    logging.info("Start Q-variant berekeningen voor bekledingen")
+    for index,row in tqdm.tqdm(df.iterrows(), desc="Locaties doorgerekend", total=len(df)):
         #general stuff to get right location for database
         dwarsprofiel = row['dwarsprofiel']
         OverflowInput.get_HRLocation(
@@ -98,6 +106,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
                     Qvar_Tp = []
                     Qvar_dir = []
                     for h in wl_filtered:
+                        logging.info(f"Berekening Qvariant voor locatie {row.doorsnede}, jaar {evaluateYears[i]}, kans {Q_var_pgrid[j]:.2e}, model {m}, waterstand {h:.2f} m NAP")
                         Qvar = QVariantCalculations(locationId, mechanism, orientation, m, h, beta[j])
                         numSettings = Qvar.get_numerical_settings(configDatabase)
                         QvarRes = Qvar.run_HydraRing(hring_path, str(hlcd), local_path, evaluateYears[i], numSettings)
@@ -105,6 +114,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
                         Qvar_Hs = np.append(Qvar_Hs, QvarRes['Hs'])
                         Qvar_Tp = np.append(Qvar_Tp, QvarRes['Tp'])
                         Qvar_dir = np.append(Qvar_dir, QvarRes['dir'])
+                        logging.info(f"Qvariant berekening voor locatie {row.doorsnede}, jaar {evaluateYears[i]}, kans {Q_var_pgrid[j]:.2e}, model {m}, waterstand {h:.2f} m NAP is voltooid")
                     data[f"Qvar {i}_{j}_{m}"] = {"zichtjaar": evaluateYears[i] / 1.0,
                                                  "beta": beta[j],
                                                  "model": m,
@@ -114,6 +124,7 @@ def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hrin
                                                  "dir": list(Qvar_dir)}
 
         write_JSON_to_file(data, output_path.joinpath("Qvar_{}.json".format(row.doorsnede)))
+        logging.info(f"Qvariant berekening voor locatie {row.doorsnede} is voltooid en opgeslagen in {output_path.joinpath('Qvar_{}.json'.format(row.doorsnede))}")
 
 if __name__ == '__main__':
     # inputs

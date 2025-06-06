@@ -2,6 +2,8 @@ from pathlib import Path
 import pandas as pd
 import os
 from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qvariant
+import logging
+from preprocessing.common_functions import log_and_raise_error
 
 def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Path], waterlevel_path: Path, profielen_path: Path,
                      hring_path: Path, output_path: Path):
@@ -10,17 +12,19 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
     # if output_path doesnot exist, create it, with subfolder for tempfiles
     if not output_path.exists():
         local_path.mkdir(parents=True, exist_ok=False)
-        print("output folder created")
+        logging.info("Uitvoermap aangemaakt")
     # elif output_path exists, but empty, continue
     elif not any(list(output_path.iterdir())):
         local_path.mkdir(parents=True, exist_ok=False)
-        print("output folder created")
-    #if anything in there: stop the script
-    elif any(list(output_path.iterdir())):
-        print('The output folder is not empty. Please empty the folder and run the script again.')
-        exit()
-
+        logging.info("Uitvoermap aangemaakt")
+    #if any subfolders in there: stop the script
+    elif any([f.is_dir() for f in output_path.iterdir()]):
+        log_and_raise_error('The output folder is not empty. Please empty the folder and run the script again.', FileExistsError)
+    else:
+        local_path.mkdir(parents=True, exist_ok=True)
+        logging.info("Uitvoermap aangemaakt")
     # read bekleding csv
+    logging.info(f"Lees bekleding csv bestand: {bekleding_path}")
     try:
         df = pd.read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
@@ -30,6 +34,7 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl','begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
         df['begin_bekleding'] = df['gws']
+    logging.info("Bekleding csv bestand succesvol ingelezen")
 
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
@@ -45,6 +50,6 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
               p_ondergrens,
               p_signaleringswaarde,
               p_signaleringswaarde * (1. / 1000.)]
-
+    logging.info(f"Kansen voor Q-variant bepaald op basis van traject {traject_id}: {p_grid}")
     # step 1: qvariant
     revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path,local_path, p_grid)
