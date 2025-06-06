@@ -9,6 +9,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from itertools import pairwise
+import logging
+from preprocessing.common_functions import log_and_raise_error
 
 class HydraRingComputation:
     def __init__(self):
@@ -22,7 +24,7 @@ class HydraRingComputation:
 
         # lees data voor config voor Numerics en TimeIntegration
         configfile = list(db_path.glob("*.config.sqlite"))[0]
-        print(configfile)
+
         cnx = sqlite3.connect(configfile)
         self.TimeIntegrationScheme = np.int_(
             pd.read_sql_query(
@@ -101,7 +103,7 @@ class HydraRingComputation:
         if design_table_temp['Beta'].min() < threshold:
             # remove rows with beta values below the threshold
             design_table_temp = design_table_temp[design_table_temp['Beta'] >= threshold]
-            print(f"Er zijn beta waarden onder de 0.5 gevonden voor {calculation_type} op dijkvak {section_name}. Deze waarden zijn verwijderd.")
+            logging.warning(f"Er zijn beta waarden onder de 0.5 gevonden voor {calculation_type} op dijkvak {section_name}. Deze waarden zijn verwijderd.")
 
         # set values and betas
         values = list(design_table_temp['Value'])
@@ -109,7 +111,10 @@ class HydraRingComputation:
 
         #check if values are increasing
         if not all(a < b for a, b in pairwise(values)):
-            raise ValueError(f"Geimporteerde waarden voor {calculation_type} voor dijkvak {section_name} stijgen niet. Controleer de Hydra-Ring resultaten.")
+            log_and_raise_error(
+                f"Geimporteerde waarden voor {calculation_type} voor dijkvak {section_name} stijgen niet. Controleer de Hydra-Ring resultaten.",
+                ValueError
+            )
             
         #check if betas are increasing
         if not all(a < b for a, b in pairwise(betas)):
@@ -122,10 +127,10 @@ class HydraRingComputation:
                 else:
                     new_betas.append(betas[i])
             # new_betas = [betas[0]] + [max(betas[i], betas[i-1]) for i in range(1, len(betas))]
-            print(f"Waarden voor {calculation_type} op dijkvak {section_name} stijgen niet, waarden zijn aangepast.")
+            logging.warning(f"Waarden voor {calculation_type} op dijkvak {section_name} stijgen niet, waarden zijn aangepast.")
             #print original and new betas
-            print(f"Originele waarden: {betas}")
-            print(f"Nieuwe waarden: {new_betas}")
+            logging.warning(f"Originele waarden:            {betas}")
+            logging.warning(f"Nieuwe waarden:               {new_betas}")
 
             # replaces betas in the design_table with the new betas 
             design_table_temp['Beta'] = new_betas
@@ -137,7 +142,7 @@ class HydraRingComputation:
             # if not design_table_file.parent.joinpath(before_correction).exists():
             #     before_correction = "BeforeCorrection_"+design_table_file.name
             shutil.copy(design_table_file, design_table_file.parent.joinpath(before_correction))
-            print(f"Er is een kopie gemaakt van het originele bestand: {before_correction}")
+            logging.info(f"Aanpassingen gedaan in designtable. Er is een kopie gemaakt van het originele bestand: {before_correction}")
             # Write to file: 
             HydraRingComputation.write_design_table(design_table_temp, design_table_file)
         

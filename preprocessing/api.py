@@ -153,13 +153,13 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
             output_path.rmdir()
         output_path.mkdir(parents=True, exist_ok=True)
 
-
+    _initialize_log_file(output_path, "waterstandsberekeningen")
     # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"file_path: {file_path}")
-    print(f"database_path_current: {database_path_current}")
-    print(f"database_path_future: {database_path_future}")
-    print(f"output_path: {output_path}")
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f" file_path:                  {file_path}")
+    logging.info(f" database_path_current:      {database_path_current}")
+    logging.info(f" database_path_future:       {database_path_future}")
+    logging.info(f" output_path:                {output_path}")
 
     # run the water level computations
     waterlevel_main(
@@ -678,4 +678,5 @@ def create_database(config_file: str, results_folder: Path = None):
 
 if __name__ == '__main__':
     #Use this structure to test api calls locally but do not commit any changes.
+    generate_and_evaluate_waterlevel_computations(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\preprocessor.config', Path(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\intermediate_results\HR_results\test'))
     pass
