@@ -209,13 +209,14 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
         if output_path.exists():
             output_path.rmdir()
         output_path.mkdir(parents=True, exist_ok=True)
-    # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"file_path: {file_path}")
-    print(f"database_path_current: {database_path_current}")
-    print(f"database_path_future: {database_path_future}")
-    print(f"profielen_dir: {profielen_dir}")
-    print(f"output_path: {output_path}")
+    
+    _initialize_log_file(output_path, "overslagberekeningen")
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f"file_path: {file_path}")
+    logging.info(f"database_path_current: {database_path_current}")
+    logging.info(f"database_path_future: {database_path_future}")
+    logging.info(f"profielen_dir: {profielen_dir}")
+    logging.info(f"output_path: {output_path}")
 
     # run the overflow computations
     overflow_main(

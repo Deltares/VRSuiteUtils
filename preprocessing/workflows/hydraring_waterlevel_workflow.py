@@ -95,7 +95,7 @@ def waterlevel_main(file_path: Path,
             for loc_file in loc_output_dir.iterdir():
                 if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                     design_table = read_design_table(loc_file)
-                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
+                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
                                                                            section_name=loc_output_dir.name, design_table_file=loc_file)
             logging.info(f"Berekening voor locatie {location.doorsnede} en jaar {year} is voltooid.\n")
     logging.info("Alle Hydra-Ring waterstandsberekeningen zijn voltooid.")

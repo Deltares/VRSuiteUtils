@@ -5,6 +5,7 @@ import geopandas as gpd
 import numpy as np
 import pandas as pd
 
+from preprocessing.common_functions import log_and_raise_error
 
 class OverflowInput:
     def __init__(self, kind="weakest"):
@@ -61,15 +62,16 @@ class OverflowInput:
                     hrd_locs["Name"] == line["hr_koppel"]
                 ]["HRDLocationId"].values[0]
             except IndexError:
-                raise Exception(
-                    "HRDLocationId niet gevonden voor {}. Check in de bekledingen CSV of de namen voor 'hr_koppel' wel "
-                    "voorkomen in de database.".format(line["hr_koppel"])
+                log_and_raise_error(
+                    "HRDLocationId niet gevonden voor {}. Check in de CSV of de namen voor 'hr_koppel' wel "
+                    "voorkomen in de database.".format(line["hr_koppel"]),
+                    ValueError,
                 )
 
             hlcd_location = hlcd_locs.loc[
                 (hlcd_locs["HRDLocationId"] == hrd_location) & (hlcd_locs["TrackId"] == track_id)]["LocationId"].values[0]
             if (not np.isnan(hring_data.loc[count, "hrlocation"])) & (hring_data.loc[count, "hrlocation"] != hlcd_location):
-                raise Exception("HRLocation in input sheet is different from  HLCDLocation found in database for {}".format(line["hr_koppel"]))
+                log_and_raise_error("HRLocation in invoerbestand is anders dan   HLCDLocation in hydraulische database voor locatie {}".format(line["hr_koppel"]), ValueError)
             else:
                 hring_data.loc[count, "hrlocation"] = hlcd_location
 
@@ -122,13 +124,13 @@ class OverflowInput:
                     self.hring_data = self.hring_data.drop(columns=column)
             for column in required_cols:
                 if column not in self.hring_data.columns:
-                    raise Exception(
-                        "Column {} is required but not present in hring_data".format(
+                    raise log_and_raise_error(
+                        "Kolom {} is verplicht maar niet aanwezig in hring_data".format(
                             column
-                        )
+                        ), ValueError
                     )
         else:
-            raise Exception(
-                "hring_data not present, verification of columns is not possible"
+            raise log_and_raise_error(
+                "hring_data niet aanwezig, verificatie van kolommen is niet mogelijk", ValueError
             )
         self.hring_data.reset_index(drop=True, inplace=True)
