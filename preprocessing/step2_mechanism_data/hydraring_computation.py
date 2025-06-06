@@ -19,6 +19,27 @@ class HydraRingComputation:
     def run_hydraring(self, hydraring_path: Path, inifile: Path):
         self.hydraring_path = Path(hydraring_path).joinpath("MechanismComputation.exe")
         subprocess.run([str(self.hydraring_path), str(inifile)], cwd=str(inifile.parent))
+        result = subprocess.run(
+            [str(self.hydraring_path), str(inifile)],
+            cwd=str(inifile.parent),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        if len(result.stdout) > 0:
+            logging.info(f"HydraRing logging:\n{result.stdout}")
+        if len(result.stderr) > 0:
+            logging.error(f"HydraRing errors:\n{result.stderr}")
+        #check if there is a file with the name ' last_error.txt' in the inifile parent directory
+        last_error_file = inifile.parent.joinpath("last_error.txt")
+        if last_error_file.exists():
+            with open(last_error_file, 'r') as f:
+                last_error = f.read()
+            logging.error(f"HydraRing last error:\n{last_error}")
+            
+        if result.returncode != 0:
+            logging.error(f"HydraRing exited with return code {result.returncode}")
+
 
     def get_HRING_config(self, db_path):
 
