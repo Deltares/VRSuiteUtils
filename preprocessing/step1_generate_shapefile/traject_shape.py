@@ -7,7 +7,7 @@ from owslib.wfs import WebFeatureService
 from shapely import geometry, ops
 import logging
 
-from common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error
 
 class TrajectShape:
     """Class with functions to modify and fill the shape of a traject which is the basic reference for all preprocessing steps"""
