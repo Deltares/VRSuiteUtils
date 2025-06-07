@@ -48,6 +48,7 @@ def write_database_main(traject_name : str,
                         piping_path = None,
                         stability_path = None,
                         revetment_path = None,
+                        measure_configuration = None,
                         ):
 
     # check if output_path exists, if not create it
@@ -105,9 +106,8 @@ def write_database_main(traject_name : str,
 
     # read the data for measures
     measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
-    #if no revetment drop the row where measure_type is Revetment
-    if revetment_path == None:
-        measures_table.drop(measures_table[measures_table['measure_type'] == 'Revetment'].index, inplace=True)
+
+    measure_configuration_table, measures_table = read_measures_config(measure_configuration, measures_table) if measure_configuration is not None else None
 
 
     # read the data for profilepoints
@@ -138,7 +138,7 @@ def write_database_main(traject_name : str,
     fill_mechanisms(mechanism_data=mechanism_data, shape_file=vakindeling_shape)
 
     # fill measures
-    fill_measures(measure_table=measures_table)
+    fill_measures(measure_table=measures_table, measure_configuration=measure_configuration_table, revetment = revetment_path)
 
     #write a config file
     if revetment_path != None:

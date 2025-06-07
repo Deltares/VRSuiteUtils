@@ -603,6 +603,7 @@ def create_database(config_file: str, results_folder: Path = None):
     # Accessing parameters
     traject_id = parameters['traject_id']
     vakindeling_geojson = parameters['vakindeling_geojson']
+    measure_configuration = parameters['maatregelen_configuratie']
     characteristic_profile_csv = parameters['karakteristieke_profielen_csv']
     building_csv_path = parameters['gebouwen_csv']
     output_db_name = parameters['vrtool_database_naam']
@@ -628,6 +629,7 @@ def create_database(config_file: str, results_folder: Path = None):
     print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
     print(f"traject_id: {traject_id}")
     print(f"vakindeling_geojson: {vakindeling_geojson}")
+    print(f"measure_configuration: {measure_configuration}")
     print(f"characteristic_profile_csv: {characteristic_profile_csv}")
     print(f"building_csv_path: {building_csv_path}")
     print(f"output_dir: {output_path}")
@@ -652,7 +654,8 @@ def create_database(config_file: str, results_folder: Path = None):
         Path(overflow_results_path),
         piping_path,
         stability_path,
-        revetment_path
+        revetment_path,
+        Path(measure_configuration),
     )
 
 if __name__ == '__main__':

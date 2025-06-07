@@ -291,6 +291,24 @@ def read_revetment_data(files_dir):
 def read_bebouwing_data(file_path):
     return pd.read_csv(file_path, index_col=0)
 
+def read_measures_config(file_path, measure_table = None):
+    """reads a single csv file with measures configuration into a dataframe"""
+    measures_config = pd.read_csv(file_path, index_col=0)
+
+    if measure_table is not None:
+        #check if all index values of measure_table are present in measures_config.columns
+        if not set(measure_table.index).issubset(set(measures_config.columns)):
+            raise ValueError(f"Niet alle maatregelen in de standaard maatregeltabel zijn aanwezig in de maatregelen configuratie. Controleer het configuratiebestand: {file_path}")
+        # 
+        #check if there are columns in measures_config that only have False values
+        false_cols = [col_name for col_name in measures_config.columns if measures_config[col_name].astype(bool).eq(False).all()]
+        if len(false_cols) > 0:
+            measure_table.drop(index=false_cols, inplace=True)
+            measures_config.drop(columns=false_cols, inplace=True)
+        
+        
+        return measures_config, measure_table
+    return measures_config
 
 def read_measures_data(file_path):
     return pd.read_csv(file_path, index_col=0)

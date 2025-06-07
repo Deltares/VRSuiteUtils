@@ -5,7 +5,7 @@ import pandas as pd
 
 from preprocessing.visualization.plot_functions import plot_vakindeling
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
-
+from preprocessing.step1_generate_shapefile.measure_configuration import MeasureConfiguration
 
 def vakindeling_main(traject_id: str,
                      vakindeling_csv_path: str,
@@ -13,6 +13,8 @@ def vakindeling_main(traject_id: str,
                      traject_shape_path=False,
                      flip_traject=False,
                         ):
+    _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
+
     # make traject
     traject = TrajectShape(traject_id)
 
@@ -39,3 +41,9 @@ def vakindeling_main(traject_id: str,
         traject.vakindeling_shape,
         Path(output_folder).joinpath("Vakindeling_{}.png".format(traject_id)),
     )
+    # Generate a csv file with the configuration of measures
+    measure_config = MeasureConfiguration(traject.vakindeling_shape)
+    measure_config.write_to_csv(
+        output_folder.joinpath(f"configuratie_maatregelen.csv")
+    )
+
