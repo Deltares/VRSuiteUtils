@@ -34,6 +34,7 @@ def _initialize_log_file(log_dir: Path | None, workflow_name: str):
     _current_date = datetime.today().strftime("%Y%m%d_%H%M")
     _log_file = Path(log_dir).joinpath(f"{workflow_name}.log")
     VrToolLogger.init_file_handler(_log_file, logging_level=logging.INFO)
+    VrToolLogger.init_console_handler(logging_level=logging.INFO)
     logging.info(f"Start logging {workflow_name} vanuit %s", str(_log_file))
 
 def create_project(project_folder: Path, traject_id: str):

@@ -256,7 +256,7 @@ def fill_mechanisms(mechanism_data,
                         .get()
                         .id,
                     )
-    logging.info(f"MechanismPerSection table gevuld met data voor {len(MechanismPerSection.select().dicts())} mechanismen op {len(relevant_indices)} dijkvakken.")
+    logging.info(f"MechanismPerSection table gevuld met data voor {len(MechanismPerSection.select().dicts())} mechanismen op {len(shape_file.loc[shape_file.in_analyse == 1])} dijkvakken.")
 
     # next fill ComputationScenario table and children for each mechanism
     # first fill the ComputationType table
