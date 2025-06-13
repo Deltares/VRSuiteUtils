@@ -5,6 +5,7 @@ import numpy as np
 import csv
 import time
 import os
+import logging
 
 
 def profile_generator(traject_id: str,
@@ -18,9 +19,9 @@ def profile_generator(traject_id: str,
                       flip_waterside: bool=False,
                       ):
 # time how long this takes
-    start_time = time.time()
     traject = Traject(traject_id)
-    # traject_shape_path = Path(r'c:\VRM\Gegevens 38-1\shape\dijktrajecten.shp') # or False, if you want to retrieve it from NBWP
+    logging.info(f"Start genereren profielen op basis van AHN4 voor traject {traject_id}.")
+
     # traject.get_traject_data(NBWP_shape_path=traject_shape_path)
     traject.get_traject_data(NBPW_shape_path)
 
@@ -28,6 +29,7 @@ def profile_generator(traject_id: str,
     # if this is the case, the user should have also used this flip function when using the vakindeling workflow.
     if flip_traject:
         traject.flip_traject()
+        logging.info(f"flip_traject instelling staat aan. Traject {traject_id} wordt omgedraaid.")
 
     traject.generate_cross_section(cross_section_distance=dx, # distance between cross sections
                                    foreshore_distance=fsd,

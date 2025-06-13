@@ -5,7 +5,8 @@ from preprocessing.step2_mechanism_data.revetments.GEBU_prep_relatie import reve
 from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revetment_zst
 from preprocessing.step2_mechanism_data.revetments.revetment_slope import RevetmentSlope
 
-
+import logging
+from preprocessing.common_functions import log_and_raise_error
 import shutil
 
 def ensure_folders_exist(output_path: Path):
@@ -15,7 +16,7 @@ def ensure_folders_exist(output_path: Path):
     local_path = output_path.joinpath('temp')
 
     if not output_path.exists():
-        print("output folder does not exist. Check if the path is correct. Refer to folder with qvariant output.")
+        log_and_raise_error("Uitvoermap bestaat niet. Check if the path is correct. Refer to folder with qvariant output.", FileNotFoundError)
         exit()
     #for path in list of figures_GEBU, figures_ZST and local_path, check if they exist. If not, create them.
     for output_folder in [figures_GEBU, figures_ZST, local_path]:
@@ -41,15 +42,18 @@ def initialize_gebu_zst(output_path: Path, bekleding_path: Path, traject_id: str
     # ensure output folders exist:
     ensure_folders_exist(output_path)
 
+
     # read bekleding csv
     df = pd.read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
     df = df.reset_index(drop=True)  # reset index
+    logging.info("Bekleding csv bestand succesvol gelezen")
 
     # make p_grid
     p_grid = make_p_grid(traject_id)
+    logging.info(f"Kansen voor GEBU en ZST bepaald voor traject {traject_id}: {[f'{p:.2e}' for p in p_grid]}")
 
     return df, p_grid
 
@@ -63,16 +67,20 @@ def gebu_zst_main(traject_id, bekleding_path: Path, steentoets_path: Path, profi
     # make cross sections
     cross_sections = [RevetmentSlope(profielen_path, data = row) for index, row in df.iterrows()]
     [cross_section.add_steentoets(steentoets_path) for cross_section in cross_sections]
+    logging.info(f"Doorsnedeberekeningen klaargezet voor alle locaties")
 
     #add Steentoets data to cross_sections where available
     # run functions
     # step 2: GEBU
+    logging.info(f"Start GEBU berekeningen voor traject {traject_id}")
     revetment_gebu(cross_sections, qvar_path, output_path, binDIKErnel, output_path.joinpath('temp'), p_grid, evaluate_years)
-
+    logging.info(f"GEBU berekeningen voor traject {traject_id} zijn voltooid \n")
     
     # step 3: ZST
     #run the ZST computation
+    logging.info(f"Start ZST berekeningen voor traject {traject_id}")
     revetment_zst(cross_sections, qvar_path, output_path, output_path.joinpath('figures_ZST'), p_grid, evaluate_years, versterking_bekleding)
+    logging.info(f"ZST berekeningen voor traject {traject_id} zijn voltooid \n")
 
     # remove all files in local_path using shutil
     shutil.rmtree(output_path.joinpath('temp'))

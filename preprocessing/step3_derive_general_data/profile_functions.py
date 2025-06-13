@@ -10,6 +10,8 @@ from shapely.geometry import LineString, Point
 from scipy.interpolate import griddata
 from shapely import geometry
 import warnings
+import logging
+from preprocessing.common_functions import log_and_raise_error
 
 class Traject:
 
@@ -24,20 +26,24 @@ class Traject:
             wfs_nbpw = WebFeatureService(url='https://geo.rijkswaterstaat.nl/services/ogc/wvp/ows/wfs?version=1.1.0&request=GetCapabilities&Service=WFS',
                                          version='1.1.0')
             NBPW = gpd.read_file(wfs_nbpw.getfeature('dijktrajecten', outputFormat='json'))
+            logging.info("NBPW geladen van WFS")
         else:
             NBPW = gpd.read_file(NBWP_shape_path)
+            logging.info(f"NBPW geladen van lokale shape {NBWP_shape_path}")
 
         self.traject_shape = NBPW.loc[NBPW.TRAJECT_ID == self.name].reset_index(drop=True)
-        # self.traject_shape.geometry[0] = linemerge(self.traject_shape.geometry[0])
+
         self.traject_shape = self.traject_shape[
             ["TRAJECT_ID", "NORM_SW", "NORM_OG", "geometry"]
         ]
         self.traject_shape = self.traject_shape.explode(index_parts=True)
         if len(self.traject_shape) > 1:
-            warnings.warn("Warning: NBPW shape has more than 1 geometry")
+            log_and_raise_error("NBPW shape geeft meer dan 1 geometrie. Controleer de shape.",
+                                ValueError)
+            
 
         self.length = self.traject_shape.geometry[0].length[0]
-        print("Total traject length =", self.length)
+        logging.info(f"Totale lengte traject: {self.length}")
         return self.traject_shape, self.length
 
     def flip_traject(self):

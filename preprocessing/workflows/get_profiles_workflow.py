@@ -3,6 +3,9 @@ from pathlib import Path
 from preprocessing.step3_derive_general_data.derive_profiles import profile_generator
 from preprocessing.step3_derive_general_data.derive_characteristic_points import obtain_characteristic_profiles
 
+import logging
+from preprocessing.common_functions import log_and_raise_error
+
 def main_traject_profiles(traject_id: str,
                           output_path: Path,
                           dx: int,
@@ -16,19 +19,18 @@ def main_traject_profiles(traject_id: str,
     # check if output_path exists, if not create it
     if not output_path.exists():
         output_path.mkdir()
-        print("dijkinfo folder created")
+        logging.info("Uitvoermap aangemaakt")
 
     # check if output_path.joinpath(AHN_profiles) exists, if not create it
     ahn_profiles_folder = output_path.joinpath("ahn_profielen")
     if not ahn_profiles_folder.exists():
         ahn_profiles_folder.mkdir()
-        print("AHN_profiles folder created")
+        logging.info("AHN_profiles folder aangemaakt")
     # if the directory exists, but contains files or folders, delete all files and folders
     elif len(os.listdir(ahn_profiles_folder)) != 0:
-        print('AHN_profiles folder is not empty')
-        print('please empty the folder first')
-        # stop the script
-        sys.exit()
+        log_and_raise_error('AHN_profiles folder is not empty. Please empty the folder first and rerun the workflow.',
+                            FileExistsError)
+
     else:
         pass
 

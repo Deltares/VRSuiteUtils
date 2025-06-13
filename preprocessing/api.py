@@ -393,14 +393,15 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
         output_path_qvar = Path(parameters['output_map_bekleding'])
 
     # print the parameters
-    print("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    print(f"traject_id: {traject_id}")
-    print(f"bekleding_input_csv: {input_csv}")
-    print(f"steentoets_map: {steentoets_path}")
-    print(f"hr_profielen_dir: {profielen_path}")
-    print(f"output_map_bekleding: {output_path}")
-    print(f"versterking_bekleding: {versterking_bekleding}")
+    _initialize_log_file(output_path, "Bekleding Q-variant")
 
+    logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
+    logging.info(f"traject_id:              {traject_id}")
+    logging.info(f"bekleding_input_csv:     {input_csv}")
+    logging.info(f"steentoets_map:          {steentoets_path}")
+    logging.info(f"hr_profielen_dir:        {profielen_path}")
+    logging.info(f"output_map_bekleding:    {output_path}")
+    logging.info(f"versterking_bekleding:   {versterking_bekleding}")
 
     # run the bekleding_gebu_zst workflow
     gebu_zst_main(
@@ -447,16 +448,19 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
     flip_traject = parameters.getboolean('flip_traject', fallback=False)  # set default value to False if not present
     flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)  # set default value to False if not present
 
+    # initialize log file
+    _initialize_log_file(output_path, "get_characteristic_profiles")
+    
     # print the parameters
-    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    print(f"traject_id: {traject_id}")
-    print(f"output_path: {output_path.__str__}")
-    print(f"dx: {dx}")
-    print(f"voorland_lengte: {voorland_lengte}")
-    print(f"achterland_lengte: {achterland_lengte}")
-    print(f"traject_shape: {traject_shape}")
-    print(f"flip_traject: {flip_traject}")
-    print(f"flip_waterkant: {flip_waterkant}")
+    logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
+    logging.info(f"traject_id:          {traject_id}")
+    logging.info(f"output_path:         {output_path.__str__}")
+    logging.info(f"dx:                  {dx}")
+    logging.info(f"voorland_lengte:     {voorland_lengte}")
+    logging.info(f"achterland_lengte:   {achterland_lengte}")
+    logging.info(f"traject_shape:       {traject_shape}")
+    logging.info(f"flip_traject:        {flip_traject}")
+    logging.info(f"flip_waterkant:      {flip_waterkant}")
 
     # run the get_profiles_workflow
     main_traject_profiles(
