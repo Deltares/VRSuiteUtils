@@ -44,7 +44,6 @@ class GEBUComputation:
         #Case 1: begin grasbekleding is very close to the crest. We then assume 2 transition levels. At 1 cm below crest and 25 cm lower. Beta of 8 and 7.9 are assumed. This prevents extrapolation problems in the vrtool.
         if self.cross_section.begin_grasbekleding >= self.cross_section.end_grasbekleding - 0.25:
             self.GEBU_close_to_crest()
-            logging.info(f"overgang ligt minder dan 25 cm van kruin. Verwaarloosbare faalkans aangenomen")
 
         #Case 2: no grass revetment present. Not sure if this is possible, but if so, we break
         elif len(self.transition_levels) == 0:
@@ -83,8 +82,7 @@ class GEBUComputation:
                     "grasbekleding_begin": [self.cross_section.end_grasbekleding-0.25, self.cross_section.kruinhoogte+.1],
                     "betaFalen": [7.9, 8.]}
             write_JSON_to_file(data, self.output_path.joinpath(f"GEBU_{self.cross_section.doorsnede}_{year}.json"))
-        print(f'GEBU Case 1 voor dwarsprofiel {self.cross_section.dwarsprofiel}. Begin grasbekleding (={self.cross_section.begin_grasbekleding}) (bijna) gelijk aan de kruinhoogte'
-                f' (={self.cross_section.kruinhoogte}). Faalkans verwaarloosbaar.')
+        logging.info(f'Overgang ligt minder dan 25 cm van kruin voor dwarsprofiel {self.cross_section.dwarsprofiel}. Verwaarloosbare faalkans aangenomen.')
     
     def GEBU_normal_case(self, year_idx, p_idx, transition_level, year_probability):
         year, probability = year_probability

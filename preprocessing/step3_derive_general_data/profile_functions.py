@@ -13,7 +13,7 @@ class Traject:
 
     def __init__(self, traject_name):
         self.name = traject_name
-        logging.info("Dijktraject :", self.name)
+        logging.info(f"Dijktraject: {self.name}")
 
 
     def get_traject_data(self, NBWP_shape_path=False):
