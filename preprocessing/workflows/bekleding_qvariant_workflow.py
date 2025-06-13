@@ -50,6 +50,6 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
               p_ondergrens,
               p_signaleringswaarde,
               p_signaleringswaarde * (1. / 1000.)]
-    logging.info(f"Kansen voor Q-variant bepaald op basis van traject {traject_id}: {p_grid}")
+    logging.info(f"Kansen voor Q-variant bepaald voor traject {traject_id}: {[f"{p:.2e}" for p in p_grid]}")
     # step 1: qvariant
     revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path,local_path, p_grid)
