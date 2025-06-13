@@ -23,6 +23,7 @@ from vrtool.vrtool_logger import VrToolLogger
 import logging
 
 from datetime import datetime
+import shutil
 
 def _initialize_log_file(log_dir: Path | None, workflow_name: str):
     # Logging dir.
@@ -498,18 +499,20 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
         output_path = results_folder.joinpath(parameters['output_map_representatieve_profielen'])
         # Recreate the output folder
         if output_path.exists():
-            output_path.rmdir()
+            shutil.rmtree(output_path)
         output_path.mkdir(parents=True, exist_ok=True)
     invoerbestand = parameters.get('ingevoerde_profielen', fallback=False)
 
+    # initialize log file
+    _initialize_log_file(output_path, "selectie_profielen")
     # print the parameters
-    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    print(f"vakindeling_geojson: {vakindeling_geojson}")
-    print(f"ahn_profielen: {ahn_profielen}")
-    print(f"karakteristieke_profielen: {karakteristieke_profielen}")
-    print(f"profiel_info_csv: {profiel_info_csv}")
-    print(f"uitvoer_map: {output_path}")
-    print(f"invoerbestand: {invoerbestand}")
+    logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
+    logging.info(f"vakindeling_geojson:             {vakindeling_geojson}")
+    logging.info(f"ahn_profielen:                   {ahn_profielen}")
+    logging.info(f"karakteristieke_profielen:       {karakteristieke_profielen}")
+    logging.info(f"profiel_info_csv:                {profiel_info_csv}")
+    logging.info(f"uitvoer_map:                     {output_path}")
+    logging.info(f"invoerbestand:                   {invoerbestand}")
 
     # run the select_profiles_workflow
     main_profiel_selectie(
@@ -540,14 +543,16 @@ def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
         output_path = results_folder.joinpath(parameters['output_map_teenlijn'])
         # Recreate the output folder
         if output_path.exists():
-            output_path.rmdir()
+            shutil.rmdir()
         output_path.mkdir(parents=True, exist_ok=True)
 
+    # initialize log file
+    _initialize_log_file(output_path, "teenlijn_bepaling")
     # print the parameters
-    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    print(f"karakteristieke_profielen_map: {karakteristieke_profielen_map}")
-    print(f"profiel_info_csv: {profiel_info_csv}")
-    print(f"teenlijn_uitvoer: {output_path}")
+    logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
+    logging.info(f"karakteristieke_profielen_map:   {karakteristieke_profielen_map}")
+    logging.info(f"profiel_info_csv:                {profiel_info_csv}")
+    logging.info(f"teenlijn_uitvoer:                {output_path}")
 
     # run the teenlijn_workflow
     main_teenlijn(

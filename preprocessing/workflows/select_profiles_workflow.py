@@ -5,6 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import warnings
 import shutil
+import logging
+from preprocessing.common_functions import log_and_raise_error
+import tqdm
+
 def main_profiel_selectie(
         vakindeling_geojson: Path,
         ahn_profielen: Path,
@@ -13,35 +17,35 @@ def main_profiel_selectie(
         uitvoer_map: Path,
         invoerbestand: Path = False,
         selectiemethode: str = 'minimum'):
-    #make sure uitvoer_map does not exist: delete and recreate
-    if uitvoer_map.exists():
-        warnings.warn("uitvoer_map already exists. Deleting and recreating")
-        #remove with shutil.rmtree
-        shutil.rmtree(uitvoer_map)
 
     use_file = False
-    uitvoer_map.mkdir()
+
     #load vakindeling_geojson
     vakindeling = gpd.read_file(vakindeling_geojson)
+    logging.info(f"Vakindeling geladen uit {vakindeling_geojson}")
 
     #load profiel info
     profiel_info = pd.read_csv(profiel_info_csv)
+    logging.info(f"Profiel info geladen uit {profiel_info_csv}")
 
     #check if invoerbestand is False or a Path that exists
     if invoerbestand is not False:
         #load invoerbestand
+        logging.info("Invoerbestand met handmatig ingevoerde profielen wordt gebruikt: {}".format(invoerbestand))
         try:
             #vaknaam as index with dtype str
             custom_profiles = pd.read_csv(Path(invoerbestand),index_col=0, dtype={'vaknaam':str},header=[0,1])
             custom_profiles.index = custom_profiles.index.astype(str)
             use_file = True
         except:
-            raise FileNotFoundError(f'Could not find invoerbestand {invoerbestand}')
+            log_and_raise_error(f'Opgegeven invoerbestand {invoerbestand} kon niet worden ingelezen. Controleer het bestand en probeer opnieuw.', FileNotFoundError)
 
     #make empty dataframe to store profiles
     characteristic_profiles_df = pd.DataFrame([],index=pd.MultiIndex.from_product([['BUT', 'BUK', 'BIK', 'BBL', 'EBL', 'BIT'],['X','Z']]))
+
+    logging.info("Start met het selecteren van karakteristieke profielen per dijkvak met selectiemethode {}.".format(selectiemethode))
     #for each vak in vakindeling
-    for vak in vakindeling.itertuples():
+    for vak in tqdm.tqdm(vakindeling.itertuples(), desc='Selecteren profielen per dijkvak', total=len(vakindeling)):
         if vak.in_analyse == 0: #skip vakken die niet worden beschouwd
             continue
 
@@ -56,6 +60,7 @@ def main_profiel_selectie(
         if use_file and vak.vaknaam in custom_profiles.index:
             #if a profile is given in invoerbestand then use that one
             characteristic_profile = profile_from_file(custom_profiles.loc[vak.vaknaam])
+            logging.info(f'Karakteristiek profiel voor vak {vak.vaknaam} is opgehaald uit invoerbestand.')
         else:
             characteristic_profile = select_profile(available_profiles, karakteristieke_profielen, vak.vaknaam, selectiemethode)
             #write characteristic profile to characteristic_profiles_df
@@ -68,11 +73,15 @@ def main_profiel_selectie(
 
             #plot aggregated profile, and AHN data
             plot_profile(characteristic_profile, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
+            logging.info(f"Karakteristiek profiel voor vak {vak.vaknaam} geplot.")
         else:
             characteristic_profiles_df.loc[:,vak.vaknaam] = None
             plot_profile(None, vak.vaknaam, available_profiles.csv_filename, ahn_profielen, uitvoer_map)
-            warnings.warn(f'No profile found for vak {vak.vaknaam}')
+            logging.warning(f'Geen profiel gevonden voor vak {vak.vaknaam}')
+
     characteristic_profiles_df.transpose().to_csv(uitvoer_map.joinpath('selected_profiles.csv'), index=True)
+    logging.info(f"Karakteristieke profielen opgeslagen in {uitvoer_map.joinpath('selected_profiles.csv')}")
+
 def profile_from_file(profile):
     #profile is a row from the custom_profiles dataframe
     #drop the nans
@@ -324,13 +333,9 @@ def filter_characteristic_profiles(characteristic_profiles, selectiemethode):
 def select_profile(available_profiles, karakteristieke_profielen, section, selectiemethode):
     profiles = []
     if available_profiles.empty:
-        warnings.warn("No profiles found in available_profiles")
+        logging.warning("geen profielen gevonden voor dijkvak {}. Voer handmatig in in resultatenbestand, of draai workflow voor bepaling profielen opnieuw.".format(section))
         return None
-    # elif available_profiles.shape[0] == 1:
-    #     #only one profile found, use that one
-    #     profiles.append(pd.read_csv(karakteristieke_profielen / f"{available_profiles.csv_filename.item()}"))
-    #     warnings.warn(f"Slechts 1 profiel gevonden voor dijkvak {section}, dit profiel wordt gebruikt")
-    #     characteristic_profile = define_characteristic_points(profiles[0])
+
     else:
         characteristic_profiles = []
         for idx, profile in available_profiles.iterrows():
@@ -343,5 +348,5 @@ def select_profile(available_profiles, karakteristieke_profielen, section, selec
 
     else:
         characteristic_profile = characteristic_profiles[0]
-
+    logging.info(f"Karakteristiek profiel voor dijkvak {section} geselecteerd.")
     return characteristic_profile

@@ -39,15 +39,14 @@ def main_traject_profiles(traject_id: str,
     characteristic_profiles_folder = output_path.joinpath("kar_profielen")
     if not characteristic_profiles_folder.exists():
         characteristic_profiles_folder.mkdir()
-        print("characteristic_profiles folder created")
+        logging.info("characteristic_profiles folder aangemaakt")
     elif len(os.listdir(characteristic_profiles_folder)) != 0:
-        print('characteristic_profiles folder is not empty')
-        print('please empty the folder first')
-        # stop the script
-        sys.exit()
+        log_and_raise_error('characteristic_profiles folder is not empty. Please empty the folder first and rerun the workflow.',
+                            FileExistsError)
     else:
         pass
-
+    
+    
     profile_generator(traject_id=traject_id,
                       output_path=output_path,
                       foldername_output_csv=ahn_profiles_folder,
@@ -58,7 +57,11 @@ def main_traject_profiles(traject_id: str,
                       flip_traject=flip_traject,
                       flip_waterside=flip_waterside,
                       )
+    logging.info(f"Alle AHN4 profielen zijn opgeslagen in {ahn_profiles_folder}\n")
 
+    logging.info("Start met het bepalen van karakteristieke profielen.")
     obtain_characteristic_profiles(input_dir=ahn_profiles_folder,
                                  output_dir=characteristic_profiles_folder)
+    
+    logging.info(f"Karakteristieke profielen zijn opgeslagen in {characteristic_profiles_folder}\n")
 

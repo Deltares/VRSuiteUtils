@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import itertools
 import warnings
+import logging
+import tqdm
 
 class DFlowSlideCharacteristicPointsSimple():
     def __init__(self, df, name):
@@ -45,7 +47,7 @@ class DFlowSlideCharacteristicPointsSimple():
                 self.optimize_inner_slope()
                 self.sort_characteristic_points()
         except:
-            warnings.warn('Error encountered for {}'.format(self.name))
+            logging.error('Karakteristieke puntenvoor {} niet succesvol bepaald'.format(self.name))
 
     def preprocess_characteristic_points(self):
         self.CharacteristicPointCollection = pd.DataFrame(columns=['X', 'Z', 'profile_index', 'name'])
@@ -93,7 +95,7 @@ class DFlowSlideCharacteristicPointsSimple():
         else:
             #take the point x=0 and print a warning.
             self.id_outer_crest = self.df.loc[np.isclose(self.df.X,0.),'X'].idxmax()
-            warnings.warn('Warning: no outer crest found for {}. Take x=0 as outer crest'.format(self.name))
+            logging.warning('Geen buitenkruinlijn gevonden voor {}. x=0 als buitenkruin aangenomen'.format(self.name))
         # add this point to the characteristic point collection, using pandas.concat
         self.CharacteristicPointCollection = pd.concat([self.CharacteristicPointCollection,
                                                         pd.DataFrame({'X': self.df.loc[self.id_outer_crest, 'X'],
@@ -171,19 +173,19 @@ class DFlowSlideCharacteristicPointsSimple():
     def check_crests(self):
     # abort mission if outer or inner crest point is missing
         if (self.id_outer_crest is None) or (self.id_inner_crest is None):
-            # print('Outer or inner crest point is missing. Aborting mission.') # better if this goes into logging file?
+            logging.warning('Buiten- of binnenkruin ontbreekt voor profiel {}.'.format(self.name))
             self.correct_profile = False
             return
 
     # Check if outer and inner crest are less than 20m apart
         if abs(self.df.loc[self.id_outer_crest, 'X'] - self.df.loc[self.id_inner_crest, 'X']) > 20:
-            # print('Outer and inner crest are too far apart. Aborting mission.') # better if this goes into logging file?
+            logging.warning('Buiten- en binnenkruin liggen meer dan 20 meter uit elkaar voor profiel {}.'.format(self.name))
             self.correct_profile = False
             return
 
     # Check if tehere are points on the foreland and hinterland that are higher than the maximum between the crest points
         if self.df.loc[self.id_outer_crest:self.id_inner_crest, 'Z'].max() < self.df['Z'].max():
-            # print('There are higher points in foreland or hinterland than the crests. Aborting mission.') # better if this goes into logging file?
+            logging.warning('Er zijn hogere punten in de voorland of achterland dan de kruin voor profiel {}.'.format(self.name))
             self.correct_profile = False
             return
 
@@ -386,29 +388,22 @@ def obtain_characteristic_profiles(input_dir: Path,
     # input_dir = Path(r'c:\VRM\Gegevens 38-1\profiles5\profile_csv')
     # output_dir = Path(r'c:\VRM\Gegevens 38-1\profiles\profile_csv\output3')
 
-    for dwp, file in enumerate(os.listdir(input_dir)):
+    for dwp, file in tqdm.tqdm(enumerate(os.listdir(input_dir)), total=len(os.listdir(input_dir)),
+                               desc='Bepalen karakteristieke profielen'):
         if file.endswith('.csv'):
 
             df_line = pd.read_csv(os.path.join(input_dir, file), header=None, delimiter=",")
             column_name = file.split('.')[0]
 
-            # set up a new df for each measurement at t
+            # set up a new df
             df = pd.DataFrame()
             df['X'] = df_line.iloc[0]
             df['Z'] = df_line.iloc[1]
 
-            # if df['Z'] contains too many NaNs (more than 15%), skip the profile
-            # if df['Z'].isna().sum() > 0.15*len(df['Z']):
-            #     continue
-            # else:
-            #     pass
 
             # fill Nans by interpolation
             df['Z'] = df['Z'].interpolate(method='linear', limit_direction='both')
-            # remove NaNs
-            # df.dropna(inplace=True)
-            # reset index
-            # df.reset_index(inplace=True)
+
 
 
             DFS_CharPoints = DFlowSlideCharacteristicPointsSimple(df, name=column_name)
@@ -419,8 +414,12 @@ def obtain_characteristic_profiles(input_dir: Path,
                 # plot the profile
                 try:
                     DFS_CharPoints.plot_profile(output_dir)
+                    logging.info('Profiel {} succesvol opgeslagen en geplot'.format(column_name))
                 except:
-                    warnings.warn('Could not plot profile for {}'.format(column_name))
+                    logging.error('Profiel {} opgeslagen, maar plot niet succesvol'.format(column_name, column_name))
+            else:
+                logging.warning('Karakteristieke punten voor profiel {} niet succesvol bepaald'.format(column_name))
+
 
 
 #

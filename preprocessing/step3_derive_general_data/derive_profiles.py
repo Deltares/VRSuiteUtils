@@ -31,6 +31,7 @@ def profile_generator(traject_id: str,
         traject.flip_traject()
         logging.info(f"flip_traject instelling staat aan. Traject {traject_id} wordt omgedraaid.")
 
+
     traject.generate_cross_section(cross_section_distance=dx, # distance between cross sections
                                    foreshore_distance=fsd,
                                    hinterland_distance=hld,
@@ -51,7 +52,7 @@ def profile_generator(traject_id: str,
             # write z coordinates (profile[1]) on second row
             writer.writerow(np.round(list(profile[1]),2))
 
-        # print(f"Saved profile {index + 1} to {filename}")
+        logging.info(f"Profiel {index} opgeslagen als profile_{index:04}.csv")
 
     # write 1 file with all profile characteristics
     with open(Path(os.getcwd()).joinpath(output_path, 'traject_profiles.csv'), 'w', newline='') as csvfile:
@@ -68,17 +69,6 @@ def profile_generator(traject_id: str,
                    hld, traject.hinterland_coords[count].x, traject.hinterland_coords[count].y,
                    traject.m_values[count], f"profile_{count+1:04}.csv"]
             writer.writerow(row)
+    
+    logging.info(f"Alle profiel karakteristieken zijn opgeslagen in traject_profiles.csv\n")
 
-    # print the total time this function runs
-    # print(f"Total time: {round(time.time() - start_time,2)} seconds")
-
-if __name__ == '__main__':
-    profile_generator(traject_id="38-1",
-                      output_path=Path(r'c:\VRM\Gegevens 38-1\dijkinfo'),
-                      NBPW_shape_path=False,
-                      flip_traject=False,
-                      flip_waterside=False,
-                      dx=2500,
-                      # fsd=50,
-                      # hld=75,
-                      )
