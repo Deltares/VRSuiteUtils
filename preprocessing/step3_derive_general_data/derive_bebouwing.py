@@ -7,6 +7,10 @@ from shapely.ops import split
 from shapely.ops import nearest_points
 from pathlib import Path
 
+import logging
+from preprocessing.common_functions import log_and_raise_error
+import tqdm
+
 
 def count_buildings_per_vak(traject_name,
                             teenlijn_geojson,
@@ -18,6 +22,8 @@ def count_buildings_per_vak(traject_name,
     # read teenlijn and vakindeling
     teenlijn_gdf = gpd.read_file(teenlijn_geojson)
     vakindeling_gdf = gpd.read_file(vakindeling_geojson)
+
+    logging.info("Teenlijn en vakindeling geladen.")
 
 
 
@@ -35,6 +41,28 @@ def count_buildings_per_vak(traject_name,
 
         return xmin_bound, ymin_bound, xmax_bound, ymax_bound
 
+    def count_buildings(building_shape, buffer_shape):
+        #     counted_buildings = np.zeros(len(buffer_shape))
+        sum_buildings = []
+        for i in range(len(buffer_shape)):
+            # filter out buffer_shape.loc[i].geometry.intersects(geom) is None
+            if buffer_shape.loc[i].geometry is not None:
+                # Counts buildings that intersect with the buffer:
+                a = building_shape.geometry.apply(lambda geom: buffer_shape.loc[i].geometry.intersects(geom))
+                sum_buildings.append(np.sum(a))
+                print("DIJKVAK", buffer_shape.vaknaam[i], "contains", int(sum_buildings[i]), "buildings")
+            else:
+                sum_buildings.append(0)
+                print("DIJKVAK", buffer_shape.vaknaam[i], "contains", int(sum_buildings[i]), "buildings")
+        return sum_buildings
+
+
+    def create_buffer(input_shapefile, buffer_width=100, direction=1):
+        buffer_shape = input_shapefile.copy()
+        buffer_width_dir = buffer_width * direction # takes into account the direction, 1 is right side, -1 is left side
+        buffer_shape.geometry = buffer_shape.geometry.buffer(buffer_width_dir, single_sided=True)
+        return buffer_shape
+    
     # Create bounding box around dike segment
     bounding_box = create_bounding_box(vakindeling_gdf, margin=100)
 
@@ -63,7 +91,7 @@ def count_buildings_per_vak(traject_name,
     for i in range(len(splits)):
         points_on_line.append(teenlijn_gdf.geometry.distance(splits[i]) < 1e-8)
     if np.sum(points_on_line) != len(points_on_line):
-        print("not all the break points are on the line!")
+        logging.warning("Niet alle vakgrenzen liggen op de lijn. Controleer goed de resultaten van de workflow.")
 
     # split teenlijn_gdf into separate lines, cut the line between splits, give each line the vaknaam of the section in
     # vakindeling_gdf. Write the lines to a new geodataframe and save as geojson
@@ -85,11 +113,11 @@ def count_buildings_per_vak(traject_name,
     else:
         #remove parts where line_teen has crossed itself
         #raise Exception that there are unexpectedly many parts and that the teenlijn should be inspected for crossings
-        raise Exception("Knippen van teenlijn levert onverwacht veel delen op. Controleer teenlijn op kruisingen.")
+        log_and_raise_error("Knippen van teenlijn levert onverwacht veel delen op. Controleer teenlijn op kruisingen.", Exception)
 
     teenvakken_gdf = gpd.GeoDataFrame(columns=["vaknaam", "geometry"])
     teenvakken_gdf = pd.concat([teenvakken_gdf, pd.DataFrame({"vaknaam": vakindeling_gdf.vaknaam[0], "geometry": line}, index=[0])])
-
+    
     for i in range(2, len(splits)):
         result = split(remainder, splits[i].buffer(1.0E-10))
         if len(result.geoms) == 3:
@@ -105,54 +133,38 @@ def count_buildings_per_vak(traject_name,
 
         teenvakken_gdf = pd.concat([teenvakken_gdf, pd.DataFrame({"vaknaam": vakindeling_gdf.vaknaam[i-1], "geometry": line}, index=[i-1])])
 
+    logging.info("Teenlijn is gesplitst op basis van de vakindeling.")
     # write to geojson with crs epsg:28992
     teenvakken_gdf.crs = "epsg:28992"
     teenvakken_gdf.to_file(output_dir.joinpath("teenlijn_vakindeling.geojson"), driver="GeoJSON")
+    
+    logging.info("Opgeknipte teenlijn is opgeslagen als geojson.")
+
+    logging.info("Laden van BAG gegevens uit bestand: {0} voor gebied rond traject {1}".format(all_buildings_filename, traject_name))
 
     buildings_gdf = gpd.read_file(all_buildings_filename, bbox=bounding_box, engine="fiona")
     buildings_gdf.to_file(output_dir.joinpath("buildings_traject{0}.geojson".format(traject_name)), driver='GeoJSON')
-
-    def count_buildings(building_shape, buffer_shape):
-        #     counted_buildings = np.zeros(len(buffer_shape))
-        sum_buildings = []
-        for i in range(len(buffer_shape)):
-            # filter out buffer_shape.loc[i].geometry.intersects(geom) is None
-            if buffer_shape.loc[i].geometry is not None:
-                # Counts buildings that intersect with the buffer:
-                a = building_shape.geometry.apply(lambda geom: buffer_shape.loc[i].geometry.intersects(geom))
-                sum_buildings.append(np.sum(a))
-                print("DIJKVAK", buffer_shape.vaknaam[i], "contains", int(sum_buildings[i]), "buildings")
-            else:
-                sum_buildings.append(0)
-                print("DIJKVAK", buffer_shape.vaknaam[i], "contains", int(sum_buildings[i]), "buildings")
-        return sum_buildings
-
-    def create_buffer(input_shapefile, buffer_width=100, direction=1):
-        buffer_shape = input_shapefile.copy()
-        buffer_width_dir = buffer_width * direction # takes into account the direction, 1 is right side, -1 is left side
-        buffer_shape.geometry = buffer_shape.geometry.buffer(buffer_width_dir, single_sided=True)
-        return buffer_shape
+    logging.info("BAG gegevens geladen en selectie opgeslagen als geojson: {0}".format(output_dir.joinpath("buildings_traject{0}.geojson".format(traject_name))))
 
     # create range of buffers
     buffersize = np.arange(1, 51, 1)
+    logging.info(f"Buffers aangemaakt van {buffersize[0]} tot {buffersize[-1]} meter met stappen van {buffersize[1]-buffersize[0]} meter.")
 
     # create dataframe, with VAKNAAM as index. Each buffer size will be added as column
     building_matrix = pd.DataFrame(index=teenvakken_gdf.vaknaam)
 
     # determine amount of buildings in each dike section for each buffer size
-    for i in range(len(buffersize)):
-        print("Within", buffersize[i], "meters from the toe:")
+    for i, buffer_dist in tqdm.tqdm(enumerate(buffersize), total=len(buffersize), desc="Bepalen bebouwing per afstand"):
         # creates a buffer along a shape with a given buffer size
-        teenvak_buffer = create_buffer(teenvakken_gdf, buffersize[i], direction=direction_parameter)
+        teenvak_buffer = create_buffer(teenvakken_gdf, buffer_dist, direction=direction_parameter)
         # count the amount of buildings within a buffer
         counted_buildings = count_buildings(buildings_gdf, teenvak_buffer)
-        print()
-        building_matrix["{}".format(buffersize[i])] = counted_buildings
+        building_matrix["{}".format(buffer_dist)] = counted_buildings
 
-    print(building_matrix)
-
+    logging.info("Bebouwing per dijkvak bepaald voor alle afstanden.")
     # save to csv
     building_matrix.to_csv(output_dir.joinpath("building_count_traject{0}.csv".format(traject_name)))
+    logging.info("Bepaling bebouwing afgerond en opgeslagen.")
 
 
 if __name__ == '__main__':

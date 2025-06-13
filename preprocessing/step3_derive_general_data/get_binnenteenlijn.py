@@ -81,4 +81,4 @@ def derive_teenlijn(characteristic_profile_dir: Path,
     gdf = geopandas.GeoDataFrame(d, crs="EPSG:28992")
     gdf.to_json()
     gdf.to_file(output_dir.joinpath("teenlijn.geojson"), driver="GeoJSON")
-    logging.info(f"Binnenteenlijn is afgeleid en opgeslagen in {output_dir.joinpath('teenlijn.geojson')}")
+    logging.info(f"Binnenteenlijn is afgeleid en opgeslagen in {output_dir.joinpath('teenlijn.geojson')}. Controleer de lijn in GIS op correctheid.")

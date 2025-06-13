@@ -116,11 +116,11 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
     logging.info("Start logging vakindeling \n ")
     # print the parameters
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    logging.info(f"     traject_id:                     {traject_id}")
-    logging.info(f"     vakindeling_csv:                {vakindeling_csv}")
-    logging.info(f"     output_folder_vakindeling:      {output_folder_vakindeling}")
-    logging.info(f"     traject_shape:                  {traject_shape}")
-    logging.info(f"     flip_traject:                   {flip} \n")
+    logging.info(f" traject_id:                     {traject_id}")
+    logging.info(f" vakindeling_csv:                {vakindeling_csv}")
+    logging.info(f" output_folder_vakindeling:      {output_folder_vakindeling}")
+    logging.info(f" traject_shape:                  {traject_shape}")
+    logging.info(f" flip_traject:                   {flip} \n")
 
     # run the vakindeling workflow
     vakindeling_main(
@@ -160,7 +160,7 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
     logging.info(f" file_path:                  {file_path}")
     logging.info(f" database_path_current:      {database_path_current}")
     logging.info(f" database_path_future:       {database_path_future}")
-    logging.info(f" output_path:                {output_path}")
+    logging.info(f" output_path:                {output_path}\n")
 
     # run the water level computations
     waterlevel_main(
@@ -213,11 +213,11 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
     
     _initialize_log_file(output_path, "overslagberekeningen")
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    logging.info(f"file_path: {file_path}")
-    logging.info(f"database_path_current: {database_path_current}")
-    logging.info(f"database_path_future: {database_path_future}")
-    logging.info(f"profielen_dir: {profielen_dir}")
-    logging.info(f"output_path: {output_path}")
+    logging.info(f" file_path:               {file_path}")
+    logging.info(f" database_path_current:   {database_path_current}")
+    logging.info(f" database_path_future:    {database_path_future}")
+    logging.info(f" profielen_dir:           {profielen_dir}")
+    logging.info(f" output_path:             {output_path}\n")
 
     # run the overflow computations
     overflow_main(
@@ -255,7 +255,7 @@ def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: P
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
     logging.info(f" file_path:          {file_path}")
     logging.info(f" work_dir_path:      {work_dir_path}")
-    logging.info(f" output_path:        {output_path}")
+    logging.info(f" output_path:        {output_path}\n")
 
     # run the water level computations
     waterlevel_hydranl_main(
@@ -293,7 +293,7 @@ def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Pat
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
     logging.info(f" file_path:          {file_path}")
     logging.info(f" work_dir_path:      {work_dir_path}")
-    logging.info(f" output_path:        {output_path}")
+    logging.info(f" output_path:        {output_path}\n")
 
     # run the water level computations
     overflow_hydranl_main(
@@ -342,13 +342,13 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
     # print the parameters
     _initialize_log_file(output_path, "Bekleding Q-variant")
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    logging.info(f"traject_id:              {traject_id}")
-    logging.info(f"bekleding_input_csv:     {input_csv}")
-    logging.info(f"database_path_current:   {database_path_current}")
-    logging.info(f"database_path_future:    {database_path_future}")
-    logging.info(f"output_map_waterstand:   {waterlevel_path}")
-    logging.info(f"hr_profielen_dir:        {profielen_path}")
-    logging.info(f"output_map_bekleding: {output_path}")
+    logging.info(f" traject_id:              {traject_id}")
+    logging.info(f" bekleding_input_csv:     {input_csv}")
+    logging.info(f" database_path_current:   {database_path_current}")
+    logging.info(f" database_path_future:    {database_path_future}")
+    logging.info(f" output_map_waterstand:   {waterlevel_path}")
+    logging.info(f" hr_profielen_dir:        {profielen_path}")
+    logging.info(f" output_map_bekleding:    {output_path}\n")
 
     # run the bekleding_qvariant workflow
     qvariant_main(
@@ -397,12 +397,12 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
     _initialize_log_file(output_path, "Bekleding Q-variant")
 
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
-    logging.info(f"traject_id:              {traject_id}")
-    logging.info(f"bekleding_input_csv:     {input_csv}")
-    logging.info(f"steentoets_map:          {steentoets_path}")
-    logging.info(f"hr_profielen_dir:        {profielen_path}")
-    logging.info(f"output_map_bekleding:    {output_path}")
-    logging.info(f"versterking_bekleding:   {versterking_bekleding}")
+    logging.info(f" traject_id:              {traject_id}")
+    logging.info(f" bekleding_input_csv:     {input_csv}")
+    logging.info(f" steentoets_map:          {steentoets_path}")
+    logging.info(f" hr_profielen_dir:        {profielen_path}")
+    logging.info(f" output_map_bekleding:    {output_path}")
+    logging.info(f" versterking_bekleding:   {versterking_bekleding}\n")
 
     # run the bekleding_gebu_zst workflow
     gebu_zst_main(
@@ -454,14 +454,14 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
     
     # print the parameters
     logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    logging.info(f"traject_id:          {traject_id}")
-    logging.info(f"output_path:         {output_path.__str__}")
-    logging.info(f"dx:                  {dx}")
-    logging.info(f"voorland_lengte:     {voorland_lengte}")
-    logging.info(f"achterland_lengte:   {achterland_lengte}")
-    logging.info(f"traject_shape:       {traject_shape}")
-    logging.info(f"flip_traject:        {flip_traject}")
-    logging.info(f"flip_waterkant:      {flip_waterkant}")
+    logging.info(f" traject_id:          {traject_id}")
+    logging.info(f" output_path:         {output_path.__str__}")
+    logging.info(f" dx:                  {dx}")
+    logging.info(f" voorland_lengte:     {voorland_lengte}")
+    logging.info(f" achterland_lengte:   {achterland_lengte}")
+    logging.info(f" traject_shape:       {traject_shape}")
+    logging.info(f" flip_traject:        {flip_traject}")
+    logging.info(f" flip_waterkant:      {flip_waterkant}\n")
 
     # run the get_profiles_workflow
     main_traject_profiles(
@@ -507,13 +507,13 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
     _initialize_log_file(output_path, "selectie_profielen")
     # print the parameters
     logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    logging.info(f"vakindeling_geojson:             {vakindeling_geojson}")
-    logging.info(f"ahn_profielen:                   {ahn_profielen}")
-    logging.info(f"karakteristieke_profielen:       {karakteristieke_profielen}")
-    logging.info(f"profiel_info_csv:                {profiel_info_csv}")
-    logging.info(f"uitvoer_map:                     {output_path}")
-    logging.info(f"invoerbestand:                   {invoerbestand}")
-
+    logging.info(f" vakindeling_geojson:             {vakindeling_geojson}")
+    logging.info(f" ahn_profielen:                   {ahn_profielen}")
+    logging.info(f" karakteristieke_profielen:       {karakteristieke_profielen}")
+    logging.info(f" profiel_info_csv:                {profiel_info_csv}")
+    logging.info(f" uitvoer_map:                     {output_path}")
+    logging.info(f" invoerbestand:                   {invoerbestand}\n")
+ 
     # run the select_profiles_workflow
     main_profiel_selectie(
         Path(vakindeling_geojson),
@@ -550,9 +550,9 @@ def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
     _initialize_log_file(output_path, "teenlijn_bepaling")
     # print the parameters
     logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    logging.info(f"karakteristieke_profielen_map:   {karakteristieke_profielen_map}")
-    logging.info(f"profiel_info_csv:                {profiel_info_csv}")
-    logging.info(f"teenlijn_uitvoer:                {output_path}")
+    logging.info(f" karakteristieke_profielen_map:   {karakteristieke_profielen_map}")
+    logging.info(f" profiel_info_csv:                {profiel_info_csv}")
+    logging.info(f" teenlijn_uitvoer:                {output_path}\n")
 
     # run the teenlijn_workflow
     main_teenlijn(
@@ -595,14 +595,17 @@ def count_buildings(config_file: str, results_folder: Path = None):
     else:
         richting = 1
 
+    # initialize log file
+    _initialize_log_file(output_path, "bepaling_bebouwing")
+
     # print the parameters
-    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    print(f"traject_id: {traject_id}")
-    print(f"teenlijn_geojson: {teenlijn_geojson}")
-    print(f"vakindeling_geojson: {vakindeling_geojson}")
-    print(f"uitvoer_map: {output_path}")
-    print(f"gebouwen_geopackage: {gebouwen_geopackage}")
-    print(f"flip_waterkant: {flip_waterkant}")
+    logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
+    logging.info(f" traject_id:          {traject_id}")
+    logging.info(f" teenlijn_geojson:    {teenlijn_geojson}")
+    logging.info(f" vakindeling_geojson: {vakindeling_geojson}")
+    logging.info(f" uitvoer_map:         {output_path}")
+    logging.info(f" gebouwen_geopackage: {gebouwen_geopackage}")
+    logging.info(f" flip_waterkant:      {flip_waterkant}\n")
 
     # Run the derive_buildings_workflow
     main_bebouwing(
@@ -655,22 +658,24 @@ def create_database(config_file: str, results_folder: Path = None):
         if output_path.exists():
             output_path.rmdir()
         output_path.mkdir(parents=True, exist_ok=True)
-
+    # initialize log file
+    _initialize_log_file(output_path, "write_database")
+    
     # print the parameters
-    print("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
-    print(f"traject_id: {traject_id}")
-    print(f"vakindeling_geojson: {vakindeling_geojson}")
-    print(f"measure_configuration: {measure_configuration}")
-    print(f"characteristic_profile_csv: {characteristic_profile_csv}")
-    print(f"building_csv_path: {building_csv_path}")
-    print(f"output_dir: {output_path}")
-    print(f"output_db_name: {output_db_name}")
-    print(f"hr_input_csv: {hr_input_csv}")
-    print(f"waterlevel_results_path: {waterlevel_results_path}")
-    print(f"overflow_results_path: {overflow_results_path}")
-    print(f"piping_path: {piping_path}")
-    print(f"stability_path: {stability_path}")
-    print(f"revetment_path: {revetment_path}")
+    logging.info("\nDe volgende parameters zijn gelezen uit het configuratiebestand:\n")
+    logging.info(f" traject_id:                  {traject_id}")
+    logging.info(f" vakindeling_geojson:         {vakindeling_geojson}")
+    logging.info(f" measure_configuration:       {measure_configuration}")
+    logging.info(f" characteristic_profile_csv:  {characteristic_profile_csv}")
+    logging.info(f" building_csv_path:           {building_csv_path}")
+    logging.info(f" output_dir:                  {output_path}")
+    logging.info(f" output_db_name:              {output_db_name}")
+    logging.info(f" hr_input_csv:                {hr_input_csv}")
+    logging.info(f" waterlevel_results_path:     {waterlevel_results_path}")
+    logging.info(f" overflow_results_path:       {overflow_results_path}")
+    logging.info(f" piping_path:                 {piping_path}")
+    logging.info(f" stability_path:              {stability_path}")
+    logging.info(f" revetment_path:              {revetment_path}\n")
 
     # run the write_database_workflow
     write_database_main(
@@ -691,5 +696,5 @@ def create_database(config_file: str, results_folder: Path = None):
 
 if __name__ == '__main__':
     #Use this structure to test api calls locally but do not commit any changes.
-    run_bekleding_qvariant(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\preprocessor.config', Path(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\intermediate_results\HR_results\test2'))
-    pass
+    create_database(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\preprocessor.config', 
+                                                results_folder=Path(r'c:\Repositories\VRSuiteUtils\tests\test_data\31-1_v2\test'))
