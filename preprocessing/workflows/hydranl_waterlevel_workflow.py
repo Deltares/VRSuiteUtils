@@ -4,6 +4,8 @@ import pandas as pd
 from preprocessing.step2_mechanism_data.hydranl_read import HydraNLReadWaterLevel
 from preprocessing.workflows.write_database_workflow import read_csv_linesep
 
+import logging
+
 def waterlevel_hydranl_main(file_path: Path,
                             work_dir_path: Path,
                             output_path: Path,
@@ -27,3 +29,4 @@ def waterlevel_hydranl_main(file_path: Path,
             json_file_name = os.path.join(output_dir, f'designtable_{dsn}.json')
         
             HydraNLReadWaterLevel(hnl_work_dir_path, hr_koppel[ii], correct_uncer, decim_type).export_json(json_file_name)
+            logging.info(f"HydraNL waterstand gelezen voor {dsn} in {year} en opgeslagen in {json_file_name}")

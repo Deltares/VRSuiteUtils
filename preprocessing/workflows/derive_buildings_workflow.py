@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from preprocessing.step3_derive_general_data.derive_bebouwing import count_buildings_per_vak
-
+import logging
 
 def main_bebouwing(
     traject_name: str,
@@ -15,7 +15,7 @@ def main_bebouwing(
     # check if output_path exists, if not create it
     if not output_dir.exists():
         output_dir.mkdir()
-        print("teenlijn folder created")
+        logging.info("Uitvoermap aangemaakt")
 
     count_buildings_per_vak(
         traject_name,

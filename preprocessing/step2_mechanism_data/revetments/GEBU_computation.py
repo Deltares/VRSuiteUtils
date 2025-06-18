@@ -2,6 +2,8 @@ from preprocessing.step2_mechanism_data.revetments.revetment_slope import Revetm
 from preprocessing.step2_mechanism_data.revetments.project_utils.belastingen import waterstandsverloop, Hs_verloop, Tp_verloop, betahoek_verloop
 from preprocessing.step2_mechanism_data.revetments.project_utils.bisection import bisection
 
+from preprocessing.common_functions import log_and_raise_error
+
 from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import DIKErnelCalculations, write_JSON_to_file, read_JSON, read_prfl
 from pathlib import Path
 from itertools import product
@@ -11,7 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from vrtool.probabilistic_tools.probabilistic_functions import pf_to_beta, beta_to_pf
 
-
+import logging
+import tqdm
 
 class GEBUComputation:
     def __init__(self, cross_section: RevetmentSlope, qvariant_path: Path, output_path: Path, local_path: Path, binDIKErnel: Path,
@@ -35,6 +38,7 @@ class GEBUComputation:
     
     def compute_gebu(self, p_grid: list[float]):
         #Add the qvariant results to the object
+        logging.info(f"Start GEBU berekening voor {self.cross_section.doorsnede} met qvariant resultaten uit {self.qvariant_path}")
         self.add_qvariant_results(self.qvariant_path)
 
         #Case 1: begin grasbekleding is very close to the crest. We then assume 2 transition levels. At 1 cm below crest and 25 cm lower. Beta of 8 and 7.9 are assumed. This prevents extrapolation problems in the vrtool.
@@ -44,8 +48,7 @@ class GEBUComputation:
         #Case 2: no grass revetment present. Not sure if this is possible, but if so, we break
         elif len(self.transition_levels) == 0:
             #TODO: @Stephan te bespreken: is dit de case waarbij er alleen steen is? Moeten we dan een GrassRevetmentRelation maken of niet?
-            print(f"Error: Geen overgangen gevonden voor dwarsprofiel {self.cross_section.dwarsprofiel}. Controleer de invoer")
-            exit()
+            log_and_raise_error(f"Geen overgangen gevonden voor dwarsprofiel {self.cross_section.dwarsprofiel}. Controleer de invoer", ValueError)
         
         #Case 3: regular case with grass revetment.
         else:
@@ -55,17 +58,19 @@ class GEBUComputation:
 
             #make the same for the combination_index (TBD what to use)
             combination_idx = list(product(range(len(self.years_to_evaluate)), range(len(p_grid))))
-
             #for transition level in transition levels
             for i, transition_level in enumerate(self.transition_levels):
+                logging.info(f"Start GEBU berekening voor {self.cross_section.doorsnede} met overgangshoogte {transition_level:.2f} m+NAP")
                 #evaluate each combination of year and p-value
-                SF_list = [self.GEBU_normal_case(year_idx, p_idx, transition_level, combinations[count]) for count, (year_idx, p_idx) in enumerate(combination_idx)]
+                SF_list = [self.GEBU_normal_case(year_idx, p_idx, transition_level, combinations[count]) for count, (year_idx, p_idx) in tqdm.tqdm(enumerate(combination_idx), desc="Combinaties doorgerekend", total=len(combination_idx))]
                 self.SF_results[transition_level] =  [(year, p, value) for (year, p), value in zip(combinations, SF_list)]
 
             #get relation between beta and SF
             self.get_beta_SF_relation()
+            logging.info(f"relatie tussen overgangshoogte en faalkans is afgeleid voor locatie {self.cross_section.doorsnede}.")
 
             self.write_regular_results()
+            logging.info(f"GEBU berekening voor {self.cross_section.doorsnede} is voltooid.\n")
 
     
     def GEBU_close_to_crest(self):
@@ -77,8 +82,7 @@ class GEBUComputation:
                     "grasbekleding_begin": [self.cross_section.end_grasbekleding-0.25, self.cross_section.kruinhoogte+.1],
                     "betaFalen": [7.9, 8.]}
             write_JSON_to_file(data, self.output_path.joinpath(f"GEBU_{self.cross_section.doorsnede}_{year}.json"))
-        print(f'GEBU Case 1 voor dwarsprofiel {self.cross_section.dwarsprofiel}. Begin grasbekleding (={self.cross_section.begin_grasbekleding}) (bijna) gelijk aan de kruinhoogte'
-                f' (={self.cross_section.kruinhoogte}). Faalkans verwaarloosbaar.')
+        logging.info(f'Overgang ligt minder dan 25 cm van kruin voor dwarsprofiel {self.cross_section.dwarsprofiel}. Verwaarloosbare faalkans aangenomen.')
     
     def GEBU_normal_case(self, year_idx, p_idx, transition_level, year_probability):
         year, probability = year_probability
@@ -323,6 +327,7 @@ class GEBUComputation:
                     "grasbekleding_begin": transitions,
                     "betaFalen": betas}
             write_JSON_to_file(data, self.output_path.joinpath("GEBU_{}_{}.json".format(self.cross_section.doorsnede, year)))
+        logging.info(f"GEBU resultaten voor {self.cross_section.doorsnede} zijn weggeschreven naar JSON bestanden in {self.output_path}")
         
     def plot_positions(self, positions, transition_level, water_level, year, probability, model:str):
         fig, ax = plt.subplots()

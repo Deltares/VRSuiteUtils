@@ -14,6 +14,7 @@ from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
 
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
 
+import logging
 
 def waterlevel_main(file_path: Path,
     database_paths: list[Path],
@@ -23,12 +24,15 @@ def waterlevel_main(file_path: Path,
     """This is the main function of the workflow.
     It can be used to generate and evaluate Hydra-Ring computations for waterlevel for a given dataset"""
     _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
+
+    logging.info("Start inlezen met csv bestand voor waterstandsberekeningen")
     # read HRING reference csv
     hring_data = pd.read_csv(file_path, index_col=0)
     hring_data = hring_data.dropna(subset=['doorsnede'])
     # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
     # then hrlocation is derived from the database, using hr_koppel
     if ("hrlocation" not in hring_data.columns or hring_data["hrlocation"].isna().any()):
+        logging.info("Geen HR locatie ID gevonden voor 1 of meerdere locaties. Deze worden afgeleid uit de hydraulische databases.")
         hrd_path = [
             pad
             for pad in database_paths[0].glob("*.sqlite")
@@ -38,13 +42,17 @@ def waterlevel_main(file_path: Path,
             pad
             for pad in database_paths[0].glob("*.sqlite")
             if check_string_in_list(pad.name, ["hlcd"])
-        ][0]
-
+        ][0] 
+    
         hring_data = OverflowInput.get_HRLocation(hrd_path, hlcd_path, hring_data)
+    logging.info("Inlezen csv bestand is voltooid \n")
 
+    logging.info("Start met het maken van de Hydra-Ring waterstandsberekeningen")
     # we can now loop over all the locations and databases to generate the Hydra-Ring input files.
     for database_path in database_paths:
+        year = database_path.stem
         for count, location in hring_data.iterrows():
+            logging.info(f"Start berekening locatie: {location.doorsnede} voor jaar: {year}")
             # make output dir
             loc_output_dir = output_path.joinpath(database_path.stem, str(location.doorsnede))
             if loc_output_dir.exists():
@@ -77,7 +85,8 @@ def waterlevel_main(file_path: Path,
                 database_path,
                 hydraring_path.joinpath("config.sqlite"),
             )
-            
+            logging.info(f"Bestanden voor locatie {location.doorsnede} en jaar {year} zijn aangemaakt.")
+            logging.info(f"Berekening wordt uitgevoerd.")
             # run Hydra-Ring
             HydraRingComputation().run_hydraring(hydraring_path, Path(os.getcwd()).joinpath(computation.ini_path))
 
@@ -86,5 +95,7 @@ def waterlevel_main(file_path: Path,
             for loc_file in loc_output_dir.iterdir():
                 if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                     design_table = read_design_table(loc_file)
-                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overflow",
+                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
                                                                            section_name=loc_output_dir.name, design_table_file=loc_file)
+            logging.info(f"Berekening voor locatie {location.doorsnede} en jaar {year} is voltooid.\n")
+    logging.info("Alle Hydra-Ring waterstandsberekeningen zijn voltooid.")

@@ -7,6 +7,10 @@ from pathlib import Path
 from shapely.ops import polygonize, unary_union, linemerge
 from shapely import intersection
 
+import logging
+from preprocessing.common_functions import log_and_raise_error
+import tqdm
+
 def derive_teenlijn(characteristic_profile_dir: Path,
                     profile_path: Path,
                     output_dir: Path):
@@ -17,7 +21,7 @@ def derive_teenlijn(characteristic_profile_dir: Path,
     df_binnenteen = pd.DataFrame(columns=["Name", "coordinates", "profile_number"])
 
     # loop through all png files in the characteristic_profile_dir
-    for png_file in characteristic_profile_dir.glob('*.png'):
+    for index, png_file in tqdm.tqdm(enumerate(characteristic_profile_dir.glob('*.png')), total=len(list(characteristic_profile_dir.glob('*.png'))), desc="Binnenteenlijn afleiden uit profielen"):
         # get the name of the png file and remove the extension (.png). Do this in 1 line
         profile_name = png_file.stem
 
@@ -51,6 +55,8 @@ def derive_teenlijn(characteristic_profile_dir: Path,
                                                                     "coordinates": [Point(float(x_teen_coord),
                                                                                           float(y_teen_coord))],
                                                                     "profile_number": [profile_number]})])
+        else:
+            logging.warning(f"Geen geldige coördinaten gevonden voor binnenteen van profiel {profile_name}. ")
 
     # sort the df_binnenteen by profile_number in ascending order
     df_binnenteen = df_binnenteen.sort_values(by="profile_number", ascending=True)
@@ -59,6 +65,7 @@ def derive_teenlijn(characteristic_profile_dir: Path,
     teenlijn_geometry = LineString(df_binnenteen["coordinates"])
     #check if the teenlijn is_simple
     if not teenlijn_geometry.is_simple:
+        logging.warning("De teenlijn bestaat uit meerdere lijnen die elkaar kruisen. De teenlijn wordt aangepast om deze kruisingen te verwijderen maar geadviseerd wordt deze in GIS te controleren.")
         # if not simple, we identify all polygons that are created from the linestring using polygonize
         polygons = polygonize(unary_union(teenlijn_geometry))
         intersections = [intersection(teenlijn_geometry,polygon) for polygon in polygons]
@@ -74,13 +81,4 @@ def derive_teenlijn(characteristic_profile_dir: Path,
     gdf = geopandas.GeoDataFrame(d, crs="EPSG:28992")
     gdf.to_json()
     gdf.to_file(output_dir.joinpath("teenlijn.geojson"), driver="GeoJSON")
-
-if __name__ == "__main__":
-    # Path(r'c:\VRM\Gegevens 38-1\dijkinfo')
-    # characteristic_profile_dir is where the characteristic profiles (both CSV and PNG) are stored
-    characteristic_profile_dir = Path(r'c:\VRM\Gegevens 38-1\dijkinfo\characteristic_profiles')
-    profile_path = Path(r'c:\VRM\Gegevens 38-1\dijkinfo\traject_profiles.csv')
-    output_dir = Path(r"c:\VRM\Gegevens 38-1\dijkinfo\teenlijn")
-    derive_teenlijn(characteristic_profile_dir,
-                    profile_path,
-                    output_dir)
+    logging.info(f"Binnenteenlijn is afgeleid en opgeslagen in {output_dir.joinpath('teenlijn.geojson')}. Controleer de lijn in GIS op correctheid.")

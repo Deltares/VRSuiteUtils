@@ -2,6 +2,8 @@ from pathlib import Path
 
 from preprocessing.step3_derive_general_data.get_binnenteenlijn import derive_teenlijn
 
+import logging
+
 
 def main_teenlijn(
     characteristic_profile_dir: Path,
@@ -15,6 +17,7 @@ def main_teenlijn(
         print("teenlijn folder created")
 
 
+    logging.info(f"Start afleiden teenlijn op basis van karakteristieke profielen")
 
     derive_teenlijn(characteristic_profile_dir,
                     profile_path,

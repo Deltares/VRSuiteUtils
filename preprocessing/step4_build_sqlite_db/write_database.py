@@ -12,6 +12,9 @@ from vrtool.failure_mechanisms.stability_inner.stability_inner_functions import 
 from vrtool.orm.models import *
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from preprocessing import generic_data
+import logging
+from preprocessing.common_functions import log_and_raise_error
+import tqdm
 
 def fill_diketrajectinfo_table(traject,length):
     traject_data = pd.read_csv(
@@ -36,6 +39,7 @@ def fill_diketrajectinfo_table(traject,length):
         n_revetment=3.,
         traject_length = length
     )
+    logging.info("Informatie voor traject {} toegevoegd aan DikeTrajectInfo".format(traject))
 
 
 def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
@@ -50,11 +54,12 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
     # replace nans in a_piping and a_stabiliteit with 1.0 so that upscaling is done for the entire section. We don't use the default of 0.0 here. First check if the column exists. If a_piping doesn't exist but a_stabiliteit does we don't detect it, but this should never be the case.
     #check if a_piping and a_stabiliteit are in the shape_file.columns
     if "a_piping" not in shape_file.columns and "a_stabiliteit" not in shape_file.columns:
+        logging.warning("a_piping en a_stabiliteit niet in shape_file, toevoegen met default waarde 1.0. Dit betekent dat dijkvakken volledig bijdragen aan het lengte-effect. \nWanneer dit ongewenst is moet de vakindeling opnieuw worden aangemaakt met de juiste waarden.")
         shape_file["a_piping"] = 1.0
         shape_file["a_stabiliteit"] = 1.0
     elif ("a_piping" in shape_file.columns) != ("a_stabiliteit" in shape_file.columns):
         # Only one of the columns is present
-        raise ValueError("Both 'a_piping' and 'a_stabiliteit' must be present or absent together.")
+        log_and_raise_error("Slechts 1 van de kolommen voor 'a_piping' en 'a_stabiliteit' gevonden. Deze moeten samen aan-/afwezig zijn.")
     else:
         shape_file["a_piping"] = shape_file["a_piping"].fillna(
             1.0
@@ -62,6 +67,7 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
         shape_file["a_stabiliteit"] = shape_file["a_stabiliteit"].fillna(
             1.0
         )
+        logging.info("Ontbrekende waarden voor a_piping en a_stabiliteit zijn aangevuld met waarden 1.0.")
 
     
     # remove rows with same index
@@ -95,6 +101,7 @@ def fill_sectiondata_table(traject:str, shape_file: gpd.GeoDataFrame):
                 sensitive_fraction_stability_inner=row.a_stabiliteit,
 
             )
+    logging.info(f"SectionData table gevuld met {len(shape_file)} dijkvakken voor traject {traject}")
 
 
 def fill_buildings(buildings):
@@ -118,6 +125,11 @@ def fill_buildings(buildings):
             pass
             # warnings.warn("Dijkvak {} niet in SectionData".format(vaknaam))
     # TODO add check if all sections in SectionData have buildings
+    SectionData.select(SectionData.section_name)
+    missing_sections = set([row["section_name"] for row in SectionData.select(SectionData.section_name).dicts()]) - set(buildings.index)
+    if len(missing_sections) > 0:
+        logging.warning(f"De volgende dijkvakken hebben geen gebouwen: {missing_sections} in de invoerdata")
+    logging.info(f"Buildings table gevuld met data voor {len(buildings)} dijkvakken.")
 
 
 def fill_waterleveldata(waterlevel_table, shape_file):
@@ -142,8 +154,9 @@ def fill_waterleveldata(waterlevel_table, shape_file):
         wl_table_data = waterlevel_table.loc[
             waterlevel_table["WaterLevelLocationId"] == waterlevel_location_id
         ]
+        if wl_table_data.empty:
+            log_and_raise_error(f"Geen waterstandsdata gevonden voor dijkvak {section_name}. Controleer de doorsnede voor overslag en of de resultaten aanwezig zijn.", ValueError)
         for count, row in wl_table_data.iterrows():
-            # TODO check how to write waterlevel_location_id, it now gives an integrity error
             WaterlevelData.create(
                 section_data=section_data_id,
                 water_level=row["WaterLevel"],
@@ -151,6 +164,7 @@ def fill_waterleveldata(waterlevel_table, shape_file):
                 year=row["Year"],
                 waterlevel_location_id=999,
             )  # , waterlevel_location_id=waterlevel_location_id)
+    logging.info(f"WaterlevelData table gevuld met data voor {len(section_names)} dijkvakken.")
 
 def fill_profiles(profile_df):
     unique_points = profile_df.columns.get_level_values(0).unique().tolist()
@@ -182,8 +196,8 @@ def fill_profiles(profile_df):
                     # warnings.warn("Skipped {} for section {}".format(pointtype,section_name))
         except:
             pass
-            # warnings.warn("Dijkvak {} niet in vakindeling. Profiel wordt niet weggeschreven.".format(section_name))
-
+            logging.warning("Dijkvak {} wel in profielen maar niet in vakindeling. Profiel wordt niet weggeschreven.".format(section_name))
+    logging.info(f"Profielen toegevoegd in ProfilePoint table.")
 
 def fill_profilepoints(profile_points, shape_file):
     # find unique values in CharacteristicPoint of profile_points
@@ -242,6 +256,8 @@ def fill_mechanisms(mechanism_data,
                         .get()
                         .id,
                     )
+    logging.info(f"MechanismPerSection table gevuld met data voor {len(MechanismPerSection.select().dicts())} mechanismen op {len(shape_file.loc[shape_file.in_analyse == 1])} dijkvakken.")
+
     # next fill ComputationScenario table and children for each mechanism
     # first fill the ComputationType table
     for computation_type in ["HRING", "SEMIPROB", "SIMPLE", "DSTABILITY"]:
@@ -328,6 +344,8 @@ def fill_overflow(overflow_table, shape_file, computation_type="HRING"):
                 value=row["CrestHeight"],
                 beta=row["Beta"],
             )
+        logging.debug(f"MechanismTable gevuld voor dijkvak {section_name} met {len(overflow_table.loc[computation_name])} rijen.")
+    logging.info(f"MechanismTable gevuld met data voor {len(relevant_indices)} dijkvakken.")
 
 
 def fill_piping(piping_table, shape_file):
@@ -357,9 +375,12 @@ def fill_piping(piping_table, shape_file):
             add_computation_scenario(
                 piping_table.loc[cross_section], row["id"], cross_section, piping_id
             )
+            logging.debug(f"Piping scenario toegevoegd voor dijkvak {section_name} met {cross_section}.")
         else:
             for scen_count, subset in piping_table.loc[cross_section].iterrows():
                 add_computation_scenario(subset, row["id"], cross_section, piping_id)
+                logging.debug(f"Piping scenario toegevoegd voor dijkvak {section_name} met {cross_section} en scenario {subset['scenarionaam']}.")
+    logging.info(f"Piping gegevens ingevuld voor {len(relevant_indices)} dijkvakken.")
 
 
 def fill_stability(stability_table, shape_file):
@@ -394,9 +415,12 @@ def fill_stability(stability_table, shape_file):
                 cross_section,
                 stability_id,
             )
+            logging.debug(f"Stabiliteit toegevoegd voor dijkvak {section_name} met {cross_section}.")
         else:
             for scen_count, subset in stability_table.loc[cross_section].iterrows():
                 add_computation_scenario(subset, row["id"], cross_section, stability_id)
+                logging.debug(f"Stabiliteit scenario toegevoegd voor dijkvak {section_name} met {cross_section} en scenario {subset['scenarionaam']}.")
+    logging.info(f"Stabiliteit gegevens ingevuld voor {len(relevant_indices)} dijkvakken.")
 
 def add_simple_computation_scenario(
     computation_type, beta_value, scenario_probability,mechanism_per_section_id, cross_section, mechanism_id, scenario_name):
@@ -572,9 +596,13 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
 
         index = np.argwhere(np.array(slope_part_table["location"])==scenario_name)
         for ind in index:
-            #Temporary fix for Noorse steen:
+            #Temporary fix for Noorse steen: #TODO
             if slope_part_table["top_layer_type"][ind[0]]==28.6:
                 slope_part_table["top_layer_type"][ind[0]] = 27.9
+                log_and_raise_error(
+                    f"Noorse steen gevonden op dijkvak {section_name}. Noorse steen kan niet worden 'uitgebreid' in de VRTOOL. Kies voor optie 'vervangen' waarbij Basalton wordt gebruikt.",
+                    ValueError
+                )
                 
             current_slope_part = SlopePart.create(
                 computation_scenario_id = computation_id,
@@ -584,6 +612,7 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
                 top_layer_thickness = slope_part_table["top_layer_thickness"][ind[0]],
                 tan_alpha = slope_part_table["tan_alpha"][ind[0]],
             )
+        
 
             if slope_part_table["top_layer_type"][ind[0]]>=26.0 and slope_part_table["top_layer_type"][ind[0]]<=27.9:
                 index1 = np.argwhere((np.array(rel_ZST_table["location"])==scenario_name) & (np.array(rel_ZST_table["slope_part"])==slope_part_table["slope_part"][ind[0]]))
@@ -603,6 +632,7 @@ def fill_revetment(slope_part_table, rel_GEBU_table, rel_ZST_table, shape_file):
                 transition_level = rel_GEBU_table["transition_level"][ind[0]],
                 beta = rel_GEBU_table["beta"][ind[0]],
             )
+    logging.info(f"GrassRevetmentRelation, BlockRevetmentRelation en SlopePart tables gevuld met data voor {len(relevant_indices)} dijkvakken.")
 
 def fill_structures():
     pass
@@ -619,8 +649,8 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
     #check consistency of section_ids and measure_configuration.index
     section_ids = sorted([val["id"] for val in SectionData.select().dicts()])
     if isinstance(measure_configuration, pd.DataFrame) and not section_ids == measure_configuration.index.to_list():
-        raise Exception(
-            "The section_ids in the measure_configuration do not match the section_ids in the SectionData table. Please check the measure_configuration file and ensure its indexing is consistent with the geojson of the vakindeling."
+        log_and_raise_error(
+            "De ids van de dijkvakken in de measure_configuration komen niet overeen met de section_ids in de SectionData tabel. Controleer het measure_configuration bestand en zorg ervoor dat de index consistent is met de geojson van de vakindeling.", ValueError
         )
     
     # remove Revetment measures if revetment is None
@@ -628,6 +658,7 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
         measure_table.drop(measure_table[measure_table['measure_type'] == 'Revetment'].index, inplace=True) 
     
     if include_kruinverhoging_or_not(section_ids):
+        logging.info("Kruinverhoging wordt toegevoegd aan de measures omdat de kerende hoogte van een of meer dijkvakken kleiner is dan 2 meter.")
         #add kruinverhoging to measure_table. 
         #duplicate all rows with "Grondversterking" in the string and replace "Grondversterking" with "Kruinverhoging"
         kruinverhoging_table = measure_table[measure_table.index.str.lower().str.contains('grondversterking')].copy()
@@ -692,7 +723,8 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
             n_steps_block=row["n_steps_block"],
             piping_reduction_factor = row["piping_reduction_factor"],
         )
-    [write_measures_for_section(measure_configuration.loc[section_id], section_id, measure_ids) for section_id in section_ids]
+    for section_id in tqdm.tqdm(section_ids, desc="Maatregelen per dijkvak wegschrijven:"):
+        write_measures_for_section(measure_configuration.loc[section_id], section_id, measure_ids)
 
 def check_if_revetment(section_id):
     try:

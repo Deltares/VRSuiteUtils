@@ -14,6 +14,7 @@ from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowI
 
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
 
+import logging
 
 def overflow_main(file_path: Path,
     database_paths: list[Path],
@@ -25,6 +26,7 @@ def overflow_main(file_path: Path,
 
     _generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
 
+    logging.info("Start inlezen met csv bestand voor overslagberekeningen")
     # read HRING reference csv, and add to OverflowInput object
     hring_data = pd.read_csv(file_path, index_col=0)
     hring_data = hring_data.dropna(subset=['doorsnede'])
@@ -34,6 +36,8 @@ def overflow_main(file_path: Path,
     # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
     # then hrlocation is derived from the database, using hr_koppel
     if "hrlocation" not in hring_data.columns or hring_data["hrlocation"].isna().any():
+        logging.info("Geen HR locatie ID gevonden voor 1 of meerdere locaties. Deze worden afgeleid uit de hydraulische databases.")
+
         hrd_path = [
             pad
             for pad in database_paths[0].glob("*.sqlite")
@@ -50,10 +54,14 @@ def overflow_main(file_path: Path,
         )
 
     overflow_input_object.verify_and_filter_columns()
+
+    logging.info("Inlezen en valideren csv bestand is voltooid \n")
     # now we have a dataframe with all the data we need to generate the Hydra-Ring input files.
     # we can now loop over all the locations and databases to generate the Hydra-Ring input files.
     for database_path in database_paths:
+        year = database_path.stem
         for count, location in overflow_input_object.hring_data.iterrows():
+            logging.info(f"Start berekening locatie: {location.doorsnede} voor jaar: {year}")
             # make output dir
             loc_output_dir = output_path.joinpath(database_path.stem, str(location.doorsnede))
             if loc_output_dir.exists():
@@ -89,6 +97,8 @@ def overflow_main(file_path: Path,
                 HydraRing_path.joinpath("config.sqlite"),
             )
             # run Hydra-Ring
+            logging.info(f"Bestanden voor locatie {location.doorsnede} en jaar {year} zijn aangemaakt.")
+            logging.info(f"Berekening wordt uitgevoerd.")
             HydraRingComputation().run_hydraring(HydraRing_path, Path(os.getcwd()).joinpath(computation.ini_path))
 
             # read and check the resulting design table
@@ -96,6 +106,8 @@ def overflow_main(file_path: Path,
             for loc_file in loc_output_dir.iterdir():
                 if (loc_file.is_file()) and (loc_file.stem.lower().startswith("designtable")) and (loc_file.suffix.lower() == ".txt"):
                     design_table = read_design_table(loc_file)
-                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Waterstand",
+                    HydraRingComputation().check_and_justify_HydraRing_data(design_table, calculation_type="Overslag",
                                                                            section_name=loc_output_dir.name, design_table_file=loc_file)
+            logging.info(f"Berekening voor locatie {location.doorsnede} en jaar {year} is voltooid.")
+    logging.info("Alle Hydra-Ring overslagberekeningen zijn voltooid.")
 

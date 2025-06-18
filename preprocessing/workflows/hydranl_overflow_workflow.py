@@ -36,3 +36,5 @@ def overflow_hydranl_main(file_path: Path,
                                 prfl_bestand[ii], 
                                 dijkhoogte[ii],
                                 q_crit).export_json(json_file_name)
+            
+            logging.info(f"HydraNL HBN resultaten gelezen voor {dsn} in {year} en opgeslagen in {json_file_name}")
