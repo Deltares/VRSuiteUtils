@@ -311,7 +311,9 @@ def read_measures_config(file_path, measure_table = None):
         #check if all index values of measure_table are present in measures_config.columns
         if not set(measure_table.index).issubset(set(measures_config.columns)):
             raise ValueError(f"Niet alle maatregelen in de standaard maatregeltabel zijn aanwezig in de maatregelen configuratie. Controleer het configuratiebestand: {file_path}")
-        # 
+        else:
+            #drop columns in measures_config that are not in measure_table
+            measures_config = measures_config[measure_table.index]
         #check if there are columns in measures_config that only have False values
         false_cols = [col_name for col_name in measures_config.columns if measures_config[col_name].astype(bool).eq(False).all()]
         if len(false_cols) > 0:

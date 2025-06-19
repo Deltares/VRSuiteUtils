@@ -90,9 +90,11 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    #get measure df:
    # measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
    # measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
-
    # # read the data for measures
-   measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
+   if (traject == '31-1') and (not test_name in ['full', 'mixture']):
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment_small.csv"))
+   else:
+      measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
 
    #read the configuration
    measure_configuration_table, measures_table = read_measures_config(_test_data_dir.joinpath("settings","configuratie_maatregelen.csv"), measures_table)
@@ -125,6 +127,9 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
       measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability', 'max_crest_increase'] = 0.5
       measures_table.loc['Grondversterking binnenwaarts D-Stability', 'crest_step'] = 0.5
       measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability', 'crest_step'] = 0.5
+   elif 'mixed' in request.node.callspec.id: #remove revetment measures for 2 sections in mixed case.
+      measure_configuration_table.loc[7, 'Aanpassing bekleding'] = False
+      measure_configuration_table.loc[8, 'Aanpassing bekleding'] = False
 
    #reset the index to start from 1 
    measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
@@ -163,7 +168,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    
    # fill measures
-   fill_measures(measure_table=measures_table, measure_configuration=measure_configuration_table)
+   fill_measures(measure_table=measures_table, measure_configuration=measure_configuration_table, revetment= revetment)
 
    # for measure_set, measures_table in measure_tables.items():
    #    #get sections for which measure_set is relevant
