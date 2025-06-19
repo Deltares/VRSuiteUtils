@@ -137,8 +137,20 @@ def read_overflow_data(files_dir, use_hydraring):
                                     (overflow_data, table_data), ignore_index=True
                                 )
 
-    overflow_data = overflow_data.set_index("LocationId")
+    #mask for all nan values in Beta column
+    mask_nan_beta = overflow_data['Beta'].isna()
 
+    #mask for matching values (LocationId and CrestHeight)
+    mask_duplicates = overflow_data[mask_nan_beta].apply(
+        lambda row: (overflow_data['LocationId'] == row['LocationId']) &
+                    (overflow_data['CrestHeight'] == row['CrestHeight']),
+        axis=1
+    ).any(axis=0)
+
+    #filter out rows where Beta is NaN and LocationId and CrestHeight match
+    overflow_data = overflow_data[~(mask_nan_beta | mask_duplicates)]
+
+    overflow_data.set_index('LocationId', inplace=True)
     return overflow_data
 
 def read_and_validate_piping_data(file_path):
