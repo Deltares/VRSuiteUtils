@@ -88,10 +88,46 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    
    # read the data for measures
    #get measure df:
-   measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
-   measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
+   # measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
+   # measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
+
+   # # read the data for measures
+   measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
+
+   #read the configuration
+   measure_configuration_table, measures_table = read_measures_config(_test_data_dir.joinpath("settings","configuratie_maatregelen.csv"), measures_table)
+
+   #remove all sections that are not in analyse  in vakindeling_shape from measure_configuration_table
+   #get the objectids of the vakindeling_shape that are in analyse
+   in_analyse_section_ids = vakindeling_shape[vakindeling_shape['in_analyse'] == True].objectid.tolist()
+   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_ids]
 
 
+   #small change for dstability case to make sure limited measures are considered (reduction of test runtime)
+   if 'D-Stability' in request.node.callspec.id:
+      #modify the configuration for section 7.
+      measure_configuration_table['Grondversterking binnenwaarts D-Stability'] = measure_configuration_table['Grondversterking binnenwaarts']
+      measure_configuration_table['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability'] = measure_configuration_table['Grondversterking binnenwaarts met stabiliteitsscherm']
+      #set for section 8 the 'D-stability' measures to False
+      measure_configuration_table.loc[9, 'Grondversterking binnenwaarts D-Stability'] = False
+      measure_configuration_table.loc[9, 'Grondversterking binnenwaarts met stabiliteitsscherm D-Stability'] = False
+      #set for section 7 the normal measures to False
+      measure_configuration_table.loc[8, 'Grondversterking binnenwaarts'] = False
+      measure_configuration_table.loc[8, 'Grondversterking binnenwaarts met stabiliteitsscherm'] = False
+
+      #modify the measure_table. Copy Grondversterking binnenwaarts and Grondversterking binnenwaarts met stabiliteitsscherm to the D-Stability measures
+      measures_table.loc['Grondversterking binnenwaarts D-Stability'] = measures_table.loc['Grondversterking binnenwaarts']
+      measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability'] = measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm']
+      # set max_inward to 5, crest step to 0.5 and max crest to 0.5
+      measures_table.loc['Grondversterking binnenwaarts D-Stability', 'max_inward_reinforcement'] = 5
+      measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability', 'max_inward_reinforcement'] = 5
+      measures_table.loc['Grondversterking binnenwaarts D-Stability', 'max_crest_increase'] = 0.5
+      measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability', 'max_crest_increase'] = 0.5
+      measures_table.loc['Grondversterking binnenwaarts D-Stability', 'crest_step'] = 0.5
+      measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability', 'crest_step'] = 0.5
+
+   #reset the index to start from 1 
+   measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
@@ -124,11 +160,15 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    # fill all the mechanisms
    fill_mechanisms(mechanism_data=mechanism_data, shape_file=vakindeling_shape)
 
+
+   
    # fill measures
-   for measure_set, measures_table in measure_tables.items():
-      #get sections for which measure_set is relevant
-      section_list = vakindeling_shape[(vakindeling_shape.in_analyse == True) & (measures_per_section.values == measure_set)].vaknaam.tolist()
-      fill_measures(measure_table=measures_table, list_of_sections = section_list)
+   fill_measures(measure_table=measures_table, measure_configuration=measure_configuration_table)
+
+   # for measure_set, measures_table in measure_tables.items():
+   #    #get sections for which measure_set is relevant
+   #    # section_list = vakindeling_shape[(vakindeling_shape.in_analyse == True) & (measures_per_section.values == measure_set)].vaknaam.tolist()
+   #    fill_measures(measure_table=measures_table)
 
    #assert that the database is equal to the reference database
    _reference_database = _test_data_dir.joinpath('reference_databases','{}.db'.format(request.node.callspec.id))
@@ -242,12 +282,19 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
    if 'pleistoceendiepte' not in vakindeling_shape.columns:
       vakindeling_shape = merge_to_vakindeling(vakindeling_shape, to_merge = mechanism_data['stabiliteit'][["pleistoceendiepte", "deklaagdikte"]], left_key = ['stabiliteit'], right_key = ['doorsnede'])
    
-   # read the data for measures
-   #get measure df:
-   measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
-   measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
+   # # read the data for measures
+   measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
 
+   #read the configuration
+   measure_configuration_table, measures_table = read_measures_config(_test_data_dir.joinpath("settings","configuratie_maatregelen.csv"), measures_table)
 
+   #remove all sections that are not in analyse  in vakindeling_shape from measure_configuration_table
+   #get the objectids of the vakindeling_shape that are in analyse
+   in_analyse_section_ids = vakindeling_shape[vakindeling_shape['in_analyse'] == True].objectid.tolist()
+   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_ids]
+
+   #reset the index to start from 1 
+   measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
@@ -281,10 +328,8 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
    fill_mechanisms(mechanism_data=mechanism_data, shape_file=vakindeling_shape)
 
    # fill measures
-   for measure_set, measures_table in measure_tables.items():
-      #get sections for which measure_set is relevant
-      section_list = vakindeling_shape[(vakindeling_shape.in_analyse == True) & (measures_per_section.values == measure_set)].vaknaam.tolist()
-      fill_measures(measure_table=measures_table, list_of_sections = section_list)
+   fill_measures(measure_table=measures_table, measure_configuration=measure_configuration_table)
+
 
    #assert that the database is equal to the reference database
    _reference_database = _test_data_dir.joinpath('reference_databases','{}.db'.format(request.node.callspec.id))
