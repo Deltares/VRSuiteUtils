@@ -2,7 +2,7 @@
 
 This repository contains preprocessing tools to process input from a WBI assessment and openly available data to generate input databases for the [VRTOOL](https://github.com/Deltares/Veiligheidsrendement). Additionally it contains tools to process and analyze results from the VRTOOL. Further guidelines can be found [here](https://deltares-research.github.io/VrtoolDocumentation/).
 
-The current version that this repository pertains to is VRTOOL v1.0.1
+The current version that this repository pertains to is VRTOOL v1.1
 
 ## How do I get set up? ##
 Installation instructions are found [here](https://deltares-research.github.io/VrtoolDocumentation/Installaties/index.html) for general users. 
