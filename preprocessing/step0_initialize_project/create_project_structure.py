@@ -140,6 +140,7 @@ def create_project_structure(project_folder, traject_id):
         f.write(f"flip_traject              = False    # gooit de vakindeling om, indien het de shapefile in de andere richting is gedefinieerd als de vakindeling. Werkt ook voor het genereren van AHN profielen.\n")
         f.write(f"flip_waterkant            = False    # belangrijk bij het genereren van AHN profielen. Er wordt een profiel getrokken met voor- en achterland. By default (False) wordt aangenomen dat het water rechts van de kering ligt, in de richting van oplopende vakindeling. Anders moet deze parameter op True worden gezet. Let op, als flip_traject op True staat, ligt het water rechts t.o.v. het geflipte traject!\n")
         f.write(f"versterking_bekleding	    = uitbreiden # 'vervangen' voor nieuwe bekleding met Hs/DeltaD = 4.5 of 'uitbreiden' voor uitbreiden van bekleding conform huidige Hs/DeltaD")
+        f.write(f"gebruik_hydraring         = True    # zet deze op False als je de Hydra-NL workflow wilt gebruiken. Dit is alleen nodig als je de HNL resultaten wilt gebruiken in de VRTool. Hydra-Ring wordt aanbevolen.\n")
 
     print(f"\nProjectstructuur aangemaakt voor '{os.path.basename(project_folder)}'.")
 

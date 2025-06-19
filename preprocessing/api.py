@@ -648,6 +648,7 @@ def create_database(config_file: str, results_folder: Path = None):
     piping_path = parameters.get('piping_input_csv', fallback=False)
     stability_path = parameters.get('stabiliteit_input_csv', fallback=False)
     revetment_path = parameters.get('output_map_bekleding', fallback=False)
+    use_hydraring = parameters.getboolean('gebruik_hydraring', fallback=True)  # set default value to True if not present
     if len(os.listdir(revetment_path))==0: #no results present, so ignore revetment
         revetment_path = None
 
@@ -676,7 +677,8 @@ def create_database(config_file: str, results_folder: Path = None):
     logging.info(f" overflow_results_path:       {overflow_results_path}")
     logging.info(f" piping_path:                 {piping_path}")
     logging.info(f" stability_path:              {stability_path}")
-    logging.info(f" revetment_path:              {revetment_path}\n")
+    logging.info(f" revetment_path:              {revetment_path}")
+    logging.info(f" gebruik_hydraring:           {use_hydraring}\n")
 
     # run the write_database_workflow
     write_database_main(
@@ -693,6 +695,7 @@ def create_database(config_file: str, results_folder: Path = None):
         stability_path,
         revetment_path,
         Path(measure_configuration),
+        use_hydraring=use_hydraring,
     )
 
 if __name__ == '__main__':

@@ -54,6 +54,7 @@ def write_database_main(traject_name : str,
                         stability_path = None,
                         revetment_path = None,
                         measure_configuration = None,
+                        use_hydraring: bool = True,  
                         ):
 
     # check if output_path exists, if not create it
@@ -77,11 +78,11 @@ def write_database_main(traject_name : str,
     HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
 
     #read water levels
-    waterlevel_results = read_waterlevel_data(waterlevel_results_path, use_hydraring=True)
+    waterlevel_results = read_waterlevel_data(waterlevel_results_path, use_hydraring=use_hydraring)
     logging.info(f"Waterstandsdata succesvol ingelezen.")
 
     #read mechanism_data and store in dictionary. We must have overflow and stabiliteit. Others are optional
-    mechanism_data = {'overslag': read_overflow_data(overflow_results_path, use_hydraring=True), 
+    mechanism_data = {'overslag': read_overflow_data(overflow_results_path, use_hydraring=use_hydraring), 
                       'stabiliteit': read_stability_data(stability_path),}
     logging.info(f"Data voor overslag en stabiliteit succesvol ingelezen.")
 

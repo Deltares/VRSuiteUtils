@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from types import NoneType
 import warnings
 from pathlib import Path
 
@@ -379,7 +380,7 @@ def fill_piping(piping_table, shape_file):
         else:
             for scen_count, subset in piping_table.loc[cross_section].iterrows():
                 add_computation_scenario(subset, row["id"], cross_section, piping_id)
-                logging.debug(f"Piping scenario toegevoegd voor dijkvak {section_name} met {cross_section} en scenario {subset['scenarionaam']}.")
+                logging.debug(f"Piping scenario toegevoegd voor dijkvak {section_name} met {cross_section} en scenario {subset['scenario'].astype(int)}.")
     logging.info(f"Piping gegevens ingevuld voor {len(relevant_indices)} dijkvakken.")
 
 
@@ -688,8 +689,9 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
     # fill StandardMeasure
     measure_ids = {}
     for idx, row in measure_table.iterrows():
-        if not any(measure_configuration[idx]):
-            continue
+        if not isinstance(measure_configuration, NoneType):
+            if not any(measure_configuration[idx]):
+                continue
 
         measure_type_id = (
             MeasureType.select().where(MeasureType.name == row["measure_type"]).get().id
@@ -724,7 +726,10 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
             piping_reduction_factor = row["piping_reduction_factor"],
         )
     for section_id in tqdm.tqdm(section_ids, desc="Maatregelen per dijkvak wegschrijven:"):
-        write_measures_for_section(measure_configuration.loc[section_id], section_id, measure_ids)
+        if isinstance(measure_configuration, NoneType):
+            write_measures_for_section()
+        else:
+            write_measures_for_section(measure_configuration.loc[section_id], section_id, measure_ids)
 
 def check_if_revetment(section_id):
     try:
