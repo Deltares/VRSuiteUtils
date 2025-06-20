@@ -394,7 +394,7 @@ def obtain_characteristic_profiles(input_dir: Path,
                                desc='Bepalen karakteristieke profielen'):
         if file.endswith('.csv'):
 
-            df_line = pd.read_csv(os.path.join(input_dir, file), header=None)
+            df_line = read_csv(os.path.join(input_dir, file), header=None)
             column_name = file.split('.')[0]
 
             # set up a new df
