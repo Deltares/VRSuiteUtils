@@ -8,14 +8,14 @@ from shapely.ops import polygonize, unary_union, linemerge
 from shapely import intersection
 
 import logging
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 import tqdm
 
 def derive_teenlijn(characteristic_profile_dir: Path,
                     profile_path: Path,
                     output_dir: Path):
 
-    data_profielen = pd.read_csv(profile_path)
+    data_profielen = read_csv(profile_path)
 
     # create empty dataframe for the binnenteen (df_binnenteen), with columns "Names" and x_coord and y_coord and profile number
     df_binnenteen = pd.DataFrame(columns=["Name", "coordinates", "profile_number"])
@@ -31,7 +31,7 @@ def derive_teenlijn(characteristic_profile_dir: Path,
         # open characteristic_profile_dir.joinpath("{}.csv".format(profile_name)) as df and obtain the last value of column "X"
         # and store it in variable x_teen
         csv_file = characteristic_profile_dir.joinpath("{}.csv".format(profile_name))
-        x_teen = round(pd.read_csv(csv_file)["X"].iloc[-1],2)
+        x_teen = round(read_csv(csv_file)["X"].iloc[-1],2)
 
         # find the corresponding x_coord_fs, y_coord_fs and x_coord_hl, y_coord_fs in data_profielen[csv_filename] == csv_file_name
         # and store them in variables x_fs, y_fs, x_hl, y_hl

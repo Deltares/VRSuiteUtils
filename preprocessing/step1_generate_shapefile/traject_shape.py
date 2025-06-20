@@ -7,7 +7,7 @@ from owslib.wfs import WebFeatureService
 from shapely import geometry, ops
 import logging
 
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 
 class TrajectShape:
     """Class with functions to modify and fill the shape of a traject which is the basic reference for all preprocessing steps"""
@@ -164,7 +164,7 @@ class TrajectShape:
                     logging.warning(f"Kolom {col} in vakindeling_csv bevat enkele NaN of None waarden. Controleer de input data.")
 
         #get the vakindeling shape from the vakken_path
-        df_vakken = pd.read_csv(vakken_path)
+        df_vakken = read_csv(vakken_path)
         _present_columns_types = check_column_presence(df_vakken)
         logging.info("Controle op de aanwezigheid van de vereiste kolommen in de vakindeling csv is uitgevoerd. \n")
 

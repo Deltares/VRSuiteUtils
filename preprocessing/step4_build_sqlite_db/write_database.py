@@ -14,11 +14,11 @@ from vrtool.orm.models import *
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
 from preprocessing import generic_data
 import logging
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 import tqdm
 
 def fill_diketrajectinfo_table(traject,length):
-    traject_data = pd.read_csv(
+    traject_data = read_csv(
         generic_data.joinpath("diketrajectinfo.csv"),
         index_col=0,
     ).loc[traject]

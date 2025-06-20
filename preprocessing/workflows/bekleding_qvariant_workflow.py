@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from preprocessing.step2_mechanism_data.revetments.qvariant import revetment_qvariant
 import logging
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 
 def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Path], waterlevel_path: Path, profielen_path: Path,
                      hring_path: Path, output_path: Path):
@@ -26,11 +26,11 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
     # read bekleding csv
     logging.info(f"Lees bekleding csv bestand: {bekleding_path}")
     try:
-        df = pd.read_csv(bekleding_path,
+        df = read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_bekleding','begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
     except: #older format
-        df = pd.read_csv(bekleding_path,
+        df = read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl','begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
         df['begin_bekleding'] = df['gws']
@@ -42,7 +42,7 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
     # set default Q-variant probability grid:
     this_file_path = Path(os.path.dirname(os.path.realpath(__file__)))
     _generic_data_dir = this_file_path.absolute().parent.joinpath('generic_data')
-    dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
+    dike_info = read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
     p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
     p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
 

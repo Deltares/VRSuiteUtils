@@ -8,6 +8,7 @@ from tests import test_data, test_results
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import *
 from preprocessing.step4_build_sqlite_db.write_database import *
 from preprocessing.workflows.write_database_workflow import *
+from preprocessing.common_functions import read_csv
 import pandas as pd
 
 @pytest.mark.parametrize("traject,test_name,revetment", [
@@ -37,15 +38,15 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    # read the vakindeling shape. This is universal for each traject we consider. Turning on and off sections is done through the vakindeling_config
    vakindeling_shape = gpd.read_file(_test_data_dir.joinpath("reference_results","reference_shapes", f"reference_shape.geojson"))
-   vakindeling_config = pd.read_csv(_test_data_dir.joinpath("settings", "vakindeling_configuration.csv"),
-                                    dtype={test_name:int},sep=",").rename(columns={test_name:'in_analyse'})
+   vakindeling_config = read_csv(_test_data_dir.joinpath("settings", "vakindeling_configuration.csv"),
+                                    dtype={test_name:int}).rename(columns={test_name:'in_analyse'})
 
    #reset in_analyse in vakindeling_shape based on vakindeling_config. This is only for testdata.
    vakindeling_shape = pd.merge(vakindeling_shape.drop(columns=['in_analyse']),vakindeling_config[['objectid','in_analyse']],on='objectid')
 
    if 'kunstwerken' in vakindeling_shape.columns:  vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
    # read the HR_input
-   HR_input = pd.read_csv(
+   HR_input = read_csv(
       _test_data_dir.joinpath("HRING_data_reference.csv"),
       dtype={'doorsnede':str}).drop_duplicates(subset=["doorsnede"])
    # read the data for different mechanisms
@@ -88,8 +89,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    
    # read the data for measures
    #get measure df:
-   # measures_per_section = pd.read_csv(_test_data_dir.joinpath("settings","maatregelen.csv"),index_col=0)[request.node.callspec.id]
-   # measure_tables = {measure_set: read_measures_data(_generic_data_dir.joinpath(measure_set)) for measure_set in measures_per_section.dropna().unique()}
+
    # # read the data for measures
    if (traject == '31-1') and (not test_name in ['full', 'mixture']):
       measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_revetment_small.csv"))
@@ -242,15 +242,15 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
 
    # read the vakindeling shape. This is universal for each traject we consider. Turning on and off sections is done through the vakindeling_config
    vakindeling_shape = gpd.read_file(_test_data_dir.joinpath("reference_results","reference_shapes", f"reference_shape.geojson"))
-   vakindeling_config = pd.read_csv(_test_data_dir.joinpath("settings", "vakindeling_configuration.csv"),
-                                    dtype={test_name:int},sep=",").rename(columns={test_name:'in_analyse'})
+   vakindeling_config = read_csv(_test_data_dir.joinpath("settings", "vakindeling_configuration.csv"),
+                                    dtype={test_name:int}).rename(columns={test_name:'in_analyse'})
 
    #reset in_analyse in vakindeling_shape based on vakindeling_config. This is only for testdata.
    vakindeling_shape = pd.merge(vakindeling_shape.drop(columns=['in_analyse']),vakindeling_config[['objectid','in_analyse']],on='objectid')
 
    if 'kunstwerken' in vakindeling_shape.columns:  vakindeling_shape.drop(columns=['kunstwerken'],inplace=True)
    # read the HR_input
-   HR_input = pd.read_csv(
+   HR_input = read_csv(
       _test_data_dir.joinpath("HRING_data_reference.csv"),
       dtype={'doorsnede':str}).drop_duplicates(subset=["doorsnede"])
    # read the data for different mechanisms

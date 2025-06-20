@@ -19,59 +19,8 @@ from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowI
 from preprocessing.step2_mechanism_data.waterlevel.waterlevel_hydraring import (
     WaterlevelComputationInput,
 )
+from preprocessing.common_functions import read_csv
 from tests import test_data, test_results
-
-@pytest.mark.skip(reason="This is deprecated functionality")
-@pytest.mark.parametrize(
-    "hring_input,gekb_shape,traject_shape,db_location",
-    [
-        (
-            test_data.joinpath("38-1", "input", "HRING_data.csv"),
-            test_data.joinpath("38-1", "input", "gekb_shape.shp"),
-            test_data.joinpath("38-1", "reference_shape.geojson"),
-            test_data.joinpath(
-                "38-1", "input", "db", "2023", "WBI2017_Bovenrijn_38-1_v04.sqlite"
-            ),
-        )
-    ],
-)
-def test_select_HRING_locs(hring_input, traject_shape, db_location, gekb_shape):
-    # test to see if the correct locations are selected from the HRING input csv. This is done based on a shapefile with all the locations.
-    # HRING_input input should have: M-value of location, and what is in HR-data.
-    # read GEKB_input:
-
-    #DEPRECATED FUNCTIONALITY
-    hring_df = pd.read_csv(hring_input, index_col=0)
-    gekb_shape = (
-        gpd.read_file(gekb_shape)
-        .sort_values("M_VAN")
-        .drop("OBJECTID", axis=1)
-        .reset_index(drop=True)
-        .reset_index()
-        .rename(columns={"index": "OBJECTID"})
-    )
-
-    overflow_input = OverflowInput(kind="weakest")
-    overflow_input.add_traject_shape(traject_shape)
-    # check if M-value in hring_df
-    if any(hring_df.m_value.isna()):
-        overflow_input.get_mvalue_of_locs(hring_df, gekb_shape)
-    else:
-        overflow_input.hring_data = hring_df
-
-    overflow_input.select_locs()
-
-    overflow_input.hring_data = overflow_input.get_HRLocation(
-        db_location, overflow_input.hring_data
-    )
-
-    overflow_input.verify_and_filter_columns()
-    pd.testing.assert_frame_equal(
-        overflow_input.hring_data,
-        pd.read_csv(
-            Path(traject_shape.parent).joinpath("HRING_data_reference.csv"), index_col=0
-        ),
-    )
 
 
 @pytest.mark.parametrize(
@@ -109,7 +58,7 @@ def test_make_HRING_waterlevel_input(
     results_dir.mkdir(parents=True, exist_ok=False)
 
     # read locations, filter 3 locs as defined in ilocs
-    HRING_data = pd.read_csv(HRING_data, index_col=0)
+    HRING_data = read_csv(HRING_data, index_col=0)
     HRING_data = HRING_data.iloc[ilocs]
 
     # initialize lists for errors
@@ -213,7 +162,7 @@ def test_make_HRING_overflow_input(
     results_dir.mkdir(parents=True, exist_ok=False)
 
     # read locations, filter 3 locs as defined in ilocs
-    HRING_data = pd.read_csv(HRING_data, index_col=0)
+    HRING_data = read_csv(HRING_data, index_col=0)
     HRING_data = HRING_data.iloc[ilocs]
 
     # initialize lists for errors

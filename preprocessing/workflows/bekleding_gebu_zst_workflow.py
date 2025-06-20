@@ -6,7 +6,7 @@ from preprocessing.step2_mechanism_data.revetments.ZST_prep_relatie import revet
 from preprocessing.step2_mechanism_data.revetments.revetment_slope import RevetmentSlope
 
 import logging
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 import shutil
 
 def ensure_folders_exist(output_path: Path):
@@ -29,7 +29,7 @@ def ensure_folders_exist(output_path: Path):
 
 def make_p_grid(traject_id: str):
     # set default Q-variant probability grid:
-    dike_info = pd.read_csv(Path(__file__).parent.parent.joinpath('generic_data','diketrajectinfo.csv'))
+    dike_info = read_csv(Path(__file__).parent.parent.joinpath('generic_data','diketrajectinfo.csv'))
     p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
     p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
 
@@ -44,7 +44,7 @@ def initialize_gebu_zst(output_path: Path, bekleding_path: Path, traject_id: str
 
 
     # read bekleding csv
-    df = pd.read_csv(bekleding_path,
+    df = read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel','naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],dtype={'doorsnede': str, 'dwarsprofiel': str})
     df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number

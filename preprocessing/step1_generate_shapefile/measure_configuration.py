@@ -2,6 +2,7 @@
 from pathlib import Path
 import pandas as pd
 import logging
+from preprocessing.common_functions import read_csv
 
 class MeasureConfiguration:
     """
@@ -10,7 +11,7 @@ class MeasureConfiguration:
     def __init__(self, vakindeling_shape):
         self.vakindeling_shape = vakindeling_shape
         self._generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
-        self._measure_names = pd.read_csv(self._generic_data_dir.joinpath('base_measures_totaal.csv'), index_col=0).index.tolist()
+        self._measure_names = read_csv(self._generic_data_dir.joinpath('base_measures_totaal.csv'), index_col=0).index.tolist()
         self._columns = ['objectid', 'vaknaam'] + self._measure_names
 
     def adjust_sections_revetments(self):
