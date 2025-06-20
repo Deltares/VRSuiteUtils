@@ -3,6 +3,26 @@ import re
 import os
 
 import logging
+import pandas as pd
+
+
+def read_csv(file_path, convert_to_ascii=True, **kwargs):
+    """ Reads a CSV file with automatic line separator detection."""
+    df = pd.read_csv(file_path, sep=None, engine='python', **kwargs)
+    df.columns = df.columns.str.encode('ascii', 'ignore').str.decode('ascii') # only allow ascii characters in column names
+    # Check for non-ASCII characters in column names
+    non_ascii_columns = [col for col in df.columns if not all(ord(char) < 128 for char in col)]
+    if non_ascii_columns:
+        logging.warning(f"Non-ASCII karakters gevonden in kolommen: {non_ascii_columns}. Deze worden verwijderd.")
+        if convert_to_ascii:
+            df.columns = df.columns.str.encode('ascii', 'ignore').str.decode('ascii')
+    if len(df.columns) == 1: 
+        log_and_raise_error(f"Fout bij inlezen van CSV-bestand {file_path}: bij inlezen is slechts 1 kolom gevonden. Controleer de scheidingstekens.", ValueError) 
+    
+    if 'doorsnede' in df.columns: #drop empty rows in doorsnede column
+        df = df.dropna(subset=['doorsnede'])
+    
+    return df
 
 def log_and_raise_error(message, error_type=Exception):
     """

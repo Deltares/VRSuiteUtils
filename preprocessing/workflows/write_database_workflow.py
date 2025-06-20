@@ -7,16 +7,7 @@ from preprocessing.step4_build_sqlite_db.write_database import *
 import shutil
 
 import logging
-from preprocessing.common_functions import log_and_raise_error
-
-
-def read_csv_linesep(file_path, **kwargs):
-    try:
-        df = pd.read_csv(file_path, sep = ',', **kwargs)
-    except:
-        df = pd.read_csv(file_path, sep = ';', lineterminator = '\n', **kwargs)
-    df = df.dropna(subset=['doorsnede'])
-    return df
+from preprocessing.common_functions import log_and_raise_error, read_csv
 
 def write_config_file(output_dir : Path, traject_name : str, database_name : str, exclude_mechanisms = None):
     # make a json with traject = traject_name and input_database_path = database_path
@@ -75,7 +66,7 @@ def write_database_main(traject_name : str,
     logging.info(f"Vakindeling geojson bestand succesvol ingelezen.")
 
     # load HR input csv
-    HR_input = read_csv_linesep(hr_input_csv,index_col=0, dtype={'doorsnede':str})
+    HR_input = read_csv(hr_input_csv,index_col=0, dtype={'doorsnede':str})
 
     #read water levels
     waterlevel_results = read_waterlevel_data(waterlevel_results_path, use_hydraring=use_hydraring)

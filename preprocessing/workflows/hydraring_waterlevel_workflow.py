@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from preprocessing.common_functions import check_string_in_list
+from preprocessing.common_functions import check_string_in_list, read_csv
 from preprocessing.step2_mechanism_data.hydraring_computation import (
     HydraRingComputation,
 )
@@ -27,7 +27,7 @@ def waterlevel_main(file_path: Path,
 
     logging.info("Start inlezen met csv bestand voor waterstandsberekeningen")
     # read HRING reference csv
-    hring_data = pd.read_csv(file_path, index_col=0)
+    hring_data = read_csv(file_path, index_col=0)
     hring_data = hring_data.dropna(subset=['doorsnede'])
     # if the hrlocation column is missing, or, if the hrlocation column is present, but empty,
     # then hrlocation is derived from the database, using hr_koppel

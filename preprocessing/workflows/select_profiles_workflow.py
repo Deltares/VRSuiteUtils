@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import warnings
 import shutil
 import logging
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 import tqdm
 
 def main_profiel_selectie(
@@ -25,7 +25,7 @@ def main_profiel_selectie(
     logging.info(f"Vakindeling geladen uit {vakindeling_geojson}")
 
     #load profiel info
-    profiel_info = pd.read_csv(profiel_info_csv)
+    profiel_info = read_csv(profiel_info_csv)
     logging.info(f"Profiel info geladen uit {profiel_info_csv}")
 
     #check if invoerbestand is False or a Path that exists
@@ -34,7 +34,7 @@ def main_profiel_selectie(
         logging.info("Invoerbestand met handmatig ingevoerde profielen wordt gebruikt: {}".format(invoerbestand))
         try:
             #vaknaam as index with dtype str
-            custom_profiles = pd.read_csv(Path(invoerbestand),index_col=0, dtype={'vaknaam':str},header=[0,1])
+            custom_profiles = read_csv(Path(invoerbestand),index_col=0, dtype={'vaknaam':str},header=[0,1])
             custom_profiles.index = custom_profiles.index.astype(str)
             use_file = True
         except:
@@ -101,7 +101,7 @@ def plot_profile(profile, vaknaam : str, profile_names, ahn_path : Path, output_
     fig, ax = plt.subplots()
     #plot ahn_profiles
     for profile_name in profile_names:
-        ahn_profile = pd.read_csv(ahn_path.joinpath(profile_name),header=None).transpose()
+        ahn_profile = read_csv(ahn_path.joinpath(profile_name),header=None).transpose()
         ax.plot(ahn_profile[0], ahn_profile[1], color='grey', alpha=0.5)
     #plot aggregated profile
     if profile is not None:
@@ -339,7 +339,7 @@ def select_profile(available_profiles, karakteristieke_profielen, section, selec
     else:
         characteristic_profiles = []
         for idx, profile in available_profiles.iterrows():
-            profiles.append(pd.read_csv(karakteristieke_profielen / f"{profile.csv_filename}"))
+            profiles.append(read_csv(karakteristieke_profielen / f"{profile.csv_filename}"))
             characteristic_profiles.append(define_characteristic_points(profiles[-1]))
         #read all profiles from csv files
 

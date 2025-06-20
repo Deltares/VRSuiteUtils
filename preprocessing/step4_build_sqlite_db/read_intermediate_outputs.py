@@ -10,6 +10,7 @@ from itertools import pairwise
 
 from preprocessing.step2_mechanism_data.hydraring_computation import HydraRingComputation
 from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
+from preprocessing.common_functions import read_csv
 
 def read_design_table(filename: Path):
     import re
@@ -165,7 +166,7 @@ def read_piping_data(file_path):
     #TODO improve for backwards compatibility
     if 'beta' in pd.read_csv(file_path, nrows=1).columns:
         #new format with beta included. Rows can be either semi-probabilistic or direct beta.
-        return pd.read_csv(
+        return read_csv(
             file_path,
             index_col=0,
             usecols=[
@@ -191,7 +192,7 @@ def read_piping_data(file_path):
         )
     else:
         #old format without beta this can only be a semi-probabilistic piping input
-        return pd.read_csv(
+        return read_csv(
             file_path,
             index_col=0,
             usecols=[
@@ -218,7 +219,7 @@ def read_piping_data(file_path):
 
 def read_stability_data(file_path):
     try:
-        dataset = pd.read_csv(
+        dataset = read_csv(
         file_path,
         index_col=0,
         usecols=[
@@ -235,7 +236,7 @@ def read_stability_data(file_path):
         dtype={'doorsnede': str, 'scenario': int, 'stixnaam': str, 'beta':float, 'deklaagdikte': float, 'pleistoceendiepte': float},
     )        
     except:
-        dataset = pd.read_csv(
+        dataset = read_csv(
         file_path,
         index_col=0,
         usecols=[
@@ -301,11 +302,11 @@ def read_revetment_data(files_dir):
     return slope_part_table, rel_GEBU_table, rel_ZST_table
 
 def read_bebouwing_data(file_path):
-    return pd.read_csv(file_path, index_col=0)
+    return read_csv(file_path, index_col=0)
 
 def read_measures_config(file_path, measure_table = None):
     """reads a single csv file with measures configuration into a dataframe"""
-    measures_config = pd.read_csv(file_path, index_col=0)
+    measures_config = read_csv(file_path, index_col=0)
 
     if measure_table is not None:
         #check if all index values of measure_table are present in measures_config.columns
@@ -325,7 +326,7 @@ def read_measures_config(file_path, measure_table = None):
     return measures_config
 
 def read_measures_data(file_path):
-    return pd.read_csv(file_path, index_col=0)
+    return read_csv(file_path, index_col=0)
 
 def adjust_inner_toe(BIK, BIT, min_kerende_hoogte):
     current_slope = (BIK.Z - BIT.Z) / (BIT.X - BIK.X)
@@ -355,7 +356,7 @@ def read_profiles_old(files_dir):
     )
     for profile_file in files_dir.iterdir():
         profile_name = profile_file.stem
-        profile = pd.read_csv(profile_file, index_col=0)
+        profile = read_csv(profile_file, index_col=0)
         profile_points = pd.DataFrame(
             {
                 "vaknaam": [profile_name] * profile.shape[0],
@@ -366,7 +367,6 @@ def read_profiles_old(files_dir):
         )
         profile_data = pd.concat((profile_data, profile_points), ignore_index=True)
     return profile_data
-    # return pd.read_csv(file_path,index_col=0)
 
 def validate_piping_data(piping_data):
     if 'beta' not in piping_data.columns:

@@ -17,6 +17,7 @@ from preprocessing.step2_mechanism_data.revetments.project_utils.DiKErnel import
 from preprocessing.step2_mechanism_data.revetments.project_utils.functions_integrate import issteen
 
 from preprocessing.step2_mechanism_data.revetments.ZST_computation import ZSTComputation
+from preprocessing.common_functions import read_csv
 
 
 
@@ -42,7 +43,7 @@ if __name__ == '__main__':
 
     traject_id = "31-1"
     _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
-    dike_info = pd.read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
+    dike_info = read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
     p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
     p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
 
@@ -52,7 +53,7 @@ if __name__ == '__main__':
               p_signaleringswaarde * (1. / 1000.)]
 
     # read revetment file
-    df = pd.read_csv(bekleding_path,
+    df = read_csv(bekleding_path,
                      usecols=['doorsnede', 'dwarsprofiel', 'naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],
                      dtype={'doorsnede': str, 'dwarsprofiel': str})

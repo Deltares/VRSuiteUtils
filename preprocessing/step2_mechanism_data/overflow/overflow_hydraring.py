@@ -11,6 +11,7 @@ import pandas as pd
 from preprocessing.step2_mechanism_data.hydraring_computation import (
     HydraRingComputation,
 )
+from preprocessing.common_functions import read_csv
 
 # import matplotlib.pyplot as plt
 
@@ -21,7 +22,7 @@ class OverflowComputationInput(HydraRingComputation):
         self.MechanismID = 101
 
     def get_critical_discharge(self, discharge_path):
-        critical_discharges = pd.read_csv(discharge_path, index_col=0)
+        critical_discharges = read_csv(discharge_path, index_col=0)
         try:
             subset = critical_discharges.loc[self.sod_class]
 

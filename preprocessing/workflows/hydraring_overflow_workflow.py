@@ -13,6 +13,7 @@ from preprocessing.step2_mechanism_data.overflow.overflow_hydraring import (
 from preprocessing.step2_mechanism_data.overflow.overflow_input import OverflowInput
 
 from preprocessing.step4_build_sqlite_db.read_intermediate_outputs import read_design_table
+from preprocessing.common_functions import read_csv
 
 import logging
 
@@ -28,7 +29,7 @@ def overflow_main(file_path: Path,
 
     logging.info("Start inlezen met csv bestand voor overslagberekeningen")
     # read HRING reference csv, and add to OverflowInput object
-    hring_data = pd.read_csv(file_path, index_col=0)
+    hring_data = read_csv(file_path, index_col=0)
     hring_data = hring_data.dropna(subset=['doorsnede'])
     overflow_input_object = OverflowInput()
     overflow_input_object.add_hring_data(hring_data)

@@ -18,7 +18,7 @@ import warnings
 
 import logging
 import tqdm
-from preprocessing.common_functions import log_and_raise_error
+from preprocessing.common_functions import log_and_raise_error, read_csv
 
 def revetment_qvariant(df, profielen_path, database_paths, waterlevel_path, hring_path, output_path, local_path, Q_var_pgrid):
 # define variables
@@ -136,7 +136,7 @@ if __name__ == '__main__':
     output_path = Path(r'c:/VRM/test_revetments/output_test')
 
     # read csv file as dataframe
-    df = pd.read_csv(bekleding_path,
+    df = read_csv(bekleding_path,
                      usecols=['vaknaam', 'dwarsprofiel', 'signaleringswaarde', 'ondergrens', 'faalkansbijdrage',
                               'lengte_effectfactor', 'locationid', 'hrdatabase_folder', 'hrdatabase', 'region', 'gws',
                               'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'qvar_p1', 'qvar_p2',

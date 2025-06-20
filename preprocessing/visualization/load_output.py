@@ -3,13 +3,14 @@ import copy
 import numpy as np
 import pandas as pd
 from vrtool.probabilistic_tools.probabilistic_functions import beta_to_pf, pf_to_beta
+from preprocessing.common_functions import read_csv
 
 
 def read_assessment_betas(filename):
     """Reads the assessment betas from a csv file and returns a dataframe with the betas and the corresponding
     probabilities of failure"""
 
-    betas = pd.read_csv(filename)
+    betas = read_csv(filename)
     for count, line in betas.iterrows():
         betas.loc[count, "name"] = line["name"].strip("DV")
 
@@ -59,7 +60,6 @@ def get_traject_prob_development(
 
         # maatregel lezen:
         # option_index = taken_measures.loc[optimal_measures.loc[section]['Unnamed: 0']].option_index
-        # vr_measure = pd.read_csv(results_dir.joinpath(run,'{}_Options_{}.csv'.format(section,calc_type)),index_col=0).loc[option_index]
         # if section
         if taken_measures.loc[taken_measures.Section == section].shape[0] == 1:
             measure_data = taken_measures.loc[
@@ -70,7 +70,7 @@ def get_traject_prob_development(
                 optimal_measures.loc[section]["Unnamed: 0"]
             ]
         if not np.isnan(measure_data.option_index):
-            vr_measure = pd.read_csv(
+            vr_measure = read_csv(
                 option_dir.joinpath("{}_Options_{}.csv".format(section, calc_type)),
                 index_col=0,
             )

@@ -10,7 +10,7 @@ from pandas.testing import assert_frame_equal
 from preprocessing.step1_generate_shapefile.traject_shape import TrajectShape
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 from tests import test_data, test_results
-from preprocessing.common_functions import read_config_file
+from preprocessing.common_functions import read_config_file, read_csv
 
 @pytest.mark.parametrize("project_folder",
                          [pytest.param("31-1_v2", id = '31-1'),
@@ -79,8 +79,8 @@ def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.Fixt
 
     # compare dataframe for configuratie_maatregelen.csv
     assert_frame_equal(
-        pd.read_csv(test_data.joinpath(project_folder, _maatregel_config_path), index_col=0),
-        pd.read_csv(_output_path.joinpath(_maatregel_config_path), index_col=0),
+        read_csv(test_data.joinpath(project_folder, _maatregel_config_path), index_col=0),
+        read_csv(_output_path.joinpath(_maatregel_config_path), index_col=0),
         check_dtype=False,
     )
     
