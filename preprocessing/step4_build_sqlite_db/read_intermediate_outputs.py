@@ -337,7 +337,7 @@ def adjust_inner_toe(BIK, BIT, min_kerende_hoogte):
 
 def read_profile_data(file_path, min_kerende_hoogte = 2.01):
     """reads a single csv file with profiles for each section into a dataframe"""
-    profile_df = read_csv(file_path,index_col=0, header = [0,1])
+    profile_df = pd.read_csv(file_path,index_col=0, header = [0,1])
     kerende_hoogte = np.subtract(profile_df[('BIK','Z')], profile_df[('BIT','Z')])
     for count, row in profile_df.iterrows():
         if kerende_hoogte.loc[count] <=2.0:
