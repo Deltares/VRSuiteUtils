@@ -3,6 +3,20 @@ import re
 import os
 
 import logging
+import pandas as pd
+
+
+def read_csv_linesep(file_path, **kwargs):
+    """ Reads a CSV file with automatic line separator detection."""
+    df = pd.read_csv(file_path, sep=None, engine='python', **kwargs)
+
+    if len(df.columns) == 1: 
+        log_and_raise_error(f"Fout bij inlezen van CSV-bestand {file_path}: bij inlezen is slechts 1 kolom gevonden. Controleer de scheidingstekens.", ValueError) 
+    
+    if 'doorsnede' in df.columns: #drop empty rows in doorsnede column
+        df = df.dropna(subset=['doorsnede'])
+    
+    return df
 
 def log_and_raise_error(message, error_type=Exception):
     """
