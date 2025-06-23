@@ -101,7 +101,7 @@ def plot_profile(profile, vaknaam : str, profile_names, ahn_path : Path, output_
     fig, ax = plt.subplots()
     #plot ahn_profiles
     for profile_name in profile_names:
-        ahn_profile = read_csv(ahn_path.joinpath(profile_name),header=None).transpose()
+        ahn_profile = read_csv(ahn_path.joinpath(profile_name),header=None, convert_to_ascii=False).transpose()
         ax.plot(ahn_profile[0], ahn_profile[1], color='grey', alpha=0.5)
     #plot aggregated profile
     if profile is not None:
