@@ -2233,13 +2233,13 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "vrtool"
-version = "1.1.0"
+version = "1.1.1"
 description = "veiligheidsrendement tool (core and orm)"
 optional = false
 python-versions = ">=3.12,<3.13"
 groups = ["main"]
 files = [
-    {file = "vrtool-1.1.0.tar.gz", hash = "sha256:a793eb72190bff89db2e5754b70de615c2b17403fd3ac2929e80290a012c8d93"},
+    {file = "vrtool-1.1.1.tar.gz", hash = "sha256:a6950b2e403789339514b982af9cff79cce6d52343148a74d0f06ed16b40d368"},
 ]
 
 [package.dependencies]
@@ -2248,7 +2248,7 @@ d-geolib = ">=2.6.0,<3.0.0"
 matplotlib = ">=3.7.0,<4.0.0"
 numpy = "1.26.4"
 openpyxl = ">=3.1.1,<4.0.0"
-openturns = ">=1.19,<2.0"
+openturns = "1.24"
 pandas = ">=1.5.3"
 peewee = ">=3.16.1,<4.0.0"
 scipy = ">=1.8.1,<1.14.0"
@@ -2258,7 +2258,7 @@ tqdm = ">=4.66.2,<5.0.0"
 
 [package.source]
 type = "file"
-url = "externals/vrtool/vrtool-1.1.0.tar.gz"
+url = "externals/vrtool/vrtool-1.1.1.tar.gz"
 
 [[package]]
 name = "xyzservices"
@@ -2295,4 +2295,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12, <3.13"
-content-hash = "b1f0fce12fe9f597d1a7bd4fd03577a9ca093c364d8ca1b5a052c9d1af31452e"
+content-hash = "394a0ca18347d71003f05081c407075e8d776411b2782c3b6a2be60d7235baf2"
