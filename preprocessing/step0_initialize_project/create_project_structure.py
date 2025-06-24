@@ -28,6 +28,8 @@ The necessary paths are written to the input.txt file in the input_files directo
 '''
 
 import os
+import shutil
+from pathlib import Path
 
 def create_project_structure(project_folder, traject_id):
     # Define directory paths
@@ -71,7 +73,10 @@ def create_project_structure(project_folder, traject_id):
     os.makedirs(database_path_HR_current)
     os.makedirs(database_path_HR_future)
     os.makedirs(hr_profielen_dir)
-    os.makedirs(default_files_dir)
+
+    #copy default files from preprocessing to default_files_dir
+    shutil.copytree(Path(os.path.dirname(__file__)).parent.joinpath('default_files'), default_files_dir)
+
     os.makedirs(steentoets_dir)
     os.makedirs(vakindeling_dir)
     os.makedirs(hr_results_dir)
