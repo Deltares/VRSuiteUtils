@@ -4,6 +4,9 @@ import pandas as pd
 from scipy.optimize import minimize
 from scipy.interpolate import interp1d
 
+# required to make it work in a docker container
+import matplotlib
+# Set the backend to TkAgg
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from pathlib import Path
