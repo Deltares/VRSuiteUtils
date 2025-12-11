@@ -5,10 +5,11 @@ from scipy.optimize import minimize
 from scipy.interpolate import interp1d
 
 # required to make it work in a docker container
-import matplotlib
+# import matplotlib
 # Set the backend to TkAgg
-matplotlib.use('TkAgg')
+# matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+plt.switch_backend('TkAgg')
 from pathlib import Path
 import itertools
 import warnings
