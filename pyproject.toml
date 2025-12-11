@@ -3,6 +3,7 @@ name = "vrtoolpreprocess"
 version = "1.2.1"
 description = ""
 authors = [{name = "Wouter Jan Klerk", email = "wouterjan.klerk@deltares.nl"}]
+maintainers = [{name = "Stephan Rikkert", email="stephan.rikkert@deltares.nl"}]
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dependencies = ["vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc/vrtool-1.1.1-py3-none-any.whl"]
@@ -43,6 +44,7 @@ black = ">=22.8.0"
 isort = ">=5.10.1"
 commitizen = ">=3.0.1"
 urllib3 = "1.26.15"
+jupyterlab = ">=4.5.0,<5"
 
 [tool.pixi.feature.dev.tasks]
 isort = "isort"
