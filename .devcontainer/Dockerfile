@@ -10,5 +10,9 @@ ENV PIXI_HOME=$SRC_ROOT/.pixi
 # -v {your_vrtool_checkout_dir}:/usr/src/app
 WORKDIR $SRC_ROOT/app
 
+# This apparently is necessary for matplotlib to work properly
+RUN apt-get update 
+RUN apt-get install -y tcl tk
+
 # Define the endpoint
 CMD [ "/bin/bash" ]

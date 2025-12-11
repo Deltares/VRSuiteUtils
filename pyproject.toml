@@ -44,12 +44,11 @@ teamcity-messages = ">=1.33,<2"
 pytest-xdist = ">=3.8.0,<4"
 pytest-profiling = ">=1.8.1,<2"
 
-
 [tool.pixi.feature.dev.dependencies]
 black = ">=22.8.0"
 isort = ">=5.10.1"
 commitizen = ">=3.0.1"
-urllib3 = "1.26.15"
+urllib3 = "==1.26.15"
 jupyterlab = ">=4.5.0,<5"
 
 [tool.pixi.feature.dev.tasks]
