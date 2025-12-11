@@ -43,6 +43,7 @@ coverage = ">=7.13.0,<8"
 teamcity-messages = ">=1.33,<2"
 pytest-xdist = ">=3.8.0,<4"
 pytest-profiling = ">=1.8.1,<2"
+matplotlib = ">=3.10.8,<4"
 
 [tool.pixi.feature.dev.dependencies]
 black = ">=22.8.0"
