@@ -1,0 +1,26 @@
+{
+  "name": "vrtoolutils_dev_container",
+  "build":{
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/usr/src/app",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/usr/src/app,type=bind,consistency=cached"
+  ],
+  "postStartCommand": "git config --global core.autocrlf true & git config --global --add safe.directory ${containerWorkspaceFolder}",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+          "ms-python.python",
+          "ms-python.vscode-pylance",
+          "ms-python.debugpy",
+          "ms-python.black-formatter",
+          "ms-python.isort",
+          "ms-python.pylint",
+          "ms-vscode.test-adapter-converter",
+          "njpwerner.autodocstring"
+      ]
+    }
+  },
+  "forwardPorts": [3000]
+}
