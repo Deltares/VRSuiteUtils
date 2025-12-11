@@ -9,7 +9,6 @@ from scipy.interpolate import interp1d
 # Set the backend to TkAgg
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-plt.switch_backend('TkAgg')
 from pathlib import Path
 import itertools
 import warnings
@@ -351,6 +350,7 @@ class DFlowSlideCharacteristicPointsSimple():
         don't interpolate between missing points, leave parts with nan blank
         '''
         # create a figure with 5 subplots
+        plt.switch_backend('TkAgg')
         fig, axs = plt.subplots(1, figsize=(16, 8))
 
         # plot the profile
