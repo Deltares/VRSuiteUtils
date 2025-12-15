@@ -362,7 +362,7 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
         Path(output_path),
     )
 
-def run_gebu_zst(config_file: str, results_folder: Path = None):
+def run_gebu_zst(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
 
     try:
@@ -372,19 +372,20 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
         return
 
     # Accessing parameters
+    _config_dir = config_file.parent
     traject_id = parameters['traject_id']
-    input_csv = parameters['bekleding_input_csv']
-    steentoets_path = parameters['steentoets_map']
-    profielen_path = parameters['hr_profielen_dir']
-    output_path = parameters['output_map_bekleding']
+    input_csv = _config_dir.joinpath(parameters['bekleding_input_csv'])
+    steentoets_path = _config_dir.joinpath(parameters['steentoets_map'])
+    profielen_path = _config_dir.joinpath(parameters['hr_profielen_dir'])
+    output_path = _config_dir.joinpath(parameters['output_map_bekleding'])
     if 'versterking_bekleding' in parameters:
         versterking_bekleding = parameters['versterking_bekleding']
     else:
         versterking_bekleding = 'uitbreiden'
 
     if results_folder is None:
-        output_path_qvar = Path(parameters['output_map_bekleding'])
-        output_path_results = Path(parameters['output_map_bekleding'])
+        output_path_qvar = _config_dir.joinpath(parameters['output_map_bekleding'])
+        output_path_results = _config_dir.joinpath(parameters['output_map_bekleding'])
     else: # used for testing
         output_path_results = results_folder.joinpath(parameters['output_map_bekleding'])
         # Recreate the output folder
@@ -408,12 +409,12 @@ def run_gebu_zst(config_file: str, results_folder: Path = None):
     # run the bekleding_gebu_zst workflow
     gebu_zst_main(
         traject_id,
-        Path(input_csv),
-        Path(steentoets_path),
-        Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'DiKErnel'),
-        Path(output_path_qvar),
-        Path(output_path_results),
+        input_csv,
+        steentoets_path,
+        profielen_path,
+        Path(__file__).parent.parent.joinpath('externals', 'DiKErnel'),
+        output_path_qvar,
+        output_path_results,
         versterking_bekleding,
     )
     
