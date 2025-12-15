@@ -3,7 +3,6 @@ import filecmp
 
 from pathlib import Path
 import preprocessing.api as api
-import geopandas as gpd
 import pytest
 import shutil
 import sqlite3

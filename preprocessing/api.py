@@ -306,7 +306,9 @@ def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Pat
         q_crit
     )
 
-def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
+def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
+    if config_file and not isinstance(config_file, Path):
+        config_file = Path(config_file)
     mandatory_parameters = ['traject_id',
                             'bekleding_input_csv',
                             'database_path_HR_current',
@@ -323,17 +325,17 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
 
     # Accessing parameters
     traject_id = parameters['traject_id']
-    input_csv = parameters['bekleding_input_csv']
-    database_path_current = parameters['database_path_HR_current']
-    database_path_future = parameters['database_path_HR_future']
-    waterlevel_path = parameters['output_map_waterstand']
-    profielen_path = parameters['hr_profielen_dir']
+    input_csv = config_file.joinpath(parameters['bekleding_input_csv'])
+    database_path_current = config_file.joinpath(parameters['database_path_HR_current'])
+    database_path_future = config_file.joinpath(parameters['database_path_HR_future'])
+    waterlevel_path = config_file.joinpath(parameters['output_map_waterstand'])
+    profielen_path = config_file.joinpath(parameters['hr_profielen_dir'])
 
     if results_folder is None:
-        output_path = Path(parameters['output_map_bekleding'])
-        paths_to_databases = [Path(database_path_current), Path(database_path_future)]
+        output_path = config_file.joinpath(parameters['output_map_bekleding'])
+        paths_to_databases = [database_path_current, database_path_future]
     else: # used for testing
-        paths_to_databases = [Path(database_path_current)]
+        paths_to_databases = [database_path_current]
         output_path = results_folder.joinpath(parameters['output_map_bekleding'])
         # Recreate the output folder
         if output_path.exists():
@@ -354,15 +356,17 @@ def run_bekleding_qvariant(config_file: str, results_folder: Path = None):
     # run the bekleding_qvariant workflow
     qvariant_main(
         traject_id,
-        Path(input_csv),
+        input_csv,
         paths_to_databases,
-        Path(waterlevel_path),
-        Path(profielen_path),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
+        waterlevel_path,
+        profielen_path,
+        Path(__file__).parent.parent.joinpath('externals', 'HydraRing-23.1.1'),
+        output_path,
     )
 
 def run_gebu_zst(config_file: Path, results_folder: Path = None):
+    if config_file and not isinstance(config_file, Path):
+        config_file = Path(config_file)
     mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
 
     try:
