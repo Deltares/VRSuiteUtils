@@ -1,9 +1,8 @@
 import configparser
 import re
 import os
-
+from pathlib import Path
 import logging
-from zipfile import Path
 import pandas as pd
 
 
