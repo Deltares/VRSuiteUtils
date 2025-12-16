@@ -8,7 +8,7 @@ from shapely.ops import polygonize, unary_union, linemerge
 from shapely import intersection
 
 import logging
-from preprocessing.common_functions import log_and_raise_error, read_csv
+from preprocessing.common_functions import read_csv
 import tqdm
 
 def derive_teenlijn(characteristic_profile_dir: Path,
@@ -35,12 +35,13 @@ def derive_teenlijn(characteristic_profile_dir: Path,
 
         # find the corresponding x_coord_fs, y_coord_fs and x_coord_hl, y_coord_fs in data_profielen[csv_filename] == csv_file_name
         # and store them in variables x_fs, y_fs, x_hl, y_hl
-        x_fs = data_profielen.loc[data_profielen["csv_filename"] == "{}.csv".format(profile_name), "x_coord_fs"].iloc[0]
-        y_fs = data_profielen.loc[data_profielen["csv_filename"] == "{}.csv".format(profile_name), "y_coord_fs"].iloc[0]
-        x_hl = data_profielen.loc[data_profielen["csv_filename"] == "{}.csv".format(profile_name), "x_coord_hl"].iloc[0]
-        y_hl = data_profielen.loc[data_profielen["csv_filename"] == "{}.csv".format(profile_name), "y_coord_hl"].iloc[0]
-        length_foreshore = data_profielen.loc[data_profielen["csv_filename"] == "{}.csv".format(profile_name), "length_fs"].iloc[0]
-        length_hinterland = data_profielen.loc[data_profielen["csv_filename"] == "{}.csv".format(profile_name), "length_hl"].iloc[0]
+        _csv_data_profile = data_profielen["csv_filename"]
+        x_fs = data_profielen.loc[_csv_data_profile == "{}.csv".format(profile_name), "x_coord_fs"].iloc[0]
+        y_fs = data_profielen.loc[_csv_data_profile == "{}.csv".format(profile_name), "y_coord_fs"].iloc[0]
+        x_hl = data_profielen.loc[_csv_data_profile == "{}.csv".format(profile_name), "x_coord_hl"].iloc[0]
+        y_hl = data_profielen.loc[_csv_data_profile == "{}.csv".format(profile_name), "y_coord_hl"].iloc[0]
+        length_foreshore = data_profielen.loc[_csv_data_profile == "{}.csv".format(profile_name), "length_fs"].iloc[0]
+        length_hinterland = data_profielen.loc[_csv_data_profile == "{}.csv".format(profile_name), "length_hl"].iloc[0]
         # create a line from the foreshore to the hinterland
         line_x = interp1d([-length_foreshore, length_hinterland], [x_fs, x_hl])
         # find where the x_teen is on the line

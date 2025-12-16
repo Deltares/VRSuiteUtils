@@ -1,4 +1,3 @@
-from logging import config
 from preprocessing.step0_initialize_project.create_project_structure import create_project_structure
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 
