@@ -1,4 +1,4 @@
-name: dev
+name: vrtool_utils_dev_environment
 channels:
 - conda-forge
 - nodefaults
