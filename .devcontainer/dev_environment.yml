@@ -3,6 +3,7 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
+- python >=3.12,<3.14
 - black >=22.8.0
 - isort >=5.10.1
 - commitizen >=3.0.1
@@ -31,5 +32,5 @@ dependencies:
 - pip
 - pip:
   - build
-  - vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc/vrtool-1.1.1-py3-none-any.whl
+  - vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
 

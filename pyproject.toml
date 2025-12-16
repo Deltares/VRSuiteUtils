@@ -6,7 +6,7 @@ authors = [{name = "Wouter Jan Klerk", email = "wouterjan.klerk@deltares.nl"}]
 maintainers = [{name = "Stephan Rikkert", email="stephan.rikkert@deltares.nl"}]
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
-dependencies = ["vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc/vrtool-1.1.1-py3-none-any.whl"]
+dependencies = ["vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl"]
 
 [project.urls]
 homepage = "https://deltares-research.github.io/VrtoolDocumentation/"
