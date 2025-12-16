@@ -217,6 +217,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/13/6b/b60f47101ba2cac66b4a83246630e68ae9bbe2e614cbae5f4465f46dee13/python_multipart-0.0.18-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
+      - pypi: ./
   dev:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -546,6 +547,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/13/6b/b60f47101ba2cac66b4a83246630e68ae9bbe2e614cbae5f4465f46dee13/python_multipart-0.0.18-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
+      - pypi: ./
   py312:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -762,6 +764,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl
+      - pypi: ./
   py313:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -978,6 +981,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl
+      - pypi: ./
   test:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -1208,6 +1212,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/13/6b/b60f47101ba2cac66b4a83246630e68ae9bbe2e614cbae5f4465f46dee13/python_multipart-0.0.18-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
+      - pypi: ./
 packages:
 - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
   build_number: 8
@@ -4703,6 +4708,14 @@ packages:
   - pkg:pypi/pluggy?source=compressed-mapping
   size: 25877
   timestamp: 1764896838868
+- pypi: ./
+  name: preprocessing
+  version: 1.2.1
+  sha256: b348f4859db145891d79889093ce07031fff99e5b53a24fd49156bbc4f7c293a
+  requires_dist:
+  - vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0-rc-1/vrtool-1.1.1-py3-none-any.whl
+  requires_python: '>=3.12,<3.14'
+  editable: true
 - conda: https://conda.anaconda.org/conda-forge/win-64/primesieve-12.10-hac47afa_1.conda
   sha256: 180472e614068bca2981eb8abc557c237546be652a6f2c2253969028591abcbe
   md5: 3849db7fa2b0e4264d046b776be8be3e

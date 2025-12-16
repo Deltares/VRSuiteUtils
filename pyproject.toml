@@ -1,5 +1,5 @@
 [project]
-name = "vrtoolpreprocess"
+name = "preprocessing"
 version = "1.2.1"
 description = ""
 authors = [{name = "Wouter Jan Klerk", email = "wouterjan.klerk@deltares.nl"}]
@@ -14,8 +14,16 @@ documentation = "https://deltares-research.github.io/VrtoolDocumentation/"
 repository = "https://github.com/Deltares/VrToolPreprocess"
 issues = "https://github.com/Deltares/veiligheidsrendement/issues"
 
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
 [tool.pixi.pypi-dependencies]
 build = "*"
+preprocessing = { path=".", editable=true }
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
@@ -108,7 +116,3 @@ skip = [
   ".vscode",
   "site",
 ]
-
-[build-system]
-build-backend = "hatchling.build"
-requires = ["hatchling"]
