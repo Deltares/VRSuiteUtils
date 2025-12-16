@@ -1,7 +1,4 @@
 import preprocessing.api as api
-import filecmp
-
-from pathlib import Path
 import preprocessing.api as api
 import geopandas as gpd
 import pytest
@@ -9,7 +6,6 @@ import shutil
 
 
 from tests import test_data, test_results
-from preprocessing.common_functions import read_config_file
 
 @pytest.mark.parametrize("project_folder",
                          [pytest.param("31-1_v2", id = '31-1')])

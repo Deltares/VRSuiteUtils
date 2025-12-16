@@ -1,3 +1,4 @@
+from logging import config
 from preprocessing.step0_initialize_project.create_project_structure import create_project_structure
 from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_main
 
@@ -531,7 +532,7 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
         "minimum"
     )
 
-def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
+def obtain_inner_toe_line(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['karakteristieke_profielen_map', 'profiel_info_csv', 'output_map_teenlijn']
 
     try:
@@ -541,10 +542,11 @@ def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
         return
 
     # Accessing parameters
-    karakteristieke_profielen_map = parameters['karakteristieke_profielen_map']
-    profiel_info_csv = parameters['profiel_info_csv']
+    _parent_dir = config_file.parent
+    karakteristieke_profielen_map = _parent_dir.joinpath(parameters['karakteristieke_profielen_map'])
+    profiel_info_csv = _parent_dir.joinpath(parameters['profiel_info_csv'])
     if results_folder is None:
-        output_path = Path(parameters['output_map_teenlijn'])
+        output_path = _parent_dir.joinpath(parameters['output_map_teenlijn'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_teenlijn'])
         # Recreate the output folder
@@ -562,9 +564,9 @@ def obtain_inner_toe_line(config_file: str, results_folder: Path = None):
 
     # run the teenlijn_workflow
     main_teenlijn(
-        Path(karakteristieke_profielen_map),
-        Path(profiel_info_csv),
-        Path(output_path),
+        karakteristieke_profielen_map,
+        profiel_info_csv,
+        output_path,
     )
 
 def count_buildings(config_file: str, results_folder: Path = None):

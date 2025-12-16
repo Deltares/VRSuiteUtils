@@ -19,7 +19,8 @@ def test_bekleding_gebu_zst(project_folder:str,  request: pytest.FixtureRequest)
         shutil.rmtree(_output_path)
 
     #run the hydraring overflow workflow to generate the relevant results
-    _preprocessor_config_path = test_data.joinpath(project_folder, "preprocessor_config.config")
+    _preprocessor_config_path = test_data.joinpath(project_folder, "preprocessor.config")
+    assert _preprocessor_config_path.exists()
     api.run_gebu_zst(_preprocessor_config_path, _output_path)
 
     #compare the json file
