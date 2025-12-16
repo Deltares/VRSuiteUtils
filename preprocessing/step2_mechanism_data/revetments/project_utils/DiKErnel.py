@@ -50,6 +50,9 @@ class DIKErnelCalculations(object):
     def run_DIKErnel(self, binDIKErnel, output_path, local_path, region):
 
         dike_kernel_exe = binDIKErnel.joinpath('DiKErnel-cli.exe')
+        if not dike_kernel_exe.exists():
+            raise FileNotFoundError("DIKErnel executable not found in {}".format(dike_kernel_exe))
+        
         input_json_path = local_path.joinpath("input.json")
         output_json_path = output_path.joinpath('output.json')
         # os.system(str(dike_kernel_exe) + ' --invoerbestand project_utils/input.json '+ '--uitvoerbestand output.json --uitvoerniveau schade')
