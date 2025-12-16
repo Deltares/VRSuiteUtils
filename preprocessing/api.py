@@ -68,14 +68,14 @@ def create_project(project_folder: Path, traject_id: str):
     create_project_structure(project_folder, traject_id)
 
 
-def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
+def generate_vakindeling_shape(config_file: Path, results_folder: Path = None):
     """
     Generate the vakindeling shapefile based on the input vakindeling csv file.
     The vakindeling shapefile will be saved in the output folder specified in the configuration file.
 
     Parameters
     ----------
-    config_file : str
+    config_file : Path
         Path to the configuration file.
     results_folder : Path, optional
         Used for testing: Path to the folder where the results will be saved. If None, the results will be saved in the same folder as the configuration file.
@@ -84,7 +84,7 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
     -------
     None
     """
-
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
     mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_map_vakindeling']
 
     try:
@@ -94,11 +94,12 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
         return
 
     # Accessing parameters
+    _parent_dir = config_file.parent
     traject_id = parameters['traject_id']
-    vakindeling_csv = parameters['vakindeling_csv']
+    vakindeling_csv = _parent_dir.joinpath(parameters['vakindeling_csv'])
 
     if results_folder is None:
-        output_folder_vakindeling = Path(parameters['output_map_vakindeling'])
+        output_folder_vakindeling = _parent_dir.joinpath(parameters['output_map_vakindeling'])
     else: # used for testing
         output_folder_vakindeling = results_folder.joinpath(parameters['output_map_vakindeling'])
         # Recreate the output folder
@@ -128,13 +129,14 @@ def generate_vakindeling_shape(config_file: str, results_folder: Path = None):
     vakindeling_main(
         traject_id,
         vakindeling_csv,
-        Path(output_folder_vakindeling),
+        output_folder_vakindeling,
         traject_shape,
         flip,
     )
 
-def generate_and_evaluate_waterlevel_computations(config_file: str, results_folder: Path = None):
+def generate_and_evaluate_waterlevel_computations(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'output_map_waterstand']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -143,12 +145,13 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
         return
 
     # Accessing parameters
-    file_path = parameters['hr_input_csv']
-    database_path_current = Path(parameters['database_path_HR_current'])
-    database_path_future = Path(parameters['database_path_HR_future'])
-    
+    _parent_dir = config_file.parent
+    file_path = _parent_dir.joinpath(parameters['hr_input_csv'])
+    database_path_current = _parent_dir.joinpath(parameters['database_path_HR_current'])
+    database_path_future = _parent_dir.joinpath(parameters['database_path_HR_future'])
+
     if results_folder is None:
-        output_path = Path(parameters['output_map_waterstand'])
+        output_path = _parent_dir.joinpath(parameters['output_map_waterstand'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_waterstand'])
         # Recreate the output folder
@@ -166,20 +169,20 @@ def generate_and_evaluate_waterlevel_computations(config_file: str, results_fold
 
     # run the water level computations
     waterlevel_main(
-        Path(file_path),
+        file_path,
         [database_path_current, database_path_future],
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
+        Path(__file__).parent.parent.joinpath('externals', 'HydraRing-23.1.1'),
+        output_path,
     )
 
-def generate_and_evaluate_overflow_computations(config_file: str, results_folder: Path = None):
+def generate_and_evaluate_overflow_computations(config_file: Path, results_folder: Path = None):
     """
     Generate the overflow computations based on the input HR input csv file.
     The results will be saved in the output folder specified in the configuration file.
 
     Parameters
     ----------
-    config_file : str
+    config_file : Path
         Path to the configuration file.
     results_folder : Path, optional 
         Used for testing: Path to the folder where the results will be saved. If None, the results will be saved in the same folder as the configuration file.
@@ -188,7 +191,7 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
     -------
     None
     """
-    
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
     mandatory_parameters = ['hr_input_csv', 'database_path_HR_current', 'database_path_HR_future', 'hr_profielen_dir', 'output_map_overslag']
 
     try:
@@ -198,14 +201,15 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
         return
 
     # Accessing parameters
-    file_path = parameters['hr_input_csv']
-    database_path_current = Path(parameters['database_path_HR_current'])
-    database_path_future = Path(parameters['database_path_HR_future'])
-    
-    profielen_dir = parameters['hr_profielen_dir']
-    output_path = parameters['output_map_overslag']
+    _parent_dir = config_file.parent
+    file_path = _parent_dir.joinpath(parameters['hr_input_csv'])
+    database_path_current = _parent_dir.joinpath(parameters['database_path_HR_current'])
+    database_path_future = _parent_dir.joinpath(parameters['database_path_HR_future'])
+
+    profielen_dir = _parent_dir.joinpath(parameters['hr_profielen_dir'])
+    output_path = _parent_dir.joinpath(parameters['output_map_overslag'])
     if results_folder is None:
-        output_path = Path(parameters['output_map_overslag'])
+        output_path = _parent_dir.joinpath(parameters['output_map_overslag'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_overslag'])
         # Recreate the output folder
@@ -223,15 +227,16 @@ def generate_and_evaluate_overflow_computations(config_file: str, results_folder
 
     # run the overflow computations
     overflow_main(
-        Path(file_path),
+        file_path,
         [database_path_current, database_path_future],
-        Path(profielen_dir),
-        Path(os.path.dirname(os.path.realpath(__file__))).joinpath('externals', 'HydraRing-23.1.1'),
-        Path(output_path),
+        profielen_dir,
+        Path(__file__).parent.parent.joinpath('externals', 'HydraRing-23.1.1'),
+        output_path,
     )
 
-def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple'):
+def evaluate_hydranl_waterlevel_computations(config_file: Path, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple'):
     mandatory_parameters = ['hr_input_csv', 'hnl_results_dir', 'output_map_waterstand']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -240,11 +245,12 @@ def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: P
         return
 
     # Accessing parameters
-    file_path = parameters['hr_input_csv']
-    work_dir_path = parameters['hnl_results_dir']
-    
+    _parent_dir = config_file.parent
+    file_path = _parent_dir.joinpath(parameters['hr_input_csv'])
+    work_dir_path = _parent_dir.joinpath(parameters['hnl_results_dir'])
+
     if results_folder is None:
-        output_path = Path(parameters['output_map_waterstand'])
+        output_path = _parent_dir.joinpath(parameters['output_map_waterstand'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_waterstand'])
         # Recreate the output folder
@@ -261,16 +267,16 @@ def evaluate_hydranl_waterlevel_computations(config_file: str, results_folder: P
 
     # run the water level computations
     waterlevel_hydranl_main(
-        Path(file_path),
-        Path(work_dir_path),
-        Path(output_path),
+        file_path,
+        work_dir_path,
+        output_path,
         correct_uncer,
         decim_type
     )
 
-def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple', q_crit: int = 1):
+def evaluate_hydranl_overflow_computations(config_file: Path, results_folder: Path = None, correct_uncer: bool = True, decim_type: str = 'decim_simple', q_crit: int = 1):
     mandatory_parameters = ['hr_input_csv', 'hnl_results_dir', 'output_map_overslag']
-
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
     except ValueError as e:
@@ -278,11 +284,12 @@ def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Pat
         return
 
     # Accessing parameters
-    file_path = parameters['hr_input_csv']
-    work_dir_path = parameters['hnl_results_dir']
-    
+    _parent_dir = config_file.parent
+    file_path = _parent_dir.joinpath(parameters['hr_input_csv'])
+    work_dir_path = _parent_dir.joinpath(parameters['hnl_results_dir'])
+
     if results_folder is None:
-        output_path = Path(parameters['output_map_overslag'])
+        output_path = _parent_dir.joinpath(parameters['output_map_overslag'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_overslag'])
         # Recreate the output folder
@@ -299,17 +306,16 @@ def evaluate_hydranl_overflow_computations(config_file: str, results_folder: Pat
 
     # run the water level computations
     overflow_hydranl_main(
-        Path(file_path),
-        Path(work_dir_path),
-        Path(output_path),
+        file_path,
+        work_dir_path,
+        output_path,
         correct_uncer,
         decim_type,
         q_crit
     )
 
 def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
-    if config_file and not isinstance(config_file, Path):
-        config_file = Path(config_file)
+
     mandatory_parameters = ['traject_id',
                             'bekleding_input_csv',
                             'database_path_HR_current',
@@ -317,6 +323,7 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
                             'output_map_waterstand',
                             'hr_profielen_dir',
                             'output_map_bekleding']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -366,9 +373,9 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
     )
 
 def run_gebu_zst(config_file: Path, results_folder: Path = None):
-    if config_file and not isinstance(config_file, Path):
-        config_file = Path(config_file)
+
     mandatory_parameters = ['traject_id', 'bekleding_input_csv', 'steentoets_map', 'hr_profielen_dir', 'output_map_bekleding']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -425,6 +432,7 @@ def run_gebu_zst(config_file: Path, results_folder: Path = None):
     
 def get_characteristic_profiles_for_traject(config_file: str, results_folder: Path = None):   
     mandatory_parameters = ['traject_id', 'output_map_profielen']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -435,9 +443,10 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
 
 
     # Accessing parameters
+    _parent_dir = config_file.parent
     traject_id = parameters['traject_id']
     if results_folder is None:
-        output_path = Path(parameters['output_map_profielen'])
+        output_path = _parent_dir.joinpath(parameters['output_map_profielen'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_profielen'])
         # Recreate the output folder
@@ -482,12 +491,13 @@ def get_characteristic_profiles_for_traject(config_file: str, results_folder: Pa
         flip_waterkant,
     )
 
-def selecteer_profiel(config_file: str, results_folder: Path = None):
+def selecteer_profiel(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['vakindeling_geojson',
                             'output_map_ahn_profielen',
                             'karakteristieke_profielen_map',
                             'profiel_info_csv',
                             'output_map_representatieve_profielen']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
     
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -496,12 +506,13 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
         return
 
     # Accessing parameters
-    vakindeling_geojson = parameters['vakindeling_geojson']
-    ahn_profielen = parameters['output_map_ahn_profielen']
-    karakteristieke_profielen = parameters['karakteristieke_profielen_map']
-    profiel_info_csv = parameters['profiel_info_csv']
+    _parent_dir = config_file.parent
+    vakindeling_geojson = _parent_dir.joinpath(parameters['vakindeling_geojson'])
+    ahn_profielen = _parent_dir.joinpath(parameters['output_map_ahn_profielen'])
+    karakteristieke_profielen = _parent_dir.joinpath(parameters['karakteristieke_profielen_map'])
+    profiel_info_csv = _parent_dir.joinpath(parameters['profiel_info_csv'])
     if results_folder is None:
-        output_path = Path(parameters['output_map_representatieve_profielen'])
+        output_path = _parent_dir.joinpath(parameters['output_map_representatieve_profielen'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_representatieve_profielen'])
         # Recreate the output folder
@@ -523,17 +534,18 @@ def selecteer_profiel(config_file: str, results_folder: Path = None):
  
     # run the select_profiles_workflow
     main_profiel_selectie(
-        Path(vakindeling_geojson),
-        Path(ahn_profielen),
-        Path(karakteristieke_profielen),
-        Path(profiel_info_csv),
-        Path(output_path),
+        vakindeling_geojson,
+        ahn_profielen,
+        karakteristieke_profielen,
+        profiel_info_csv,
+        output_path,
         invoerbestand,
         "minimum"
     )
 
 def obtain_inner_toe_line(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['karakteristieke_profielen_map', 'profiel_info_csv', 'output_map_teenlijn']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -569,12 +581,13 @@ def obtain_inner_toe_line(config_file: Path, results_folder: Path = None):
         output_path,
     )
 
-def count_buildings(config_file: str, results_folder: Path = None):
+def count_buildings(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['traject_id',
                             'teenlijn_geojson',
                             'vakindeling_geojson',
                             'output_map_bebouwing',
                             'bag_gebouwen_geopackage']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -583,14 +596,15 @@ def count_buildings(config_file: str, results_folder: Path = None):
         return
 
     # Accessing parameters
+    _parent_dir = config_file.parent
     traject_id = parameters['traject_id']
-    teenlijn_geojson = parameters['teenlijn_geojson']
-    vakindeling_geojson = parameters['vakindeling_geojson']
-    gebouwen_geopackage = parameters['bag_gebouwen_geopackage']
+    teenlijn_geojson = _parent_dir.joinpath(parameters['teenlijn_geojson'])
+    vakindeling_geojson = _parent_dir.joinpath(parameters['vakindeling_geojson'])
+    gebouwen_geopackage = _parent_dir.joinpath(parameters['bag_gebouwen_geopackage'])
     flip_waterkant = parameters.getboolean('flip_waterkant', fallback=False)
     
     if results_folder is None:
-        output_path = Path(parameters['output_map_bebouwing'])
+        output_path = _parent_dir.joinpath(parameters['output_map_bebouwing'])
     else: # used for testing
         output_path = results_folder.joinpath(parameters['output_map_bebouwing'])
         # Recreate the output folder
@@ -618,14 +632,14 @@ def count_buildings(config_file: str, results_folder: Path = None):
     # Run the derive_buildings_workflow
     main_bebouwing(
         traject_id,
-        Path(teenlijn_geojson),
-        Path(vakindeling_geojson),
-        Path(output_path),
-        Path(gebouwen_geopackage),
+        teenlijn_geojson,
+        vakindeling_geojson,
+        output_path,
+        gebouwen_geopackage,
         richting
     )
 
-def create_database(config_file: str, results_folder: Path = None):
+def create_database(config_file: Path, results_folder: Path = None):
     mandatory_parameters = ['traject_id',
                             'vakindeling_geojson',
                             'karakteristieke_profielen_csv',
@@ -635,6 +649,7 @@ def create_database(config_file: str, results_folder: Path = None):
                             'hr_input_csv',
                             'output_map_waterstand',
                             'output_map_overslag']
+    config_file = config_file if isinstance(config_file, Path) else Path(config_file)
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -643,18 +658,19 @@ def create_database(config_file: str, results_folder: Path = None):
         return
 
     # Accessing parameters
+    _parent_dir = config_file.parent
     traject_id = parameters['traject_id']
-    vakindeling_geojson = parameters['vakindeling_geojson']
-    measure_configuration = parameters['maatregelen_configuratie']
-    characteristic_profile_csv = parameters['karakteristieke_profielen_csv']
-    building_csv_path = parameters['gebouwen_csv']
+    vakindeling_geojson = _parent_dir.joinpath(parameters['vakindeling_geojson'])
+    measure_configuration = _parent_dir.joinpath(parameters['maatregelen_configuratie'])
+    characteristic_profile_csv = _parent_dir.joinpath(parameters['karakteristieke_profielen_csv'])
+    building_csv_path = _parent_dir.joinpath(parameters['gebouwen_csv'])
     output_db_name = parameters['vrtool_database_naam']
-    hr_input_csv = parameters['hr_input_csv']
-    waterlevel_results_path = parameters['output_map_waterstand']
-    overflow_results_path = parameters['output_map_overslag']
-    piping_path = parameters.get('piping_input_csv', fallback=False)
-    stability_path = parameters.get('stabiliteit_input_csv', fallback=False)
-    revetment_path = parameters.get('output_map_bekleding', fallback=False)
+    hr_input_csv = _parent_dir.joinpath(parameters['hr_input_csv'])
+    waterlevel_results_path = _parent_dir.joinpath(parameters['output_map_waterstand'])
+    overflow_results_path = _parent_dir.joinpath(parameters['output_map_overslag'])
+    piping_path = _parent_dir.joinpath(parameters.get('piping_input_csv', fallback=False))
+    stability_path = _parent_dir.joinpath(parameters.get('stabiliteit_input_csv', fallback=False))
+    revetment_path = _parent_dir.joinpath(parameters.get('output_map_bekleding', fallback=False))
     use_hydraring = parameters.getboolean('gebruik_hydraring', fallback=True)  # set default value to True if not present
     if len(os.listdir(revetment_path))==0: #no results present, so ignore revetment
         revetment_path = None
@@ -690,18 +706,18 @@ def create_database(config_file: str, results_folder: Path = None):
     # run the write_database_workflow
     write_database_main(
         traject_id,
-        Path(vakindeling_geojson),
-        Path(characteristic_profile_csv),
-        Path(building_csv_path),
-        Path(output_path),
+        vakindeling_geojson,
+        characteristic_profile_csv,
+        building_csv_path,
+        output_path,
         output_db_name,
-        Path(hr_input_csv),
-        Path(waterlevel_results_path),
-        Path(overflow_results_path),
+        hr_input_csv,
+        waterlevel_results_path,
+        overflow_results_path,
         piping_path,
         stability_path,
         revetment_path,
-        Path(measure_configuration),
+        measure_configuration,
         use_hydraring=use_hydraring,
     )
 
