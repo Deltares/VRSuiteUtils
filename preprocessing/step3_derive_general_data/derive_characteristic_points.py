@@ -1,13 +1,9 @@
-import matplotlib, os, sys
+import matplotlib, os
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize
 from scipy.interpolate import interp1d
 
-# required to make it work in a docker container
-# import matplotlib
-# Set the backend to TkAgg
-# matplotlib.use('TkAgg')
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from pathlib import Path
 import itertools
@@ -350,7 +346,6 @@ class DFlowSlideCharacteristicPointsSimple():
         don't interpolate between missing points, leave parts with nan blank
         '''
         # create a figure with 5 subplots
-        plt.switch_backend('TkAgg')
         fig, axs = plt.subplots(1, figsize=(16, 8))
 
         # plot the profile
