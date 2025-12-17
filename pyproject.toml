@@ -6,7 +6,7 @@ authors = [{name = "Wouter Jan Klerk", email = "wouterjan.klerk@deltares.nl"}]
 maintainers = [{name = "Stephan Rikkert", email="stephan.rikkert@deltares.nl"}]
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
-dependencies = ["geopandas", "numpy", "seaborn", "pandas", "shapely", "fiona", "scipy", "geojson", "openpyxl", "owslib", "contextily", "matplotlib", "tqdm", "vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl", "vr-dash @ git+https://github.com/Deltares-research/VrtoolDashboard.git"]
+dependencies = ["geopandas", "numpy", "seaborn", "pandas", "shapely", "fiona", "scipy", "geojson", "openpyxl", "owslib", "contextily", "matplotlib", "tqdm", "vr-dash @ git+https://github.com/Deltares-research/VrtoolDashboard.git@v1.2.0?rev_type=tag", "vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl"]
 
 [project.urls]
 homepage = "https://deltares-research.github.io/VrtoolDocumentation/"

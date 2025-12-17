@@ -210,7 +210,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
       - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
       - pypi: ./
   dev:
@@ -536,7 +536,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
       - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
       - pypi: ./
   py312:
@@ -747,7 +747,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
       - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl
       - pypi: ./
@@ -959,7 +959,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
       - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl
       - pypi: ./
@@ -1186,7 +1186,7 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
       - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
       - pypi: ./
 packages:
@@ -4591,7 +4591,7 @@ packages:
 - pypi: ./
   name: preprocessing
   version: 1.2.1
-  sha256: 347ceb7c3a58212390baa606e8045ba0b1f66b54f8fc40f715cc33f744abede2
+  sha256: 4a8ae81d56bb1d68df19ee0231faf012b8e78235e7ef1800df8af77ad03d1ebc
   requires_dist:
   - geopandas
   - numpy
@@ -4606,8 +4606,8 @@ packages:
   - contextily
   - matplotlib
   - tqdm
+  - vr-dash @ git+https://github.com/Deltares-research/VrtoolDashboard.git@v1.2.0
   - vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-  - vr-dash @ git+https://github.com/Deltares-research/VrtoolDashboard.git
   requires_python: '>=3.12,<3.14'
   editable: true
 - conda: https://conda.anaconda.org/conda-forge/win-64/proj-9.7.1-h7b1ce8f_0.conda
@@ -6142,7 +6142,7 @@ packages:
   purls: []
   size: 115073
   timestamp: 1765216325898
-- pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+- pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
   name: vr-dash
   version: 1.2.0
   requires_dist:
