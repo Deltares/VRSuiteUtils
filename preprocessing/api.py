@@ -323,7 +323,7 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
                             'hr_profielen_dir',
                             'output_map_bekleding']
     config_file = config_file if isinstance(config_file, Path) else Path(config_file)
-
+    _parent_dir = config_file.parent
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
     except ValueError as e:
@@ -332,14 +332,14 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
 
     # Accessing parameters
     traject_id = parameters['traject_id']
-    input_csv = config_file.joinpath(parameters['bekleding_input_csv'])
-    database_path_current = config_file.joinpath(parameters['database_path_HR_current'])
-    database_path_future = config_file.joinpath(parameters['database_path_HR_future'])
-    waterlevel_path = config_file.joinpath(parameters['output_map_waterstand'])
-    profielen_path = config_file.joinpath(parameters['hr_profielen_dir'])
+    input_csv = _parent_dir.joinpath(parameters['bekleding_input_csv'])
+    database_path_current = _parent_dir.joinpath(parameters['database_path_HR_current'])
+    database_path_future = _parent_dir.joinpath(parameters['database_path_HR_future'])
+    waterlevel_path = _parent_dir.joinpath(parameters['output_map_waterstand'])
+    profielen_path = _parent_dir.joinpath(parameters['hr_profielen_dir'])
 
     if results_folder is None:
-        output_path = config_file.joinpath(parameters['output_map_bekleding'])
+        output_path = _parent_dir.joinpath(parameters['output_map_bekleding'])
         paths_to_databases = [database_path_current, database_path_future]
     else: # used for testing
         paths_to_databases = [database_path_current]
