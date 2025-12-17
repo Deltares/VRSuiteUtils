@@ -17,6 +17,7 @@ from preprocessing.workflows.derive_buildings_workflow import main_bebouwing
 from preprocessing.workflows.write_database_workflow import write_database_main
 
 from preprocessing.common_functions import read_config_file
+from preprocessing import hydraring_bin_dir, dikernel_bin_dir
 from pathlib import Path
 import os
 from vrtool.vrtool_logger import VrToolLogger
@@ -170,7 +171,7 @@ def generate_and_evaluate_waterlevel_computations(config_file: Path, results_fol
     waterlevel_main(
         file_path,
         [database_path_current, database_path_future],
-        Path(__file__).parent.parent.joinpath('externals', 'HydraRing-23.1.1'),
+        hydraring_bin_dir,
         output_path,
     )
 
@@ -229,7 +230,7 @@ def generate_and_evaluate_overflow_computations(config_file: Path, results_folde
         file_path,
         [database_path_current, database_path_future],
         profielen_dir,
-        Path(__file__).parent.parent.joinpath('externals', 'HydraRing-23.1.1'),
+        hydraring_bin_dir,
         output_path,
     )
 
@@ -367,7 +368,7 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
         paths_to_databases,
         waterlevel_path,
         profielen_path,
-        Path(__file__).parent.parent.joinpath('externals', 'HydraRing-23.1.1'),
+        hydraring_bin_dir,
         output_path,
     )
 
@@ -423,7 +424,7 @@ def run_gebu_zst(config_file: Path, results_folder: Path = None):
         input_csv,
         steentoets_path,
         profielen_path,
-        Path(__file__).parent.parent.joinpath('externals', 'DiKErnel'),
+        dikernel_bin_dir,
         output_path_qvar,
         output_path_results,
         versterking_bekleding,
