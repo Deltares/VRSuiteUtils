@@ -19,7 +19,7 @@ def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.Fixt
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
-        shutil.rmtree(_output_path)
+        shutil.rmtree(_output_path, ignore_errors=True)
     
     #run the vakindeling workflow to generate the geojson
     api.generate_vakindeling_shape(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)

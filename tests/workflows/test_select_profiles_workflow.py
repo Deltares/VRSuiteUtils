@@ -1,15 +1,11 @@
-import preprocessing.api as api
 import filecmp
 
-from pathlib import Path
 import preprocessing.api as api
-import geopandas as gpd
 import pytest
 import shutil
 
 
 from tests import test_data, test_results
-from preprocessing.common_functions import read_config_file
 
 @pytest.mark.parametrize("project_folder",
                          [pytest.param("31-1_v2", id = '31-1')])
@@ -17,7 +13,7 @@ def test_select_profiles_workflow(project_folder:str,  request: pytest.FixtureRe
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
-        shutil.rmtree(_output_path)
+        shutil.rmtree(_output_path, ignore_errors=True)
 
     # #run the hydraring overflow workflow to generate the relevant results
     api.selecteer_profiel(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)

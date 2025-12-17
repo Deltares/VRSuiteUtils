@@ -14,7 +14,7 @@ def test_bekleding_qvariant_workflow(project_folder:str,  request: pytest.Fixtur
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
-        shutil.rmtree(_output_path)
+        shutil.rmtree(_output_path, ignore_errors=True)
 
     #run the hydraring overflow workflow to generate the relevant results
     api.run_bekleding_qvariant(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)

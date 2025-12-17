@@ -16,7 +16,7 @@ def test_bekleding_gebu_zst(project_folder:str,  request: pytest.FixtureRequest)
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
-        shutil.rmtree(_output_path)
+        shutil.rmtree(_output_path, ignore_errors=True)
 
     #run the hydraring overflow workflow to generate the relevant results
     _preprocessor_config_path = test_data.joinpath(project_folder, "preprocessor.config")

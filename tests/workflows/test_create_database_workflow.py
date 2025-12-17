@@ -17,7 +17,7 @@ def test_create_database_workflow(project_folder:str,  config_name: str, referen
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
-        shutil.rmtree(_output_path)
+        shutil.rmtree(_output_path.parent, ignore_errors=True)
 
     # #run the hydraring overflow workflow to generate the relevant results
     api.create_database(test_data.joinpath(project_folder, config_name), _output_path)
