@@ -648,11 +648,11 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
 
 
     #check consistency of section_ids and measure_configuration.index
-    section_ids = sorted([val["id"] for val in SectionData.select().dicts()])
-    section_names = sorted([val["section_name"] for val in SectionData.select().dicts()])
-    if isinstance(measure_configuration, pd.DataFrame) and not section_names == measure_configuration.index.to_list():
+    section_ids, section_names = zip(*sorted([(val["id"], val["section_name"]) for val in SectionData.select().dicts()]))
+
+    if isinstance(measure_configuration, pd.DataFrame) and not list(section_names) == measure_configuration.index.to_list():
         log_and_raise_error(
-            "De ids van de dijkvakken in de measure_configuration waarvoor in_analyse = True komen niet overeen met de section_ids in de SectionData tabel. Controleer het measure_configuration bestand en zorg ervoor dat deze consistent is met de geojson van de vakindeling.", ValueError
+            "De namen van de dijkvakken in de measure_configuration waarvoor in_analyse = True komen niet overeen met waarden de SectionData.section_name. Controleer het measure_configuration bestand en zorg ervoor dat deze consistent is met de geojson van de vakindeling.", ValueError
         )
     
     # remove Revetment measures if revetment is None
