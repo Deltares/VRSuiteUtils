@@ -10,6 +10,8 @@ import logging
 
 def vakindeling_main(traject_id: str,
                      vakindeling_csv_path: str,
+                     maatregelen_configuratie_path: str,
+                     vakindeling_geojson_path: str,
                      output_folder: Path,
                      traject_shape_path=False,
                      flip_traject=False,
@@ -41,28 +43,28 @@ def vakindeling_main(traject_id: str,
 
     # Save to file
     traject.vakindeling_shape.to_file(
-        Path(output_folder).joinpath(f"Vakindeling_{traject_id}.geojson"),
+        output_folder.joinpath(Path(vakindeling_geojson_path).name),
         driver="GeoJSON",
     )
     logging.info(
         "Vakindeling van traject {} opgeslagen in {}".format(
-            traject_id, output_folder.joinpath(f"Vakindeling_{traject_id}.geojson")
+            traject_id, output_folder.joinpath(Path(vakindeling_geojson_path).name)
         )
     )
     # Save a plot
     plot_vakindeling(
         traject.vakindeling_shape,
-        Path(output_folder).joinpath("Vakindeling_{}.png".format(traject_id)),
+        output_folder.joinpath("Vakindeling_{}.png".format(traject_id)),
     )
     logging.info("Bijbehorende plot opgeslagen")
         
     # Generate a csv file with the configuration of measures
     measure_config = MeasureConfiguration(traject.vakindeling_shape)
     measure_config.write_to_csv(
-        output_folder.joinpath(f"configuratie_maatregelen.csv")
+        output_folder.joinpath(Path(maatregelen_configuratie_path).name)
     )
     logging.info("Configuratie van maatregelen opgeslagen in {}".format(
-        output_folder.joinpath(f"configuratie_maatregelen.csv")
+        output_folder.joinpath(Path(maatregelen_configuratie_path).name)
     ))
 
     logging.info("Vakindeling workflow voor traject {} is voltooid".format(traject_id))

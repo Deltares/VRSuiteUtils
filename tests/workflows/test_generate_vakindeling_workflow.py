@@ -12,21 +12,22 @@ from preprocessing.workflows.generate_vakindeling_workflow import vakindeling_ma
 from tests import test_data, test_results
 from preprocessing.common_functions import read_config_file, read_csv
 
-@pytest.mark.parametrize("project_folder",
-                         [pytest.param("31-1_v2", id = '31-1'),
-                          pytest.param("35-1", id = '35-1'),])
-def test_generate_vakindeling_workflow(project_folder:str,  request: pytest.FixtureRequest):
+@pytest.mark.parametrize("project_folder,config_name",
+                         [pytest.param("31-1_v2", "preprocessor.config", id = '31-1'),
+                          pytest.param("31-1_v2", "preprocessor_minder_vakken.config", id = '31-1 vakken uit'),
+                          pytest.param("35-1", "preprocessor.config", id = '35-1'),])
+def test_generate_vakindeling_workflow(project_folder:str, config_name: str, request: pytest.FixtureRequest):
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
         shutil.rmtree(_output_path, ignore_errors=True)
     
     #run the vakindeling workflow to generate the geojson
-    api.generate_vakindeling_shape(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
+    api.generate_vakindeling_shape(test_data.joinpath(project_folder, config_name), _output_path)
     
     #get the relative paths from the config
-    _output_geojson = read_config_file(test_data.joinpath(project_folder, "preprocessor.config"), ['vakindeling_geojson'])['vakindeling_geojson']
-    _maatregel_config_path = read_config_file(test_data.joinpath(project_folder, "preprocessor.config"), ['maatregelen_configuratie'])['maatregelen_configuratie']
+    _output_geojson = read_config_file(test_data.joinpath(project_folder, config_name), ['vakindeling_geojson'])['vakindeling_geojson']
+    _maatregel_config_path = read_config_file(test_data.joinpath(project_folder, config_name), ['maatregelen_configuratie'])['maatregelen_configuratie']
     #read the generated vakindeling shapefile
     new_shape = gpd.read_file(
        _output_path.joinpath(_output_geojson),
