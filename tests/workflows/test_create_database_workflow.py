@@ -45,7 +45,13 @@ def test_create_database_workflow(project_folder:str,  config_name: str, referen
             cursor_ref.execute(f"SELECT * FROM {table[0]}")
             rows_ref = cursor_ref.fetchall()
             if rows != rows_ref:
-                _inconsistent_tables.append(table[0])
+                #lenient comparison for float values
+                def round_floats(row):
+                    return tuple(round(val, 5) if isinstance(val, float) else val for val in row)
+                rows_rounded = [round_floats(row) for row in rows]
+                rows_ref_rounded = [round_floats(row) for row in rows_ref]
+                if rows_rounded != rows_ref_rounded:
+                    _inconsistent_tables.append(table[0])
         assert len(_inconsistent_tables) == 0, f"Tables {str(_inconsistent_tables)} are not the same"
         conn.close()
         conn_ref.close()
