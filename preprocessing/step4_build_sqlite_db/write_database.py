@@ -649,9 +649,10 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
 
     #check consistency of section_ids and measure_configuration.index
     section_ids = sorted([val["id"] for val in SectionData.select().dicts()])
-    if isinstance(measure_configuration, pd.DataFrame) and not section_ids == measure_configuration.index.to_list():
+    section_names = sorted([val["section_name"] for val in SectionData.select().dicts()])
+    if isinstance(measure_configuration, pd.DataFrame) and not section_names == measure_configuration.index.to_list():
         log_and_raise_error(
-            "De ids van de dijkvakken in de measure_configuration komen niet overeen met de section_ids in de SectionData tabel. Controleer het measure_configuration bestand en zorg ervoor dat de index consistent is met de geojson van de vakindeling.", ValueError
+            "De ids van de dijkvakken in de measure_configuration waarvoor in_analyse = True komen niet overeen met de section_ids in de SectionData tabel. Controleer het measure_configuration bestand en zorg ervoor dat deze consistent is met de geojson van de vakindeling.", ValueError
         )
     
     # remove Revetment measures if revetment is None
@@ -725,12 +726,11 @@ def fill_measures(measure_table, measure_configuration = None, revetment = None)
             n_steps_block=row["n_steps_block"],
             piping_reduction_factor = row["piping_reduction_factor"],
         )
-    for section_id in tqdm.tqdm(section_ids, desc="Maatregelen per dijkvak wegschrijven:"):
+    for idx, section_name in tqdm.tqdm(enumerate(section_names), desc="Maatregelen per dijkvak wegschrijven:"):
         if isinstance(measure_configuration, NoneType):
             write_measures_for_section()
         else:
-            write_measures_for_section(measure_configuration.loc[section_id], section_id, measure_ids)
-
+            write_measures_for_section(measure_configuration.loc[section_name], section_ids[idx], measure_ids)
 def check_if_revetment(section_id):
     try:
         MechanismPerSection.select().where(

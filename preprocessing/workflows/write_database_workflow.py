@@ -115,10 +115,12 @@ def write_database_main(traject_name : str,
     measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
     logging.info(f"Tabel met basismaatregelen succesvol ingelezen.")
 
-    if measure_configuration is not None:
-        measure_configuration_table, measures_table = read_measures_config(measure_configuration, measures_table)
-        logging.info(f"Configuratie van maatregelen per dijkvak succesvol ingelezen.")
+    measure_configuration_table, measures_table = read_measures_config(measure_configuration, measures_table)
+    
+    logging.info(f"Configuratie van maatregelen per dijkvak succesvol ingelezen.")
 
+    #merge measure configuration with vakindeling
+    
 
     # read the data for profilepoints
     profile_table = read_profile_data(characteristic_profile_csv)
