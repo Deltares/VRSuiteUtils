@@ -85,7 +85,7 @@ def generate_vakindeling_shape(config_file: Path, results_folder: Path = None):
     None
     """
     config_file = config_file if isinstance(config_file, Path) else Path(config_file)
-    mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_map_vakindeling']
+    mandatory_parameters = ['traject_id', 'vakindeling_csv', 'output_map_vakindeling', 'vakindeling_geojson', 'maatregelen_configuratie']
 
     try:
         parameters = read_config_file(config_file, mandatory_parameters)
@@ -97,6 +97,8 @@ def generate_vakindeling_shape(config_file: Path, results_folder: Path = None):
     _parent_dir = config_file.parent
     traject_id = parameters['traject_id']
     vakindeling_csv = _parent_dir.joinpath(parameters['vakindeling_csv'])
+    vakindeling_geojson_path = parameters['vakindeling_geojson']
+    maatregelen_configuratie_path = parameters['maatregelen_configuratie']
 
     if results_folder is None:
         output_folder_vakindeling = _parent_dir.joinpath(parameters['output_map_vakindeling'])
@@ -122,6 +124,8 @@ def generate_vakindeling_shape(config_file: Path, results_folder: Path = None):
     logging.info(f" traject_id:                     {traject_id}")
     logging.info(f" vakindeling_csv:                {vakindeling_csv}")
     logging.info(f" output_folder_vakindeling:      {output_folder_vakindeling}")
+    logging.info(f" maatregelen_configuratie:       {maatregelen_configuratie_path}")
+    logging.info(f" vakindeling_geojson:            {vakindeling_geojson_path}")
     logging.info(f" traject_shape:                  {traject_shape}")
     logging.info(f" flip_traject:                   {flip} \n")
 
@@ -129,6 +133,8 @@ def generate_vakindeling_shape(config_file: Path, results_folder: Path = None):
     vakindeling_main(
         traject_id,
         vakindeling_csv,
+        maatregelen_configuratie_path,
+        vakindeling_geojson_path,
         output_folder_vakindeling,
         traject_shape,
         flip,
