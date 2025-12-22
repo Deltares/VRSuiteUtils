@@ -12,6 +12,7 @@ from preprocessing.common_functions import read_config_file
 
 @pytest.mark.parametrize("project_folder,config_name,reference_config_json",
                          [pytest.param("31-1_v2", "preprocessor.config", "config.json", id = '31-1'),
+                          pytest.param("31-1_v2", "preprocessor_minder_vakken.config", "config_minder_vakken.json", id = '31-1 minder vakken'),
                           pytest.param("31-1_v2", "preprocessor_modified_measures.config", "config_modified.json", id = '31-1 aangepaste maatregelen'),])
 def test_create_database_workflow(project_folder:str,  config_name: str, reference_config_json: str, request: pytest.FixtureRequest):
     #specify the output path for results:
