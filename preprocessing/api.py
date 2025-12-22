@@ -342,6 +342,7 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
     if results_folder is None:
         output_path = _parent_dir.joinpath(parameters['output_map_bekleding'])
         paths_to_databases = [database_path_current, database_path_future]
+        _initialize_log_file(output_path, "Bekleding Q-variant")
     else: # used for testing
         paths_to_databases = [database_path_current]
         output_path = results_folder.joinpath(parameters['output_map_bekleding'])
@@ -349,9 +350,9 @@ def run_bekleding_qvariant(config_file: Path, results_folder: Path = None):
         if output_path.exists():
             output_path.rmdir()
         output_path.mkdir(parents=True, exist_ok=True)
+        _initialize_log_file(output_path, f"Bekleding Q-variant {results_folder.name}")
 
     # print the parameters
-    _initialize_log_file(output_path, "Bekleding Q-variant")
     logging.info("De volgende parameters zijn gelezen uit het configuratiebestand:")
     logging.info(f" traject_id:              {traject_id}")
     logging.info(f" bekleding_input_csv:     {input_csv}")
