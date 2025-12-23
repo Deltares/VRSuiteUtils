@@ -294,11 +294,11 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
 
    #remove all sections that are not in analyse  in vakindeling_shape from measure_configuration_table
    #get the objectids of the vakindeling_shape that are in analyse
-   in_analyse_section_ids = vakindeling_shape[vakindeling_shape['in_analyse'] == True].objectid.tolist()
-   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_ids]
+   in_analyse_section_names = vakindeling_shape[vakindeling_shape['in_analyse'] == True].vaknaam.tolist()
+   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_names]
 
    #reset the index to start from 1 
-   measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
+   # measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
