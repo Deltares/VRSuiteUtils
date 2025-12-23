@@ -119,9 +119,6 @@ def write_database_main(traject_name : str,
     
     logging.info(f"Configuratie van maatregelen per dijkvak succesvol ingelezen.")
 
-    #merge measure configuration with vakindeling
-    
-
     # read the data for profilepoints
     profile_table = read_profile_data(characteristic_profile_csv)
     logging.info(f"Dijkprofielen per vak succesvol ingelezen.")
