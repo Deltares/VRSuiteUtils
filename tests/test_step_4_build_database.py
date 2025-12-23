@@ -297,9 +297,6 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
    in_analyse_section_names = vakindeling_shape[vakindeling_shape['in_analyse'] == True].vaknaam.tolist()
    measure_configuration_table = measure_configuration_table.loc[in_analyse_section_names]
 
-   #reset the index to start from 1 
-   # measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
-
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
       _intermediate_dir.joinpath("Bebouwing_data.csv")
