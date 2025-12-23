@@ -721,10 +721,10 @@ def create_database(config_file: Path, results_folder: Path = None):
         hr_input_csv,
         waterlevel_results_path,
         overflow_results_path,
+        measure_configuration,
         piping_path,
         stability_path,
         revetment_path,
-        measure_configuration,
         use_hydraring=use_hydraring,
     )
 
