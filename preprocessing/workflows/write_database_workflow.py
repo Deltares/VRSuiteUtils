@@ -14,17 +14,15 @@ def write_config_file(output_dir : Path, traject_name : str, database_name : str
     
     if exclude_mechanisms is None:
         config = {'traject': traject_name,
-                  'T': [0, 20, 25, 50, 75, 100],
+                  'T': [0, 25, 50, 75, 100],
                   'input_database_name': str(database_name),
-                  'input_directory': None,
-                  'output_directory': "Basisberekening"}
+                  'input_directory': None}
     else:
         config = {'traject': traject_name,
-                  'T': [0, 20, 25, 50, 75, 100],
+                  'T': [0, 25, 50, 75, 100],
                   'excluded_mechanisms': exclude_mechanisms,
                   'input_database_name': str(database_name),
-                  'input_directory': None,
-                  'output_directory': "Basisberekening"}
+                  'input_directory': None}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
