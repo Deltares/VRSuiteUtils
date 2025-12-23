@@ -41,10 +41,10 @@ def write_database_main(traject_name : str,
                         hr_input_csv: Path,
                         waterlevel_results_path: Path,
                         overflow_results_path : Path,
+                        measure_configuration : Path,
                         piping_path = None,
                         stability_path = None,
                         revetment_path = None,
-                        measure_configuration = None,
                         use_hydraring: bool = True,  
                         ):
 
