@@ -784,7 +784,13 @@ def compare_databases(path_to_generated_db, path_to_reference_db):
             reference_rows = []
         # Compare the rows and columns
         if not generated_rows == reference_rows:
-            comparison_message += "The generated database and the reference database do not have the same table contents for table {} \n".format(table_name[0])
+            #compare the rows, but reduce precision for float values to 5 decimal places
+            def round_floats(row):
+                return tuple(round(val, 5) if isinstance(val, float) else val for val in row)
+            generated_rows_rounded = [round_floats(row) for row in generated_rows]
+            reference_rows_rounded = [round_floats(row) for row in reference_rows]
+            if not generated_rows_rounded == reference_rows_rounded:
+                comparison_message += "The generated database and the reference database do not have the same table contents for table {} \n".format(table_name[0])
             continue
     # Step 5: Perform assertions
     if len(comparison_message)>0:

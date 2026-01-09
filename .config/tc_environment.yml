@@ -1,8 +1,0 @@
-name: vr_preprocessing
-channels:
-  - conda-forge
-  - nodefaults
-dependencies:
-  - conda-forge::python=3.12
-  - conda-forge::fiona
-  - conda-forge::jupyterlab

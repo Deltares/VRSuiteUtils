@@ -1,15 +1,12 @@
 import preprocessing.api as api
 import filecmp
 
-from pathlib import Path
 import preprocessing.api as api
-import geopandas as gpd
 import pytest
 import shutil
 
 
 from tests import test_data, test_results
-from preprocessing.common_functions import read_config_file
 
 @pytest.mark.parametrize("project_folder",
                          [pytest.param("31-1_v2", id = '31-1'), 
@@ -19,10 +16,12 @@ def test_bekleding_gebu_zst(project_folder:str,  request: pytest.FixtureRequest)
     #specify the output path for results:
     _output_path = test_results.joinpath(request.node.name)
     if _output_path.exists():
-        shutil.rmtree(_output_path)
+        shutil.rmtree(_output_path, ignore_errors=True)
 
     #run the hydraring overflow workflow to generate the relevant results
-    api.run_gebu_zst(test_data.joinpath(project_folder, "preprocessor.config"), _output_path)
+    _preprocessor_config_path = test_data.joinpath(project_folder, "preprocessor.config")
+    assert _preprocessor_config_path.exists()
+    api.run_gebu_zst(_preprocessor_config_path, _output_path)
 
     #compare the json file
     for file in _output_path.rglob("*.json"):

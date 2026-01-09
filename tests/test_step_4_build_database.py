@@ -1,5 +1,4 @@
 import shutil
-from pathlib import Path
 
 import pytest
 from vrtool.orm.models import *
@@ -27,7 +26,7 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
    #get id of request
    _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
    if _output_path.parent.exists():
-      shutil.rmtree(_output_path.parent)
+      shutil.rmtree(_output_path.parent, ignore_errors=True)
 
    # get all the input data
    _generic_data_dir = test_data.parent.parent.joinpath("preprocessing","generic_data")
@@ -189,7 +188,7 @@ def test_read_waterlevel_hydranl(traject: str, test_name: str, revetment: bool, 
    # get id of request
    _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
    if _output_path.parent.exists():
-      shutil.rmtree(_output_path.parent)
+      shutil.rmtree(_output_path.parent, ignore_errors=True)
 
    # get all the input data
    _test_data_dir = test_data.joinpath(traject)
@@ -211,7 +210,7 @@ def test_read_overflow_hydranl(traject: str, test_name: str, revetment: bool,  r
    # get id of request
    _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
    if _output_path.parent.exists():
-      shutil.rmtree(_output_path.parent)
+      shutil.rmtree(_output_path.parent, ignore_errors=True)
 
    # get all the input data
    _test_data_dir = test_data.joinpath(traject)
@@ -231,7 +230,7 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
    #get id of request
    _output_path = test_results.joinpath(request.node.name, "{}.db".format(request.node.callspec.id))
    if _output_path.parent.exists():
-      shutil.rmtree(_output_path.parent)
+      shutil.rmtree(_output_path.parent, ignore_errors=True)
 
    # get all the input data
    _generic_data_dir = test_data.parent.parent.joinpath("preprocessing","generic_data")

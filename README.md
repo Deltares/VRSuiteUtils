@@ -8,14 +8,11 @@ The current version that this repository pertains to is VRTOOL v1.1.1
 Installation instructions are found [here](https://deltares-research.github.io/VrtoolDocumentation/Installaties/index.html) for general users. 
 
 Of course it is also possible to download the repository and run it from the environment as specified in the .yml and .toml files.
-Use of [miniforge](https://conda-forge.org/miniforge/) is advised for this. Then run:
+Use of [Pixi](https://pixi.sh/latest/) is advised for this. Then run:
 
 ```
-conda env create -f .config\environment.yml -p .env/
-conda activate .env/
-poetry install
+pixi install -e dev
 ```
-> IMPORTANT! If the installation fails because of the `vrtool` dependency (or any related like `peewee`) try installing through pip (`pip install .`) and then installing again through poetry `poetry install`
 
 ## Contribution and usage ##
 VRSuiteUtils is shared with the MIT license. 

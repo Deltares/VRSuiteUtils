@@ -1,7 +1,7 @@
 import configparser
 import re
 import os
-
+from pathlib import Path
 import logging
 import pandas as pd
 
@@ -40,7 +40,7 @@ def check_string_in_list(str, list_vals):
             return True
     return False
 
-def read_config_file(file_path, mandatory_parameters):
+def read_config_file(file_path: Path, mandatory_parameters: list) -> dict:
     config = configparser.ConfigParser()
     # Change working dir to the folder of the configuration file
     os.chdir(os.path.dirname(file_path))

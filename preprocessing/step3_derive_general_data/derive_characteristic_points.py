@@ -1,7 +1,6 @@
-import matplotlib, os, sys
+import matplotlib, os
 import numpy as np
 import pandas as pd
-from scipy.optimize import minimize
 from scipy.interpolate import interp1d
 
 matplotlib.use('TkAgg')
