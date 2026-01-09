@@ -2,7 +2,6 @@
  "traject": "31-1",
  "T": [
   0,
-  20,
   25,
   50,
   75,
@@ -12,6 +11,5 @@
   "HYDRAULIC_STRUCTURES"
  ],
  "input_database_name": "database_31-1.sqlite",
- "input_directory": null,
- "output_directory": "Basisberekening"
+ "input_directory": null
 }
