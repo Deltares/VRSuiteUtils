@@ -43,8 +43,8 @@ def qvariant_main(traject_id: str, bekleding_path: Path, database_paths: list[Pa
     this_file_path = Path(os.path.dirname(os.path.realpath(__file__)))
     _generic_data_dir = this_file_path.absolute().parent.joinpath('generic_data')
     dike_info = read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
-    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
-    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
+    p_ondergrens = float(dike_info.loc[dike_info['traject_name'].eq(traject_id), 'p_max'].to_numpy().item())
+    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'].eq(traject_id), 'p_sig'].to_numpy().item())
 
     p_grid = [1. / 30,
               p_ondergrens,
