@@ -100,8 +100,8 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
 
    #remove all sections that are not in analyse  in vakindeling_shape from measure_configuration_table
    #get the objectids of the vakindeling_shape that are in analyse
-   in_analyse_section_ids = vakindeling_shape[vakindeling_shape['in_analyse'] == True].objectid.tolist()
-   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_ids]
+   in_analyse_section_names = vakindeling_shape[vakindeling_shape['in_analyse'] == True].vaknaam.tolist()
+   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_names]
 
 
    #small change for dstability case to make sure limited measures are considered (reduction of test runtime)
@@ -110,11 +110,11 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
       measure_configuration_table['Grondversterking binnenwaarts D-Stability'] = measure_configuration_table['Grondversterking binnenwaarts']
       measure_configuration_table['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability'] = measure_configuration_table['Grondversterking binnenwaarts met stabiliteitsscherm']
       #set for section 8 the 'D-stability' measures to False
-      measure_configuration_table.loc[9, 'Grondversterking binnenwaarts D-Stability'] = False
-      measure_configuration_table.loc[9, 'Grondversterking binnenwaarts met stabiliteitsscherm D-Stability'] = False
+      measure_configuration_table.loc['8', 'Grondversterking binnenwaarts D-Stability'] = False
+      measure_configuration_table.loc['8', 'Grondversterking binnenwaarts met stabiliteitsscherm D-Stability'] = False
       #set for section 7 the normal measures to False
-      measure_configuration_table.loc[8, 'Grondversterking binnenwaarts'] = False
-      measure_configuration_table.loc[8, 'Grondversterking binnenwaarts met stabiliteitsscherm'] = False
+      measure_configuration_table.loc['7', 'Grondversterking binnenwaarts'] = False
+      measure_configuration_table.loc['7', 'Grondversterking binnenwaarts met stabiliteitsscherm'] = False
 
       #modify the measure_table. Copy Grondversterking binnenwaarts and Grondversterking binnenwaarts met stabiliteitsscherm to the D-Stability measures
       measures_table.loc['Grondversterking binnenwaarts D-Stability'] = measures_table.loc['Grondversterking binnenwaarts']
@@ -127,11 +127,11 @@ def test_make_database(traject: str, test_name: str, revetment: bool,  request: 
       measures_table.loc['Grondversterking binnenwaarts D-Stability', 'crest_step'] = 0.5
       measures_table.loc['Grondversterking binnenwaarts met stabiliteitsscherm D-Stability', 'crest_step'] = 0.5
    elif 'mixed' in request.node.callspec.id: #remove revetment measures for 2 sections in mixed case.
-      measure_configuration_table.loc[7, 'Aanpassing bekleding'] = False
-      measure_configuration_table.loc[8, 'Aanpassing bekleding'] = False
+      measure_configuration_table.loc['WsNoo_Stab_012000_014100', 'Aanpassing bekleding'] = False
+      measure_configuration_table.loc['WsNoo_Stab_014100_014700', 'Aanpassing bekleding'] = False
 
-   #reset the index to start from 1 
-   measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
+   #reset the index to the sections included
+   measure_configuration_table.index = in_analyse_section_names
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(
@@ -294,11 +294,8 @@ def test_direct_piping_input_written_to_database(traject: str, test_name: str, r
 
    #remove all sections that are not in analyse  in vakindeling_shape from measure_configuration_table
    #get the objectids of the vakindeling_shape that are in analyse
-   in_analyse_section_ids = vakindeling_shape[vakindeling_shape['in_analyse'] == True].objectid.tolist()
-   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_ids]
-
-   #reset the index to start from 1 
-   measure_configuration_table.index = np.arange(1, len(measure_configuration_table)+1)
+   in_analyse_section_names = vakindeling_shape[vakindeling_shape['in_analyse'] == True].vaknaam.tolist()
+   measure_configuration_table = measure_configuration_table.loc[in_analyse_section_names]
 
    # read the data for bebouwing
    bebouwing_table = read_bebouwing_data(

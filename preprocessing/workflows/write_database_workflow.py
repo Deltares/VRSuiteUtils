@@ -14,17 +14,15 @@ def write_config_file(output_dir : Path, traject_name : str, database_name : str
     
     if exclude_mechanisms is None:
         config = {'traject': traject_name,
-                  'T': [0, 20, 25, 50, 75, 100],
+                  'T': [0, 25, 50, 75, 100],
                   'input_database_name': str(database_name),
-                  'input_directory': None,
-                  'output_directory': "Basisberekening"}
+                  'input_directory': None}
     else:
         config = {'traject': traject_name,
-                  'T': [0, 20, 25, 50, 75, 100],
+                  'T': [0, 25, 50, 75, 100],
                   'excluded_mechanisms': exclude_mechanisms,
                   'input_database_name': str(database_name),
-                  'input_directory': None,
-                  'output_directory': "Basisberekening"}
+                  'input_directory': None}
 
     with open(output_dir.joinpath('config.json'), 'w') as f:
         json.dump(config, f, indent=1)
@@ -41,10 +39,10 @@ def write_database_main(traject_name : str,
                         hr_input_csv: Path,
                         waterlevel_results_path: Path,
                         overflow_results_path : Path,
+                        measure_configuration : Path,
                         piping_path = None,
                         stability_path = None,
                         revetment_path = None,
-                        measure_configuration = None,
                         use_hydraring: bool = True,  
                         ):
 
@@ -115,10 +113,9 @@ def write_database_main(traject_name : str,
     measures_table = read_measures_data(_generic_data_dir.joinpath("base_measures_totaal.csv"))
     logging.info(f"Tabel met basismaatregelen succesvol ingelezen.")
 
-    if measure_configuration is not None:
-        measure_configuration_table, measures_table = read_measures_config(measure_configuration, measures_table)
-        logging.info(f"Configuratie van maatregelen per dijkvak succesvol ingelezen.")
-
+    measure_configuration_table, measures_table = read_measures_config(measure_configuration, measures_table)
+    
+    logging.info(f"Configuratie van maatregelen per dijkvak succesvol ingelezen.")
 
     # read the data for profilepoints
     profile_table = read_profile_data(characteristic_profile_csv)
