@@ -5,6 +5,8 @@ environments:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
@@ -183,25 +185,25 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_6.conda
       - pypi: https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/c5/0d/84a4380f930db0010168e0aa7b7a8fed9ba1835a8fbb1472bc6d0201d529/build-1.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/95/95/c9a829f4ecd9660a364fb868f52482597b2bf345e5bf405ac4980ce71951/d_geolib-2.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/cf/a4853e5b2b2bea55ae909095a8720b3ed50d07bdd40cbeafcedb5a6c47da/dash-3.3.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/0d/10/646ccf7bbea83399965079f500ec719d821d19785372694fa9fe4db12182/dash_ag_grid-32.3.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/92/b2/86e672e8c6a351bfaf669faa564876072072861ecc399d884acc363662c1/dash_ag_grid-32.3.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d6/38/1efeec8b4d741c09ccd169baf8a00c07a0176b58e418d4cd0c30dffedd22/dash_bootstrap_components-2.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d2/63/f10cc18533cc9ab899ea81deca9759b3eebe47d01ad95c4e67b6acdada97/dash_iconify-0.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/1c/1b/3e3c9d03d250f86d1891fb305b438952aba237c8cb92ca7bead910c89e65/dash_mantine_components-2.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3a/55/7b0aac3707afebcd829bf315a9b3fcf2c66556008152bafe37cf85ce3697/dash_mantine_components-2.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/50/3d/9373ad9c56321fdab5b41197068e1d8c25883b3fea29dd361f9b55116869/dill-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3f/27/4570e78fc0bf5ea0ca45eb1de3818a23787af9b390c0b0a0033a1b8236f9/diskcache-5.6.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ec/f9/7f9263c5695f4bd0023734af91bedb2ff8209e8de6ead162f35d8dc762fd/flask-3.1.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ee/25/7d7e78e750bc1aecfaf0efbf826c69a791d2eeaf29cf20cba93ff4cced78/multiprocess-0.70.18-py313-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/3e/b8ecc67e178919671695f64374a7ba916cf0adbf86efedc6054f38b5b8ae/narwhals-2.14.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/16/22/02f7c226115fc1d0fcd52e635a4c27aaa4a5c39e75afb4175fc6bddf9665/openturns-1.26-cp39-abi3-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/6f/60/58e7a307a24044e0e982b99042fcd5a58d0cd928d9c01829574d7553ee8d/peewee-3.18.3.tar.gz
-      - pypi: https://files.pythonhosted.org/packages/e7/c3/3031c931098de393393e1f93a38dc9ed6805d86bb801acc3cf2d5bd1e6b7/plotly-6.5.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/1a/41/19c65578ef9a54b3083253c68a607f099642747168fe00f3a2bceb7c3a34/peewee-3.19.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/e9/8e/24e0bb90b2d75af84820693260c5534e9ed351afdda67ed6f393a141a0e2/plotly-6.5.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9e/8b/341991b158ddab181cff136acd2552c9f35bd30380422a639c0671e99a91/pydantic_core-2.41.5-cp313-cp313-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/93/04/5c918669096da8d1c9ec7bb716bd72e755526103a61bc5e76a3e4fb23b53/pydantic_extra_types-2.10.6-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fe/17/fabd56da47096d240dd45ba627bead0333b0cf0ee8ada9bec579287dadf3/pydantic_extra_types-2.11.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl
@@ -210,14 +212,16 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
-      - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: https://files.pythonhosted.org/packages/ad/e4/8d97cca767bcc1be76d16fb76951608305561c6e056811587f36cb1316a8/werkzeug-3.1.5-py3-none-any.whl
       - pypi: ./
   dev:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
@@ -509,25 +513,25 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_6.conda
       - pypi: https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/c5/0d/84a4380f930db0010168e0aa7b7a8fed9ba1835a8fbb1472bc6d0201d529/build-1.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/95/95/c9a829f4ecd9660a364fb868f52482597b2bf345e5bf405ac4980ce71951/d_geolib-2.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/cf/a4853e5b2b2bea55ae909095a8720b3ed50d07bdd40cbeafcedb5a6c47da/dash-3.3.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/0d/10/646ccf7bbea83399965079f500ec719d821d19785372694fa9fe4db12182/dash_ag_grid-32.3.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/92/b2/86e672e8c6a351bfaf669faa564876072072861ecc399d884acc363662c1/dash_ag_grid-32.3.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d6/38/1efeec8b4d741c09ccd169baf8a00c07a0176b58e418d4cd0c30dffedd22/dash_bootstrap_components-2.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d2/63/f10cc18533cc9ab899ea81deca9759b3eebe47d01ad95c4e67b6acdada97/dash_iconify-0.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/1c/1b/3e3c9d03d250f86d1891fb305b438952aba237c8cb92ca7bead910c89e65/dash_mantine_components-2.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3a/55/7b0aac3707afebcd829bf315a9b3fcf2c66556008152bafe37cf85ce3697/dash_mantine_components-2.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/50/3d/9373ad9c56321fdab5b41197068e1d8c25883b3fea29dd361f9b55116869/dill-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3f/27/4570e78fc0bf5ea0ca45eb1de3818a23787af9b390c0b0a0033a1b8236f9/diskcache-5.6.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ec/f9/7f9263c5695f4bd0023734af91bedb2ff8209e8de6ead162f35d8dc762fd/flask-3.1.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ee/25/7d7e78e750bc1aecfaf0efbf826c69a791d2eeaf29cf20cba93ff4cced78/multiprocess-0.70.18-py313-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/3e/b8ecc67e178919671695f64374a7ba916cf0adbf86efedc6054f38b5b8ae/narwhals-2.14.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/16/22/02f7c226115fc1d0fcd52e635a4c27aaa4a5c39e75afb4175fc6bddf9665/openturns-1.26-cp39-abi3-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/6f/60/58e7a307a24044e0e982b99042fcd5a58d0cd928d9c01829574d7553ee8d/peewee-3.18.3.tar.gz
-      - pypi: https://files.pythonhosted.org/packages/e7/c3/3031c931098de393393e1f93a38dc9ed6805d86bb801acc3cf2d5bd1e6b7/plotly-6.5.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/1a/41/19c65578ef9a54b3083253c68a607f099642747168fe00f3a2bceb7c3a34/peewee-3.19.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/e9/8e/24e0bb90b2d75af84820693260c5534e9ed351afdda67ed6f393a141a0e2/plotly-6.5.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9e/8b/341991b158ddab181cff136acd2552c9f35bd30380422a639c0671e99a91/pydantic_core-2.41.5-cp313-cp313-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/93/04/5c918669096da8d1c9ec7bb716bd72e755526103a61bc5e76a3e4fb23b53/pydantic_extra_types-2.10.6-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fe/17/fabd56da47096d240dd45ba627bead0333b0cf0ee8ada9bec579287dadf3/pydantic_extra_types-2.11.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl
@@ -536,14 +540,16 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
-      - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: https://files.pythonhosted.org/packages/ad/e4/8d97cca767bcc1be76d16fb76951608305561c6e056811587f36cb1316a8/werkzeug-3.1.5-py3-none-any.whl
       - pypi: ./
   py312:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
@@ -716,28 +722,28 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_6.conda
       - pypi: https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/c5/0d/84a4380f930db0010168e0aa7b7a8fed9ba1835a8fbb1472bc6d0201d529/build-1.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/95/95/c9a829f4ecd9660a364fb868f52482597b2bf345e5bf405ac4980ce71951/d_geolib-2.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/cf/a4853e5b2b2bea55ae909095a8720b3ed50d07bdd40cbeafcedb5a6c47da/dash-3.3.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/0d/10/646ccf7bbea83399965079f500ec719d821d19785372694fa9fe4db12182/dash_ag_grid-32.3.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/92/b2/86e672e8c6a351bfaf669faa564876072072861ecc399d884acc363662c1/dash_ag_grid-32.3.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d6/38/1efeec8b4d741c09ccd169baf8a00c07a0176b58e418d4cd0c30dffedd22/dash_bootstrap_components-2.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d2/63/f10cc18533cc9ab899ea81deca9759b3eebe47d01ad95c4e67b6acdada97/dash_iconify-0.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/1c/1b/3e3c9d03d250f86d1891fb305b438952aba237c8cb92ca7bead910c89e65/dash_mantine_components-2.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3a/55/7b0aac3707afebcd829bf315a9b3fcf2c66556008152bafe37cf85ce3697/dash_mantine_components-2.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/50/3d/9373ad9c56321fdab5b41197068e1d8c25883b3fea29dd361f9b55116869/dill-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3f/27/4570e78fc0bf5ea0ca45eb1de3818a23787af9b390c0b0a0033a1b8236f9/diskcache-5.6.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ec/f9/7f9263c5695f4bd0023734af91bedb2ff8209e8de6ead162f35d8dc762fd/flask-3.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/20/b0/36bd937216ec521246249be3bf9855081de4c5e06a0c9b4219dbeda50373/importlib_metadata-8.7.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fa/5e/f8e9a1d23b9c20a551a8a02ea3637b4642e22c2626e3a13a9a29cdea99eb/importlib_metadata-8.7.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bf/b6/5f922792be93b82ec6b5f270bbb1ef031fd0622847070bbcf9da816502cc/multiprocess-0.70.18-py312-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/3e/b8ecc67e178919671695f64374a7ba916cf0adbf86efedc6054f38b5b8ae/narwhals-2.14.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a0/c4/c2971a3ba4c6103a3d10c4b0f24f461ddc027f0f09763220cf35ca1401b3/nest_asyncio-1.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/16/22/02f7c226115fc1d0fcd52e635a4c27aaa4a5c39e75afb4175fc6bddf9665/openturns-1.26-cp39-abi3-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/6f/60/58e7a307a24044e0e982b99042fcd5a58d0cd928d9c01829574d7553ee8d/peewee-3.18.3.tar.gz
-      - pypi: https://files.pythonhosted.org/packages/e7/c3/3031c931098de393393e1f93a38dc9ed6805d86bb801acc3cf2d5bd1e6b7/plotly-6.5.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/55/4c/c3ed1a622b6ae2fd3c945a366e64eb35247a31e4db16cf5095e269e8eb3c/psutil-7.1.3-cp37-abi3-win_amd64.whl
+      - pypi: https://files.pythonhosted.org/packages/1a/41/19c65578ef9a54b3083253c68a607f099642747168fe00f3a2bceb7c3a34/peewee-3.19.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/e9/8e/24e0bb90b2d75af84820693260c5534e9ed351afdda67ed6f393a141a0e2/plotly-6.5.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/34/68/d9317542e3f2b180c4306e3f45d3c922d7e86d8ce39f941bb9e2e9d8599e/psutil-7.2.1-cp37-abi3-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/86/45/00173a033c801cacf67c190fef088789394feaf88a98a7035b0e40d53dc9/pydantic_core-2.41.5-cp312-cp312-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/93/04/5c918669096da8d1c9ec7bb716bd72e755526103a61bc5e76a3e4fb23b53/pydantic_extra_types-2.10.6-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fe/17/fabd56da47096d240dd45ba627bead0333b0cf0ee8ada9bec579287dadf3/pydantic_extra_types-2.11.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl
@@ -747,8 +753,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
-      - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: https://files.pythonhosted.org/packages/ad/e4/8d97cca767bcc1be76d16fb76951608305561c6e056811587f36cb1316a8/werkzeug-3.1.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl
       - pypi: ./
   py313:
@@ -756,6 +762,8 @@ environments:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
@@ -928,28 +936,28 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_6.conda
       - pypi: https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/c5/0d/84a4380f930db0010168e0aa7b7a8fed9ba1835a8fbb1472bc6d0201d529/build-1.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/95/95/c9a829f4ecd9660a364fb868f52482597b2bf345e5bf405ac4980ce71951/d_geolib-2.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/cf/a4853e5b2b2bea55ae909095a8720b3ed50d07bdd40cbeafcedb5a6c47da/dash-3.3.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/0d/10/646ccf7bbea83399965079f500ec719d821d19785372694fa9fe4db12182/dash_ag_grid-32.3.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/92/b2/86e672e8c6a351bfaf669faa564876072072861ecc399d884acc363662c1/dash_ag_grid-32.3.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d6/38/1efeec8b4d741c09ccd169baf8a00c07a0176b58e418d4cd0c30dffedd22/dash_bootstrap_components-2.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d2/63/f10cc18533cc9ab899ea81deca9759b3eebe47d01ad95c4e67b6acdada97/dash_iconify-0.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/1c/1b/3e3c9d03d250f86d1891fb305b438952aba237c8cb92ca7bead910c89e65/dash_mantine_components-2.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3a/55/7b0aac3707afebcd829bf315a9b3fcf2c66556008152bafe37cf85ce3697/dash_mantine_components-2.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/50/3d/9373ad9c56321fdab5b41197068e1d8c25883b3fea29dd361f9b55116869/dill-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3f/27/4570e78fc0bf5ea0ca45eb1de3818a23787af9b390c0b0a0033a1b8236f9/diskcache-5.6.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ec/f9/7f9263c5695f4bd0023734af91bedb2ff8209e8de6ead162f35d8dc762fd/flask-3.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/20/b0/36bd937216ec521246249be3bf9855081de4c5e06a0c9b4219dbeda50373/importlib_metadata-8.7.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fa/5e/f8e9a1d23b9c20a551a8a02ea3637b4642e22c2626e3a13a9a29cdea99eb/importlib_metadata-8.7.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ee/25/7d7e78e750bc1aecfaf0efbf826c69a791d2eeaf29cf20cba93ff4cced78/multiprocess-0.70.18-py313-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/3e/b8ecc67e178919671695f64374a7ba916cf0adbf86efedc6054f38b5b8ae/narwhals-2.14.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/a0/c4/c2971a3ba4c6103a3d10c4b0f24f461ddc027f0f09763220cf35ca1401b3/nest_asyncio-1.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/16/22/02f7c226115fc1d0fcd52e635a4c27aaa4a5c39e75afb4175fc6bddf9665/openturns-1.26-cp39-abi3-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/6f/60/58e7a307a24044e0e982b99042fcd5a58d0cd928d9c01829574d7553ee8d/peewee-3.18.3.tar.gz
-      - pypi: https://files.pythonhosted.org/packages/e7/c3/3031c931098de393393e1f93a38dc9ed6805d86bb801acc3cf2d5bd1e6b7/plotly-6.5.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/55/4c/c3ed1a622b6ae2fd3c945a366e64eb35247a31e4db16cf5095e269e8eb3c/psutil-7.1.3-cp37-abi3-win_amd64.whl
+      - pypi: https://files.pythonhosted.org/packages/1a/41/19c65578ef9a54b3083253c68a607f099642747168fe00f3a2bceb7c3a34/peewee-3.19.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/e9/8e/24e0bb90b2d75af84820693260c5534e9ed351afdda67ed6f393a141a0e2/plotly-6.5.1-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/34/68/d9317542e3f2b180c4306e3f45d3c922d7e86d8ce39f941bb9e2e9d8599e/psutil-7.2.1-cp37-abi3-win_amd64.whl
       - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9e/8b/341991b158ddab181cff136acd2552c9f35bd30380422a639c0671e99a91/pydantic_core-2.41.5-cp313-cp313-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/93/04/5c918669096da8d1c9ec7bb716bd72e755526103a61bc5e76a3e4fb23b53/pydantic_extra_types-2.10.6-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fe/17/fabd56da47096d240dd45ba627bead0333b0cf0ee8ada9bec579287dadf3/pydantic_extra_types-2.11.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl
@@ -959,8 +967,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
-      - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: https://files.pythonhosted.org/packages/ad/e4/8d97cca767bcc1be76d16fb76951608305561c6e056811587f36cb1316a8/werkzeug-3.1.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl
       - pypi: ./
   test:
@@ -968,6 +976,8 @@ environments:
     - url: https://conda.anaconda.org/conda-forge/
     indexes:
     - https://pypi.org/simple
+    options:
+      pypi-prerelease-mode: if-necessary-or-explicit
     packages:
       win-64:
       - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
@@ -1159,25 +1169,25 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/win-64/zstd-1.5.7-h534d264_6.conda
       - pypi: https://files.pythonhosted.org/packages/78/b6/6307fbef88d9b5ee7421e68d78a9f162e0da4900bc5f5793f6d3d0e34fb8/annotated_types-0.7.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/c5/0d/84a4380f930db0010168e0aa7b7a8fed9ba1835a8fbb1472bc6d0201d529/build-1.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/95/95/c9a829f4ecd9660a364fb868f52482597b2bf345e5bf405ac4980ce71951/d_geolib-2.6.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/cb/cf/a4853e5b2b2bea55ae909095a8720b3ed50d07bdd40cbeafcedb5a6c47da/dash-3.3.0-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/0d/10/646ccf7bbea83399965079f500ec719d821d19785372694fa9fe4db12182/dash_ag_grid-32.3.2-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/92/b2/86e672e8c6a351bfaf669faa564876072072861ecc399d884acc363662c1/dash_ag_grid-32.3.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d6/38/1efeec8b4d741c09ccd169baf8a00c07a0176b58e418d4cd0c30dffedd22/dash_bootstrap_components-2.0.4-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/d2/63/f10cc18533cc9ab899ea81deca9759b3eebe47d01ad95c4e67b6acdada97/dash_iconify-0.1.2-py3-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/1c/1b/3e3c9d03d250f86d1891fb305b438952aba237c8cb92ca7bead910c89e65/dash_mantine_components-2.4.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3a/55/7b0aac3707afebcd829bf315a9b3fcf2c66556008152bafe37cf85ce3697/dash_mantine_components-2.4.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/50/3d/9373ad9c56321fdab5b41197068e1d8c25883b3fea29dd361f9b55116869/dill-0.4.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/3f/27/4570e78fc0bf5ea0ca45eb1de3818a23787af9b390c0b0a0033a1b8236f9/diskcache-5.6.3-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ec/f9/7f9263c5695f4bd0023734af91bedb2ff8209e8de6ead162f35d8dc762fd/flask-3.1.2-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/ee/25/7d7e78e750bc1aecfaf0efbf826c69a791d2eeaf29cf20cba93ff4cced78/multiprocess-0.70.18-py313-none-any.whl
-      - pypi: https://files.pythonhosted.org/packages/79/3e/b8ecc67e178919671695f64374a7ba916cf0adbf86efedc6054f38b5b8ae/narwhals-2.14.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/16/22/02f7c226115fc1d0fcd52e635a4c27aaa4a5c39e75afb4175fc6bddf9665/openturns-1.26-cp39-abi3-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/6f/60/58e7a307a24044e0e982b99042fcd5a58d0cd928d9c01829574d7553ee8d/peewee-3.18.3.tar.gz
-      - pypi: https://files.pythonhosted.org/packages/e7/c3/3031c931098de393393e1f93a38dc9ed6805d86bb801acc3cf2d5bd1e6b7/plotly-6.5.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/1a/41/19c65578ef9a54b3083253c68a607f099642747168fe00f3a2bceb7c3a34/peewee-3.19.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/e9/8e/24e0bb90b2d75af84820693260c5534e9ed351afdda67ed6f393a141a0e2/plotly-6.5.1-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/9e/8b/341991b158ddab181cff136acd2552c9f35bd30380422a639c0671e99a91/pydantic_core-2.41.5-cp313-cp313-win_amd64.whl
-      - pypi: https://files.pythonhosted.org/packages/93/04/5c918669096da8d1c9ec7bb716bd72e755526103a61bc5e76a3e4fb23b53/pydantic_extra_types-2.10.6-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/fe/17/fabd56da47096d240dd45ba627bead0333b0cf0ee8ada9bec579287dadf3/pydantic_extra_types-2.11.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/bd/24/12818598c362d7f300f18e74db45963dbcb85150324092410c8b49405e42/pyproject_hooks-1.2.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/14/1b/a298b06749107c305e1fe0f814c6c74aea7b2f1e10989cb30f544a1b3253/python_dotenv-1.2.1-py3-none-any.whl
@@ -1186,8 +1196,8 @@ environments:
       - pypi: https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl
       - pypi: https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl
       - pypi: direct+https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
-      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
-      - pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
+      - pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
+      - pypi: https://files.pythonhosted.org/packages/ad/e4/8d97cca767bcc1be76d16fb76951608305561c6e056811587f36cb1316a8/werkzeug-3.1.5-py3-none-any.whl
       - pypi: ./
 packages:
 - conda: https://conda.anaconda.org/conda-forge/win-64/_openmp_mutex-4.5-2_gnu.conda
@@ -1554,12 +1564,12 @@ packages:
   - pkg:pypi/brotlipy?source=hash-mapping
   size: 310421
   timestamp: 1757063721063
-- pypi: https://files.pythonhosted.org/packages/cb/8c/2b30c12155ad8de0cf641d76a8b396a16d2c36bc6d50b621a62b7c4567c1/build-1.3.0-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/c5/0d/84a4380f930db0010168e0aa7b7a8fed9ba1835a8fbb1472bc6d0201d529/build-1.4.0-py3-none-any.whl
   name: build
-  version: 1.3.0
-  sha256: 7145f0b5061ba90a1500d60bd1b13ca0a8a4cebdd0cc16ed8adf1c0e739f43b4
+  version: 1.4.0
+  sha256: 6a07c1b8eb6f2b311b96fcbdbce5dab5fe637ffda0fd83c9cac622e927501596
   requires_dist:
-  - packaging>=19.1
+  - packaging>=24.0
   - pyproject-hooks
   - colorama ; os_name == 'nt'
   - importlib-metadata>=4.6 ; python_full_version < '3.10.2'
@@ -1942,10 +1952,10 @@ packages:
   - plotly-cloud ; extra == 'cloud'
   - dash-ag-grid ; extra == 'ag-grid'
   requires_python: '>=3.8'
-- pypi: https://files.pythonhosted.org/packages/0d/10/646ccf7bbea83399965079f500ec719d821d19785372694fa9fe4db12182/dash_ag_grid-32.3.2-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/92/b2/86e672e8c6a351bfaf669faa564876072072861ecc399d884acc363662c1/dash_ag_grid-32.3.4-py3-none-any.whl
   name: dash-ag-grid
-  version: 32.3.2
-  sha256: a690d18a83ebba96e68e63d928f3e30f97d38a8a6418ddd479db4ce825c0de91
+  version: 32.3.4
+  sha256: aa722086c9076a4dbf36c9c7b0c779ce1a011e69d5b6eed760580dfa077cd2ae
   requires_dist:
   - dash>=2
   - dash[ci,dev,testing]>=2.0 ; extra == 'dev'
@@ -1978,10 +1988,10 @@ packages:
   name: dash-iconify
   version: 0.1.2
   sha256: 9ab0eda19bb4514e177bf1f8f36947bb9e5b44aba6ce947f22a1cf0f1a45fc14
-- pypi: https://files.pythonhosted.org/packages/1c/1b/3e3c9d03d250f86d1891fb305b438952aba237c8cb92ca7bead910c89e65/dash_mantine_components-2.4.0-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/3a/55/7b0aac3707afebcd829bf315a9b3fcf2c66556008152bafe37cf85ce3697/dash_mantine_components-2.4.1-py3-none-any.whl
   name: dash-mantine-components
-  version: 2.4.0
-  sha256: fdc98a6e9e32b56b43b001e8e047d087f48ea8f104110107e09c802eab32b0f8
+  version: 2.4.1
+  sha256: f3259350e14db34225a584826c4ad800a61c13ca3d9a1e2e82ab0180c162d5d4
   requires_dist:
   - dash>=2
   - dash[ci,dev,testing]>=2 ; extra == 'dev'
@@ -2585,15 +2595,13 @@ packages:
   - pkg:pypi/idna?source=hash-mapping
   size: 50721
   timestamp: 1760286526795
-- pypi: https://files.pythonhosted.org/packages/20/b0/36bd937216ec521246249be3bf9855081de4c5e06a0c9b4219dbeda50373/importlib_metadata-8.7.0-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/fa/5e/f8e9a1d23b9c20a551a8a02ea3637b4642e22c2626e3a13a9a29cdea99eb/importlib_metadata-8.7.1-py3-none-any.whl
   name: importlib-metadata
-  version: 8.7.0
-  sha256: e5dd1551894c77868a30651cef00984d50e1002d06942a7101d34870c5f02afd
+  version: 8.7.1
+  sha256: 5a1f80bf1daa489495071efbb095d75a634cf28a8bc299581244063b53176151
   requires_dist:
   - zipp>=3.20
-  - typing-extensions>=3.6.4 ; python_full_version < '3.8'
   - pytest>=6,!=8.1.* ; extra == 'test'
-  - importlib-resources>=1.3 ; python_full_version < '3.9' and extra == 'test'
   - packaging ; extra == 'test'
   - pyfakefs ; extra == 'test'
   - flufl-flake8 ; extra == 'test'
@@ -2609,8 +2617,9 @@ packages:
   - pytest-checkdocs>=2.4 ; extra == 'check'
   - pytest-ruff>=0.2.1 ; sys_platform != 'cygwin' and extra == 'check'
   - pytest-cov ; extra == 'cover'
-  - pytest-enabler>=2.2 ; extra == 'enabler'
-  - pytest-mypy ; extra == 'type'
+  - pytest-enabler>=3.4 ; extra == 'enabler'
+  - pytest-mypy>=1.0.1 ; extra == 'type'
+  - mypy<1.19 ; platform_python_implementation == 'PyPy' and extra == 'type'
   requires_python: '>=3.9'
 - conda: https://conda.anaconda.org/conda-forge/noarch/importlib-metadata-8.6.1-pyha770c72_0.conda
   sha256: 598951ebdb23e25e4cec4bbff0ae369cec65ead80b50bc08b441d8e54de5cf03
@@ -4016,10 +4025,10 @@ packages:
   - pkg:pypi/mypy-extensions?source=hash-mapping
   size: 11766
   timestamp: 1745776666688
-- pypi: https://files.pythonhosted.org/packages/79/3e/b8ecc67e178919671695f64374a7ba916cf0adbf86efedc6054f38b5b8ae/narwhals-2.14.0-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/3d/2e/cf2ffeb386ac3763526151163ad7da9f1b586aac96d2b4f7de1eaebf0c61/narwhals-2.15.0-py3-none-any.whl
   name: narwhals
-  version: 2.14.0
-  sha256: b56796c9a00179bd757d15282c540024e1d5c910b19b8c9944d836566c030acf
+  version: 2.15.0
+  sha256: cbfe21ca19d260d9fd67f995ec75c44592d1f106933b03ddd375df7ac841f9d6
   requires_dist:
   - cudf>=24.10.0 ; extra == 'cudf'
   - dask[dataframe]>=2024.8 ; extra == 'dask'
@@ -4457,10 +4466,14 @@ packages:
   purls: []
   size: 995992
   timestamp: 1763655708300
-- pypi: https://files.pythonhosted.org/packages/6f/60/58e7a307a24044e0e982b99042fcd5a58d0cd928d9c01829574d7553ee8d/peewee-3.18.3.tar.gz
+- pypi: https://files.pythonhosted.org/packages/1a/41/19c65578ef9a54b3083253c68a607f099642747168fe00f3a2bceb7c3a34/peewee-3.19.0-py3-none-any.whl
   name: peewee
-  version: 3.18.3
-  sha256: 62c3d93315b1a909360c4b43c3a573b47557a1ec7a4583a71286df2a28d4b72e
+  version: 3.19.0
+  sha256: de220b94766e6008c466e00ce4ba5299b9a832117d9eb36d45d0062f3cfd7417
+  requires_dist:
+  - pymysql ; extra == 'mysql'
+  - psycopg2-binary ; extra == 'postgres'
+  - psycopg[binary] ; extra == 'psycopg3'
 - conda: https://conda.anaconda.org/conda-forge/win-64/pillow-12.0.0-py312h31f0997_2.conda
   sha256: f790f3ea6ae82d8ee3490d62cc2400311f0ca130eaf73292c599019e0b3ccae4
   md5: 4155ddcc60faad07fb2a5b3b988b3741
@@ -4536,10 +4549,10 @@ packages:
   - pkg:pypi/platformdirs?source=hash-mapping
   size: 23922
   timestamp: 1764950726246
-- pypi: https://files.pythonhosted.org/packages/e7/c3/3031c931098de393393e1f93a38dc9ed6805d86bb801acc3cf2d5bd1e6b7/plotly-6.5.0-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/e9/8e/24e0bb90b2d75af84820693260c5534e9ed351afdda67ed6f393a141a0e2/plotly-6.5.1-py3-none-any.whl
   name: plotly
-  version: 6.5.0
-  sha256: 5ac851e100367735250206788a2b1325412aa4a4917a4fe3e6f0bc5aa6f3d90a
+  version: 6.5.1
+  sha256: 5adad4f58c360612b6c5ce11a308cdbc4fd38ceb1d40594a614f0062e227abe1
   requires_dist:
   - narwhals>=1.15.1
   - packaging
@@ -4591,7 +4604,7 @@ packages:
 - pypi: ./
   name: preprocessing
   version: 1.2.1
-  sha256: 4a8ae81d56bb1d68df19ee0231faf012b8e78235e7ef1800df8af77ad03d1ebc
+  sha256: 379940285f4b4ffaee0814a764a40a5da37e26a10bb1b956d5dbff1a07a2bc1b
   requires_dist:
   - geopandas
   - numpy
@@ -4609,7 +4622,6 @@ packages:
   - vr-dash @ git+https://github.com/Deltares-research/VrtoolDashboard.git@v1.2.0
   - vrtool @ https://github.com/Deltares/Veiligheidsrendement/releases/download/v1.2.0/vrtool-1.2.0-py3-none-any.whl
   requires_python: '>=3.12,<3.14'
-  editable: true
 - conda: https://conda.anaconda.org/conda-forge/win-64/proj-9.7.1-h7b1ce8f_0.conda
   sha256: c582fd23ceaabe435f4fc78f4cb1f0f4ca46964e19d3b56dc3813dd83a25b115
   md5: 9839364b9ca98be1917a72046e5880fd
@@ -4663,16 +4675,19 @@ packages:
   purls: []
   size: 7182
   timestamp: 1744724189376
-- pypi: https://files.pythonhosted.org/packages/55/4c/c3ed1a622b6ae2fd3c945a366e64eb35247a31e4db16cf5095e269e8eb3c/psutil-7.1.3-cp37-abi3-win_amd64.whl
+- pypi: https://files.pythonhosted.org/packages/34/68/d9317542e3f2b180c4306e3f45d3c922d7e86d8ce39f941bb9e2e9d8599e/psutil-7.2.1-cp37-abi3-win_amd64.whl
   name: psutil
-  version: 7.1.3
-  sha256: f39c2c19fe824b47484b96f9692932248a54c43799a84282cfe58d05a6449efd
+  version: 7.2.1
+  sha256: b1b0671619343aa71c20ff9767eced0483e4fc9e1f489d50923738caf6a03c17
   requires_dist:
+  - psleak ; extra == 'dev'
   - pytest ; extra == 'dev'
   - pytest-instafail ; extra == 'dev'
-  - pytest-subtests ; extra == 'dev'
   - pytest-xdist ; extra == 'dev'
   - setuptools ; extra == 'dev'
+  - pywin32 ; extra == 'dev'
+  - wheel ; extra == 'dev'
+  - wmi ; extra == 'dev'
   - abi3audit ; extra == 'dev'
   - black ; extra == 'dev'
   - check-manifest ; extra == 'dev'
@@ -4692,20 +4707,16 @@ packages:
   - validate-pyproject[all] ; extra == 'dev'
   - virtualenv ; extra == 'dev'
   - vulture ; extra == 'dev'
-  - wheel ; extra == 'dev'
-  - colorama ; os_name == 'nt' and extra == 'dev'
-  - pyreadline ; os_name == 'nt' and extra == 'dev'
-  - pywin32 ; os_name == 'nt' and platform_python_implementation != 'PyPy' and extra == 'dev'
-  - wheel ; os_name == 'nt' and platform_python_implementation != 'PyPy' and extra == 'dev'
-  - wmi ; os_name == 'nt' and platform_python_implementation != 'PyPy' and extra == 'dev'
+  - colorama ; extra == 'dev'
+  - pyreadline3 ; extra == 'dev'
+  - psleak ; extra == 'test'
   - pytest ; extra == 'test'
   - pytest-instafail ; extra == 'test'
-  - pytest-subtests ; extra == 'test'
   - pytest-xdist ; extra == 'test'
   - setuptools ; extra == 'test'
-  - pywin32 ; os_name == 'nt' and platform_python_implementation != 'PyPy' and extra == 'test'
-  - wheel ; os_name == 'nt' and platform_python_implementation != 'PyPy' and extra == 'test'
-  - wmi ; os_name == 'nt' and platform_python_implementation != 'PyPy' and extra == 'test'
+  - pywin32 ; extra == 'test'
+  - wheel ; extra == 'test'
+  - wmi ; extra == 'test'
   requires_python: '>=3.6'
 - conda: https://conda.anaconda.org/conda-forge/win-64/psutil-7.1.3-py313h5fd188c_0.conda
   sha256: 460ad6347bcd4d83533322af7e09b41347491f867142972cde24ea16c8d8680b
@@ -4786,10 +4797,10 @@ packages:
   requires_dist:
   - typing-extensions>=4.14.1
   requires_python: '>=3.9'
-- pypi: https://files.pythonhosted.org/packages/93/04/5c918669096da8d1c9ec7bb716bd72e755526103a61bc5e76a3e4fb23b53/pydantic_extra_types-2.10.6-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/fe/17/fabd56da47096d240dd45ba627bead0333b0cf0ee8ada9bec579287dadf3/pydantic_extra_types-2.11.0-py3-none-any.whl
   name: pydantic-extra-types
-  version: 2.10.6
-  sha256: 6106c448316d30abf721b5b9fecc65e983ef2614399a24142d689c7546cc246a
+  version: 2.11.0
+  sha256: 84b864d250a0fc62535b7ec591e36f2c5b4d1325fa0017eb8cda9aeb63b374a6
   requires_dist:
   - pydantic>=2.5.2
   - typing-extensions
@@ -4811,7 +4822,7 @@ packages:
   - python-ulid>=1,<2 ; python_full_version < '3.9' and extra == 'python-ulid'
   - python-ulid>=1,<4 ; python_full_version >= '3.9' and extra == 'python-ulid'
   - semver>=3.0.2 ; extra == 'semver'
-  requires_python: '>=3.8'
+  requires_python: '>=3.9'
 - pypi: https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl
   name: pydantic-settings
   version: 2.12.0
@@ -6142,7 +6153,7 @@ packages:
   purls: []
   size: 115073
   timestamp: 1765216325898
-- pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git?tag=v1.2.0#8ce19629a7dc712c45b7d8016877cf33d7157161
+- pypi: git+https://github.com/Deltares-research/VrtoolDashboard.git#8ce19629a7dc712c45b7d8016877cf33d7157161
   name: vr-dash
   version: 1.2.0
   requires_dist:
@@ -6220,10 +6231,10 @@ packages:
   - pkg:pypi/websocket-client?source=hash-mapping
   size: 61391
   timestamp: 1759928175142
-- pypi: https://files.pythonhosted.org/packages/2f/f9/9e082990c2585c744734f85bec79b5dae5df9c974ffee58fe421652c8e91/werkzeug-3.1.4-py3-none-any.whl
+- pypi: https://files.pythonhosted.org/packages/ad/e4/8d97cca767bcc1be76d16fb76951608305561c6e056811587f36cb1316a8/werkzeug-3.1.5-py3-none-any.whl
   name: werkzeug
-  version: 3.1.4
-  sha256: 2ad50fb9ed09cc3af22c54698351027ace879a0b60a3b5edf5730b2f7d876905
+  version: 3.1.5
+  sha256: 5111e36e91086ece91f93268bb39b4a35c1e6f1feac762c9c822ded0a4e322dc
   requires_dist:
   - markupsafe>=2.1.1
   - watchdog>=2.3 ; extra == 'watchdog'
