@@ -10,6 +10,6 @@
  "excluded_mechanisms": [
   "HYDRAULIC_STRUCTURES"
  ],
- "input_database_name": "database_31-1.sqlite",
+ "input_database_name": "database_31-1_minder_vakken.sqlite",
  "input_directory": null
 }

@@ -12,7 +12,7 @@ class MeasureConfiguration:
         self.vakindeling_shape = vakindeling_shape
         self._generic_data_dir = Path(__file__).absolute().parent.parent.joinpath('generic_data')
         self._measure_names = read_csv(self._generic_data_dir.joinpath('base_measures_totaal.csv'), index_col=0).index.tolist()
-        self._columns = ['objectid', 'vaknaam'] + self._measure_names
+        self._columns = ['objectid', 'vaknaam', 'in_analyse'] + self._measure_names
 
     def adjust_sections_revetments(self):
         #if there is a value for bekledingen in vakindeling_shape, then the value should be True, otherwise it should be False
@@ -33,6 +33,7 @@ class MeasureConfiguration:
         measures_df = pd.DataFrame(columns=self._columns)
         measures_df['objectid'] = self.vakindeling_shape['objectid']
         measures_df['vaknaam'] = self.vakindeling_shape['vaknaam']
+        measures_df['in_analyse'] = self.vakindeling_shape['in_analyse']
 
         #turn off everything that has buitenwaarts in the column name. Turn on all the others
         for measure in self._measure_names:
@@ -43,6 +44,7 @@ class MeasureConfiguration:
 
         self.measure_configuration = measures_df
         self.adjust_sections_revetments()
+
         return measures_df
     
     def write_to_csv(self, output_path: Path):
