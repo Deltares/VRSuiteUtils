@@ -28,45 +28,4 @@ def revetment_zst(cross_sections, qvar_path,  output_path, figures_ZST,p_grid, e
         computation.compute_zst(p_grid)
 
 if __name__ == '__main__':
-    # paths
-    # bekleding_path = Path(r"c:\vrm_test\bekleding_split_workflow\Bekleding_20230830_full.csv")
-    # profielen_path = Path(r'c:\vrm_test\bekleding_split_workflow\PRFL')
-    # steentoets_path = Path(r"c:\vrm_test\bekleding_split_workflow\steentoets")
-    # output_path = Path(r"c:\vrm_test\bekleding_split_workflow\output_full")
-
-    bekleding_path = Path(r"c:\VRM\preprocess_test\20240510_test_31_1\input_files\default_files\Bekleding_default_31-1.csv")
-    profielen_path = Path(r'c:\VRM\preprocess_test\20240510_test_31_1\input_files\prfl')
-    steentoets_path = Path(r"c:\VRM\preprocess_test\20240510_test_31_1\input_files\steentoets")
-    output_path = Path(r"c:\VRM\preprocess_test\20240510_test_31_1\intermediate_results\bekleding")
-    figures_ZST = output_path.joinpath('figures_ZST')
-
-
-    traject_id = "31-1"
-    _generic_data_dir = Path(__file__).absolute().parent.parent.parent.joinpath('generic_data')
-    dike_info = read_csv(_generic_data_dir.joinpath('diketrajectinfo.csv'))
-    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
-    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
-
-    p_grid = [1. / 30,
-              p_ondergrens,
-              p_signaleringswaarde,
-              p_signaleringswaarde * (1. / 1000.)]
-
-    # read revetment file
-    df = read_csv(bekleding_path,
-                     usecols=['doorsnede', 'dwarsprofiel', 'naam_hrlocatie', 'hrlocation', 'hr_koppel', 'region', 'gws',
-                              'getij_amplitude', 'steentoetsfile', 'prfl', 'begin_grasbekleding', 'waterstand_stap'],
-                     dtype={'doorsnede': str, 'dwarsprofiel': str})
-    df = df.dropna(subset=['doorsnede'])  # drop rows where vaknaam is Not a Number
-    df = df.reset_index(drop=True)  # reset index
-
-    # if figures_ZST doesnot exist, create it
-    if not figures_ZST.exists():
-        figures_ZST.mkdir()
-    # elif figures_ZST exists, but not empty, stop the script
-    elif figures_ZST.exists() and len(list(figures_ZST.iterdir())) != 0:
-        print('The figure folder is not empty. Please empty the figures_ZST folder and run the script again.')
-        exit()
-
-    # run revetment_zst
-    revetment_zst(df, profielen_path, steentoets_path, output_path, output_path, figures_ZST, p_grid)
+    pass
