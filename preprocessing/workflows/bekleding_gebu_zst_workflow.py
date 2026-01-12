@@ -30,8 +30,8 @@ def ensure_folders_exist(output_path: Path):
 def make_p_grid(traject_id: str):
     # set default Q-variant probability grid:
     dike_info = read_csv(Path(__file__).parent.parent.joinpath('generic_data','diketrajectinfo.csv'))
-    p_ondergrens = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_max']].values[0])
-    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'] == traject_id, ['p_sig']].values[0])
+    p_ondergrens = float(dike_info.loc[dike_info['traject_name'].eq(traject_id), 'p_max'].to_numpy().item())
+    p_signaleringswaarde = float(dike_info.loc[dike_info['traject_name'].eq(traject_id), 'p_sig'].to_numpy().item())
 
     return [1. / 30,
               p_ondergrens,
